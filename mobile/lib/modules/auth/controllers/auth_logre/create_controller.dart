@@ -17,4 +17,4 @@ class CreateController extends GetxController {
       Get.snackbar("Error", "Please fill all fields");
     }
   }
-}
+} 

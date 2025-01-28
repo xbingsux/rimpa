@@ -10,7 +10,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Stack( 
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
