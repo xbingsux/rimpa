@@ -1,0 +1,50 @@
+datasource db {
+  provider = "mysql" // หรือ PostgreSQL, SQLite, ฯลฯ
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                Int      @id @default(autoincrement()) // Primary Key
+  email             String?  @unique // Email
+  password          String? // Password
+  role              Role // Role
+  profile           Profile? // Profile relation
+  line_uid          String?  @unique // Line ID
+  line_access_token String?  @db.VarChar(255) // Optional line access token
+  active            Boolean  @default(true) // Active status
+}
+
+enum Role {
+  ADMIN // admin
+  USER // พนักงาน
+  MANAGER // หัวหน้างาน - หัวหน้าแผนก
+}
+
+model Profile {
+  id            Int       @id @default(autoincrement()) // Primary Key
+  user_id       Int       @unique // Foreign Key ไปยัง User
+  user          User      @relation(fields: [user_id], references: [id]) // ความสัมพันธ์แบบ 1:1 กับ User
+  title         String? // คำนำหน้า เช่น นาย, นาง, นางสาว
+  first_name    String? // ชื่อจริง
+  last_name     String? // นามสกุล
+  contact_email String? // อีเมล 
+  birth_date    DateTime? // วันเดือนปีเกิด
+  phone         String? // เบอร์โทรศัพท์ (ไม่จำเป็นต้องใส่)
+
+  // ที่อยู่ (address) แยกเก็บเป็นฟิลด์ย่อย
+  address_no          String? // เลขที่บ้าน
+  address_subdistrict String? // แขวง/ตำบล
+  address_district    String? // เขต/อำเภอ
+  address_province    String? // จังหวัด
+  address_code        String? // รหัสไปรษณีย์
+
+  profile_img String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
+  id_card     String?   @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
+  start_date  DateTime? // วันที่เริ่มทำงานวันแรก
+
+  // check_ins        CheckIn[] // ความสัมพันธ์แบบ 1:N กับ CheckIn
+}
