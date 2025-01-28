@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   var email = ''.obs;
   var password = ''.obs;
-
+ 
   void login() {
     if (email.value.isNotEmpty && password.value.isNotEmpty) {
       // Logic การเข้าสู่ระบบ

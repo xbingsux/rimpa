@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 class CreateController extends GetxController {
   var email = ''.obs;
   var password = ''.obs;
-
+ 
   void register() {
     // ใส่ลอจิกการลงทะเบียนที่นี่ (เช่น API call หรือการตรวจสอบข้อมูล)
     if (email.isNotEmpty && password.isNotEmpty) {

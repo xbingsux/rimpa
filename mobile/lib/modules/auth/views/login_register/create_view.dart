@@ -5,7 +5,7 @@ import '../../controllers/auth_logre/create_controller.dart'; // ใช้ตั
 
 class CreateAccountView extends StatelessWidget {
   final registerController = Get.put(CreateController()); // ตัวควบคุมการลงทะเบียน
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

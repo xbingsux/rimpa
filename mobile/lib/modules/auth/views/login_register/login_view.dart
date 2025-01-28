@@ -6,7 +6,7 @@ import '../../controllers/auth_logre/login_controller.dart';
 
 class LoginView extends StatelessWidget {
   final authController = Get.put(LoginController());
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
