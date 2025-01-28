@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
-import 'routes/app_pages.dart';
+import 'core/routes/app_pages.dart';
 
 void main() {
   Get.put(ThemeController());

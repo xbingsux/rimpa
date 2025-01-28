@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/theme/theme_controller.dart';
-import '../../../core/widgets/custom_loginpage.dart';
+import '../../../widgets/custom_loginpage.dart';
 import '../../controllers/auth.controller.dart';
 
 class LoginView extends StatelessWidget {

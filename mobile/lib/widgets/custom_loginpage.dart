@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../theme/theme_controller.dart';
+import '../core/theme/theme_controller.dart';
 
 // ปุ่มกดเข้าระบบ
 class CustomButton extends StatelessWidget {
