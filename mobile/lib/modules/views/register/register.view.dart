@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/widgets/custom_loginpage.dart'; // เชื่อมต่อกับ CustomTextField และ CustomButton
-import '../../controllers/auth_login_register/create_controller.dart'; // ใช้ตัวควบคุมของ Register
+import '../../controllers/register.controller.dart'; // ใช้ตัวควบคุมของ Register
 
 class CreateAccountView extends StatelessWidget {
-  final registerController = Get.put(CreateController()); // ตัวควบคุมการลงทะเบียน
+  final registerController = Get.put(RegisterController()); // ตัวควบคุมการลงทะเบียน
  
   @override
   Widget build(BuildContext context) {
