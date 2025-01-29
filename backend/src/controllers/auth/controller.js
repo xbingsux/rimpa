@@ -70,7 +70,7 @@ router.post("/register", async (req, res) => {
       });
 
       console.log(token);
-      // await Service.sendVertifyUser(email, token)
+      await Service.sendVertifyUser(email, token)
     }
     return res.status(201).json({
       status: "success",
