@@ -8,20 +8,19 @@ generator client {
 }
 
 model User {
-  id                Int      @id @default(autoincrement()) // Primary Key
-  email             String?  @unique // Email
-  password          String? // Password
-  role              Role // Role
-  profile           Profile? // Profile relation
-  line_uid          String?  @unique // Line ID
-  line_access_token String?  @db.VarChar(255) // Optional line access token
-  active            Boolean  @default(true) // Active status
+  id       Int      @id @default(autoincrement()) // Primary Key
+  email    String   @unique // Email
+  password String // Password
+  role_id  Int      @unique // Foreign Key ไปยัง User
+  role     Role     @relation(fields: [role_id], references: [id]) // ความสัมพันธ์แบบ 1:1 กับ User
+  profile  Profile? // Profile relation
+  active   Boolean  @default(true) // Active status
 }
 
-enum Role {
-  ADMIN // admin
-  USER // พนักงาน
-  MANAGER // หัวหน้างาน - หัวหน้าแผนก
+model Role {
+  id   Int    @id @default(autoincrement()) // Primary Key
+  user User?
+  role String
 }
 
 model Profile {
@@ -42,9 +41,8 @@ model Profile {
   address_province    String? // จังหวัด
   address_code        String? // รหัสไปรษณีย์
 
-  profile_img String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
-  id_card     String?   @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
-  start_date  DateTime? // วันที่เริ่มทำงานวันแรก
+  profile_img  String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
+  profile_name String?
 
-  // check_ins        CheckIn[] // ความสัมพันธ์แบบ 1:N กับ CheckIn
+  id_card String? @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
 }

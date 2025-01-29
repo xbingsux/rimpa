@@ -63,19 +63,55 @@ router.post("/register", async (req, res) => {
   const { email, password, profile } = req.body;
   try {
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = await Service.createUser(email, hashedPassword, profile);
+    const newUser = await Service.register(email, hashedPassword, profile);
+    if (newUser) {
+      let token = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY, {
+        expiresIn: "1d",
+      });
+      await Service.sendVertifyUser(email, token)
+    }
     return res.status(201).json({
       status: "success",
       user: newUser,
     });
+
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: error.message//"Internal Server Error",
+    });
+  }
+});
+
+router.get("/verify-user", async (req, res) => {
+  const { token } = req.query
+  // ตรวจสอบว่า token มีค่าหรือไม่
+  if (!token) {
+    return res.status(401).send("No token");
+  }
+
+  // ตรวจสอบและถอดรหัส token
+  const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+  if (!decoded || !decoded.userId) {
+    return res.status(401).send("Invalid token or missing user ID");
+  }
+  const user = await Service.vertifyUser(decoded.userId)
+
+  if (user && user.active) {
+    res.status(200).json({
+      status: "success",
+      message: "User is online",
+      user: user,
+    });
+  } else {
     return res.status(500).json({
       status: "error",
       message: "Internal Server Error",
     });
   }
-});
+})
 
 // Verify Token
 router.post("/verify-token", (req, res) => {
