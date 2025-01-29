@@ -94,8 +94,8 @@ class CreateAccountView extends StatelessWidget {
                   CustomButton(
                     text: 'ยืนยันบัญชี',
                     onPressed: () {
-                      // เปลี่ยนหน้าไปยังหน้า OTP
-                      Get.toNamed('/otp');
+                      // เรียกใช้งาน register
+                      registerController.register();
                     },
                   ),
                   SizedBox(height: 16),
