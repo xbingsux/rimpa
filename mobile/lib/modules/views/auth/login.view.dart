@@ -6,11 +6,11 @@ import '../../controllers/auth.controller.dart';
 
 class LoginView extends StatelessWidget {
   final authController = Get.put(LoginController());
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack( 
+      body: Stack(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -34,13 +34,13 @@ class LoginView extends StatelessWidget {
                 SizedBox(height: 32),
                 // ปุ่ม Login เต็มข้าง
                 CustomButton(
-                  text: 'Login',
+                  text: 'ล็อคอิน',
                   onPressed: () => authController.login(),
                 ),
                 SizedBox(height: 16),
                 // ปุ่ม Create Account เต็มข้าง
                 CreateAccountButton(
-                  text: 'Create Account',
+                  text: 'ยังไม่มีบัญซี',
                   onPressed: () => Get.toNamed('/create-account'),
                 ),
               ],

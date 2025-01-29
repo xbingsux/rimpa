@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 class RegisterController extends GetxController {
   var email = ''.obs;
+  var username = ''.obs;
   var password = ''.obs;
  
   void register() {
