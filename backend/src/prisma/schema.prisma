@@ -18,9 +18,9 @@ model User {
 }
 
 model Role {
-  id   Int    @id @default(autoincrement()) // Primary Key
-  user User?
-  role String
+  id        Int    @id @default(autoincrement()) // Primary Key
+  role_name String @unique
+  user      User[]
 }
 
 model Profile {

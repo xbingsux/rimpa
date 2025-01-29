@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
         status: "success",
         token: token,
         role: user.role,
-        active: user.active,
+        // active: user.active,
       });
     } else {
       return res.status(401).json({
@@ -68,7 +68,9 @@ router.post("/register", async (req, res) => {
       let token = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY, {
         expiresIn: "1d",
       });
-      await Service.sendVertifyUser(email, token)
+
+      console.log(token);
+      // await Service.sendVertifyUser(email, token)
     }
     return res.status(201).json({
       status: "success",

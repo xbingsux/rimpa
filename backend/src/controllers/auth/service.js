@@ -36,8 +36,8 @@ const register = async (email, password, profile) => {
           password: password,
           role: {
             connectOrCreate: {
-              where: { role: "user", id: 0 },
-              create: { role: "user" }
+              where: { role_name: "user" },
+              create: { role_name: "user" }
             },
           },
           profile: profile ? { create: profile } : { create: {} },
