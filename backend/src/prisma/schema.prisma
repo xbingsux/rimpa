@@ -11,7 +11,7 @@ model User {
   id       Int      @id @default(autoincrement()) // Primary Key
   email    String   @unique // Email
   password String // Password
-  role_id  Int      @unique // Foreign Key ไปยัง User
+  role_id  Int // Foreign Key ไปยัง User
   role     Role     @relation(fields: [role_id], references: [id]) // ความสัมพันธ์แบบ 1:1 กับ User
   profile  Profile? // Profile relation
   active   Boolean  @default(true) // Active status
