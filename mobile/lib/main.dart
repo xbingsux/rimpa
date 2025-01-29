@@ -14,14 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     return Obx(() => GetMaterialApp(
-          title: 'Login rimpa',
+          title: 'Login rimpaa',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx
+          themeMode:
+              themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx
           initialRoute: AppPages.initial,
           getPages: AppPages.routes,
           debugShowCheckedModeBanner: false,
         ));
-  } 
+  }
 }
- 
