@@ -100,19 +100,26 @@ router.get("/verify-user", async (req, res) => {
     return res.status(401).send("Invalid token or missing user ID");
   }
   const user = await Service.vertifyUser(decoded.userId)
-
-  if (user && user.active) {
-    res.status(200).json({
-      status: "success",
-      message: "User is online",
-      user: user,
-    });
-  } else {
-    return res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
+  let isSuccess = (user && user.active)
+  res.send(`
+        <div style="
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 50px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 50px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        ">
+            <h1 style="color: ${isSuccess ? "#28a745" : "#dc3545"};">
+                ${isSuccess ? "✅ Verify สำเร็จ!" : "❌ Verify ไม่สำเร็จ!"}
+            </h1>
+            <p style="font-size: 18px; color: #333;">
+                ${isSuccess ? "บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว" : "การยืนยันบัญชีล้มเหลว กรุณาลองใหม่"}
+            </p>
+        </div>
+        `)
 })
 
 // Verify Token
