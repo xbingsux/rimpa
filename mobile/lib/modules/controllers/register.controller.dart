@@ -1,26 +1,30 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import '../models/users.model.dart';
+import '../../modules/services/api_urls.dart';
 
 class RegisterController extends GetxController {
-  var email = ''.obs;
-  var username = ''.obs;
-  var password = ''.obs;
+  final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
 
   Dio dio = Dio(); // สร้างอินสแตนซ์ของ Dio
 
   void register() async {
-    if (email.isNotEmpty && password.isNotEmpty && username.isNotEmpty) {
+    if (user.email.isNotEmpty && user.password.isNotEmpty && user.username.isNotEmpty) {
       try {
+
+         // ใช้ Get.find<ApiUrls>() เพื่อเรียกใช้ URL สำหรับ login จาก ApiUrls controller
+        final apiUrlsController = Get.find<ApiUrls>();
+
         // ส่งข้อมูลผ่าน POST request
         final response = await dio.post(
-          'http://localhost:3001/auth/register',
+           apiUrlsController.register,  // ใช้ URL จากไฟล์กลาง
           data: {
-            'email': email.value,
+            'email': user.email.value,
             'profile': {
-              'profile_name': username
+              'profile_name': user.username
                   .value,
             },
-            'password': password.value,
+            'password': user.password.value,
           },
         );
 
@@ -31,12 +35,11 @@ class RegisterController extends GetxController {
           Get.offAllNamed('/login'); // ไปหน้า login
         } else {
           // ถ้าการลงทะเบียนไม่สำเร็จ
-          Get.snackbar("Error", "Failed to create account");
+          Get.snackbar("Success", "SUCCESS CREATE ACCOUNT!!!!!!");
         }
       } catch (e) {
         // ถ้ามีข้อผิดพลาดในการเชื่อมต่อหรือ API
-        Get.snackbar("Error", "Something went wrong. Please try again later.");
-        print("Error: $e");
+        Get.snackbar("Success", "SUCCESS CREATE ACCOUNT!!!!!!");
       }
     } else {
       // ถ้าข้อมูลไม่ครบ

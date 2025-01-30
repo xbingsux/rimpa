@@ -22,7 +22,7 @@ class LoginView extends StatelessWidget {
                 CustomTextField(
                   labelText: 'Email',  // ระบุชื่อของ field
                   obscureText: false,   // กำหนดให้เป็น text ธรรมดา
-                  onChanged: (value) => authController.email.value = value,  // รับค่าจากผู้ใช้
+                  onChanged: (value) => authController.user.email.value = value,  // รับค่าจากผู้ใช้
                 ),
                 SizedBox(height: 16),
                 
@@ -30,7 +30,7 @@ class LoginView extends StatelessWidget {
                 CustomTextField(
                   labelText: 'Password',  // ระบุชื่อของ field
                   obscureText: true,  // กำหนดให้เป็นแบบซ่อนข้อความ
-                  onChanged: (value) => authController.password.value = value,  // รับค่าจากผู้ใช้
+                  onChanged: (value) => authController.user.password.value = value,  // รับค่าจากผู้ใช้
                 ),
                 SizedBox(height: 32),
                 

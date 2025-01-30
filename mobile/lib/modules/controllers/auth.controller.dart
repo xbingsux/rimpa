@@ -1,25 +1,29 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import '../models/users.model.dart';
+import '../../modules/services/api_urls.dart';
 
 class LoginController extends GetxController {
-  var email = ''.obs;
-  var password = ''.obs;
+  final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
 
   Dio dio = Dio();
 
   void login() async {
-    if (email.value.isNotEmpty && password.value.isNotEmpty) {
+    if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
       try {
         // แสดงข้อมูลที่กรอกใน console log
-        print('Email: ${email.value}');
-        print('Password: ${password.value}');  // ควรระมัดระวังการแสดงรหัสผ่านใน console เพราะเป็นข้อมูลที่ควรเก็บเป็นความลับ
+        print('Email: ${user.email.value}');
+        print('Password: ${user.password.value}');  // ควรระมัดระวังการแสดงรหัสผ่านใน console เพราะเป็นข้อมูลที่ควรเก็บเป็นความลับ
+
+        // ใช้ Get.find<ApiUrls>() เพื่อเรียกใช้ URL สำหรับ login จาก ApiUrls controller
+        final apiUrlsController = Get.find<ApiUrls>();
 
         // ส่งข้อมูลผ่าน POST request ไปยัง Backend
         final response = await dio.post(
-          'http://localhost:3001/auth/login',  // URL ของ Backend
+          apiUrlsController.login,  // ใช้ URL จากไฟล์กลาง
           data: {
-            'email': email.value,
-            'password': password.value,
+            'email': user.email.value,
+            'password': user.password.value,
           },
         );
 
