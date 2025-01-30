@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+
+class AppColors {
+  static const Color primary = Color(0xFF0D6EFD);
+  static const Color secondary = Color(0xFF6C757D);
+  static const Color accent = Color(0xFF0D6EFD);
+
+  /// สีขาวสุด #FFFFFF
+  static const Color white = Color(0xFFFFFFFF);
+  /// สีขาวนวล #F8F9FA
+  static const Color light = Color(0xFFF8F9FA);
+  /// สีดำสุด #000000
+  static const Color black = Color(0xFF000000);
+  /// สีดำมืด #212529
+  static const Color dark = Color(0xFF212529);
+  /// สีฟ้าอ่อน info #0DCAF0
+  static const Color info = Color(0xFF0DCAF0);
+  /// สีเขียว success #198754
+  static const Color success = Color(0xFF198754);
+  /// สีเหลือง warning info #FFC107
+  static const Color warning = Color(0xFFFFC107);
+  /// สีแดง danger #DC3545
+  static const Color danger = Color(0xFFDC3545);
+}
+
+class AppTextColors {
+  static const Color primary = Color(0xFF212529);
+  static const Color secondary = Color(0xFF212529);
+  static const Color accent = Color(0xFF212529);
+
+  /// สีขาวสุด #FFFFFF
+  static const Color white = Color(0xFFFFFFFF);
+  /// สีขาวนวล #F8F9FA
+  static const Color light = Color(0xFFF8F9FA);
+  /// สีดำสุด #000000
+  static const Color black = Color(0xFF000000);
+  /// สีดำมืด #212529
+  static const Color dark = Color(0xFF212529);
+  /// สีฟ้าอ่อน info #0DCAF0
+  static const Color info = Color(0xFF0DCAF0);
+  /// สีเขียว success #198754
+  static const Color success = Color(0xFF198754);
+  /// สีเหลือง warning info #FFC107
+  static const Color warning = Color(0xFFFFC107);
+  /// สีแดง danger #DC3545
+  static const Color danger = Color(0xFFDC3545);
+}
+
+class AppTextSize {
+  /// 8.0 - Extra Extra Small
+  static const double xxs = 8.0;
+
+  /// 12.0 - Extra Small
+  static const double xs = 12.0;
+
+  /// 14.0 - Small
+  static const double sm = 14.0;
+
+  /// 16.0 - Medium
+  static const double md = 16.0;
+
+  /// 18.0 - Large
+  static const double lg = 18.0;
+
+  /// 20.0 - Extra Large
+  static const double xl = 20.0;
+
+  /// 24.0 - Extra Extra Large
+  static const double xxl = 24.0;
+}
+
+class AppSpacing {
+  /// 2.0 - Extra Extra Small
+  static const double xxs = 2.0;
+
+  /// 4.0 - Extra Small
+  static const double xs = 4.0;
+
+  /// 8.0 - Small
+  static const double sm = 8.0;
+
+  /// 16.0 - Medium
+  static const double md = 16.0;
+
+  /// 24.0 - Large
+  static const double lg = 24.0;
+
+  /// 32.0 - Extra Large
+  static const double xl = 32.0;
+
+  /// 40.0 - Extra Extra Large
+  static const double xxl = 40.0;
+}
+
+class AppRadius {
+  /// 4.0 - Extra Extra Small
+  static const double xxs = 4.0;
+
+  /// 8.0 - Extra Small
+  static const double xs = 8.0;
+
+  /// 16.0 - Small
+  static const double sm = 16.0;
+
+  /// 24.0 - Medium
+  static const double md = 24.0;
+
+  /// 28.0 - Large (แก้ให้ต่างจาก md)
+  static const double lg = 28.0;
+
+  /// 32.0 - Extra Large
+  static const double xl = 32.0;
+
+  /// 40.0 - Extra Extra Large
+  static const double xxl = 40.0;
+
+  /// 1000.0 - Fully Rounded (ใช้สำหรับทำมุมโค้งสุดๆ)
+  static const double rounded = 1000.0;
+}
+
+class AppShadow {
+  /// Light shadow effect - เงาที่สว่าง
+  static const BoxShadow lightShadow = BoxShadow(
+    blurRadius: 2.0,  // ค่ารัศมีเบลอ
+    color: AppColors.light,  // ใช้สีจาก AppColors.light
+  );
+
+  /// Dark shadow effect - เงาที่ดำ
+  static const BoxShadow darkShadow = BoxShadow(
+    blurRadius: 2.0,  // ค่ารัศมีเบลอ
+    color: AppColors.dark,  // ใช้สีจาก AppColors.dark
+  );
+
+  /// Custom shadow effect - เงาที่สามารถปรับแต่งเองได้
+  /// [color] - สีของเงา
+  /// [blurRadius] - ค่ารัศมีเบลอของเงา (default = 2.0)
+  /// [offset] - ระยะห่างของเงา (default = (0, 0))
+  /// [spreadRadius] - การขยายขนาดของเงา (default = 0.0)
+  static BoxShadow custom({
+    required Color color,  // สีของเงา
+    double blurRadius = 2.0,  // ค่ารัศมีเบลอ
+    Offset offset = const Offset(0, 0),  // ระยะห่างของเงา
+    double spreadRadius = 0.0,  // การขยายของเงา
+  }) {
+    return BoxShadow(
+      color: color,  // กำหนดสี
+      blurRadius: blurRadius,  // กำหนดรัศมีเบลอ
+      offset: offset,  // กำหนดระยะห่าง
+      spreadRadius: spreadRadius,  // กำหนดการขยาย
+    );
+  }
+}
