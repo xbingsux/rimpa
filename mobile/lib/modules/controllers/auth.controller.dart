@@ -51,8 +51,8 @@ class LoginController extends GetxController {
           Get.snackbar('Error', 'Failed to login');
         }
       } catch (e) {
-        // ถ้ามีข้อผิดพลาดในการเชื่อมต่อกับ API
-        Get.snackbar('Error', 'Something went wrong. Please try again later');
+        // EMAIL หรือ PASSWORD ผิด
+        Get.snackbar('Error', 'Check you email and password');
         print("Error: $e");
       }
     } else {
