@@ -99,13 +99,9 @@ class CreateAccountView extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Text(
-                      'มีบัญชีอยู่แล้ว? เข้าสู่ระบบที่นี่',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    ),
-                  ),
+                  Haveaccountbutton(
+                                onPressed: () => Get.toNamed('/login'),
+                              ),
                 ],
               ),
             ),

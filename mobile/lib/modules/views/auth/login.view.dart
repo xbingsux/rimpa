@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rimpa/core/theme/theme_controller.dart';
 import '../../../widgets/custom_loginpage.dart';
 import '../../controllers/auth.controller.dart';
+import '../../../core/constant/app.constant.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -169,9 +170,9 @@ class _LoginViewState extends State<LoginView>
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
                     ),
-                    SizedBox(height: 28),
+                    SizedBox(height: AppSpacing.xl),
                     // ฟอร์มที่จะแสดงตามแท็บที่เลือก
-                    Expanded(
+                    Flexible(
                       child: TabBarView(
                         controller: _tabController,
                         children: [
@@ -184,14 +185,14 @@ class _LoginViewState extends State<LoginView>
                                 onChanged: (value) =>
                                     authController.user.email.value = value,
                               ),
-                              SizedBox(height: 16),
+                              SizedBox(height: AppSpacing.md),
                               CustomTextField(
                                 labelText: 'รหัสผ่าน',
                                 obscureText: true,
                                 onChanged: (value) =>
                                     authController.user.password.value = value,
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: AppSpacing.md),
                               // ลืมรหัสและจำรหัส
                               RememberPasswordWidget(
                                 rememberPassword: _rememberPassword,
@@ -204,30 +205,53 @@ class _LoginViewState extends State<LoginView>
                                   print("กดลืมรหัสผ่าน");
                                 },
                               ),
-                              SizedBox(height: 32),
+                              SizedBox(height: AppSpacing.md),
                               CustomButton(
                                 text: 'เข้าสู่ระบบ',
-                                onPressed: () => authController.loginwithemail(),
+                                onPressed: () =>
+                                    authController.loginwithemail(),
+                              ),
+                              SizedBox(height: AppSpacing.md),
+                              Ordesign(
+                                text: 'หรือ',
+                              ),
+                              SizedBox(
+                                  height: AppSpacing
+                                      .md), // ระยะห่างระหว่าง "หรือ" กับปุ่ม social login
+                              SocialLoginButtons(
+                                onGooglePressed: () {
+                                  print("เข้าสู่ระบบด้วย Google");
+                                },
+                                onApplePressed: () {
+                                  print("เข้าสู่ระบบด้วย Apple");
+                                },
+                                onFacebookPressed: () {
+                                  print("เข้าสู่ระบบด้วย Facebook");
+                                },
+                              ),
+                              SizedBox(height: AppSpacing.md),
+                              // ปุ่ม Create Account
+                              CreateAccountButton(
+                                onPressed: () => Get.toNamed('/select-create'),
                               ),
                             ],
                           ),
                           // ฟอร์มสำหรับ "โทรศัพท์"
                           Column(
                             children: [
-                              CustomTextField(
-                                labelText: 'เบอร์โทรศัพท์มือถือ',
-                                obscureText: false,
+                              CustomPhoneTextField(
                                 onChanged: (value) => authController
                                     .user.phoneNumber.value = value,
                               ),
-                              SizedBox(height: 16),
+
+                              SizedBox(height: AppSpacing.md),
                               CustomTextField(
                                 labelText: 'รหัสผ่าน',
                                 obscureText: true,
                                 onChanged: (value) =>
                                     authController.user.password.value = value,
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: AppSpacing.md),
                               // ลืมรหัสและจำรหัส
                               RememberPasswordWidget(
                                 rememberPassword: _rememberPassword,
@@ -240,28 +264,45 @@ class _LoginViewState extends State<LoginView>
                                   print("กดลืมรหัสผ่าน");
                                 },
                               ),
-                              SizedBox(height: 32),
+                              SizedBox(height: AppSpacing.md),
                               CustomButton(
                                 text: 'เข้าสู่ระบบ',
-                                onPressed: () => authController.loginwithemail(),
+                                onPressed: () =>
+                                    authController.loginwithemail(),
+                              ),
+                              SizedBox(height: AppSpacing.md),
+                              Ordesign(
+                                text: 'หรือ',
+                              ),
+                              SizedBox(
+                                  height: AppSpacing
+                                      .md), // ระยะห่างระหว่าง "หรือ" กับปุ่ม social login
+                              SocialLoginButtons(
+                                onGooglePressed: () {
+                                  print("เข้าสู่ระบบด้วย Google");
+                                },
+                                onApplePressed: () {
+                                  print("เข้าสู่ระบบด้วย Apple");
+                                },
+                                onFacebookPressed: () {
+                                  print("เข้าสู่ระบบด้วย Facebook");
+                                },
+                              ),
+                              SizedBox(height: AppSpacing.md),
+                              // ปุ่ม Create Account
+                              CreateAccountButton(
+                                onPressed: () => Get.toNamed('/select-create'),
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 16),
-                    // ปุ่ม Create Account
-                    CreateAccountButton(
-                      text: 'ยังไม่มีบัญชี',
-                      onPressed: () => Get.toNamed('/create-account'),
-                    ),
                   ],
                 ),
               ),
             ),
           ),
-
           // ปุ่มเปลี่ยนธีมที่มุมขวาบน
           Positioned(
             top: 16,
