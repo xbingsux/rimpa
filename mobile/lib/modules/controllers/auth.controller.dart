@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../models/users.model.dart';
+import '../../core/routes/app_pages.dart';
 import '../../core/services/api_urls.dart';
 
 class LoginController extends GetxController {
@@ -8,13 +9,12 @@ class LoginController extends GetxController {
 
   Dio dio = Dio();
 
-  void login() async {
+  void loginwithemail() async {
     if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
       try {
         // แสดงข้อมูลที่กรอกใน console log
         print('Email: ${user.email.value}');
-        print(
-            'Password: ${user.password.value}'); // ควรระมัดระวังการแสดงรหัสผ่านใน console เพราะเป็นข้อมูลที่ควรเก็บเป็นความลับ
+        print('Password: ${user.password.value}');
 
         // ใช้ Get.find<ApiUrls>() เพื่อเรียกใช้ URL สำหรับ login จาก ApiUrls controller
         final apiUrlsController = Get.find<ApiUrls>();
@@ -36,6 +36,9 @@ class LoginController extends GetxController {
           // เก็บ token เพื่อใช้ในการเข้าสู่ระบบครั้งต่อไป
           // ใช้ GetStorage หรือ SharedPreferences สำหรับการเก็บ token
           // เช่น: GetStorage().write('token', token);
+
+          // เปลี่ยนไปที่หน้า Home
+          Get.offNamed('/home'); // หรือ Get.to(HomePage());
         } else if (response.statusCode == 401) {
           // หากรหัสผ่านไม่ถูกต้อง หรืออีเมลไม่ได้รับการยืนยัน
           if (response.data['message'] == 'Wrong password') {

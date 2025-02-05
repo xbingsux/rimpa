@@ -4,25 +4,39 @@ class AppTheme {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
-    scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    textTheme: TextTheme(
-      bodyLarge: TextStyle(color: Colors.black), // ตัวอักษรสีดำในธีม Light
-      bodyMedium: TextStyle(color: Colors.black), // ตัวอักษรสีดำในธีม Light
-      displayLarge: TextStyle(color: Colors.black), // หัวข้อสีดำในธีม Light
+    scaffoldBackgroundColor: const Color(0xFFFFFFFF), // พื้นหลังขาว
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Color(0xFFFFFFFF), // BottomSheet สีขาว
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+    ),
+    cardColor: Colors.white, // ปรับสีของ Card
+    fontFamily: 'fontappsetting',
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+      bodyMedium: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+      displayLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
     ),
   );
 
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: Colors.blue,
-    scaffoldBackgroundColor: Colors.black,
-    textTheme: TextTheme(
-      bodyLarge: TextStyle(
-          color: const Color.fromARGB(255, 0, 0, 0)), // ตัวอักษรสีขาวในธีม Dark
-      bodyMedium: TextStyle(
-          color: const Color.fromARGB(255, 0, 0, 0)), // ตัวอักษรสีขาวในธีม Dark
-      displayLarge: TextStyle(
-          color: const Color.fromARGB(255, 0, 0, 0)), // หัวข้อสีขาวในธีม Dark
+    scaffoldBackgroundColor: Colors.black, // พื้นหลังดำสนิท
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor:
+          Color.fromARGB(255, 26, 25, 25), // ปรับ BottomSheet เป็นเทาเข้ม
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+    ),
+    cardColor: const Color(0xFF2C2C2C), // ปรับสีของ Card ให้ไม่กลืนกับพื้นหลัง
+    fontFamily: 'fontappsetting',
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.white),
+      bodyMedium: TextStyle(color: Colors.white),
+      displayLarge: TextStyle(color: Colors.white),
     ),
   );
 }
