@@ -56,6 +56,7 @@ const register = async (email, password, profile) => {
       data: {
         email: email,
         password: password,
+        profile: { update: profile },
       },
     })
   }
@@ -66,8 +67,7 @@ const register = async (email, password, profile) => {
 const vertifyUser = async (id) => {
   const user = prisma.user.update({
     where: {
-      id: id,
-      active: false
+      id: id
     },
     data: {
       active: true
@@ -92,9 +92,22 @@ const sendVertifyUser = async (email, token) => {
     to: email,
     subject: "Test Vertify Email",
     html: `
-    <button href="${process.env.API_URL}/auth/verify-user?token=${token}">
-      Vertify Email
-    </button>
+    <a href="${process.env.API_URL}/auth/verify-user?token=${token}" target="_blank" style="text-decoration: none;">
+      <button style="
+          background-color: #28a745; 
+          color: white; 
+          padding: 12px 20px; 
+          font-size: 16px; 
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: 0.3s;
+          display: inline-block;
+      " onmouseover="this.style.backgroundColor='#218838'" 
+        onmouseout="this.style.backgroundColor='#28a745'">
+        Verify Email
+      </button>
+    </a>
     `
   };
 
