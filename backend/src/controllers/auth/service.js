@@ -56,6 +56,7 @@ const register = async (email, password, profile) => {
       data: {
         email: email,
         password: password,
+        profile: { update: profile },
       },
     })
   }
