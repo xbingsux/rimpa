@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF0D6EFD);
-  static const Color secondary = Color(0xFF6C757D);
-  static const Color accent = Color(0xFF0D6EFD);
+  /// สีหลัก
+  static const Color primary = Color(0xFF1093ED);
+  /// สีเทารอง ตัดกับสีหลัก
+  static const Color secondary = Color(0xFFD9D9D9);
+  /// สีเน้นส่วนสำคัญ
+  static const Color accent = Color(0xFF1E54FD);
+  /// สีพื้นหลังหลัก
+  static const Color background_main = Color(0xFFF2F2F4);
+
 
   /// สีขาวสุด #FFFFFF
   static const Color white = Color(0xFFFFFFFF);
@@ -24,9 +30,14 @@ class AppColors {
 }
 
 class AppTextColors {
-  static const Color primary = Color(0xFF212529);
-  static const Color secondary = Color(0xFF212529);
-  static const Color accent = Color(0xFF212529);
+  /// สีฟ้อนท์หลัก
+  static const Color primary = Color(0xFF000000);
+  /// สีฟ้อนรอง
+  static const Color secondary = Color(0xFF999999);
+  /// สีเน้นหัวข้อ
+  static const Color accent = Color(0xFF1E54FD);
+  /// สีเน้นข้อความ
+  static const Color accent2 = Color(0xFF1093ED);
 
   /// สีขาวสุด #FFFFFF
   static const Color white = Color(0xFFFFFFFF);
