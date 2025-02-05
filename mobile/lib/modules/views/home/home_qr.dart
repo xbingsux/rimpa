@@ -7,22 +7,21 @@ class HomeQRPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.person_outline, color: Colors.black),
-                SizedBox(width: 8),
-                Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-            Icon(Icons.notifications_none, color: Colors.black),
-          ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {},
         ),
+        title: Center(
+          child: Text(
+            "Scan QR Code",
+            style: TextStyle(color: Color(0xFF1E54FD), fontSize: 18),
+          ),
+        ),
+        actions: [
+          Container(
+            width: 48, // To center the title properly
+          ),
+        ],
       ),
       body: Center(
         child: Text("QR Code Scanner"),

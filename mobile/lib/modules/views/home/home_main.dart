@@ -47,15 +47,23 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(Icons.person_outline, color: Colors.black),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300],
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.person_outline,
+                      color: Colors.grey), // Change color to gray
+                ),
                 SizedBox(width: 8),
                 Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black),
+                  "Userdname",
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ],
             ),
-            Icon(Icons.notifications_none, color: Colors.black),
+            Icon(Icons.notifications_none, color: Colors.grey),
           ],
         ),
       ),
@@ -111,9 +119,34 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 16),
               // Activities Section
-              Text(
-                "กิจกรรม",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "กิจกรรม",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "ดูทั้งหมด",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Text(
+                        " >",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Row(
@@ -173,11 +206,24 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 16),
-              // Grid Section
-              Text(
-                "เรื่องตาม",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // Add dashed line
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: List.generate(60, (index) {
+                    return Expanded(
+                      child: Container(
+                        color:
+                            index % 2 == 0 ? Colors.transparent : Colors.grey,
+                        height: 1,
+                      ),
+                    );
+                  }),
+                ),
               ),
+              // Grid Section
+              SortButton(),
               SizedBox(height: 8),
               GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -298,15 +344,23 @@ class _HomeMainPageState extends State<HomeMainPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.person_outline, color: Colors.black),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300],
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.person_outline,
+                      color: Colors.grey), // Change color to gray
+                ),
                 SizedBox(width: 8),
                 Text(
                   "Username",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ],
             ),
-            Icon(Icons.notifications_none, color: Colors.black),
+            Icon(Icons.notifications_none, color: Colors.grey),
           ],
         ),
       ),
@@ -363,9 +417,34 @@ class _HomeMainPageState extends State<HomeMainPage> {
               ),
               SizedBox(height: 16),
               // Activities Section
-              Text(
-                "กิจกรรม",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "กิจกรรม",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "ดูทั้งหมด",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Text(
+                        " >",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Row(
@@ -425,11 +504,24 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ],
               ),
               SizedBox(height: 16),
-              // Grid Section
-              Text(
-                "เรื่องตาม",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // Add dashed line
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: List.generate(60, (index) {
+                    return Expanded(
+                      child: Container(
+                        color:
+                            index % 2 == 0 ? Colors.transparent : Colors.grey,
+                        height: 1,
+                      ),
+                    );
+                  }),
+                ),
               ),
+              // Grid Section
+              SortButton(),
               SizedBox(height: 8),
               GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -472,6 +564,42 @@ class _HomeMainPageState extends State<HomeMainPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SortButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        side: BorderSide(color: Colors.grey),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      onPressed: () {
+        // Handle sorting action
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "เรียงตาม",
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          SizedBox(width: 4),
+          Column(
+            mainAxisSize: MainAxisSize.min, // Adjust spacing
+            children: [
+              Icon(Icons.arrow_drop_up, size: 16, color: Colors.black),
+              Icon(Icons.arrow_drop_down, size: 16, color: Colors.black),
+            ],
+          ),
+        ],
       ),
     );
   }

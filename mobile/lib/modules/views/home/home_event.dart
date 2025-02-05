@@ -7,20 +7,19 @@ class HomeEventPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Stack(
           children: [
-            Row(
-              children: [
-                Icon(Icons.person_outline, color: Colors.black),
-                SizedBox(width: 8),
-                Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "กิจกรรม",
+                style: TextStyle(color: Color(0xFF1E54FD), fontSize: 18),
+              ),
             ),
-            Icon(Icons.notifications_none, color: Colors.black),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.notifications_none, color: Colors.grey),
+            ),
           ],
         ),
       ),
