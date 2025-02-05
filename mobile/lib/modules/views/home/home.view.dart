@@ -59,26 +59,6 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.person_outline, color: Colors.black),
-                SizedBox(width: 8),
-                Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-            Icon(Icons.notifications_none, color: Colors.black),
-          ],
-        ),
-      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
