@@ -17,9 +17,12 @@ class AppTheme {
     primarySwatch: Colors.blue,
     scaffoldBackgroundColor: Colors.black,
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: Colors.white), // ตัวอักษรสีขาวในธีม Dark
-      bodyMedium: TextStyle(color: Colors.white), // ตัวอักษรสีขาวในธีม Dark
-      displayLarge: TextStyle(color: Colors.white), // หัวข้อสีขาวในธีม Dark
+      bodyLarge: TextStyle(
+          color: const Color.fromARGB(255, 0, 0, 0)), // ตัวอักษรสีขาวในธีม Dark
+      bodyMedium: TextStyle(
+          color: const Color.fromARGB(255, 0, 0, 0)), // ตัวอักษรสีขาวในธีม Dark
+      displayLarge: TextStyle(
+          color: const Color.fromARGB(255, 0, 0, 0)), // หัวข้อสีขาวในธีม Dark
     ),
   );
 }

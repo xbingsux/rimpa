@@ -46,7 +46,7 @@ class CreateAccountView extends StatelessWidget {
               child: CustomTextField(
                 labelText: 'Email',
                 obscureText: false,
-                onChanged: (value) => registerController.email.value = value,
+                onChanged: (value) => registerController.user.email.value = value,
               ),
             ),
             SizedBox(height: 16), // ระยะห่างระหว่างช่องอีเมลกับช่อง Username
@@ -57,7 +57,7 @@ class CreateAccountView extends StatelessWidget {
               child: CustomTextField(
                 labelText: 'Username',
                 obscureText: false,
-                onChanged: (value) => registerController.username.value = value,
+                onChanged: (value) => registerController.user.username.value = value,
               ),
             ),
             SizedBox(
@@ -69,7 +69,7 @@ class CreateAccountView extends StatelessWidget {
               child: CustomTextField(
                 labelText: 'Password',
                 obscureText: true, // ซ่อนรหัสผ่าน
-                onChanged: (value) => registerController.password.value = value,
+                onChanged: (value) => registerController.user.password.value = value,
               ),
             ),
             SizedBox(
@@ -81,7 +81,7 @@ class CreateAccountView extends StatelessWidget {
               child: CustomTextField(
                 labelText: 'Comfirm Password',
                 obscureText: true, // ซ่อนรหัสผ่าน
-                onChanged: (value) => registerController.password.value = value,
+                onChanged: (value) => registerController.user.password.value = value,
               ),
             ),
             Spacer(), // ดันให้ปุ่มอยู่ล่างสุด
@@ -94,8 +94,8 @@ class CreateAccountView extends StatelessWidget {
                   CustomButton(
                     text: 'ยืนยันบัญชี',
                     onPressed: () {
-                      // เปลี่ยนหน้าไปยังหน้า OTP
-                      Get.toNamed('/otp');
+                      // เรียกใช้งาน register
+                      registerController.register();
                     },
                   ),
                   SizedBox(height: 16),

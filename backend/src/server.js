@@ -7,6 +7,8 @@ const path = require("path");
 require('dotenv').config();
 let port = process.env.PORT || 3001;
 
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
 app.use(cors());
 app.use(nocache());
 app.use(morgan("dev"));

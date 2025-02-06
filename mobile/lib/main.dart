@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
+import 'core/services/api_urls.dart';
 
 void main() {
+  Get.put(ApiUrls());
   Get.put(ThemeController());
   runApp(MyApp());
 }
