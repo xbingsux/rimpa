@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:rimpa/components/dropdown/app-dropdown.component.dart'; // Import AppDropdown
+import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart'; // Import AppDropdown
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -41,7 +42,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,7 +60,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 SizedBox(width: 8),
                 Text(
                   "Username",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: TextStyle(fontSize: AppTextSize.md),
                 ),
               ],
             ),

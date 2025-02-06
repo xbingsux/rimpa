@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart'; // Add this import
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'home_main.dart';
 import 'home_event.dart';
 import 'home_qr.dart';
@@ -73,7 +74,6 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: [
@@ -91,13 +91,8 @@ class _HomePageState extends State<HomePage> {
               height: 64,
               padding: EdgeInsets.only(top: 0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF1E54FD), Color(0xFF0ACCF5)],
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(24),
+                  gradient: AppGradiant.gradientX_1),
               child: Icon(Icons.qr_code_scanner, color: Colors.white),
             ),
             label: "",
