@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  /// สีหลัก
+  /// สีหลัก Dodger Blue
   static const Color primary = Color(0xFF1093ED);
   /// สีเทารอง ตัดกับสีหลัก
   static const Color secondary = Color(0xFFD9D9D9);
-  /// สีเน้นส่วนสำคัญ
+  /// สีเน้นส่วนสำคัญ Bright Blue
   static const Color accent = Color(0xFF1E54FD);
+  /// สีเน้นส่วนสำคัญ Sky Blue
+  static const Color accent2 = Color(0xFF0ACCF5);
   /// สีพื้นหลังหลัก
   static const Color background_main = Color(0xFFF2F2F4);
 
@@ -161,3 +163,8 @@ class AppShadow {
     );
   }
 }
+
+class AppGradiant {
+  static const LinearGradient gradientY_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+  static const LinearGradient gradientX_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.centerLeft, end: Alignment.centerRight);
+} 
