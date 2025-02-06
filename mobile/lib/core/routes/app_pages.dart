@@ -4,7 +4,7 @@ import '../../modules/views/register/register.view.dart';
 import '../../modules/views/home/home.view.dart';
 import '../../modules/views/selectregister/selectregister.view.dart';
 class AppPages {
-  static const initial = '/login';
+  static const initial = '/home';
   static final routes = [
     GetPage(
       name: '/login',
