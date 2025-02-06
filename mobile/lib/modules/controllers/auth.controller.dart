@@ -31,17 +31,17 @@ class LoginController extends GetxController {
 
         if (response.statusCode == 200) {
           var token = response.data['token'] ?? ''; // ใช้ค่าว่างถ้าเป็น null
-          var email = response.data['email'] ?? ''; // ใช้ค่าว่างถ้าเป็น null
+
+          // เก็บข้อมูล token และ email ที่กรอกเองใน SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', token);
+          await prefs.setString('email', user.email.value);  // เก็บ email ที่กรอก
+
+          // ตรวจสอบการเก็บข้อมูล
+          String? storedEmail = prefs.getString('email');
+          print('Stored email after saving: $storedEmail');
 
           Get.snackbar('Success', 'Logged in successfully');
-          print('Token: $token');
-
-          // เก็บข้อมูล token และ email ใน SharedPreferences
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('token', token);
-          prefs.setString('email', email);
-
-          // เปลี่ยนไปที่หน้า Home
           Get.offNamed('/home');
         } else if (response.statusCode == 401) {
           if (response.data['message'] == 'Wrong password') {
