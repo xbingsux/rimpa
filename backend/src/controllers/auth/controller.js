@@ -65,8 +65,8 @@ router.post("/register", async (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser = await Service.register(email, hashedPassword, profile);
     if (newUser) {
-      let token = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY, {
-        expiresIn: "1d",
+      let token = jwt.sign({ userId: newUser.id, usedToken: 1 }, process.env.SECRET_KEY, {
+        expiresIn: "30m",
       });
 
       console.log(token);
@@ -95,31 +95,50 @@ router.get("/verify-user", async (req, res) => {
 
   // ตรวจสอบและถอดรหัส token
   const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
   if (!decoded || !decoded.userId) {
     return res.status(401).send("Invalid token or missing user ID");
   }
-  const user = await Service.vertifyUser(decoded.userId)
-  let isSuccess = (user && user.active)
-  res.send(`
-        <div style="
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 50px;
-            border-radius: 10px;
-            max-width: 400px;
-            margin: 50px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        ">
-            <h1 style="color: ${isSuccess ? "#28a745" : "#dc3545"};">
-                ${isSuccess ? "✅ Verify สำเร็จ!" : "❌ Verify ไม่สำเร็จ!"}
-            </h1>
-            <p style="font-size: 18px; color: #333;">
-                ${isSuccess ? "บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว" : "การยืนยันบัญชีล้มเหลว กรุณาลองใหม่"}
-            </p>
-        </div>
-        `)
+  const item = await Service.vertifyUser(decoded.userId)
+  let isSuccess = (item && item.user.active)
+
+  if (item.status) {
+    res.send(`
+      <div style="
+          text-align: center;
+          font-family: Arial, sans-serif;
+          background-color: #f8f9fa;
+          padding: 50px;
+          border-radius: 10px;
+          max-width: 400px;
+          margin: 50px auto;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      ">
+          <h1 style="color: ${isSuccess ? "#28a745" : "#dc3545"};">
+              ${isSuccess ? "✅ Verify สำเร็จ!" : "❌ Verify ไม่สำเร็จ!"}
+          </h1>
+          <p style="font-size: 18px; color: #333;">
+              ${isSuccess ? "บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว" : "การยืนยันบัญชีล้มเหลว กรุณาลองใหม่"}
+          </p>
+      </div>
+      `)
+  } else {
+    res.send(`
+      <div style="
+          text-align: center;
+          font-family: Arial, sans-serif;
+          background-color: #f8f9fa;
+          padding: 50px;
+          border-radius: 10px;
+          max-width: 400px;
+          margin: 50px auto;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      ">
+          <h1 style="color: #dc3545;">
+              บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว
+          </h1>
+      </div>
+      `)
+  }
 })
 
 // Verify Token

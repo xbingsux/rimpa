@@ -65,7 +65,13 @@ const register = async (email, password, profile) => {
 };
 
 const vertifyUser = async (id) => {
-  const user = prisma.user.update({
+  let user = await prisma.user.findFirst({
+    where: { id: id, active: true }
+  })
+
+  if (user) return { status: 0, user: user }
+
+  user = await prisma.user.update({
     where: {
       id: id
     },
@@ -73,7 +79,8 @@ const vertifyUser = async (id) => {
       active: true
     }
   })
-  return user;
+
+  if (user) return { status: 1, user: user }
 }
 
 const sendVertifyUser = async (email, token) => {
