@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:get/get.dart'; // Add this import
 import 'home_main.dart';
 import 'home_event.dart';
 import 'home_qr.dart';
@@ -43,9 +44,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 2) {
+      Get.to(HomeQRPage())!.then((_) {
+        setState(() {
+          _selectedIndex = 0;
+        });
+      });
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
@@ -77,7 +86,20 @@ class _HomePageState extends State<HomePage> {
             label: "กิจกรรม",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner),
+            icon: Container(
+              width: 64,
+              height: 64,
+              padding: EdgeInsets.only(top: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF1E54FD), Color(0xFF0ACCF5)],
+                ),
+              ),
+              child: Icon(Icons.qr_code_scanner, color: Colors.white),
+            ),
             label: "",
           ),
           BottomNavigationBarItem(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // Add this import
 
 class HomeQRPage extends StatelessWidget {
   @override
@@ -9,7 +10,9 @@ class HomeQRPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          onPressed: () {
+            Get.back(); // Use Get.back() for navigation
+          },
         ),
         title: Center(
           child: Text(
