@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/theme/theme_controller.dart';
-import '../../../widgets/custom_loginpage.dart';
+import '../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
 
