@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
-import 'package:rimpa/core/constant/app.constant.dart'; // Import AppDropdown
+
+import '../../../components/cards/app-card.component.dart';
+import '../../../components/imageloader/app-image.component.dart'; // Import AppDropdown
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -42,8 +44,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        backgroundColor: Colors.white,
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,7 +63,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 SizedBox(width: 8),
                 Text(
                   "Username",
-                  style: TextStyle(fontSize: AppTextSize.md),
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ],
             ),
@@ -89,19 +90,10 @@ class _HomeMainPageState extends State<HomeMainPage> {
                   },
                   itemBuilder: (context, index) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Banner ${index + 1}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                    child: AppImageComponent(
+                      imageType: AppImageType.network,
+                      imageAddress:
+                          "https://img.freepik.com/free-photo/morskie-oko-tatry_1204-510.jpg",
                     ),
                   ),
                 ),
@@ -156,33 +148,29 @@ class _HomeMainPageState extends State<HomeMainPage> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: List.generate(5, (index) {
+                  children: List.generate(8, (index) {
                     return Container(
-                      width: 130,
+                      width: 150,
                       margin: EdgeInsets.only(right: 8),
-                      child: Card(
-                        color: Theme.of(context).cardColor, // ใช้สีตามธีม
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child:
-                                    Center(child: Text("Banner ${index + 1}")),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
+                      child: AppCardComponent(
+                        child: Column(
+                          children: [
+                            AppImageComponent(
+                              imageType: AppImageType.network,
+                              imageAddress:
+                                  "https://img.freepik.com/free-photo/morskie-oko-tatry_1204-510.jpg",
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Text(
                                 "Lorem Ipsum is simply dummy text of the printing",
                                 style: TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -222,24 +210,16 @@ class _HomeMainPageState extends State<HomeMainPage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 3 / 2,
+                  childAspectRatio: 2 / 3,
                 ),
-                itemCount: 4,
-                itemBuilder: (context, index) => Card(
-                  color: Theme.of(context).cardColor, // ใช้สีจาก Theme เพื่อรองรับ Light/Dark Mode
+                itemCount: 8,
+                itemBuilder: (context, index) => AppCardComponent(
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text("Banner ${index + 1}"),
-                          ),
-                        ),
+                      AppImageComponent(
+                        imageType: AppImageType.network,
+                        imageAddress:
+                            "https://img.freepik.com/free-photo/morskie-oko-tatry_1204-510.jpg",
                       ),
                       SizedBox(height: 8),
                       Padding(

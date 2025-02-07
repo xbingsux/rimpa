@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../../../components/cards/app-card.component.dart';
 import '../../../components/dropdown/app-dropdown.component.dart';
+import '../../../components/imageloader/app-image.component.dart';
 
 class HomeEventPage extends StatefulWidget {
   @override
@@ -42,7 +44,8 @@ class _HomeEventPageState extends State<HomeEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Stack(
@@ -83,24 +86,16 @@ class _HomeEventPageState extends State<HomeEventPage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 3 / 2,
+                  childAspectRatio: 2 / 3,
                 ),
                 itemCount: 8,
-                itemBuilder: (context, index) => Card(
-                  color: Theme.of(context).cardColor, // ใช้สีตามธีม
+                itemBuilder: (context, index) => AppCardComponent(
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text("Banner ${index + 1}"),
-                          ),
-                        ),
+                      AppImageComponent(
+                        imageType: AppImageType.network,
+                        imageAddress:
+                            "https://img.freepik.com/free-photo/morskie-oko-tatry_1204-510.jpg",
                       ),
                       SizedBox(height: 8),
                       Padding(
