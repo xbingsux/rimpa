@@ -42,7 +42,8 @@ class _HomeEventPageState extends State<HomeEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        automaticallyImplyLeading: false,
         elevation: 0,
         title: Stack(
           children: [
@@ -86,6 +87,7 @@ class _HomeEventPageState extends State<HomeEventPage> {
                 ),
                 itemCount: 8,
                 itemBuilder: (context, index) => Card(
+                  color: Theme.of(context).cardColor, // ใช้สีตามธีม
                   child: Column(
                     children: [
                       Expanded(

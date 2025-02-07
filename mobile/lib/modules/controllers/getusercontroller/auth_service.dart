@@ -35,3 +35,5 @@ Future<bool> isLoggedIn() async {
     prefs.remove('email'); // ลบ email
   }
 }
+
+

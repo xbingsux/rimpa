@@ -5,7 +5,9 @@ class HomeRewardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        automaticallyImplyLeading: false,
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -16,7 +18,6 @@ class HomeRewardPage extends StatelessWidget {
                 SizedBox(width: 8),
                 Text(
                   "Username",
-                  style: TextStyle(color: Colors.black),
                 ),
               ],
             ),

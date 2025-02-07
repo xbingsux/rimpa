@@ -42,6 +42,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,6 +161,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       width: 130,
                       margin: EdgeInsets.only(right: 8),
                       child: Card(
+                        color: Theme.of(context).cardColor, // ใช้สีตามธีม
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -223,6 +226,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ),
                 itemCount: 4,
                 itemBuilder: (context, index) => Card(
+                  color: Theme.of(context).cardColor, // ใช้สีจาก Theme เพื่อรองรับ Light/Dark Mode
                   child: Column(
                     children: [
                       Expanded(

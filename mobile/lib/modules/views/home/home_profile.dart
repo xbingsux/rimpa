@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/getusercontroller/auth_service.dart';  // นำเข้า AuthService ที่คุณสร้างไว้
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/constant/app.constant.dart';
 
 class HomeProfilePage extends StatefulWidget {
   @override
@@ -51,59 +52,61 @@ class _HomeProfilePageState extends State<HomeProfilePage> {
     });
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.person_outline, color: Colors.black),
-                SizedBox(width: 8),
-                Text(
-                  isLoggedIn ? email : "กำลังโหลด...", // แสดง email หรือข้อความที่ยังไม่โหลด
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-            Icon(Icons.notifications_none, color: Colors.black),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: AppGradiant.gradientX_1, // ใช้ Gradient พื้นหลัง
       ),
-      body: Center(
-        child: isLoggedIn
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    email.isEmpty ? "กำลังโหลด..." : email, // แสดง email ตรงกลางเมื่อโหลดเสร็จ
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.transparent, // พื้นหลังใส
+          body: Center(
+            child: isLoggedIn
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        email.isEmpty ? "กำลังโหลด..." : email,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _logout,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                        ),
+                        child: Text('ออกจากระบบ'),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ยังไม่ได้ล็อกอิน",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () => Get.toNamed('/login'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        child: Text('ไปยังหน้าล็อกอิน'),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _logout, // ล็อกเอาท์เมื่อกดปุ่ม
-                    child: Text('ออกจากระบบ'),
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "ยังไม่ได้ล็อกอิน",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => Get.toNamed('/login'),
-                    child: Text('ไปยังหน้าล็อกอิน'),
-                  ),
-                ],
-              ),
+          ),
+        ),
       ),
     );
   }

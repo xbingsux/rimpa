@@ -35,7 +35,8 @@ class LoginController extends GetxController {
           // เก็บข้อมูล token และ email ที่กรอกเองใน SharedPreferences
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', token);
-          await prefs.setString('email', user.email.value);  // เก็บ email ที่กรอก
+          await prefs.setString(
+              'email', user.email.value); // เก็บ email ที่กรอก
 
           // ตรวจสอบการเก็บข้อมูล
           String? storedEmail = prefs.getString('email');
@@ -43,6 +44,7 @@ class LoginController extends GetxController {
 
           Get.snackbar('Success', 'Logged in successfully');
           Get.offNamed('/home');
+
         } else if (response.statusCode == 401) {
           if (response.data['message'] == 'Wrong password') {
             Get.snackbar('Error', 'Wrong password');
