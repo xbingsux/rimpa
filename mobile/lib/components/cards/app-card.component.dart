@@ -16,7 +16,7 @@ class AppCardComponent extends StatelessWidget {
       this.incardPadding = const EdgeInsets.all(AppSpacing.sm),
       this.outcardPadding = const EdgeInsets.all(0),
       this.border = const Border.fromBorderSide(
-          BorderSide(width: 1, color: AppColors.secondary)),
+          BorderSide(width: 0, )),
       this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)),
       this.backgroundColor = AppColors.white,
       required this.child});
@@ -30,7 +30,7 @@ class AppCardComponent extends StatelessWidget {
         child: Container(
           padding: incardPadding,
           decoration: BoxDecoration(
-              color: backgroundColor,
+              color: Theme.of(context).cardColor, // ใช้สีจาก Theme
               borderRadius: borderRadius,
               border: border),
           child: child,

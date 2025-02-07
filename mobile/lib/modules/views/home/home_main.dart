@@ -44,7 +44,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+         backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,7 +64,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 SizedBox(width: 8),
                 Text(
                   "Username",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: TextStyle( fontSize: 16),
                 ),
               ],
             ),

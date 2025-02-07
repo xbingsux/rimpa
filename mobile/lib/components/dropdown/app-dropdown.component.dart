@@ -43,7 +43,8 @@ class AppDropdown extends StatelessWidget {
                   return ListTile(
                     title: Text(choice,
                         style: TextStyle(
-                            fontSize: AppTextSize.md, color: textColor)),
+                          fontSize: AppTextSize.md,
+                        )),
                     onTap: () {
                       onChanged(choice);
                       Navigator.pop(context); // ปิด Popup หลังจากเลือกค่า
@@ -59,7 +60,7 @@ class AppDropdown extends StatelessWidget {
         width: width, // Set width
         height: height, // Set height
         decoration: BoxDecoration(
-          border: border,
+          color: Theme.of(context).cardColor, 
           borderRadius: borderRadius,
         ),
         child: Row(
@@ -67,19 +68,25 @@ class AppDropdown extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(active,
-                style: TextStyle(fontSize: AppTextSize.md, color: textColor)),
+                style: TextStyle(
+                  fontSize: AppTextSize.md,
+                )),
             Stack(
               alignment: Alignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: Icon(Icons.arrow_drop_up,
-                      size: AppTextSize.lg, color: textColor),
+                  child: Icon(
+                    Icons.arrow_drop_up,
+                    size: AppTextSize.lg,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.sm),
-                  child: Icon(Icons.arrow_drop_down,
-                      size: AppTextSize.lg, color: textColor),
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    size: AppTextSize.lg,
+                  ),
                 ),
               ],
             ),
