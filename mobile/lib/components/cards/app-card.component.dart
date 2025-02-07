@@ -16,7 +16,7 @@ class AppCardComponent extends StatelessWidget {
       this.incardPadding = const EdgeInsets.all(AppSpacing.sm),
       this.outcardPadding = const EdgeInsets.all(0),
       this.border = const Border.fromBorderSide(
-          BorderSide(width: 0, )),
+          BorderSide(width: 0.1, )),
       this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)),
       this.backgroundColor = AppColors.white,
       required this.child});
