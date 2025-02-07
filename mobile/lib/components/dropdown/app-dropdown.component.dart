@@ -60,7 +60,10 @@ class AppDropdown extends StatelessWidget {
         width: width, // Set width
         height: height, // Set height
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor, 
+          color: Theme.of(context).cardColor,
+          border: Theme.of(context).brightness == Brightness.light
+              ? Border.all(color: Colors.black26, width: 1) // ขอบสีดำจางๆ
+              : null, // ไม่มีขอบใน Dark Mode
           borderRadius: borderRadius,
         ),
         child: Row(
