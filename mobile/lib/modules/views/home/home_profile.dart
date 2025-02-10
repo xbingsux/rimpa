@@ -80,7 +80,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
       ),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color.fromARGB(0, 194, 88, 88),
           body: SlideTransition(
             position: _slideAnimation,
             child: Align(
@@ -222,7 +222,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                       width: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.black,
+                        color: const Color.fromARGB(255, 218, 165, 165),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
