@@ -201,8 +201,8 @@ class _LoginViewState extends State<LoginView>
                                     _rememberPassword = value;
                                   });
                                 },
-                                onForgotPassword: () {
-                                  print("กดลืมรหัสผ่าน");
+                               onForgotPassword: () {
+                                  Get.toNamed('/forgot-password');
                                 },
                               ),
                               SizedBox(height: AppSpacing.md),
@@ -261,7 +261,7 @@ class _LoginViewState extends State<LoginView>
                                   });
                                 },
                                 onForgotPassword: () {
-                                  print("กดลืมรหัสผ่าน");
+                                  Get.toNamed('/forgot-password');
                                 },
                               ),
                               SizedBox(height: AppSpacing.md),

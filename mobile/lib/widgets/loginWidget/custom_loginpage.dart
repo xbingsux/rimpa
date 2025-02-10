@@ -96,6 +96,44 @@ class CreateAccountButton extends StatelessWidget {
     );
   }
 }
+// ปุ่มสร้างบัญชี
+class backlogin extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const backlogin({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RichText(
+        text: TextSpan(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 16,
+                color: Colors.grey, // "ยังไม่มีบัญชี" สีเทาอ่อน
+              ),
+          children: [
+            WidgetSpan(
+              child: GestureDetector(
+                onTap: onPressed,
+                child: Text(
+                  'กลับไปหน้าล็อคอิน',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue, // สีฟ้า
+                    decoration: TextDecoration.underline, // ขีดเส้นใต้
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 // มีบัญซีอยู่แล้ว
 class Haveaccountbutton extends StatelessWidget {
   final VoidCallback onPressed;
