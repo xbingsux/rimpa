@@ -25,5 +25,8 @@
   },
   "devDependencies": {
     "prisma": "^6.3.0"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   }
 }

@@ -10,7 +10,11 @@ const nodemailer = require("nodemailer");
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-router.get("/test", async (req, res) => {
+// router.get("/test", async (req, res) => {
+//   return res.status(200).json({ status: "success" });
+// });
+
+router.post("/test", auth, async (req, res) => {
   return res.status(200).json({ status: "success" });
 });
 
@@ -18,11 +22,12 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await Service.authenticateEmail(email, password);
+
     if (user) {
       console.log("#LOGIN WITH EMAIL");
       let token = null;
       if (user.active)
-        token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
+        token = jwt.sign({ userId: user.id, role: user.role }, process.env.SECRET_KEY, {
           expiresIn: "1d",
         });
 
@@ -161,6 +166,7 @@ router.post("/verify-token", (req, res) => {
       status: "success",
       message: "Token is verify",
       userId: decoded.userId,
+      role: decoded.role
     });
   });
 });

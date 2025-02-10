@@ -1,1 +1,23 @@
-<p>login works!</p>
+<div class="bg-[#111] fixed h-screen w-screen">
+
+    <div class="bg-[#2B2B2B] absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] 
+        aspect-[7/4] w-[655px] rounded-[24px] border-[0.5px]
+        grid items-center justify-center">
+        <p class="text-[40px] font-semibold text-white text-center"> SING IN</p>
+        <input type="text" [(ngModel)]="login.email"
+            class="border-[1px] rounded-[16px] w-[575px] px-[16px] text-[20px]">
+        <input type="password" [(ngModel)]="login.password"
+            class="border-[1px] rounded-[16px] w-[575px] px-[16px] text-[20px]">
+        <div class="flex px-4">
+            <div class="flex-1 text-white"><input type="checkbox" [(ngModel)]="keep_me">
+                <span class="px-[12px]">Keep me signed in</span>
+            </div>
+            <div class="underline text-[#FF9800]">Forgot password?</div>
+        </div>
+        <div (click)="AuthLogin()" class="border-[1px] rounded-[16px] w-[575px] px-[16px] text-[20px] text-center p-[4px] bg-[#FF9800] text-white
+            select-none cursor-pointer">
+            Login
+        </div>
+    </div>
+
+</div>

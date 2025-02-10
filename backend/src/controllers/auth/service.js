@@ -8,12 +8,12 @@ const nodemailer = require("nodemailer");
 const prisma = new PrismaClient();
 
 const authenticateEmail = async (email, password) => {
-  const user = await prisma.user.findUnique({ where: { email, active: true } });
+  const user = await prisma.user.findUnique({ where: { email, active: true }, include: { role: true } });
   if (!user) {
     throw new Error("User not found");
   }
   if (user && bcrypt.compareSync(password, user.password)) {
-    return { id: user.id, role: user.role, active: user.active };
+    return { id: user.id, role: user.role.role_name, active: user.active };
   } else {
     throw new Error("Wrong password");
   }

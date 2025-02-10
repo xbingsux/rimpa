@@ -1,0 +1,32 @@
+<div class="bg-[#FCFBFC] relative h-screen grid grid-cols-[auto_1fr]"><!--bg color-->
+  <div class="relative w-[260px] border-r">
+    <div class="sticky top-0 h-screen w-full bg-[#2B2B2B] border-r-[#16223B33] rounded-tr-[8px] rounded-br-[8px]">
+      <div class="grid gap-3 py-6 grid-rows-[repeat(10,50px)] p-3">
+
+        <div *ngFor="let item of menu" class="dashboard-btn" (click)="goToLink(item.path)"
+          [style]="path == item.path ?active:''">
+          <div class="dashboard-inner">
+            <img src="{{item.icon}}" class="dashboard-img">
+            <p>{{item.title}}</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="absolute bottom-0 w-full h-[80px] flex justify-center items-center p-[20px]">
+        <div class="flex flex-1 h-[60px] items-center gap-3">
+          <div class="rounded-[50%] w-[40px] aspect-square bg-[#E7E7E7] grid items-center justify-center">
+            <img src="user_outline.svg" class="w-[20px] aspect-square">
+          </div>
+          <div class="text-[#F3F3F3] font-light">
+            <p class="text-[14px]">Username</p>
+            <p class="text-[12px]">Admin</p>
+          </div>
+        </div>
+        <i src="logout.svg" class="w-[16px] aspect-square" (click)="logout()"></i>
+      </div>
+    </div>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

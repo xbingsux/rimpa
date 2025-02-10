@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-
+import { Component, Injectable, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
+import { TestApiService } from './test-api.service'
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -7,6 +8,19 @@ import { Component } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+@Injectable({
+  providedIn: 'root'
+})
+export class DashboardComponent implements OnInit {
 
+  constructor(private http: HttpClient, private api: TestApiService) {
+
+  }
+  ngOnInit(): void {
+    this.api.test()
+  }
+
+  test() {
+    this.api.test()
+  }
 }

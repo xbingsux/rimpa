@@ -1,31 +1,33 @@
 import { Routes } from '@angular/router';
-import { AnnouncementBoardComponent } from './announcement-board/announcement-board.component'
+import { AuthGuard } from './service/auth-guard.service'
+
 import { DashboardComponent } from './dashboard/dashboard.component'
-import { EventInfoComponent } from './event-info/event-info.component'
 import { EventScanComponent } from './event-scan/event-scan.component'
 import { LoginComponent } from './login/login.component'
-import { NewsComponent } from './news/news.component'
-import { PollComponent } from './poll/poll.component'
 import { NotFoundComponent } from './not-found/not-found.component'
-import { AuthGuard } from './auth-guard.service'
+import { AdminComponent } from './admin/admin.component'
+import { EventManagementComponent } from './event-management/event-management.component';
+import { BannerManagementComponent } from './banner-management/banner-management.component';
+import { RewardManagementComponent } from './reward-management/reward-management.component';
+import { UserManagementComponent } from './user-management/user-management.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-    { path: 'event', component: EventInfoComponent, canActivate: [AuthGuard] },
-    { path: 'news', component: NewsComponent, canActivate: [AuthGuard] },
-    { path: 'announcement-board', component: AnnouncementBoardComponent, canActivate: [AuthGuard] },
-    { path: 'poll', component: PollComponent, canActivate: [AuthGuard] },
-    { path: 'event-scan', component: EventScanComponent, canActivate: [AuthGuard] },
-    // {
-    //   path: 'dashboard',
-    //   component: DashboardComponent,
-    //   children: [
-    //     { path: 'overview', component: OverviewComponent },
-    //     { path: 'analytics', component: AnalyticsComponent },
-    //     { path: 'settings', component: SettingsComponent },
-    //   ]
-    // },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
+    {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AuthGuard],
+        children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'event', component: EventManagementComponent },
+            { path: 'banner', component: BannerManagementComponent },
+            { path: 'reward', component: RewardManagementComponent },
+            { path: 'users', component: UserManagementComponent },
+            { path: 'event-scan', component: EventScanComponent },
+
+        ]
+    },
     { path: '**', component: NotFoundComponent },
 ];

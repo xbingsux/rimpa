@@ -34,8 +34,10 @@ const auth = async (req, res, next) => {
 
     next(); // ทำงานต่อ
   } catch (error) {
-    console.log(error);
-    return res.status(500).send("Token Invalid");
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ status: "error", message: "Token Expired" });
+    }
+    return res.status(401).json({ status: "error", message: "Invalid Token" });
   }
 };
 
