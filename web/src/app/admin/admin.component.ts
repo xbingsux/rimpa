@@ -17,27 +17,46 @@ export class AdminComponent implements OnInit {
     {
       title: 'Dashboard',
       path: `/${this.title}/dashboard`,
-      icon: 'dashboard.svg'
+      icon: 'dashboard.svg',
+      tags: [
+        `/${this.title}/dashboard`,
+      ]
     },
     {
       title: 'Event Management',
       path: `/${this.title}/event`,
-      icon: 'calendar.svg'
+      icon: 'calendar.svg',
+      tags: [
+        `/${this.title}/event`,
+        `/${this.title}/event-update`
+      ]
     },
     {
       title: 'Banner Management',
       path: `/${this.title}/banner`,
-      icon: 'notification.svg'
+      icon: 'notification.svg',
+      tags: [
+        `/${this.title}/banner`,
+        `/${this.title}/banner-update`
+      ]
     },
     {
       title: 'Reward Management',
       path: `/${this.title}/reward`,
-      icon: 'cup.svg'
+      icon: 'cup.svg',
+      tags: [
+        `/${this.title}/reward`,
+        `/${this.title}/reward-update`
+      ]
     },
     {
       title: 'User Management',
       path: `/${this.title}/users`,
-      icon: 'users.svg'
+      icon: 'users.svg',
+      tags: [
+        `/${this.title}/users`,
+        `/${this.title}/user-update`
+      ]
     }
   ]
 
@@ -66,5 +85,9 @@ export class AdminComponent implements OnInit {
   logout() {
     localStorage.removeItem('token')
     this.router.navigate(['login'])
+  }
+
+  isUrl(url: string, tags_url: string[]) {
+    return tags_url.some((tag: string) => tag.indexOf(url) != -1)
   }
 }

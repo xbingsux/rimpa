@@ -14,7 +14,8 @@
                 <input id="search" type="text" placeholder="Search"
                     class="pl-[50px] h-[40px] w-full min-w-[400px] rounded-[12px] border-[1px] border-[#D9D9D9]">
             </label>
-            <input type="button" class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Add Reward">
+            <input type="button" (click)="goToLink('admin/reward-update')"
+                class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Add Reward">
         </div>
     </div>
     <div class="">
@@ -24,7 +25,7 @@
             <div>Reward</div>
             <div class="justify-center">Start Date</div>
             <div class="justify-center">End Date</div>
-            <div class="justify-center">Participants</div>
+            <div class="justify-center">Quota</div>
             <div class="justify-center">Action</div>
         </div>
         <div class="container h-[56px] grid grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-4 hover:bg-[#EBF5FD]
@@ -47,7 +48,7 @@
             </div>
             <div class="justify-center">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
-                    loremlpsems
+                    50/100
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">

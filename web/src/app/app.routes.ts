@@ -10,6 +10,10 @@ import { EventManagementComponent } from './event-management/event-management.co
 import { BannerManagementComponent } from './banner-management/banner-management.component';
 import { RewardManagementComponent } from './reward-management/reward-management.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import { EventUpdateComponent } from './event-update/event-update.component';
+import { BannerUpdateComponent } from './banner-update/banner-update.component';
+import { RewardUpdateComponent } from './reward-update/reward-update.component';
+import { UserUpdateComponent } from './user-update/user-update.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -22,11 +26,14 @@ export const routes: Routes = [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'event', component: EventManagementComponent },
+            { path: 'event-update', component: EventUpdateComponent },
             { path: 'banner', component: BannerManagementComponent },
+            { path: 'banner-update', component: BannerUpdateComponent },
             { path: 'reward', component: RewardManagementComponent },
+            { path: 'reward-update', component: RewardUpdateComponent },
             { path: 'users', component: UserManagementComponent },
+            { path: 'user-update', component: UserUpdateComponent },
             { path: 'event-scan', component: EventScanComponent },
-
         ]
     },
     { path: '**', component: NotFoundComponent },

@@ -4,7 +4,7 @@
       <div class="grid gap-3 py-6 grid-rows-[repeat(10,50px)] p-3">
 
         <div *ngFor="let item of menu" class="dashboard-btn" (click)="goToLink(item.path)"
-          [style]="path == item.path ?active:''">
+          [style]="isUrl(path,item.tags) ?active:''">
           <div class="dashboard-inner">
             <img src="{{item.icon}}" class="dashboard-img">
             <p>{{item.title}}</p>
@@ -22,7 +22,7 @@
             <p class="text-[12px]">Admin</p>
           </div>
         </div>
-        <i src="logout.svg" class="w-[16px] aspect-square" (click)="logout()"></i>
+        <img src="logout.svg" class="w-[16px] aspect-square" (click)="logout()">
       </div>
     </div>
   </div>
