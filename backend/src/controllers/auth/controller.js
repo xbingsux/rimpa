@@ -99,14 +99,42 @@ router.get("/verify-user", async (req, res) => {
   }
 
   // ตรวจสอบและถอดรหัส token
-  const decoded = jwt.verify(token, process.env.SECRET_KEY);
+  let decoded
+  let expired = false
+  try {
+    decoded = jwt.decode(token, process.env.SECRET_KEY)
+    jwt.verify(token, process.env.SECRET_KEY);
+  } catch (e) {
+    if (e.message == 'jwt expired') {
+      expired = true
+    }
+  }
+
   if (!decoded || !decoded.userId) {
     return res.status(401).send("Invalid token or missing user ID");
   }
+
   const item = await Service.vertifyUser(decoded.userId)
   let isSuccess = (item && item.user.active)
 
-  if (item.status) {
+  if (!item.status && expired) {
+    res.send(`
+      <div style="
+          text-align: center;
+          font-family: Arial, sans-serif;
+          background-color: #f8f9fa;
+          padding: 50px;
+          border-radius: 10px;
+          max-width: 400px;
+          margin: 50px auto;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      ">
+          <h1 style="color: #dc3545;">
+              บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว
+          </h1>
+      </div>
+      `)
+  } else if (item.status && !expired) {
     res.send(`
       <div style="
           text-align: center;
@@ -127,22 +155,7 @@ router.get("/verify-user", async (req, res) => {
       </div>
       `)
   } else {
-    res.send(`
-      <div style="
-          text-align: center;
-          font-family: Arial, sans-serif;
-          background-color: #f8f9fa;
-          padding: 50px;
-          border-radius: 10px;
-          max-width: 400px;
-          margin: 50px auto;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      ">
-          <h1 style="color: #dc3545;">
-              บัญชีของคุณได้รับการยืนยันเรียบร้อยแล้ว
-          </h1>
-      </div>
-      `)
+    return res.status(401).send("Invalid token");
   }
 })
 

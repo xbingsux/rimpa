@@ -148,6 +148,8 @@ model SubEvent {
   id          Int          @id @default(autoincrement()) // Primary Key
   title       String?
   decription  String?
+  startDate   DateTime?
+  endDate     DateTime?
   point       Decimal? //คะแนนที่ได้รับ
   cost        Decimal? //กำหนดค่าใช้งานในการเข้าร่วม event
   PaymentType PaymentType? //กำหนดประเภทการจ่ายเงิน CASH and POINTS
@@ -217,6 +219,8 @@ model Reward {
   id           Int         @id @default(autoincrement()) // Primary Key
   reward_name  String
   img          String
+  startDate    DateTime?
+  endDate      DateTime?
   cost         Decimal
   paymentType  PaymentType @default(Point) //กำหนดประเภทการจ่ายเงิน CASH and POINTS
   stock        Int // จำนวนของรางวัลที่มีอยู่
