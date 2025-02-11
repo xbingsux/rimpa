@@ -64,4 +64,61 @@ class LoginController extends GetxController {
       Get.snackbar('Error', 'Please fill in all fields');
     }
   }
+
+
+
+
+  void deleteAccount() async {
+    if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
+      try {
+        // แสดงข้อมูลที่กรอกใน console log
+        print('Email: ${user.email.value}');
+        print('Password: ${user.password.value}');
+
+        final apiUrlsController = Get.find<ApiUrls>();
+
+        // ส่งข้อมูลผ่าน POST request ไปยัง Backend
+        final response = await dio.post(
+          apiUrlsController.login,
+          data: {
+            'email': user.email.value,
+            'password': user.password.value,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var token = response.data['token'] ?? ''; // ใช้ค่าว่างถ้าเป็น null
+
+          // เก็บข้อมูล token และ email ที่กรอกเองใน SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', token);
+          await prefs.setString(
+              'email', user.email.value); // เก็บ email ที่กรอก
+
+          // ตรวจสอบการเก็บข้อมูล
+          String? storedEmail = prefs.getString('email');
+          print('Stored email after saving: $storedEmail');
+
+          Get.snackbar('Success', 'Logged in successfully');
+          Get.offNamed('/home');
+
+        } else if (response.statusCode == 401) {
+          if (response.data['message'] == 'Wrong password') {
+            Get.snackbar('Error', 'Wrong password');
+          } else if (response.data['message'] == 'Unauthorized') {
+            Get.snackbar('Error', 'Your email is not verified');
+          }
+        } else if (response.statusCode == 404) {
+          Get.snackbar('Error', 'User not found');
+        } else {
+          Get.snackbar('Error', 'Failed to login');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Check your email and password');
+        print("Error: $e");
+      }
+    } else {
+      Get.snackbar('Error', 'Please fill in all fields');
+    }
+  }
 }

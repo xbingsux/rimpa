@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
           themeMode:
               themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx
           initialRoute: AppPages.initial,
-          getPages: AppPages.routes,
           debugShowCheckedModeBanner: false,
+          getPages: AppPages.routes,
         ));
   }
 }

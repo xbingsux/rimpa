@@ -45,7 +45,7 @@ class AppPages {
     ),
     GetPage(
       name: '/delete-account',
-      page: () => UserDetail(),
+      page: () => DeleteAccount(),
     ),
 
   ];

@@ -15,26 +15,14 @@ bool _rememberPassword = false; // ตัวแปรจำรหัส
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   final authController = Get.put(LoginController());
-  late TabController _tabController; // ตัวควบคุมสำหรับ Tab
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-
-    // เพิ่ม listener เพื่อรีเฟรชเมื่อมีการเปลี่ยนแปลงแท็บ
-    _tabController.addListener(() {
-      if (mounted) {
-        setState(() {
-          // การรีเฟรชหรือเปลี่ยนแปลงบางสิ่งที่ต้องการ
-        });
-      }
-    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose(); // อย่าลืม dispose
     super.dispose();
   }
 
@@ -84,224 +72,79 @@ class _LoginViewState extends State<LoginView>
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // TabBar ที่ด้านบนของ BottomSheet
-                    TabBar(
-                      controller: _tabController,
-                      tabs: [
-                        Tab(
-                          child: ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              if (_tabController.index == 0) {
-                                return LinearGradient(
-                                  colors: [
-                                    Color(0xFF1E54FD),
-                                    Color(0xFF0ACCF5),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ).createShader(
-                                    bounds); // ใช้ Linear Gradient กับข้อความเมื่อเลือก
-                              } else {
-                                return const LinearGradient(
-                                  colors: [
-                                    Colors.white,
-                                    Colors.white,
-                                  ], // ไม่มี Gradient เมื่อไม่ได้เลือก
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ).createShader(bounds);
-                              }
-                            },
-                            child: Text(
-                              'อีเมล',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: _tabController.index == 0
-                                    ? Colors.white // ตัวอักษรสีขาวเมื่อเลือก
-                                    : Color.fromARGB(255, 158, 158,
-                                        158), // ตัวอักษรสีแดงเมื่อไม่ได้เลือก
-                              ),
-                            ),
-                          ),
+                    // ข้อความ "เข้าสู่ระบบ" ที่มุมซ้ายบน
+                    SizedBox(height: AppSpacing.sm),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'ยินดีต้อนรับเข้าสู่ระบบ',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Tab(
-                          child: ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              if (_tabController.index == 1) {
-                                return LinearGradient(
-                                  colors: [
-                                    Color(0xFF1E54FD),
-                                    Color(0xFF0ACCF5),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ).createShader(
-                                    bounds); // ใช้ Linear Gradient กับข้อความเมื่อเลือก
-                              } else {
-                                return const LinearGradient(
-                                  colors: [
-                                    Colors.white,
-                                    Colors.white,
-                                  ], // ไม่มี Gradient เมื่อไม่ได้เลือก
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ).createShader(bounds);
-                              }
-                            },
-                            child: Text(
-                              'เบอร์โทรศัพท์',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: _tabController.index == 1
-                                    ? Colors.white // ตัวอักษรสีขาวเมื่อเลือก
-                                    : Color.fromARGB(255, 158, 158,
-                                        158), // ตัวอักษรสีแดงเมื่อไม่ได้เลือก
-                              ),
-                            ),
-                          ),
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+
+                    // ฟอร์มสำหรับ "อีเมล"
+                    Column(
+                      children: [
+                        CustomTextField(
+                          labelText: 'อีเมล',
+                          obscureText: false,
+                          onChanged: (value) =>
+                              authController.user.email.value = value,
+                        ),
+                        SizedBox(height: AppSpacing.md),
+                        CustomTextField(
+                          labelText: 'รหัสผ่าน',
+                          obscureText: true,
+                          onChanged: (value) =>
+                              authController.user.password.value = value,
+                        ),
+                        SizedBox(height: AppSpacing.md),
+                        // ลืมรหัสและจำรหัส
+                        RememberPasswordWidget(
+                          rememberPassword: _rememberPassword,
+                          onRememberChanged: (value) {
+                            setState(() {
+                              _rememberPassword = value;
+                            });
+                          },
+                          onForgotPassword: () {
+                            Get.toNamed('/forgot-password');
+                          },
+                        ),
+                        SizedBox(height: AppSpacing.md),
+                        CustomButton(
+                          text: 'เข้าสู่ระบบ',
+                          onPressed: () => authController.loginwithemail(),
+                        ),
+                        SizedBox(height: AppSpacing.md),
+                        Ordesign(
+                          text: 'หรือ',
+                        ),
+                        SizedBox(
+                            height: AppSpacing
+                                .md), // ระยะห่างระหว่าง "หรือ" กับปุ่ม social login
+                        SocialLoginButtons(
+                          onGooglePressed: () {
+                            print("เข้าสู่ระบบด้วย Google");
+                          },
+                        ),
+                        SizedBox(height: AppSpacing.md),
+                        // ปุ่ม Create Account
+                        CreateAccountButton(
+                          onPressed: () => Get.toNamed('/select-create'),
                         ),
                       ],
-                      indicator: GradientTabIndicator(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF1E54FD), Color(0xFF0ACCF5)],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                    ),
-                    SizedBox(height: AppSpacing.xl),
-                    // ฟอร์มที่จะแสดงตามแท็บที่เลือก
-                    Flexible(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          // ฟอร์มสำหรับ "อีเมล"
-                          Column(
-                            children: [
-                              CustomTextField(
-                                labelText: 'อีเมล',
-                                obscureText: false,
-                                onChanged: (value) =>
-                                    authController.user.email.value = value,
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              CustomTextField(
-                                labelText: 'รหัสผ่าน',
-                                obscureText: true,
-                                onChanged: (value) =>
-                                    authController.user.password.value = value,
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              // ลืมรหัสและจำรหัส
-                              RememberPasswordWidget(
-                                rememberPassword: _rememberPassword,
-                                onRememberChanged: (value) {
-                                  setState(() {
-                                    _rememberPassword = value;
-                                  });
-                                },
-                               onForgotPassword: () {
-                                  Get.toNamed('/forgot-password');
-                                },
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              CustomButton(
-                                text: 'เข้าสู่ระบบ',
-                                onPressed: () =>
-                                    authController.loginwithemail(),
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              Ordesign(
-                                text: 'หรือ',
-                              ),
-                              SizedBox(
-                                  height: AppSpacing
-                                      .md), // ระยะห่างระหว่าง "หรือ" กับปุ่ม social login
-                              SocialLoginButtons(
-                                onGooglePressed: () {
-                                  print("เข้าสู่ระบบด้วย Google");
-                                },
-                                onApplePressed: () {
-                                  print("เข้าสู่ระบบด้วย Apple");
-                                },
-                                onFacebookPressed: () {
-                                  print("เข้าสู่ระบบด้วย Facebook");
-                                },
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              // ปุ่ม Create Account
-                              CreateAccountButton(
-                                onPressed: () => Get.toNamed('/select-create'),
-                              ),
-                            ],
-                          ),
-                          // ฟอร์มสำหรับ "โทรศัพท์"
-                          Column(
-                            children: [
-                              CustomPhoneTextField(
-                               
-                              ),
-
-                              SizedBox(height: AppSpacing.md),
-                              CustomTextField(
-                                labelText: 'รหัสผ่าน',
-                                obscureText: true,
-                                onChanged: (value) =>
-                                    authController.user.password.value = value,
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              // ลืมรหัสและจำรหัส
-                              RememberPasswordWidget(
-                                rememberPassword: _rememberPassword,
-                                onRememberChanged: (value) {
-                                  setState(() {
-                                    _rememberPassword = value;
-                                  });
-                                },
-                                onForgotPassword: () {
-                                  Get.toNamed('/forgot-password');
-                                },
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              CustomButton(
-                                text: 'เข้าสู่ระบบ',
-                                onPressed: () =>
-                                    authController.loginwithemail(),
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              Ordesign(
-                                text: 'หรือ',
-                              ),
-                              SizedBox(
-                                  height: AppSpacing
-                                      .md), // ระยะห่างระหว่าง "หรือ" กับปุ่ม social login
-                              SocialLoginButtons(
-                                onGooglePressed: () {
-                                  print("เข้าสู่ระบบด้วย Google");
-                                },
-                                onApplePressed: () {
-                                  print("เข้าสู่ระบบด้วย Apple");
-                                },
-                                onFacebookPressed: () {
-                                  print("เข้าสู่ระบบด้วย Facebook");
-                                },
-                              ),
-                              SizedBox(height: AppSpacing.md),
-                              // ปุ่ม Create Account
-                              CreateAccountButton(
-                                onPressed: () => Get.toNamed('/select-create'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
               ),
             ),
           ),
+
           // ปุ่มเปลี่ยนธีมที่มุมขวาบน
           Positioned(
             top: 16,
@@ -315,45 +158,6 @@ class _LoginViewState extends State<LoginView>
           ),
         ],
       ),
-    );
-  }
-}
-
-// สีเส้นtabbar
-class GradientTabIndicator extends Decoration {
-  final Gradient gradient;
-
-  const GradientTabIndicator({required this.gradient});
-
-  @override
-  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _GradientPainter(gradient);
-  }
-}
-
-class _GradientPainter extends BoxPainter {
-  final Gradient gradient;
-
-  _GradientPainter(this.gradient);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    if (configuration.size == null) return;
-
-    // เช็คว่าถ้าไม่ได้ถูกเลือกให้ไม่วาดเส้น
-    if (configuration.size!.height == 0) return;
-
-    final paint = Paint()
-      ..shader = gradient.createShader(
-        Rect.fromLTWH(offset.dx, configuration.size!.height - 1.0,
-            configuration.size!.width, 1.0),
-      )
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(
-      Rect.fromLTWH(offset.dx, configuration.size!.height - 1.5,
-          configuration.size!.width, 1.5),
-      paint,
     );
   }
 }

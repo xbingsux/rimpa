@@ -88,9 +88,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // BottomSheet with adjusted position
                   SingleChildScrollView(
-                    // Wrap with SingleChildScrollView
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.78,
                       width: double.infinity,
@@ -111,109 +109,99 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 65), // No padding at the top
+                        padding: const EdgeInsets.only(top: 65),
                         child: Center(
-                          child: isLoggedIn
-                              ? Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start, // Move to top
-                                  children: [
-                                    // User name (Bold and not too big)
-                                    Text(
-                                      "ชื่อผู้ใช้", // เปลี่ยนเป็นชื่อผู้ใช้จริงได้
-                                      style: TextStyle(
-                                        fontSize: AppTextSize
-                                            .md, // ขนาดตัวอักษรไม่ใหญ่เกินไป
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    // Email
-                                    Text(
-                                      email.isEmpty ? "กำลังโหลด..." : email,
-                                      style: TextStyle(
-                                        fontSize: AppTextSize
-                                            .sm, // ขนาดตัวอักษรเล็กลง
-                                      ),
-                                    ),
-
-                                    /// เมนูบัญชีผู้ใช้
-                                    MenuCard(
-                                      title: "บัญซีและความเป็นส่วนตัว",
-                                      items: [
-                                        MenuItem(
-                                            title: "บัญซีผู้ใช้งาน",
-                                            icon: Icons.person,
-                                            route: "/user-deteil"),
-                                        MenuItem(
-                                            title: "เปลี่ยนรหัสผ่าน",
-                                            icon: Icons.lock,
-                                            route: "/chang-password"),
-                                        MenuItem(
-                                          title: "การแจ้งเตือน",
-                                          icon: Icons.notifications,
-                                          route: "/notifications",
-                                          isToggle: true, // ตั้งค่าเป็น Toggle
-                                        ),
-                                      ],
-                                    ),
-                                    MenuCard(
-                                      title: "อื่นๆ",
-                                      items: [
-                                        MenuItem(
-                                            title: "ช่วยเหลือ",
-                                            icon: Icons.person,
-                                            route: "/profile"),
-                                        MenuItem(
-                                            title: "ลบบัญซีผู้ใช้",
-                                            icon: Icons.person,
-                                            route: "/Deleteaccount"),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
-                                    // Logout button
-                                    ElevatedButton(
-                                      onPressed: _logout,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xFFD9D9D9),
-                                        fixedSize: Size(
-                                            350, 40), // กำหนดขนาดปุ่มให้แน่นอน
-                                      ),
-                                      child: Text('ออกจากระบบ'),
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start, // Move to top
-                                  children: [
-                                    Text(
-                                      "ยังไม่ได้ล็อกอิน",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    ElevatedButton(
-                                      onPressed: () => Get.toNamed('/login'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blueAccent,
-                                        fixedSize: Size(
-                                            270, 40), // กำหนดขนาดปุ่มให้แน่นอน
-                                      ),
-                                      child: Text('ไปยังหน้าล็อกอิน'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              // สำหรับกรณีที่ยังไม่ได้ล็อกอิน
+                              if (!isLoggedIn) ...[
+                                Text(
+                                  "ยังไม่ได้ลงชื่อเข้าใช้",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: () => Get.toNamed('/login'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blueAccent,
+                                    fixedSize: Size(270, 40),
+                                  ),
+                                  child: Text(
+                                    'ไปยังหน้าล็อกอิน',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ),
+                              ] else ...[
+                                // กรณีที่ล็อกอินแล้ว
+                                Text(
+                                  "ชื่อผู้ใช้",
+                                  style: TextStyle(
+                                    fontSize: AppTextSize.md,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  email.isEmpty ? "กำลังโหลด..." : email,
+                                  style: TextStyle(
+                                    fontSize: AppTextSize.sm,
+                                  ),
+                                ),
+                                MenuCard(
+                                  title: "บัญชีและความเป็นส่วนตัว",
+                                  items: [
+                                    MenuItem(
+                                        title: "บัญชีผู้ใช้งาน",
+                                        icon: Icons.person,
+                                        route: "/user-deteil"),
+                                    MenuItem(
+                                        title: "เปลี่ยนรหัสผ่าน",
+                                        icon: Icons.lock,
+                                        route: "/chang-password"),
+                                    MenuItem(
+                                      title: "การแจ้งเตือน",
+                                      icon: Icons.notifications,
+                                      route: "/notifications",
+                                      isToggle: true,
                                     ),
                                   ],
                                 ),
+                                MenuCard(
+                                  title: "อื่นๆ",
+                                  items: [
+                                    MenuItem(
+                                        title: "ช่วยเหลือ",
+                                        icon: Icons.person,
+                                        route: "/profile"),
+                                    MenuItem(
+                                        title: "ลบบัญชีผู้ใช้",
+                                        icon: Icons.person,
+                                        route: "/delete-account"),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: _logout,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFD9D9D9),
+                                    fixedSize: Size(350, 40),
+                                  ),
+                                  child: Text(
+                                    'ออกจากระบบ',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-
-                  // Profile Circle Positioned at the top
                   Positioned(
                     top: -50,
                     left: MediaQuery.of(context).size.width / 2 - 50,

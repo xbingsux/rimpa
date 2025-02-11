@@ -96,6 +96,7 @@ class CreateAccountButton extends StatelessWidget {
     );
   }
 }
+
 // ปุ่มสร้างบัญชี
 class backlogin extends StatelessWidget {
   final VoidCallback onPressed;
@@ -134,6 +135,7 @@ class backlogin extends StatelessWidget {
     );
   }
 }
+
 // มีบัญซีอยู่แล้ว
 class Haveaccountbutton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -224,6 +226,7 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
 // ช่องกรอกข้อมูล
 class Customtextprofile extends StatelessWidget {
   final String labelText;
@@ -274,7 +277,6 @@ class Customtextprofile extends StatelessWidget {
 
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {
-
   const CustomPhoneTextField({
     Key? key,
   }) : super(key: key);
@@ -312,11 +314,9 @@ class CustomPhoneTextField extends StatelessWidget {
         size: 24,
       ), // ไอคอนลูกศรเลือกประเทศ
       dropdownDecoration: BoxDecoration(
-
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
-
     );
   }
 }
@@ -508,26 +508,14 @@ class SocialLoginButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
         _buildSocialButton(
-          icon: Icons.g_translate, // ไอคอน Google (สามารถใช้ image ได้)
-          color: const Color.fromARGB(255, 255, 169, 70),
+          icon: Icons.g_translate, // ไอคอน Google
+          color: const Color.fromARGB(255, 218, 218, 218),
           onTap: onGooglePressed,
-        ),
-        SizedBox(width: 12),
-        _buildSocialButton(
-          icon: Icons.apple, // ไอคอน Apple
-          color: Colors.black,
-          onTap: onApplePressed,
-        ),
-        SizedBox(width: 12),
-        _buildSocialButton(
-          icon: Icons.facebook, // ไอคอน Facebook
-          color: Colors.blue,
-          onTap: onFacebookPressed,
-        ),
+          text: 'ล็อกอินด้วย Google',
+        )
       ],
     );
   }
@@ -536,22 +524,34 @@ class SocialLoginButtons extends StatelessWidget {
     required IconData icon,
     required Color color,
     required Function()? onTap,
+    required String text,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 80,
-        height: 45,
+        width: double.infinity, // ให้ปุ่มเต็มความกว้าง
+        height: 55,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 28,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 28,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
       ),
     );
