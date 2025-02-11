@@ -71,7 +71,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor, // รองรับ Light/Dark Mode
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -321,20 +322,20 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
               ),
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.1 - 0,
-              left: MediaQuery.of(context).size.width * 0.1,
-              right: MediaQuery.of(context).size.width * 0.1,
+              top: MediaQuery.of(context).size.height * 0.12 - 0,
+              left: MediaQuery.of(context).size.width * 0.05,
+              right: MediaQuery.of(context).size.width * 0.05,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 4,
                 child: Container(
-                  width: 342,
+                  width: 350,
                   height: 84,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor, // เปลี่ยนสีพื้นหลังตามธีม
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -383,7 +384,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       SizedBox(width: 16),
                       Container(
                         padding: EdgeInsets.only(
-                            left: 30), // Added padding to the left
+                            left: 100), // Added padding to the left
                         child: Container(
                           width: 96, // Adjusted width to prevent overflow
                           height: 40,

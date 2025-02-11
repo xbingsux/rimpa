@@ -96,6 +96,7 @@ class CreateAccountButton extends StatelessWidget {
     );
   }
 }
+
 // ปุ่มสร้างบัญชี
 class backlogin extends StatelessWidget {
   final VoidCallback onPressed;
@@ -134,6 +135,7 @@ class backlogin extends StatelessWidget {
     );
   }
 }
+
 // มีบัญซีอยู่แล้ว
 class Haveaccountbutton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -225,13 +227,58 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
+// ช่องกรอกข้อมูล
+class Customtextprofile extends StatelessWidget {
+  final String labelText;
+  final bool obscureText;
+
+  const Customtextprofile({
+    Key? key,
+    required this.labelText,
+    required this.obscureText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: obscureText,
+      style: const TextStyle(
+          fontSize: AppTextSize.sm,
+          color: Color.fromARGB(255, 158, 158, 158)), // สีข้อความปกติ
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          fontSize: AppTextSize.sm,
+          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25), // กรอบโค้ง
+          borderSide: const BorderSide(
+            color: Color.fromARGB(
+                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
+            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
+            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
+          ),
+        ),
+        filled: true,
+        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+      ),
+    );
+  }
+}
+
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {
-  final Function(String) onChanged;
-
   const CustomPhoneTextField({
     Key? key,
-    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -267,14 +314,9 @@ class CustomPhoneTextField extends StatelessWidget {
         size: 24,
       ), // ไอคอนลูกศรเลือกประเทศ
       dropdownDecoration: BoxDecoration(
-
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
-      onChanged: (phone) {
-        onChanged(
-            phone.completeNumber); // ส่งค่าหมายเลขโทรศัพท์ที่รวมรหัสประเทศ
-      },
     );
   }
 }
@@ -466,26 +508,14 @@ class SocialLoginButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
         _buildSocialButton(
-          icon: Icons.g_translate, // ไอคอน Google (สามารถใช้ image ได้)
-          color: const Color.fromARGB(255, 255, 169, 70),
+          icon: Icons.g_translate, // ไอคอน Google
+          color: const Color.fromARGB(255, 218, 218, 218),
           onTap: onGooglePressed,
-        ),
-        SizedBox(width: 12),
-        _buildSocialButton(
-          icon: Icons.apple, // ไอคอน Apple
-          color: Colors.black,
-          onTap: onApplePressed,
-        ),
-        SizedBox(width: 12),
-        _buildSocialButton(
-          icon: Icons.facebook, // ไอคอน Facebook
-          color: Colors.blue,
-          onTap: onFacebookPressed,
-        ),
+          text: 'ล็อกอินด้วย Google',
+        )
       ],
     );
   }
@@ -494,22 +524,34 @@ class SocialLoginButtons extends StatelessWidget {
     required IconData icon,
     required Color color,
     required Function()? onTap,
+    required String text,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 80,
-        height: 45,
+        width: double.infinity, // ให้ปุ่มเต็มความกว้าง
+        height: 55,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 28,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 28,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
       ),
     );

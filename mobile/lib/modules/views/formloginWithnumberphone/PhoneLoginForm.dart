@@ -43,7 +43,7 @@ class PhoneLoginForm extends StatelessWidget {
            SizedBox(height: AppSpacing.md),
           //  ฟิลด์ป้อนเบอร์โทร
           CustomPhoneTextField(
-            onChanged: (value) => value,
+            
           ),
           SizedBox(height: AppSpacing.md),
           Align(
