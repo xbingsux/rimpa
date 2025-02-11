@@ -3,6 +3,7 @@ import '../../modules/views/auth/login.view.dart';
 import '../../modules/views/register/register.view.dart';
 import '../../modules/views/home/home.view.dart';
 import '../../modules/views/selectregister/selectregister.view.dart';
+import '../../modules/views/forgotpasswords/forgotpassworduser.dart';
 class AppPages {
   static const initial = '/home';
   static final routes = [
@@ -21,6 +22,10 @@ class AppPages {
     GetPage(
       name: '/select-create',
       page: () => LoginSelectionView(),
+    ),
+    GetPage(
+      name: '/forgot-password',
+      page: () => ForgotPasswordView(),
     ),
   ];
 }

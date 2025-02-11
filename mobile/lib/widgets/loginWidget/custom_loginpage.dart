@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../core/theme/app_theme.dart';
+import '../../core/theme/app_theme.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import '../core/theme/theme_controller.dart';
+import '../../core/theme/theme_controller.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 // ปุ่มกดเข้าระบบ
@@ -82,6 +82,44 @@ class CreateAccountButton extends StatelessWidget {
                 onTap: onPressed,
                 child: Text(
                   'สมัครสมาชิก',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue, // สีฟ้า
+                    decoration: TextDecoration.underline, // ขีดเส้นใต้
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+// ปุ่มสร้างบัญชี
+class backlogin extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const backlogin({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RichText(
+        text: TextSpan(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 16,
+                color: Colors.grey, // "ยังไม่มีบัญชี" สีเทาอ่อน
+              ),
+          children: [
+            WidgetSpan(
+              child: GestureDetector(
+                onTap: onPressed,
+                child: Text(
+                  'กลับไปหน้าล็อคอิน',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.blue, // สีฟ้า

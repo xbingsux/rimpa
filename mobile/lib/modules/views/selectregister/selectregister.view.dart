@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/widgets/custom_loginpage.dart'; 
+import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart'; 
 import '../../../core/constant/app.constant.dart';
 import '../formloginWithnumberphone/PhoneLoginForm.dart'; // ✅ นำเข้า PhoneLoginForm
 

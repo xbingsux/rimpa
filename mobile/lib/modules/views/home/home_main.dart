@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
-
+import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart'; // Import AppDropdown
 
@@ -18,6 +18,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
   @override
   void initState() {
     super.initState();
+
+    // เรียก popup แจ้งเตือน
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PopupDialog.checkAndShowPopup(context);
+    });
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;

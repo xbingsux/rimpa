@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/theme/theme_controller.dart';
-import '../../../widgets/custom_loginpage.dart';
+import '../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
 
@@ -201,8 +201,8 @@ class _LoginViewState extends State<LoginView>
                                     _rememberPassword = value;
                                   });
                                 },
-                                onForgotPassword: () {
-                                  print("กดลืมรหัสผ่าน");
+                               onForgotPassword: () {
+                                  Get.toNamed('/forgot-password');
                                 },
                               ),
                               SizedBox(height: AppSpacing.md),
@@ -261,7 +261,7 @@ class _LoginViewState extends State<LoginView>
                                   });
                                 },
                                 onForgotPassword: () {
-                                  print("กดลืมรหัสผ่าน");
+                                  Get.toNamed('/forgot-password');
                                 },
                               ),
                               SizedBox(height: AppSpacing.md),
