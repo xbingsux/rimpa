@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../core/constant/app.constant.dart';
 
-class HomeRewardPage extends StatelessWidget {
+import '../../../components/cards/app-card.component.dart';
+import '../../../components/dropdown/app-dropdown.component.dart';
+import '../../../components/imageloader/app-image.component.dart';
+import '../../../core/constant/app.constant.dart';
+
+class HomeRewardPage extends StatefulWidget {
+  @override
+  _HomeRewardPageState createState() => _HomeRewardPageState();
+}
+
+class _HomeRewardPageState extends State<HomeRewardPage> {
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  int _currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth =
