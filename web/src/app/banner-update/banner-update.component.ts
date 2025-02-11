@@ -1,10 +1,11 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-banner-update',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './banner-update.component.html',
   styleUrl: './banner-update.component.scss'
 })

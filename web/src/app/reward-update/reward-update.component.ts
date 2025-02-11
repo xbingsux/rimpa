@@ -1,10 +1,11 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reward-update',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './reward-update.component.html',
   styleUrl: './reward-update.component.scss'
 })

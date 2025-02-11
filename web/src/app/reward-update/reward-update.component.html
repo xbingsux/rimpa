@@ -2,10 +2,10 @@
     <div class="w-full h-[150px] grid items-center grid-cols-2">
         <div>
             <p class="text-[32px] font-bold">
-                Event Management
+                Reward Management
             </p>
-            <p class="text-[#1093ED] text-[16px] font-medium underline" (click)="goToLink('/admin/event')">
-                All Event
+            <p class="text-[#1093ED] text-[16px] font-medium underline" (click)="goToLink('/admin/reward')">
+                All Reward
             </p>
         </div>
         <div class="h-[40px] flex gap-2 justify-end">
@@ -20,11 +20,11 @@
             class="min-h-[calc(100vh-215px)] grid grid-cols-[70%_1fr] gap-8 p-8 border-b-[1px] text-[16px] font-normal">
             <div class="flex flex-col gap-y-2">
                 <div class="flex flex-col gap-y-2">
-                    <label for="name">Event name</label>
+                    <label for="name">Reward name</label>
                     <input type="text" id="name" placeholder="Name"
                         class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
                 </div>
-                <label for="Description">Event name</label>
+                <label for="Description">Description</label>
                 <textarea id="Description" placeholder="Description"
                     class="w-full h-full p-4 border-[#D9D9D9] border-[1px] rounded-[12px] resize-none"></textarea>
             </div>
@@ -54,16 +54,18 @@
                             class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
                     </div>
                 </div>
-                <div class="flex flex-col gap-y-2">
-                    <label for="map">Link google map</label>
-                    <input type="text" id="map" placeholder="Link google map"
-                        class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                <div class="flex gap-4">
+                    <div class="flex-1 flex flex-col gap-y-2">
+                        <label for="quota">Quota</label>
+                        <input type="text" id="quota" placeholder="100"
+                            class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                    </div>
+                    <div class="flex-1 flex flex-col gap-y-2">
+                        <label for="point">Point</label>
+                        <input type="text" id="point" placeholder="300"
+                            class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                    </div>
                 </div>
-            </div>
-            <div class="flex flex-col gap-y-2">
-                <label for="point">Point</label>
-                <input type="text" id="point" placeholder="300"
-                    class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
             </div>
         </div>
     </div>
