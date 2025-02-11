@@ -144,11 +144,11 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                         MenuItem(
                                             title: "บัญซีผู้ใช้งาน",
                                             icon: Icons.person,
-                                            route: "/profile"),
+                                            route: "/user-deteil"),
                                         MenuItem(
                                             title: "เปลี่ยนรหัสผ่าน",
                                             icon: Icons.lock,
-                                            route: "/change-password"),
+                                            route: "/chang-password"),
                                         MenuItem(
                                           title: "การแจ้งเตือน",
                                           icon: Icons.notifications,

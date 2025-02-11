@@ -224,14 +224,59 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+// ช่องกรอกข้อมูล
+class Customtextprofile extends StatelessWidget {
+  final String labelText;
+  final bool obscureText;
+
+  const Customtextprofile({
+    Key? key,
+    required this.labelText,
+    required this.obscureText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: obscureText,
+      style: const TextStyle(
+          fontSize: AppTextSize.sm,
+          color: Color.fromARGB(255, 158, 158, 158)), // สีข้อความปกติ
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          fontSize: AppTextSize.sm,
+          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25), // กรอบโค้ง
+          borderSide: const BorderSide(
+            color: Color.fromARGB(
+                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
+            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
+            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
+          ),
+        ),
+        filled: true,
+        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+      ),
+    );
+  }
+}
 
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {
-  final Function(String) onChanged;
 
   const CustomPhoneTextField({
     Key? key,
-    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -271,10 +316,7 @@ class CustomPhoneTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
-      onChanged: (phone) {
-        onChanged(
-            phone.completeNumber); // ส่งค่าหมายเลขโทรศัพท์ที่รวมรหัสประเทศ
-      },
+
     );
   }
 }

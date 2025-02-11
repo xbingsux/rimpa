@@ -4,14 +4,14 @@ class AppTheme {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
-    scaffoldBackgroundColor: const Color(0xFFFFFFFF), // พื้นหลังขาว
+    scaffoldBackgroundColor: const Color(0xFFFCFBFC), // พื้นหลังสี #FCFBFC
     bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Color(0xFFFFFFFF), // BottomSheet สีขาว
+      backgroundColor: Color(0xFFFCFBFC), // BottomSheet สี #FCFBFC
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
     ),
-    cardColor: Colors.white, // ปรับสีของ Card
+    cardColor: const Color(0xFFFCFBFC), // ปรับสีของ Card เป็น #FCFBFC
 
     fontFamily: 'fontappsetting',
     textTheme: const TextTheme(

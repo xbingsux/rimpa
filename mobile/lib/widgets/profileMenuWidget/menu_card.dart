@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constant/app.constant.dart';
+import 'package:get/get.dart';
 
 class MenuItem {
   final String title;
@@ -94,7 +95,9 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      // สามารถทำงานอื่นๆ ได้ที่นี่
+                      // ใช้ Get.toNamed กับ item.route
+                      Get.toNamed(item
+                          .route); // นำทางไปยังหน้าตาม route ที่กำหนดใน MenuItem
                     },
                   );
                 } else {

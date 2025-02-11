@@ -240,8 +240,7 @@ class _LoginViewState extends State<LoginView>
                           Column(
                             children: [
                               CustomPhoneTextField(
-                                onChanged: (value) => authController
-                                    .user.phoneNumber.value = value,
+                               
                               ),
 
                               SizedBox(height: AppSpacing.md),
