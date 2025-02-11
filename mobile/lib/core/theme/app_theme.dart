@@ -12,6 +12,7 @@ class AppTheme {
       ),
     ),
     cardColor: Colors.white, // ปรับสีของ Card
+
     fontFamily: 'fontappsetting',
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
