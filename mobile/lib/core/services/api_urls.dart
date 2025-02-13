@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
   // baseUrl สามารถเปลี่ยนแปลงได้ตามต้องการ
-  var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
+  var baseUrl = 'http://localhost:3001/auth'.obs;
 
   // ฟังก์ชันที่ใช้ในการอัปเดต baseUrl
   void updateBaseUrl(String newUrl) {
