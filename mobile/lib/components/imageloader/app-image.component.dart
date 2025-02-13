@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 
 enum AppImageType {
@@ -33,7 +34,18 @@ class AppImageComponent extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: ClipRRect(
         borderRadius: borderRadius,
-        child: Image.asset(imageAddress, fit: fit,),
+        child: Image.asset(
+          imageAddress, 
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.secondary,
+              child: const Center(
+                child: Icon(Icons.image_not_supported, size: AppTextSize.xxl, color: AppTextColors.secondary,),
+              ),
+            );
+          },
+        ),
       ), 
     );
   }
@@ -43,7 +55,18 @@ class AppImageComponent extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: ClipRRect(
         borderRadius: borderRadius,
-        child: Image.network(imageAddress, fit: fit,),
+        child: Image.network(
+          imageAddress, 
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.secondary,
+              child: const Center(
+                child: Icon(Icons.image_not_supported, size: AppTextSize.xxl, color: AppTextColors.secondary,),
+              ),
+            );
+          },
+        ),
       ), 
     );
   }
