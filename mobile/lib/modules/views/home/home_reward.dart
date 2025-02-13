@@ -95,6 +95,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               itemBuilder: (context, index) => Container(
                                 margin: EdgeInsets.symmetric(horizontal: 8),
                                 child: AppImageComponent(
+                                  aspectRatio: 2.08 / 1,
+                                  fit: BoxFit.cover,
                                   imageType: AppImageType.network,
                                   imageAddress:
                                       "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
