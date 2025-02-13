@@ -69,32 +69,37 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.white,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedLabelStyle:
-            TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        unselectedLabelStyle: TextStyle(color: Colors.grey),
-        iconSize: 24, // ตั้งขนาดไอคอนให้เหมาะสม
-        selectedFontSize: 12, // ขนาดฟอนต์ที่เลือก
-        unselectedFontSize: 12, // ขนาดฟอนต์ที่ไม่ได้เลือก
-        items: [
-          _buildNavItem(Icons.home, "หน้าหลัก", 0),
-          _buildNavItem(Icons.event, "กิจกรรม", 1),
-          _buildQRItem(2), // ไอคอนตรงกลาง
-          _buildNavItem(Icons.star, "รีวอร์ด", 3),
-          _buildNavItem(Icons.person, "โปรไฟล์", 4),
-        ],
+      body: SafeArea(
+        child: _pages[_selectedIndex], // เนื้อหาหลัก
       ),
+      bottomNavigationBar: Container(
+        height: 130, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.white,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          selectedLabelStyle:
+              TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          unselectedLabelStyle: TextStyle(color: Colors.grey),
+          iconSize: 24, // ปรับขนาดของไอคอนให้พอดี
+          selectedFontSize: 10, // ลดขนาดตัวอักษร
+          unselectedFontSize: 10, // ลดขนาดตัวอักษร
+          items: [
+            _buildNavItem(Icons.home, "หน้าหลัก", 0),
+            _buildNavItem(Icons.event, "กิจกรรม", 1),
+            _buildQRItem(2),
+            _buildNavItem(Icons.star, "รีวอร์ด", 3),
+            _buildNavItem(Icons.person, "โปรไฟล์", 4),
+          ],
+        ),
+      ),
+      resizeToAvoidBottomInset: false, // ปิดการปรับขนาดเมื่อ keyboard ปรากฏ
     );
   }
 
-  // **ฟังก์ชันสร้างไอคอนของ BottomNavigationBarItem**
   BottomNavigationBarItem _buildNavItem(
       IconData icon, String label, int index) {
     bool isActive = _selectedIndex == index;
@@ -102,34 +107,43 @@ class _HomePageState extends State<HomePage> {
     return BottomNavigationBarItem(
       icon: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center, // จัดให้อยู่กลาง
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          isActive
-              ? ShaderMask(
-                  shaderCallback: (bounds) =>
-                      AppGradiant.gradientX_1.createShader(bounds),
-                  child: Icon(icon,
-                      color: Colors.white, size: 24), // เพิ่มขนาดของไอคอน
-                )
-              : Icon(icon, color: Colors.grey, size: 24), // เพิ่มขนาดของไอคอน
-          const SizedBox(height: 4),
-          isActive
-              ? ShaderMask(
-                  shaderCallback: (bounds) =>
-                      AppGradiant.gradientX_1.createShader(bounds),
-                  child: Text(
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 0), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
+            child: isActive
+                ? ShaderMask(
+                    shaderCallback: (bounds) =>
+                        AppGradiant.gradientX_1.createShader(bounds),
+                    child: Icon(icon, color: Colors.white, size: 24),
+                  )
+                : Icon(icon, color: Colors.grey, size: 24),
+          ),
+          const SizedBox(height: 4), // ให้ความห่างระหว่างไอคอนกับข้อความ
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 4), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
+            child: isActive
+                ? ShaderMask(
+                    shaderCallback: (bounds) =>
+                        AppGradiant.gradientX_1.createShader(bounds),
+                    child: Text(
+                      label,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : Text(
                     label,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.grey),
                   ),
-                )
-              : Text(label, style: TextStyle(color: Colors.grey)),
+          ),
         ],
       ),
       label: "",
     );
   }
 
-  // **ฟังก์ชันสร้างไอคอน QR Code ตรงกลาง**
   BottomNavigationBarItem _buildQRItem(int index) {
     return BottomNavigationBarItem(
       icon: SizedBox(

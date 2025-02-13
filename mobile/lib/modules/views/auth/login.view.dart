@@ -112,13 +112,15 @@ class _LoginViewState extends State<LoginView>
                             });
                           },
                           onForgotPassword: () {
+                            // ไปหน้า reset password
                             Get.toNamed('/forgot-password');
                           },
                         ),
                         SizedBox(height: AppSpacing.md),
                         CustomButton(
                           text: 'เข้าสู่ระบบ',
-                          onPressed: () => authController.loginwithemail(),
+                          onPressed: () =>
+                              authController.loginwithemail(_rememberPassword),
                         ),
                         SizedBox(height: AppSpacing.md),
                         Ordesign(

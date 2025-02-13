@@ -367,23 +367,17 @@ class CreatTextField extends StatelessWidget {
 }
 
 // ลืมรหัสผ่านและจำรหัผ่าน
-class RememberPasswordWidget extends StatefulWidget {
+class RememberPasswordWidget extends StatelessWidget {
   final bool rememberPassword;
   final Function(bool) onRememberChanged;
-  final VoidCallback onForgotPassword;
+  final Function() onForgotPassword;
 
-  const RememberPasswordWidget({
-    Key? key,
+  RememberPasswordWidget({
     required this.rememberPassword,
     required this.onRememberChanged,
     required this.onForgotPassword,
-  }) : super(key: key);
+  });
 
-  @override
-  _RememberPasswordWidgetState createState() => _RememberPasswordWidgetState();
-}
-
-class _RememberPasswordWidgetState extends State<RememberPasswordWidget> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -395,39 +389,17 @@ class _RememberPasswordWidgetState extends State<RememberPasswordWidget> {
         children: [
           Row(
             children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                width: 24, // กำหนดขนาด Checkbox ให้พอดี
-                height: 24,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: widget.rememberPassword
-                        ? Colors.blue
-                        : (isDarkMode ? Colors.white54 : Colors.grey),
-                    width: 1,
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Checkbox(
-                    value: widget.rememberPassword,
-                    onChanged: (value) {
-                      widget.onRememberChanged(value!);
-                    },
-                    activeColor: Colors.blue,
-                    checkColor: Colors.white,
-                    visualDensity: VisualDensity.compact,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    side: BorderSide.none, // ปิดขอบของ Checkbox
-                  ),
-                ),
+              Checkbox(
+                value: rememberPassword,
+                onChanged: (value) => onRememberChanged(value!),
+                activeColor: Colors.blue,
+                checkColor: Colors.white,
               ),
-              SizedBox(width: 8), // ระยะห่างระหว่าง Checkbox และข้อความ
+              SizedBox(width: 8),
               Text(
                 "จำรหัสผ่าน",
                 style: TextStyle(
-                  color: widget.rememberPassword
+                  color: rememberPassword
                       ? (isDarkMode ? Colors.white : Colors.black)
                       : (isDarkMode ? Colors.white54 : Colors.grey),
                 ),
@@ -435,12 +407,12 @@ class _RememberPasswordWidgetState extends State<RememberPasswordWidget> {
             ],
           ),
           GestureDetector(
-            onTap: widget.onForgotPassword,
+            onTap: onForgotPassword,
             child: Text(
               "ลืมรหัสผ่าน?",
               style: TextStyle(
                 color: isDarkMode ? Colors.white70 : Colors.grey,
-                decoration: TextDecoration.underline, // ขีดเส้นใต้
+                decoration: TextDecoration.underline,
               ),
             ),
           ),
@@ -449,6 +421,7 @@ class _RememberPasswordWidgetState extends State<RememberPasswordWidget> {
     );
   }
 }
+
 
 // หรือ///
 class Ordesign extends StatelessWidget {

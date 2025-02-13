@@ -1,39 +1,51 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  // ฟังก์ชันสำหรับดึง token
+  String? _token;
+  String? _email;
+
   Future<String?> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token'); // คืนค่า token ที่เก็บไว้
+    return _token;
   }
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ (เช่น email)
-Future<Map<String, String>> getUserInfo() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? email = prefs.getString('email') ?? ''; // ถ้าไม่มี email ใน SharedPreferences ให้ใช้ค่าว่าง
-  String? token = prefs.getString('token') ?? ''; // ถ้าไม่มี token ใน SharedPreferences ให้ใช้ค่าว่าง
+  Future<Map<String, String>> getUserInfo() async {
+    return {
+      'email': _email ?? '',
+      'token': _token ?? '',
+    };
+  }
 
-  return {
-    'email': email,
-    'token': token, // เพิ่ม token ไปในข้อมูลที่คืนค่า
-  };
-}
+  Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
+    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
+    if (rememberPassword) {
+      // เก็บ token และ email เมื่อเลือก "จำรหัสผ่าน"
+      _token = prefs.getString('token');
+      _email = prefs.getString('email');
+    } else {
+      // เก็บข้อมูลจากการล็อกอินถ้าไม่ได้เลือก "จำรหัสผ่าน"
+      if (!isFirstLaunch) {
+        _token = prefs.getString('token');
+        _email = prefs.getString('email');
+      }
+    }
 
-  // ฟังก์ชันสำหรับตรวจสอบว่า token มีหรือไม่
-Future<bool> isLoggedIn() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = prefs.getString('token');
-  return token != null && token.isNotEmpty; // ตรวจสอบว่า token มีค่าหรือไม่
-}
+    // อัปเดตค่า isFirstLaunch เป็น false หลังจากเปิดแอปแล้ว
+    await prefs.setBool('isFirstLaunch', false);
 
+    return (_token != null && _token!.isNotEmpty);
+  }
 
-  // ฟังก์ชันสำหรับลบ token และข้อมูลผู้ใช้ (logout)
   Future<void> clearAuth() async {
+    _token = null;
+    _email = null;
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('token'); // ลบ token
-    prefs.remove('email'); // ลบ email
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('rememberPassword');
+    await prefs.setBool('isFirstLaunch', true);
   }
 }
-
-

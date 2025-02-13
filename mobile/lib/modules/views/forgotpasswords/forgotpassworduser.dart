@@ -110,7 +110,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   // ปุ่มรีเซ็ตรหัสผ่าน
                   CustomButton(
                     text: 'ส่งคำขอรีเซ็ตรหัสผ่าน',
-                    onPressed: () => authController.loginwithemail(),
+                    onPressed: () => authController.deleteAccount(),
                   ),
 
                   // ปุ่มย้อนกลับไปหน้า Login

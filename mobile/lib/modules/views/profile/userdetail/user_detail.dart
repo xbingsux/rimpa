@@ -108,7 +108,7 @@ class UserDetail extends StatelessWidget {
               const Spacer(),
               CustomButton(
                 text: 'บันทึกข้อมูลใหม่',
-                onPressed: () => authController.loginwithemail(),
+                onPressed: () => authController.deleteAccount(),
               ),
             ],
           ),

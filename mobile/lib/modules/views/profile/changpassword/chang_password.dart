@@ -81,7 +81,7 @@ class ChangePassword extends StatelessWidget {
               
               CustomButton(
                 text: 'บันทึกรหัสผ่านใหม่',
-                onPressed: () => authController.loginwithemail(),
+                onPressed: () => authController.deleteAccount(),
               ),
             ],
           ),

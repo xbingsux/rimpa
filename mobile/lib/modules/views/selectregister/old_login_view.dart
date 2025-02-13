@@ -209,7 +209,7 @@ class _LoginViewState extends State<LoginView>
                               CustomButton(
                                 text: 'เข้าสู่ระบบ',
                                 onPressed: () =>
-                                    authController.loginwithemail(),
+                                    authController.deleteAccount(),
                               ),
                               SizedBox(height: AppSpacing.md),
                               Ordesign(
@@ -267,7 +267,7 @@ class _LoginViewState extends State<LoginView>
                               CustomButton(
                                 text: 'เข้าสู่ระบบ',
                                 onPressed: () =>
-                                    authController.loginwithemail(),
+                                    authController.deleteAccount(),
                               ),
                               SizedBox(height: AppSpacing.md),
                               Ordesign(
