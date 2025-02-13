@@ -16,12 +16,12 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   bool isLoggedIn = false;
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
+  final AuthService _authService = AuthService(); // สร้าง instance ของ AuthService
 
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
-
+    _checkLoginStatus(); // ตรวจสอบสถานะการล็อกอินเมื่อเริ่มต้น
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -35,66 +35,37 @@ class _HomeProfilePageState extends State<HomeProfilePage>
 
     _animationController.forward();
   }
-
+  
 void _checkLoginStatus() async {
+    bool isLoggedInStatus = await _authService.checkLoginStatus();
+    if (isLoggedInStatus) {
+      _loadUserInfo();
+    } else {
+      setState(() {
+        isLoggedIn = false;
+      });
+    }
+  }
+
+  void _loadUserInfo() async {
+    String userEmail = await _authService.loadUserInfo();
+    setState(() {
+      email = userEmail;
+      isLoggedIn = true;
+    });
+  }
+
+  void _logout() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
-  String? token = prefs.getString('token'); // ดึงจาก session
+  await prefs.remove('token');
+  await prefs.remove('email');
+  await prefs.remove('rememberPassword');
 
-  if (token != null && token.isNotEmpty) {
-    setState(() {
-      isLoggedIn = true;
-    });
-    _loadUserInfo();
-  } else {
-    setState(() {
-      isLoggedIn = false;
-    });
-  }
-
-  // ลบข้อมูลเมื่อแอปเปิดใหม่หรือล็อกเอาท์
-  if (!rememberPassword) {
-    Future.delayed(Duration(seconds: 1), () async {
-      await prefs.remove('token');
-      await prefs.remove('email');
-    });
-  }
-}
-
-
-
-void _loadUserInfo() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? savedEmail = prefs.getString('email'); //  โหลดอีเมลจาก SharedPreferences
-  if (savedEmail != null && savedEmail.isNotEmpty) {
-    setState(() {
-      email = savedEmail;
-      isLoggedIn = true;
-    });
-  } else {
-    final authService = AuthService();
-    Map<String, String> userInfo = await authService.getUserInfo();
-    setState(() {
-      email = userInfo['email'] ?? 'ไม่มีข้อมูล';
-      isLoggedIn = true;
-    });
-
-    // บันทึก email ลง SharedPreferences เผื่อใช้ตอน rememberPassword = false
-    await prefs.setString('email', email);
-  }
-}
-
-
-
-
-void _logout() async {
-  final authService = AuthService();
-  await authService.clearAuth();  // ล้างข้อมูลการล็อกอิน
   setState(() {
     isLoggedIn = false;
-    email = '';
   });
 }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -119,7 +90,7 @@ void _logout() async {
                 children: [
                   SingleChildScrollView(
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.78,
+                      height: MediaQuery.of(context).size.height * 0.70,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark

@@ -15,25 +15,37 @@ class AuthService {
     };
   }
 
+  Future<bool> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
+    String? token = prefs.getString('token');
+
+    if (rememberPassword && token != null && token.isNotEmpty) {
+      return true; // ผู้ใช้ล็อกอินแล้ว
+    }
+    return false; // ผู้ใช้ยังไม่ได้ล็อกอิน
+  }
+
+// ฟังก์ชันโหลดข้อมูลผู้ใช้งาน
+  Future<String> loadUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    return email ?? 'ไม่มีข้อมูล';
+  }
+
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
-    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
     if (rememberPassword) {
-      // เก็บ token และ email เมื่อเลือก "จำรหัสผ่าน"
       _token = prefs.getString('token');
       _email = prefs.getString('email');
-    } else {
-      // เก็บข้อมูลจากการล็อกอินถ้าไม่ได้เลือก "จำรหัสผ่าน"
-      if (!isFirstLaunch) {
-        _token = prefs.getString('token');
-        _email = prefs.getString('email');
-      }
+      return (_token != null && _token!.isNotEmpty);
     }
 
-    // อัปเดตค่า isFirstLaunch เป็น false หลังจากเปิดแอปแล้ว
-    await prefs.setBool('isFirstLaunch', false);
+    // ถ้าไม่ได้เลือก "จำรหัสผ่าน" ก็ตรวจสอบ token ที่เก็บไว้
+    _token = prefs.getString('token');
+    _email = prefs.getString('email');
 
     return (_token != null && _token!.isNotEmpty);
   }
@@ -46,6 +58,5 @@ class AuthService {
     await prefs.remove('token');
     await prefs.remove('email');
     await prefs.remove('rememberPassword');
-    await prefs.setBool('isFirstLaunch', true);
   }
 }

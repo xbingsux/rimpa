@@ -7,6 +7,8 @@ import 'home_event.dart';
 import 'home_qr.dart';
 import 'home_reward.dart';
 import 'home_profile.dart';
+import '../../controllers/getusercontroller/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,10 +20,13 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   Timer? _timer;
   int _selectedIndex = 0;
+  bool isLoggedIn = false; // ตัวแปรสำหรับการตรวจสอบสถานะการล็อกอิน
+  String email = ''; // ตัวแปรสำหรับเก็บข้อมูลอีเมลของผู้ใช้
 
   @override
   void initState() {
     super.initState();
+     
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
@@ -43,6 +48,8 @@ class _HomePageState extends State<HomePage> {
     _pageController.dispose();
     super.dispose();
   }
+
+  
 
   void _onItemTapped(int index) {
     if (index == 2) {

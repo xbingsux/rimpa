@@ -11,6 +11,7 @@ class LoginController extends GetxController {
   Dio dio = Dio();
 
   void loginwithemail(bool rememberPassword) async {
+  // ตรวจสอบว่าเป็นการล็อกอินใหม่หรือไม่
   if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
     try {
       final apiUrlsController = Get.find<ApiUrls>();
@@ -28,20 +29,16 @@ class LoginController extends GetxController {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        // เก็บ Token เสมอเมื่อล็อกอินสำเร็จ
-        await prefs.setString('token', token);
-        await prefs.setString('email', user.email.value);
-        await prefs.setBool('rememberPassword', rememberPassword);
-
-        // ส่ง token และ email ไปใช้งานก่อน
-        String? savedEmail = prefs.getString('email');
-        String? savedToken = prefs.getString('token');
-        if (savedEmail != null && savedToken != null) {
-          // ใช้งานข้อมูลที่ได้จาก SharedPreferences ที่นี่
-          
+        if (rememberPassword) {
+          await prefs.setString('token', token);
+          await prefs.setString('email', user.email.value);
+          await prefs.setBool('rememberPassword', true);
+        } else {
+          await prefs.setString('token', token);
+          await prefs.setString('email', user.email.value);
+          await prefs.setBool('rememberPassword', false);
         }
 
-        print('Stored email after saving: ${prefs.getString('email')}');
         Get.snackbar('Success', 'Logged in successfully');
         Get.offNamed('/home');
       } else {
@@ -52,10 +49,17 @@ class LoginController extends GetxController {
       print("Error: $e");
     }
   } else {
-    Get.snackbar('Error', 'Please fill in all fields');
+    // หากไม่มีอีเมลและรหัสผ่าน ให้ใช้ token จากเครื่อง
+    final authService = Get.find<AuthService>();
+    if (await authService.isLoggedIn()) {
+      // ถ้ามี token ในเครื่องแล้ว ให้เข้าสู่ระบบทันที
+      Get.snackbar('Success', 'Logged in with saved token');
+      Get.offNamed('/home');
+    } else {
+      Get.snackbar('Error', 'Please fill in all fields');
+    }
   }
 }
-
 
 
   void deleteAccount() async {
@@ -91,7 +95,6 @@ class LoginController extends GetxController {
 
           Get.snackbar('Success', 'Logged in successfully');
           Get.offNamed('/home');
-
         } else if (response.statusCode == 401) {
           if (response.data['message'] == 'Wrong password') {
             Get.snackbar('Error', 'Wrong password');
