@@ -49,7 +49,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,9 +69,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
+                  'Username',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                      ),
+                )
               ],
             ),
             Icon(Icons.notifications_none, color: Colors.grey),

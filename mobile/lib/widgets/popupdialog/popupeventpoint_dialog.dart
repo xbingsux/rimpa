@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/constant/app.constant.dart';
 
 class CustomDialog extends StatefulWidget {
   final BuildContext context;
@@ -23,7 +24,10 @@ class _CustomDialogState extends State<CustomDialog>
     )..forward(); // เริ่มอนิเมชั่นทันทีที่ Dialog เปิด
 
     _scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut), // ใช้ curve "elasticOut" เพื่อให้ดูเด้งขึ้น
+      CurvedAnimation(
+          parent: _controller,
+          curve:
+              Curves.elasticOut), // ใช้ curve "elasticOut" เพื่อให้ดูเด้งขึ้น
     );
   }
 
@@ -40,7 +44,8 @@ class _CustomDialogState extends State<CustomDialog>
         borderRadius: BorderRadius.circular(20),
       ),
       backgroundColor: Colors.transparent, // พื้นหลังของ Dialog โปร่งใส
-      child: ScaleTransition( // ใช้ ScaleTransition สำหรับอนิเมชั่นขยาย
+      child: ScaleTransition(
+        // ใช้ ScaleTransition สำหรับอนิเมชั่นขยาย
         scale: _scaleAnimation,
         child: Stack(
           clipBehavior: Clip.none,
@@ -51,7 +56,7 @@ class _CustomDialogState extends State<CustomDialog>
                   padding: EdgeInsets.all(20),
                   width: 300,
                   decoration: BoxDecoration(
-                    color: Colors.white, // พื้นหลังสีขาว
+                     color: Theme.of(context).cardColor, // ใช้สีจาก cardColor ของ theme
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -105,7 +110,7 @@ class _CustomDialogState extends State<CustomDialog>
                         "ยอดสะสมของคุณเหลือ 150 คะแนน",
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black, // สีดำ
+                          color: const Color.fromARGB(255, 119, 119, 119), // สีดำ
                         ),
                       ),
                     ],
@@ -156,8 +161,10 @@ class TicketClipper extends CustomClipper<Path> {
     path.addArc(Rect.fromCircle(center: Offset(0, size.height / 2), radius: 30),
         -1.5708, 3.1416);
     path.addArc(
-        Rect.fromCircle(center: Offset(size.width, size.height / 2), radius: 30),
-        1.5708, 3.1416);
+        Rect.fromCircle(
+            center: Offset(size.width, size.height / 2), radius: 30),
+        1.5708,
+        3.1416);
     path.fillType = PathFillType.evenOdd;
     return path;
   }
@@ -198,22 +205,33 @@ class _AnimatedPulseCircleState extends State<AnimatedPulseCircle>
       animation: _controller,
       builder: (context, child) {
         return Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue.withOpacity(_controller.value),
-                blurRadius: 20 + (_controller.value * 15),
-                spreadRadius: _controller.value * 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(_controller.value),
+                  blurRadius: 20 + (_controller.value * 15),
+                  spreadRadius: _controller.value * 10,
+                ),
+              ],
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient:
+                    AppGradiant.gradientY_1, // ใช้ gradient จาก AppGradient
               ),
-            ],
-          ),
-          child: CircleAvatar(
-            radius: 45,
-            backgroundColor: Colors.blue,
-            child: Icon(Icons.check, color: Colors.white, size: 52),
-          ),
-        );
+              child: CircleAvatar(
+                radius: 45, // ขนาดของวงกลม
+                backgroundColor: Colors
+                    .transparent, // ทำให้พื้นหลังโปร่งใสเพื่อให้ใช้ Gradient
+                child: Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 52,
+                ),
+              ),
+            ));
       },
     );
   }
