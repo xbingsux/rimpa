@@ -1,48 +1,58 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
+import '../models/users.model.dart';
 import '../models/users.model.dart';
 import '../../core/services/api_urls.dart';
 
 class RegisterController extends GetxController {
-  final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
+  final UserModel user = UserModel();
+  final ProfileModel profile = ProfileModel();
+  Dio dio = Dio();
+// เปลี่ยนวันที่ให้เป็นรูปแบบที่ต้องการ
 
-  Dio dio = Dio(); // สร้างอินสแตนซ์ของ Dio
-
+  // ฟังก์ชันเพื่อส่งข้อมูลลง backend
   void register() async {
     if (user.email.isNotEmpty &&
         user.password.isNotEmpty &&
-        user.username.isNotEmpty) {
+        profile.profileName.isNotEmpty &&
+        profile.firstName.isNotEmpty &&
+        profile.lastName.isNotEmpty &&
+        profile.phone.isNotEmpty &&
+        profile.birthDate != null) {
       try {
-        // ใช้ Get.find<ApiUrls>() เพื่อเรียกใช้ URL สำหรับ login จาก ApiUrls controller
         final apiUrlsController = Get.find<ApiUrls>();
-
-        // ส่งข้อมูลผ่าน POST request
+        String genderValue = profile.gender.value == 'ไม่ระบุ' ? 'Other' : profile.gender.value == 'ชาย' ? 'Male' : 'Female';
+        // แปลงวันที่ให้เป็นรูปแบบ ISO-8601 พร้อมเวลาและเขตเวลา
+        String formattedDate =
+            profile.birthDate.value.toUtc().toIso8601String();
+        // ส่งข้อมูลไปยัง API
         final response = await dio.post(
-          apiUrlsController.register, // ใช้ URL จากไฟล์กลาง
+          apiUrlsController.register,
           data: {
             'email': user.email.value,
-            'profile': {
-              'profile_name': user.username.value,
-            },
             'password': user.password.value,
+            'profile': {
+              'profile_name': profile.profileName.value,
+              'first_name': profile.firstName.value,
+              'last_name': profile.lastName.value,
+              'phone': profile.phone.value,
+              'birth_date': formattedDate, // ใช้วันที่ที่แปลงแล้ว
+              'gender': genderValue,  // ส่งค่า gender ที่เลือก
+            },
           },
         );
 
-        // ตรวจสอบผลลัพธ์จากการตอบกลับของ API
         if (response.statusCode == 200) {
-          // ถ้าการลงทะเบียนสำเร็จ
           Get.snackbar("Success", "Account Created Successfully");
-          Get.offAllNamed('/login'); // ไปหน้า login
+          Get.offAllNamed('/login');
         } else {
-          // ถ้าการลงทะเบียนไม่สำเร็จ
-          Get.snackbar("Success", "SUCCESS CREATE ACCOUNT!!!!!!");
+          Get.snackbar("Error", "Failed to create account.");
         }
       } catch (e) {
-        // ถ้ามีข้อผิดพลาดในการเชื่อมต่อหรือ API
-        Get.snackbar("Success", "SUCCESS CREATE ACCOUNT!!!!!!");
+        Get.snackbar("Error", "An error occurred. Please try again.");
       }
     } else {
-      // ถ้าข้อมูลไม่ครบ
       Get.snackbar("Error", "Please fill all fields");
     }
   }
