@@ -4,10 +4,11 @@ import '../getusercontroller/auth_service.dart';
 
 class AuthMiddleware extends GetMiddleware {
   @override
-  Future<RouteSettings?> redirect(String? route) async {
+  RouteSettings? redirect(String? route) {
     // ตัวนี้ยังคงเป็นการตรวจสอบการ redirect ไปที่หน้า login ถ้าไม่ได้ล็อกอิน
     return null;
   }
+
   // ฟังก์ชันที่ใช้ตรวจสอบสถานะการล็อกอินเฉพาะฟังก์ชันใน controller
   Future<bool> checkLoginStatusInFunction() async {
     AuthService authService = Get.find<AuthService>();
