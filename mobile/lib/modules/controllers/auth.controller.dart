@@ -11,55 +11,49 @@ class LoginController extends GetxController {
   Dio dio = Dio();
 
   void loginwithemail(bool rememberPassword) async {
-  // ตรวจสอบว่าเป็นการล็อกอินใหม่หรือไม่
-  if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
-    try {
-      final apiUrlsController = Get.find<ApiUrls>();
+    if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
+      try {
+        final apiUrlsController = Get.find<ApiUrls>();
+        final response = await dio.post(
+          apiUrlsController.login,
+          data: {
+            'email': user.email.value,
+            'password': user.password.value,
+          },
+        );
 
-      final response = await dio.post(
-        apiUrlsController.login,
-        data: {
-          'email': user.email.value,
-          'password': user.password.value,
-        },
-      );
+        if (response.statusCode == 200) {
+          var token = response.data['token'] ?? '';
 
-      if (response.statusCode == 200) {
-        var token = response.data['token'] ?? '';
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-
-        if (rememberPassword) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', token);
           await prefs.setString('email', user.email.value);
-          await prefs.setBool('rememberPassword', true);
+          await prefs.setBool('rememberPassword', rememberPassword);
+
+          if (!rememberPassword) {
+            // บันทึกเวลาล็อกอิน ถ้าไม่ได้เลือก "จำฉันไว้"
+            await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
+          }
+
+          Get.snackbar('สำเร็จ', 'เข้าสู่ระบบเรียบร้อย');
+          Get.offNamed('/home');
         } else {
-          await prefs.setString('token', token);
-          await prefs.setString('email', user.email.value);
-          await prefs.setBool('rememberPassword', false);
+          Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');
         }
-
-        Get.snackbar('Success', 'Logged in successfully');
+      } catch (e) {
+        Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน');
+        print("Error: $e");
+      }
+    } else {
+      final authService = Get.find<AuthService>();
+      if (await authService.isLoggedIn()) {
+        Get.snackbar('สำเร็จ', 'เข้าสู่ระบบโดยใช้ token ที่บันทึกไว้');
         Get.offNamed('/home');
       } else {
-        Get.snackbar('Error', 'Login failed');
+        Get.snackbar('ข้อผิดพลาด', 'โปรดกรอกข้อมูลให้ครบถ้วน');
       }
-    } catch (e) {
-      Get.snackbar('Error', 'Check your email and password');
-      print("Error: $e");
-    }
-  } else {
-    // หากไม่มีอีเมลและรหัสผ่าน ให้ใช้ token จากเครื่อง
-    final authService = Get.find<AuthService>();
-    if (await authService.isLoggedIn()) {
-      // ถ้ามี token ในเครื่องแล้ว ให้เข้าสู่ระบบทันที
-      Get.snackbar('Success', 'Logged in with saved token');
-      Get.offNamed('/home');
-    } else {
-      Get.snackbar('Error', 'Please fill in all fields');
     }
   }
-}
 
 
   void deleteAccount() async {
