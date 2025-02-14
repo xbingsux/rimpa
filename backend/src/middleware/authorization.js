@@ -1,9 +1,11 @@
 const jwt = require("jsonwebtoken");
 
+const usedTokens = new Set();
+
 const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
-    
+
     // ตรวจสอบว่า authHeader มีค่าและอยู่ในรูปแบบ "Bearer <token>"
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).send("No token or Invalid token format");
@@ -23,11 +25,19 @@ const auth = async (req, res, next) => {
       return res.status(401).send("Invalid token or missing user ID");
     }
 
+    if (usedTokens.has(token)) {
+      return res.status(403).json({ message: "Token already used" });
+    }
+
     req.user = decoded; // เก็บข้อมูลผู้ใช้ใน req.user
+    if (decoded.usedToken) usedTokens.add(token);
+
     next(); // ทำงานต่อ
   } catch (error) {
-    console.log(error);
-    return res.status(500).send("Token Invalid");
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ status: "error", message: "Token Expired" });
+    }
+    return res.status(401).json({ status: "error", message: "Invalid Token" });
   }
 };
 

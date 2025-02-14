@@ -8,13 +8,15 @@ generator client {
 }
 
 model User {
-  id       Int      @id @default(autoincrement()) // Primary Key
-  email    String   @unique // Email
-  password String // Password
-  role_id  Int // Foreign Key ไปยัง User
-  role     Role     @relation(fields: [role_id], references: [id]) // ความสัมพันธ์แบบ 1:1 กับ User
-  profile  Profile? // Profile relation
-  active   Boolean  @default(true) // Active status
+  id        Int      @id @default(autoincrement()) // Primary Key
+  email     String   @unique // Email
+  password  String // Password
+  role_id   Int // Foreign Key ไปยัง User
+  role      Role     @relation(fields: [role_id], references: [id])
+  profile   Profile? // Profile relation
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  active    Boolean  @default(true) // Active status
 }
 
 model Role {
@@ -26,23 +28,285 @@ model Role {
 model Profile {
   id            Int       @id @default(autoincrement()) // Primary Key
   user_id       Int       @unique // Foreign Key ไปยัง User
-  user          User      @relation(fields: [user_id], references: [id]) // ความสัมพันธ์แบบ 1:1 กับ User
+  user          User      @relation(fields: [user_id], references: [id])
   title         String? // คำนำหน้า เช่น นาย, นาง, นางสาว
   first_name    String? // ชื่อจริง
   last_name     String? // นามสกุล
   contact_email String? // อีเมล 
   birth_date    DateTime? // วันเดือนปีเกิด
   phone         String? // เบอร์โทรศัพท์ (ไม่จำเป็นต้องใส่)
+  profile_img   String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
+  profile_name  String?
+  gender        Gender?
+  points        Decimal   @default(0) // คะแนนสะสมของผู้ใช้
 
+  id_card          String?            @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
+  Point            Point[]
+  EventView        EventView[]
+  EventLike        EventLike[]
+  EventParticipant EventParticipant[]
+  TransactionLog   TransactionLog[]
+  Address          Address[]
+  CheckIn          CheckIn[]
+  RedeemReward     RedeemReward[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  active           Boolean            @default(true) // Active status
+}
+
+enum Gender {
+  Other
+  Male
+  Female
+}
+
+model Point {
+  id          Int             @id @default(autoincrement())
+  type        TransactionType // ประเภทการทำรายการ
+  points      Decimal // จำนวนคะแนนที่ได้รับหรือใช้
+  description String? // รายละเอียด (เช่น "ซื้อสินค้าราคา 500 บาท")
+
+  Profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int
+
+  TransactionLog TransactionLog[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  active         Boolean          @default(true)
+}
+
+enum TransactionType {
+  EARN // รับคะแนน
+  REDEEM // ใช้คะแนน
+}
+
+model Address {
+  id                  Int     @id @default(autoincrement()) // Primary Key
+  full_name           String
   // ที่อยู่ (address) แยกเก็บเป็นฟิลด์ย่อย
   address_no          String? // เลขที่บ้าน
   address_subdistrict String? // แขวง/ตำบล
   address_district    String? // เขต/อำเภอ
   address_province    String? // จังหวัด
   address_code        String? // รหัสไปรษณีย์
+  phone               String? // เบอร์โทรศัพท์ (ไม่จำเป็นต้องใส่)
 
-  profile_img  String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
-  profile_name String?
+  Profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int
 
-  id_card String? @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
+  RedeemReward RedeemReward[]
+  AddressType  AddressType
+  active       Boolean
+}
+
+enum AddressType {
+  DEFAULT
+  OTHER
+}
+
+model Event {
+  id             Int              @id @default(autoincrement()) // Primary Key
+  event_name     String?
+  title          String
+  description    String
+  max_attendees  Int              @default(0)
+  startDate      DateTime
+  endDate        DateTime
+  releaseDate    DateTime?
+  SubEvent       SubEvent[]
+  EventView      EventView[]
+  EventLike      EventLike[]
+  TransactionLog TransactionLog[]
+}
+
+enum EventStatus {
+  PENDING //รอดำเนินการ → ลูกค้าเริ่มการชำระเงิน แต่ยังไม่เสร็จสิ้น
+  PAID //ชำระเงินเรียบร้อยแล้ว
+  FAILED //การชำระเงินล้มเหลว (เช่น บัตรเครดิตถูกปฏิเสธ)
+  CANCELLED //ยกเลิกการชำระเงินก่อนสำเร็จ
+  EXPIRED //คำขอชำระเงินหมดอายุ
+  REFUNDED //เงินถูกคืนให้ลูกค้าแล้ว
+  PARTIALLY_REFUNDED //คืนเงินบางส่วน
+  CHARGEBACK //ลูกค้าร้องขอเงินคืนจากธนาคาร (Chargeback)
+}
+
+model EventView {
+  id         Int      @id @default(autoincrement()) // Primary Key
+  event      Event    @relation(fields: [eventId], references: [id])
+  eventId    Int
+  profile    Profile  @relation(fields: [profile_id], references: [id])
+  profile_id Int
+  createdAt  DateTime @default(now())
+}
+
+model EventLike {
+  event      Event    @relation(fields: [event_id], references: [id])
+  event_id   Int
+  profile    Profile  @relation(fields: [profile_id], references: [id])
+  profile_id Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  active     Boolean  @default(true)
+
+  @@id([event_id, profile_id])
+}
+
+model SubEvent {
+  id          Int          @id @default(autoincrement()) // Primary Key
+  title       String?
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  map         String?
+  point       Decimal? //คะแนนที่ได้รับ
+  cost        Decimal? //กำหนดค่าใช้งานในการเข้าร่วม event
+  PaymentType PaymentType? //กำหนดประเภทการจ่ายเงิน CASH and POINTS
+  img         EventIMG[]
+
+  checkIn          CheckIn[]
+  EventParticipant EventParticipant[]
+
+  event_type EventType   @default(Sub) //ประเภทอีเวน [หลัก ,รอง]
+  isHidden   Boolean? //ซ่อน event จากผู้ใช้
+  visibility Visibility? //ประเภทผู้เข้าร่วม
+  Event      Event       @relation(fields: [eventId], references: [id])
+  eventId    Int
+}
+
+model EventParticipant {
+  id          Int           @id @default(autoincrement()) // Primary Key
+  Profile     Profile       @relation(fields: [profileId], references: [id])
+  profileId   Int
+  createdAt   DateTime      @default(now())
+  paymentType PaymentType?
+  status      PaymentStatus @default(PENDING)
+  SubEvent    SubEvent      @relation(fields: [subEventId], references: [id])
+  subEventId  Int
+}
+
+enum Visibility {
+  Private
+  Public
+}
+
+enum EventType {
+  Main
+  Sub
+}
+
+model EventIMG {
+  id           Int      @id @default(autoincrement()) // Primary Key
+  path         String
+  eventId      Int
+  sub_event    SubEvent @relation(fields: [sub_event_id], references: [id])
+  sub_event_id Int
+}
+
+model CheckIn {
+  id Int @id @default(autoincrement()) // Primary Key
+
+  profile      Profile  @relation(fields: [profile_id], references: [id])
+  profile_id   Int
+  sub_event    SubEvent @relation(fields: [sub_event_id], references: [id])
+  sub_event_id Int
+
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id             Int              @id @default(autoincrement()) // Primary Key
+  title          String
+  description    String
+  path           String
+  startDate      DateTime
+  endDate        DateTime
+  TransactionLog TransactionLog[]
+}
+
+model Reward {
+  id           Int         @id @default(autoincrement()) // Primary Key
+  reward_name  String
+  description  String
+  img          String
+  startDate    DateTime?
+  endDate      DateTime?
+  cost         Decimal
+  paymentType  PaymentType @default(Point) //กำหนดประเภทการจ่ายเงิน CASH and POINTS
+  stock        Int // จำนวนของรางวัลที่มีอยู่
+  max_per_user Int? // จำนวนสูงสุดที่ผู้ใช้แต่ละคนสามารถแลกได้ (nullable)
+
+  RedeemReward   RedeemReward[]
+  TransactionLog TransactionLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  active    Boolean  @default(true)
+}
+
+model RedeemReward {
+  id        Int      @id @default(autoincrement()) // Primary Key
+  quantity  Int      @default(1)
+  base_fee  Decimal? // ค่าจัดส่งพื้นฐาน
+  Reward    Reward   @relation(fields: [rewardId], references: [id])
+  rewardId  Int
+  Address   Address? @relation(fields: [addressId], references: [id])
+  addressId Int?
+  Profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId Int?
+
+  delivery DeliveryType  @default(Pickup)
+  status   PaymentStatus @default(PENDING)
+}
+
+enum PaymentStatus {
+  PENDING // รอดำเนินการ
+  PAID // ชำระเงินสำเร็จ
+  FAILED // การชำระเงินล้มเหลว
+
+  IN_TRANSIT // กำลังขนส่ง
+  SHIPPED // จัดส่งแล้ว
+
+  DELIVERED // ส่งสำเร็จ
+  CANCELLED // ยกเลิกการชำระเงิน / ยกเลิกคำสั่งซื้อ
+}
+
+enum DeliveryType {
+  Pickup
+  Standard
+  Express
+  COD
+  Postal
+}
+
+enum PaymentType {
+  FREE
+  Cash
+  DigitalPayment
+  CreditCard
+  BankTransfer
+  EWallet
+  Point
+}
+
+model TransactionLog {
+  id      Int     @default(autoincrement()) // Primary Key
+  title   String
+  log     String?
+  status  String
+  version String //Code Version
+
+  Profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int
+  Event     Event?  @relation(fields: [eventId], references: [id])
+  eventId   Int?
+  Banner    Banner? @relation(fields: [bannerId], references: [id])
+  bannerId  Int?
+  Point     Point?  @relation(fields: [pointId], references: [id])
+  pointId   Int?
+  Reward    Reward? @relation(fields: [rewardId], references: [id])
+  rewardId  Int?
+
+  createdAt DateTime @default(now())
+
+  @@id([id, profileId])
 }

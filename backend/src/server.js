@@ -15,7 +15,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use("/", require("./controllers/**/controller"));
+app.use("/", require("./controllers/admin/controller"));
 app.use("/auth", require("./controllers/auth/controller"));
+app.use("/event", require("./controllers/event/controller"));
+app.use("/payment", require("./controllers/payment/controller"));
+app.use("/reward", require("./controllers/reward/controller"));
+app.use("/", require("./controllers/upload/controller"));
 // app.use(`/public`, express.static(path.join(__dirname, '/uploads')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
