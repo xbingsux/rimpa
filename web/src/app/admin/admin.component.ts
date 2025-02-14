@@ -61,7 +61,7 @@ export class AdminComponent implements OnInit {
   ]
 
 
-  constructor(public router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute) {
 
   }
   active = 'background-color: #1C1C1C;color: #fff;'
@@ -88,6 +88,6 @@ export class AdminComponent implements OnInit {
   }
 
   isUrl(url: string, tags_url: string[]) {
-    return tags_url.some((tag: string) => tag.indexOf(url) != -1)
+    return tags_url.some((tag: string) => url.indexOf(tag) != -1)
   }
 }

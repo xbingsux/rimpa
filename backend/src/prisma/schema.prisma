@@ -37,8 +37,8 @@ model Profile {
   phone         String? // เบอร์โทรศัพท์ (ไม่จำเป็นต้องใส่)
   profile_img   String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
   profile_name  String?
-
-  points Decimal @default(0) // คะแนนสะสมของผู้ใช้
+  gender        Gender?
+  points        Decimal   @default(0) // คะแนนสะสมของผู้ใช้
 
   id_card          String?            @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)
   Point            Point[]
@@ -52,6 +52,12 @@ model Profile {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   active           Boolean            @default(true) // Active status
+}
+
+enum Gender {
+  Other
+  Male
+  Female
 }
 
 model Point {
@@ -102,10 +108,11 @@ model Event {
   id             Int              @id @default(autoincrement()) // Primary Key
   event_name     String?
   title          String
-  decription     String
-  releaseDate    DateTime
+  description    String
+  max_attendees  Int              @default(0)
   startDate      DateTime
   endDate        DateTime
+  releaseDate    DateTime?
   SubEvent       SubEvent[]
   EventView      EventView[]
   EventLike      EventLike[]
@@ -147,9 +154,10 @@ model EventLike {
 model SubEvent {
   id          Int          @id @default(autoincrement()) // Primary Key
   title       String?
-  decription  String?
+  description String?
   startDate   DateTime?
   endDate     DateTime?
+  map         String?
   point       Decimal? //คะแนนที่ได้รับ
   cost        Decimal? //กำหนดค่าใช้งานในการเข้าร่วม event
   PaymentType PaymentType? //กำหนดประเภทการจ่ายเงิน CASH and POINTS
@@ -158,10 +166,10 @@ model SubEvent {
   checkIn          CheckIn[]
   EventParticipant EventParticipant[]
 
-  event_type EventType  @default(Sub) //ประเภทอีเวน [หลัก ,รอง]
-  isHidden   Boolean //ซ่อน event จากผู้ใช้
-  visibility Visibility //ประเภทผู้เข้าร่วม
-  Event      Event      @relation(fields: [eventId], references: [id])
+  event_type EventType   @default(Sub) //ประเภทอีเวน [หลัก ,รอง]
+  isHidden   Boolean? //ซ่อน event จากผู้ใช้
+  visibility Visibility? //ประเภทผู้เข้าร่วม
+  Event      Event       @relation(fields: [eventId], references: [id])
   eventId    Int
 }
 
@@ -208,7 +216,7 @@ model CheckIn {
 model Banner {
   id             Int              @id @default(autoincrement()) // Primary Key
   title          String
-  decription     String
+  description    String
   path           String
   startDate      DateTime
   endDate        DateTime
@@ -218,6 +226,7 @@ model Banner {
 model Reward {
   id           Int         @id @default(autoincrement()) // Primary Key
   reward_name  String
+  description  String
   img          String
   startDate    DateTime?
   endDate      DateTime?

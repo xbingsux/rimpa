@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'
 import { AuthGuard } from '../service/auth-guard.service'
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,9 +12,7 @@ import { AuthGuard } from '../service/auth-guard.service'
 export class LoginComponent implements OnInit {
 
   keep_me = false
-  constructor(private auth: AuthGuard) {
-
-  }
+  constructor(private auth: AuthGuard, private router: Router) { }
   ngOnInit(): void {
     if (localStorage.getItem('email')) {
       this.login.email = String(localStorage.getItem('email'))
@@ -29,6 +28,12 @@ export class LoginComponent implements OnInit {
     }
 
     this.auth.login(this.login.email, this.login.password).subscribe((item) => { console.log(item); })
+  }
+
+  goToLink(url: string) {
+    this.router.navigate([`${url}`]).finally(() => {
+      this.router.url
+    })
   }
 
   login: Login = new Login();

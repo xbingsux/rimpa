@@ -97,24 +97,69 @@ const sendVertifyUser = async (email, token) => {
   const mailOptions = {
     from: `<${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "Test Vertify Email",
+    subject: "ยืนยันอีเมลของคุณ",
     html: `
-    <a href="${process.env.API_URL}/auth/verify-user?token=${token}" target="_blank" style="text-decoration: none;">
-      <button style="
-          background-color: #28a745; 
-          color: white; 
-          padding: 12px 20px; 
-          font-size: 16px; 
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: 0.3s;
-          display: inline-block;
-      " onmouseover="this.style.backgroundColor='#218838'" 
-        onmouseout="this.style.backgroundColor='#28a745'">
-        Verify Email
-      </button>
-    </a>
+    <div style="width: 100%;background-color: #fff;">
+        <center>
+            <div style="width: fit-content;background-color: white;padding: 0 80px 0 80px;">
+                <div style="height: 250px;">
+                    <img src="https://lh3.googleusercontent.com/d/1OEo5p0k7p34zj4bms2YY7Rw1JxPPVj0B"
+                        style="width: 165px;height: 160px;margin-top: 45px;">
+                </div>
+                <table>
+                    <tr>
+                        <td style="font-weight: 700;font-size: 24px;color: #1E1E1E;">
+                            🎉 ยินดีต้อนรับ! คุณพร้อมรับรางวัลสุดพิเศษแล้ว!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 40px;font-size: 16px;font-weight: 500;">
+                            <p>
+                                เรียน [${email}],
+                            </p>
+                            <p>
+                                ขอบคุณที่ลงทะเบียนกับ [ชื่อแอป]!
+                            </p>
+                            <p>
+                                บัญชีของคุณถูกสร้างเรียบร้อยแล้ว และคุณสามารถเริ่มสะสม รีวอร์ด ได้ทันที
+                            </p>
+                            <p>
+                                ✨ สิ่งที่คุณสามารถทำได้ตอนนี้:
+                            </p>
+                            <p>
+                                ✅ เข้าสู่ระบบและตั้งค่าบัญชีของคุณ
+                            </p>
+                            <p>
+                                ✅ สำรวจภารกิจและกิจกรรมเพื่อรับแต้ม
+                            </p>
+                            <p>
+                                ✅ แลกของรางวัลสุดพิเศษจากร้านค้าของเรา
+                            </p>
+                            <p>
+                                กดปุ่มด้านล่างเพื่อเข้าสู่ระบบและเริ่มรับรางวัลเลย!
+                            </p>
+                            <a href="${process.env.API_URL}/auth/verify-user?token=${token}" target="_blank"
+                                style="text-decoration: none;">
+                                <button
+                                    style="background-color: #1093ED;border: 1px solid #1093ED;border-radius: 12px;width: 160px;height: 48px;color: white;">
+                                    Verify Email
+                                </button>
+                            </a>
+                            <p>
+                                หากคุณไม่ได้ทำการลงทะเบียน โปรดติดต่อฝ่ายสนับสนุนของเรา
+                            </p><br>
+                            <p>
+                                ขอให้สนุกกับการสะสมรางวัล! 🎁
+                            </p>
+                            <p>
+                                ทีมงาน
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </center>
+    </div>
     `
   };
 
@@ -128,9 +173,111 @@ const sendVertifyUser = async (email, token) => {
   });
 
 }
+
+const user = async (email) => {
+  const user = await prisma.user.findFirst({
+    where: { email: email },
+  })
+  return user
+}
+
+const sendForgotPassword = async (email, token) => {
+  // ตั้งค่า SMTP (ใช้ Gmail เป็นตัวอย่าง)
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,   // ใส่อีเมลของคุณ
+      pass: process.env.EMAIL_PASS       // ใช้ App Password แทนรหัสผ่านจริง
+    }
+  });
+
+  // ตั้งค่าเนื้อหาอีเมล
+  const mailOptions = {
+    from: `<${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "ยืนยันอีเมลของคุณ",
+    html: `
+        <div style="width: 100%;background-color: #fff;">
+        <center>
+            <div style="width: fit-content;background-color: white;padding: 0 80px 0 80px;">
+                <div style="height: 250px;">
+                    <img src="https://lh3.googleusercontent.com/d/1OEo5p0k7p34zj4bms2YY7Rw1JxPPVj0B"
+                        style="width: 165px;height: 160px;margin-top: 45px;">
+                </div>
+                <table>
+                    <tr>
+                        <td style="font-weight: 700;font-size: 24px;color: #1E1E1E;">
+                            🔒 รีเซ็ตรหัสผ่านของคุณ
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 40px;font-size: 16px;font-weight: 500;">
+                            <p>
+                                เรียน [ชื่อผู้ใช้],
+                            </p>
+                            <br>
+                            <p>
+                                เราแจ้งให้คุณทราบว่า รหัสผ่านของบัญชี [ชื่อแอป] ของคุณถูกเปลี่ยนเรียบร้อยแล้ว
+                            </p>
+                            <br>
+                            <p>
+                                หาก คุณไม่ได้เป็นผู้เปลี่ยนรหัสผ่าน
+                            </p>
+                            <p>
+                                โปรดรีเซ็ตรหัสผ่านของคุณทันทีโดยคลิกที่ลิงก์ด้านล่าง
+                            </p>
+                            <a href="${process.env.WEB_URL}/new-password?token=${token}" target="_blank"
+                                style="text-decoration: none;">
+                                <button
+                                    style="background-color: #1093ED;border: 1px solid #1093ED;border-radius: 12px;width: 160px;height: 48px;color: white;">
+                                    Reset Password
+                                </button>
+                            </a>
+                            <p>
+                                หากคุณมีคำถามหรือต้องการความช่วยเหลือโปรดติดต่อฝ่ายสนับสนุนของเรา
+                            </p>
+                            <p>
+                                ขอบคุณที่เป็นส่วนหนึ่งของ [ชื่อแอป]!
+                            </p>
+                            <p>
+                                ทีมงาน [ชื่อแอป]
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </center>
+    </div>
+    `
+  };
+
+  // ส่งอีเมล
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log("Error:", error);
+    } else {
+      console.log("Email sent:", info.response);
+    }
+  });
+
+}
+
+const resetPassword = async (id, password) => {
+  const user = await prisma.user.update({
+    where: { id: id },
+    data: {
+      password: password
+    }
+  })
+  return user;
+}
+
 module.exports = {
   authenticateEmail,
   register,
   sendVertifyUser,
   vertifyUser,
+  user,
+  sendForgotPassword,
+  resetPassword
 };

@@ -1,18 +1,22 @@
 import { NgIf } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-banner-update',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, FormsModule],
   templateUrl: './banner-update.component.html',
   styleUrl: './banner-update.component.scss'
 })
 export class BannerUpdateComponent {
 
-  constructor(public router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
+  data: Banner = new Banner()
   img_path = ''//base64
 
   onFileSelected(event: Event) {
@@ -32,4 +36,28 @@ export class BannerUpdateComponent {
     })
   }
 
+  submit() {
+    this.http.post(`${environment.API_URL}/update-banner`, {
+      id: this.data.id,
+      title: this.data.title,
+      description: this.data.description,
+      startDate: new Date(this.data.startDate),
+      endDate: new Date(this.data.endDate),
+      path: this.data.path
+    }).subscribe(async (response: any) => {
+      console.log(response);
+      if (response.status == 'success') this.router.navigate(['/admin/banner'])
+    }, error => {
+      console.error('Error:', error);
+    });
+  }
+
+}
+class Banner {
+  id = 0
+  title = ''
+  description = ''
+  path = ''
+  startDate = ''
+  endDate = ''
 }

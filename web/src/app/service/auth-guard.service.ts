@@ -14,8 +14,10 @@ export class AuthGuard implements CanActivate {
   login(email: string, password: string) {
     let response = this.http.post(`${this.api_url}/auth/login`, { email, password })
     response.subscribe((item: any) => {
-      localStorage.setItem('token', item.token)
-      this.router.navigate(['admin/dashboard']);
+      if (item.role == 'admin') {
+        localStorage.setItem('token', item.token)
+        this.router.navigate(['admin/dashboard']);
+      }
     })
     return response
   }

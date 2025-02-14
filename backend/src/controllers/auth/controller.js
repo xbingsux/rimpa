@@ -116,6 +116,8 @@ router.get("/verify-user", async (req, res) => {
 
   const item = await Service.vertifyUser(decoded.userId)
   let isSuccess = (item && item.user.active)
+  console.log(item.status);
+  console.log(expired);
 
   if (!item.status && expired) {
     res.send(`
@@ -182,6 +184,82 @@ router.post("/verify-token", (req, res) => {
       role: decoded.role
     });
   });
+});
+
+router.post("/reset-password", async (req, res) => {
+  const { token, new_password } = req.body
+  // ตรวจสอบว่า token มีค่าหรือไม่
+  if (!token) {
+    return res.status(401).send("No token");
+  }
+
+  // ตรวจสอบและถอดรหัส token
+  let decoded
+  let expired = false
+  try {
+    decoded = jwt.decode(token, process.env.SECRET_KEY)
+    jwt.verify(token, process.env.SECRET_KEY);
+  } catch (e) {
+    if (e.message == 'jwt expired') {
+      expired = true
+    }
+  }
+
+  if (!decoded || !decoded.userId) {
+    return res.status(401).send("Invalid token or missing user ID");
+  }
+
+  const hashedPassword = bcrypt.hashSync(new_password, 10);
+  const user = await Service.resetPassword(decoded.userId, hashedPassword)
+  return res.status(200).json({
+    status: "success",
+    user: user,
+  });
+
+  // let isSuccess = (item && item.user.active)
+
+  // if (!item.status && expired) {
+
+  // } else if (item.status && !expired) {
+
+  // } else {
+  //   return res.status(401).send("Invalid token");
+  // }
+})
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  console.log('email', email);
+
+  if (!email || email == '') {
+    return res.status(400).json({
+      status: "error",
+      message: "Email is required",
+    });
+  }
+
+  try {
+    const user = await Service.user(email)
+    if (user) {
+      let token = jwt.sign({ userId: user.id, usedToken: 1 }, process.env.SECRET_KEY, {
+        expiresIn: "30m",
+      });
+
+      console.log(token);
+      await Service.sendForgotPassword(email, token)
+    }
+    return res.status(201).json({
+      status: "success",
+      user: user,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: error.message//"Internal Server Error",
+    });
+  }
 });
 
 module.exports = router;

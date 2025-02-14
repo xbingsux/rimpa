@@ -14,10 +14,15 @@ import { EventUpdateComponent } from './event-update/event-update.component';
 import { BannerUpdateComponent } from './banner-update/banner-update.component';
 import { RewardUpdateComponent } from './reward-update/reward-update.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NewPasswordComponent } from './new-password/new-password.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
+
     { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'new-password', component: NewPasswordComponent },
     {
         path: 'admin',
         component: AdminComponent,
@@ -27,12 +32,16 @@ export const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'event', component: EventManagementComponent },
             { path: 'event-update', component: EventUpdateComponent },
+            { path: 'event-update/:id', component: EventUpdateComponent },
             { path: 'banner', component: BannerManagementComponent },
             { path: 'banner-update', component: BannerUpdateComponent },
+            { path: 'banner-update/:id', component: BannerUpdateComponent },
             { path: 'reward', component: RewardManagementComponent },
             { path: 'reward-update', component: RewardUpdateComponent },
+            { path: 'reward-update/:id', component: RewardUpdateComponent },
             { path: 'users', component: UserManagementComponent },
             { path: 'user-update', component: UserUpdateComponent },
+            { path: 'user-update/:id', component: UserUpdateComponent },
             { path: 'event-scan', component: EventScanComponent },
         ]
     },
