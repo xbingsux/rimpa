@@ -397,7 +397,7 @@ class RememberPasswordWidget extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                "จำรหัสผ่าน",
+                "จำฉันไว้ไหม",
                 style: TextStyle(
                   color: rememberPassword
                       ? (isDarkMode ? Colors.white : Colors.black)

@@ -22,7 +22,7 @@ class AuthMiddleware extends GetMiddleware {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.withOpacity(0.8),
         colorText: Colors.white,
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       );
     }
     return loggedIn;
