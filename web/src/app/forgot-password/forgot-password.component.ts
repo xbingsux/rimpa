@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment'
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,14 +14,8 @@ import { environment } from '../../environments/environment'
 })
 export class ForgotPasswordComponent {
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   email = ''
-
-  goToLink(url: string) {
-    this.router.navigate([`${url}`]).finally(() => {
-      this.router.url
-    })
-  }
 
   reset_password() {
     this.http.post(`${environment.API_URL}/auth/forgot-password`, { email: this.email }).subscribe((response: any) => {

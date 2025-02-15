@@ -19,7 +19,8 @@
                 <input type="checkbox" id="keep_me" [(ngModel)]="keep_me">
                 <label for="keep_me" class="px-[12px] select-none">Remember me</label>
             </div>
-            <div class="underline text-[#1093ED] cursor-pointer" (click)="goToLink('/forgot-password')">Forgot password?
+            <div class="underline text-[#1093ED] cursor-pointer" (click)="api.goToLink('/forgot-password')">Forgot
+                password?
             </div>
         </div>
         <div (click)="AuthLogin()" class="border-[1px] rounded-[16px] h-[48px] w-[575px] px-[16px] text-[20px] text-center p-[4px] bg-[#1093ED] text-white

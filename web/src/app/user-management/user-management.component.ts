@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-
+import { ApiService } from '../api/api.service'
 @Component({
   selector: 'app-user-management',
   standalone: true,
@@ -11,33 +11,38 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss'
 })
-export class UserManagementComponent {
+export class UserManagementComponent implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
+
   ngOnInit(): void {
     this.http.post(`${environment.API_URL}/list-profile`, {}).subscribe(async (response: any) => {
       console.log(response.profile);
+
       this.list = response.profile
+
+      this.list.map(async (item: any) => {
+        let url = item.profile.profile_img
+        if (url) {
+          const status = await this.api.checkImageExists(`${environment.API_URL}${url.replace('src', '')}`)
+          if (status === 500 || status === 404) item.profile.profile_img = null;
+        }
+        return item;
+      })
     }, error => {
       console.error('Error:', error);
     });
+
   }
 
   getImg(url: string) {
-    return `${environment.API_URL}${url.replace('src', '')}`
+    let path = `${environment.API_URL}${url.replace('src', '')}`
+    return path
   }
 
-  goToLink(url: string) {
-    this.router.navigate([`${url} `]).finally(() => {
-      this.router.url
-    })
-  }
 
-  toEdit(url: string, key: string) {
-    this.router.navigate([`${url}/${key}`])
-  }
 
   toDelete() {
 

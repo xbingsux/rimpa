@@ -15,7 +15,7 @@
                     class="pl-[50px] h-[40px] w-full min-w-[200px] rounded-[12px] border-[1px] border-[#D9D9D9]">
             </label>
 
-            <input type="button" (click)="goToLink('admin/user-update')"
+            <input type="button" (click)="api.goToLink('admin/user-update')"
                 class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Add User">
         </div>
     </div>
@@ -32,16 +32,17 @@
         <div *ngFor="let item of list" class="container h-[56px] grid grid-cols-[80px_1fr_120px_200px_120px_120px] gap-4 hover:bg-[#EBF5FD]
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
             <div><input type="checkbox"></div>
-            <div class="font-semibold text-start grid-cols-[auto_1fr]">
+            <div class="font-semibold text-start grid-cols-[60px_1fr]">
                 <div
-                    class="relative rounded-[50%] overflow-hidden w-[40px] aspect-square bg-[#E7E7E7] grid items-center justify-center">
+                    class="relative rounded-[50%] overflow-hidden w-[40px] aspect-square bg-[#E7E7E7] flex justify-center items-center">
                     <img *ngIf="item.profile.profile_img" [src]="getImg(item.profile.profile_img)"
-                        class="absolute w-[40px] aspect-square object-contain">
+                        class="absolute min-w-[50px] min-h-[50px] aspect-square object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
                     <img *ngIf="!item.profile.profile_img" src="user_outline.svg" class="w-[20px] aspect-square">
                 </div>
                 <div>
                     <samp class="text-[14px] font-semibold">
-                        {{item.profile.first_name}} {{item.profile.last_name}}
+                        {{item.profile.profile_name}}
+                        <!-- {{item.profile.first_name}} {{item.profile.last_name}} -->
                     </samp>
                     <p class="text-[10px] font-normal w-full truncate overflow-hidden whitespace-nowrap">
                         {{item.email}}
@@ -70,7 +71,7 @@
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
                 <img src="edit.svg" class="w-[32px] aspect-square"
-                    (click)="toEdit('/admin/user-update',item.profile.id)">
+                    (click)="api.toEdit('/admin/user-update',item.profile.id)">
                 <img src="delete.svg" class="w-[32px] aspect-square" (click)="toDelete()">
             </div>
         </div>

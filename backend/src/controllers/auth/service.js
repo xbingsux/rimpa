@@ -272,6 +272,33 @@ const resetPassword = async (id, password) => {
   return user;
 }
 
+const profileMe = async (id) => {
+  const profile = await prisma.profile.findFirst({
+    where: { user_id: id },
+    select: {
+      profile_name: true,
+      first_name: true,
+      last_name: true,
+      user: {
+        select: {
+          email: true,
+          active: true,
+          role: {
+            select: {
+              role_name: true
+            }
+          }
+        }
+      },
+      phone: true,
+      birth_date: true,
+      gender: true,
+      profile_img: true
+    }
+  })
+  return profile;
+}
+
 module.exports = {
   authenticateEmail,
   register,
@@ -279,5 +306,6 @@ module.exports = {
   vertifyUser,
   user,
   sendForgotPassword,
-  resetPassword
+  resetPassword,
+  profileMe
 };
