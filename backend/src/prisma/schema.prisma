@@ -227,7 +227,7 @@ model Reward {
   id           Int         @id @default(autoincrement()) // Primary Key
   reward_name  String
   description  String
-  img          String
+  img          String?
   startDate    DateTime?
   endDate      DateTime?
   cost         Decimal

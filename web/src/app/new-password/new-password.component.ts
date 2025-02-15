@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment'
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-new-password',
@@ -12,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './new-password.component.scss'
 })
 export class NewPasswordComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public api: ApiService) { }
 
   token = ''
   newPassword = ''
@@ -34,12 +35,6 @@ export class NewPasswordComponent implements OnInit {
       if (response.status == 'success') {
         this.router.navigate(['/login'])
       }
-    })
-  }
-
-  goToLink(url: string) {
-    this.router.navigate([`${url}`]).finally(() => {
-      this.router.url
     })
   }
 

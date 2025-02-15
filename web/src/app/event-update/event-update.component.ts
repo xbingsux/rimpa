@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-event-update',
@@ -14,7 +15,7 @@ import { environment } from '../../environments/environment';
 })
 export class EventUpdateComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public api: ApiService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
@@ -51,11 +52,6 @@ export class EventUpdateComponent implements OnInit {
     }
   }
 
-  goToLink(url: string) {
-    this.router.navigate([`${url}`]).finally(() => {
-      this.router.url
-    })
-  }
   data: AddEvent = new AddEvent()
 
   submit() {

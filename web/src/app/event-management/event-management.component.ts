@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { DatePipe, NgFor } from '@angular/common';
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-event-management',
@@ -13,9 +14,10 @@ import { DatePipe, NgFor } from '@angular/common';
 })
 export class EventManagementComponent implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
+  
   ngOnInit(): void {
     this.http.post(`${environment.API_URL}/event/list-event`, {}).subscribe(async (response: any) => {
       // console.log(response.event);
@@ -25,17 +27,4 @@ export class EventManagementComponent implements OnInit {
     });
   }
 
-  goToLink(url: string) {
-    this.router.navigate([`${url}`]).finally(() => {
-      this.router.url
-    })
-  }
-
-  toEdit(url: string, key: string) {
-    this.router.navigate([`${url}/${key}`])
-  }
-
-  toDelete() {
-
-  }
 }

@@ -4,7 +4,7 @@ const Service = require("./service");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const https = require("https");
-const auth = require("../../middleware/authorization");
+const { auth, usedTokens } = require("../../middleware/authorization");
 const nodemailer = require("nodemailer");
 
 router.use(express.json());
@@ -60,6 +60,22 @@ router.post("/login", async (req, res) => {
         message: "Internal Server Error",
       });
     }
+  }
+});
+
+router.post("/logout", auth, async (req, res) => {
+  try {
+    usedTokens.add(req.token)
+    return res.status(200).json({
+      status: "success",
+      token: token,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
   }
 });
 
@@ -258,6 +274,29 @@ router.post("/forgot-password", async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: error.message//"Internal Server Error",
+    });
+  }
+});
+
+router.post("/profileMe", auth, async (req, res) => {
+  const { } = req.body;
+  try {
+
+    const profile = await Service.profileMe(req.user.userId)
+
+    if (profile) {
+      return res.status(200).json({
+        status: "success",
+        profile: profile
+      });
+    } else {
+
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
     });
   }
 });

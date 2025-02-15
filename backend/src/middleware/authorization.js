@@ -30,6 +30,7 @@ const auth = async (req, res, next) => {
     }
 
     req.user = decoded; // เก็บข้อมูลผู้ใช้ใน req.user
+    req.token = token // เก็บข้อมูล Token ใน req.token
     if (decoded.usedToken) usedTokens.add(token);
 
     next(); // ทำงานต่อ
@@ -41,4 +42,7 @@ const auth = async (req, res, next) => {
   }
 };
 
-module.exports = auth;
+module.exports = {
+  auth,
+  usedTokens
+};

@@ -42,7 +42,15 @@ const listReward = async () => {
     return rewards;
 };
 
+const rewardById = async (id) => {
+    const reward = await prisma.reward.findFirst({
+        where: { id: id },
+    })
+    return reward
+}
+
 module.exports = {
     upsertReward,
-    listReward
+    listReward,
+    rewardById
 };

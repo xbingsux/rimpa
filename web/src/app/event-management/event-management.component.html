@@ -14,7 +14,7 @@
                 <input id="search" type="text" placeholder="Search"
                     class="pl-[50px] h-[40px] w-full min-w-[200px] rounded-[12px] border-[1px] border-[#D9D9D9]">
             </label>
-            <input type="button" (click)="goToLink('admin/event-update')"
+            <input type="button" (click)="api.goToLink('admin/event-update')"
                 class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Add Event">
         </div>
     </div>
@@ -52,9 +52,8 @@
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
-                <img src="edit.svg" class="w-[32px] aspect-square"
-                    (click)="toEdit('/admin/event-update',item.id)">
-                <img src="delete.svg" class="w-[32px] aspect-square" (click)="toDelete()">
+                <img src="edit.svg" class="w-[32px] aspect-square" (click)="api.toEdit('/admin/event-update',item.id)">
+                <img src="delete.svg" class="w-[32px] aspect-square" (click)="api.toDelete()">
             </div>
         </div>
         <div class="flex h-[78px] px-5 justify-center items-center">

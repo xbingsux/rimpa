@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middleware/authorization");
+const { auth } = require("../../middleware/authorization");
 const fileService = require("./service"); // นำเข้า Service ที่รวมแล้ว
 const { upload } = fileService; // ใช้ multer จาก fileService
 
@@ -138,6 +138,8 @@ router.post(
   upload.single("file"),
   async (req, res) => {
     try {
+      console.log('test reward');
+
       // const file = await fileService.uploadFile(req);
       // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxx', file)
       console.log(req.file);
