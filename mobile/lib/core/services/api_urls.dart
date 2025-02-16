@@ -13,6 +13,7 @@ class ApiUrls extends GetxController {
   String get login => '${baseUrl.value}/login';
   String get register => '${baseUrl.value}/register';
   String get profileMe => '${baseUrl.value}/profileMe';
+  // เกี่ยวกับรหัสผ่าน
   String get forgotpassworduser => '${baseUrl.value}/forgot-password';
   String get resetPassword => '${baseUrl.value}/reset-password';
 }
