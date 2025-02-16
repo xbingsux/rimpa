@@ -21,7 +21,6 @@ class ProfileController extends GetxController {
         isLoading.value = false;
         return;
       }
-      print("Token: $token");
       var response = await dio.post(
         apiUrlsController.profileMe, // ดึง URL จาก ApiUrls
         options: Options(headers: {"Authorization": "Bearer $token"}),

@@ -558,6 +558,58 @@ class CustomPhoneTextField extends StatelessWidget {
     );
   }
 }
+class CustomPhoneTextFieldProfile extends StatelessWidget {
+  final String phoneNumber;  // เพิ่มพารามิเตอร์นี้
+
+  const CustomPhoneTextFieldProfile({
+    Key? key,
+    required this.phoneNumber,  // ใช้ required เพื่อให้ต้องรับค่า
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController controller = TextEditingController(text: phoneNumber);
+
+    return IntlPhoneField(
+      controller: controller,  // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
+      decoration: InputDecoration(
+        labelText: 'เบอร์โทรศัพท์มือถือ',
+        labelStyle: const TextStyle(
+          fontSize: 14,
+          color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 180, 180, 180), // กรอบเทาอ่อน
+            width: 1,
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.white, // พื้นหลังขาว
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      ),
+      initialCountryCode: 'TH', // ให้ค่าเริ่มต้นเป็นประเทศไทย 🇹🇭
+      showCountryFlag: true, // แสดงธงชาติ
+      dropdownTextStyle: const TextStyle(
+        fontSize: 16,
+        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
+      ),
+      dropdownIcon: const Icon(
+        Icons.arrow_drop_down,
+        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อน
+        size: 24,
+      ), // ไอคอนลูกศรเลือกประเทศ
+      dropdownDecoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25), // โค้งมน
+      ),
+      disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+    );
+  }
+}
+
+
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;
 

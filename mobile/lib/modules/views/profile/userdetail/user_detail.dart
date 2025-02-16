@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart'; // เพิ่มการใช้งาน shimmer package
 import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
 import '../../../controllers/profile/profile_controller.dart'; // นำเข้า ProfileController
@@ -11,7 +12,8 @@ class UserDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     // ดึง Controller
     final authController = Get.put(LoginController());
-    final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -31,7 +33,9 @@ class UserDetail extends StatelessWidget {
         centerTitle: false,
       ),
       body: Container(
-        color: isDarkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
+        color: isDarkMode
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -42,23 +46,34 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-
-              // ✅ ใช้ Obx เพื่อให้ UI อัปเดตเมื่อ profileData เปลี่ยนแปลง
-              Obx(() => Customtextprofile(
+              // ใช้ Obx และ Shimmer ถ้ายังไม่โหลดข้อมูล
+              Obx(() {
+                if (profileController.profileData["profile_name"] == null) {
+                  return shimmerLoading(); // ถ้ายังไม่มีข้อมูลให้แสดง shimmer
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["profile_name"] ?? 'กำลังโหลด...',
-                    obscureText: false, // เปลี่ยนเป็น false เพื่อให้แสดงชื่อได้
-                  )),
-              
+                    obscureText: false,
+                  );
+                }
+              }),
+
               const SizedBox(height: 18),
               const Text(
                 "ชื่อ",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Obx(() => Customtextprofile(
+              Obx(() {
+                if (profileController.profileData["first_name"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["first_name"] ?? 'กำลังโหลด...',
                     obscureText: false,
-                  )),
+                  );
+                }
+              }),
 
               const SizedBox(height: 18),
               const Text(
@@ -66,10 +81,16 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Obx(() => Customtextprofile(
+              Obx(() {
+                if (profileController.profileData["last_name"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["last_name"] ?? 'กำลังโหลด...',
                     obscureText: false,
-                  )),
+                  );
+                }
+              }),
 
               const SizedBox(height: 18),
               const Text(
@@ -77,10 +98,16 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Obx(() => Customtextprofile(
+              Obx(() {
+                if (profileController.profileData["email"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["email"] ?? 'กำลังโหลด...',
                     obscureText: false,
-                  )),
+                  );
+                }
+              }),
 
               const SizedBox(height: 18),
               const Text(
@@ -88,7 +115,15 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              CustomPhoneTextField(),
+              Obx(() {
+                if (profileController.profileData["phone"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return CustomPhoneTextFieldProfile(
+                    phoneNumber: profileController.profileData["phone"] ?? 'กำลังโหลด...',
+                  );
+                }
+              }),
 
               const SizedBox(height: 18),
               const Text(
@@ -96,10 +131,16 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Obx(() => Customtextprofile(
+              Obx(() {
+                if (profileController.profileData["birth_date"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["birth_date"] ?? 'กำลังโหลด...',
                     obscureText: false,
-                  )),
+                  );
+                }
+              }),
 
               const SizedBox(height: 18),
               const Text(
@@ -107,10 +148,16 @@ class UserDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Obx(() => Customtextprofile(
+              Obx(() {
+                if (profileController.profileData["gender"] == null) {
+                  return shimmerLoading();
+                } else {
+                  return Customtextprofile(
                     labelText: profileController.profileData["gender"] ?? 'กำลังโหลด...',
                     obscureText: false,
-                  )),
+                  );
+                }
+              }),
 
               const Spacer(),
               CustomButton(
@@ -119,6 +166,22 @@ class UserDetail extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // ฟังก์ชันสำหรับแสดง Shimmer Effect
+  Widget shimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: double.infinity,
+        height: 48.0,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
