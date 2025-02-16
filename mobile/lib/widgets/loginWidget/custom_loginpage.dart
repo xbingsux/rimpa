@@ -57,6 +57,57 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+class CustomButtonResetpassword extends StatelessWidget {
+  final String text;
+  final VoidCallback? onPressed; // เปลี่ยนเป็น VoidCallback? เพื่อรองรับค่า null
+
+  const CustomButtonResetpassword({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity, // ขนาดปุ่มเต็มจอ
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF1E54FD), // สีแรก
+              Color(0xFF0ACCF5), // สีที่สอง
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(20), // ขอบมน
+        ),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, // สีข้อความ
+            padding: EdgeInsets.symmetric(vertical: 18),
+            backgroundColor:
+                Colors.transparent, // ทำให้ปุ่มโปร่งใสเพื่อให้เห็น Gradient
+            shadowColor: Colors.blue.withOpacity(0.4),
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontSize: 16,
+                ), // ใช้ฟอนต์จาก Theme
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 // ปุ่มสร้างบัญชี
 class CreateAccountButton extends StatelessWidget {
@@ -411,6 +462,56 @@ class Customtextprofile extends StatelessWidget {
     );
   }
 }
+class CustomResetpasswordfiule extends StatelessWidget {
+  final String labelText;
+  final bool obscureText;
+  final ValueChanged<String> onChanged;
+
+  const CustomResetpasswordfiule({
+    Key? key,
+    required this.labelText,
+    required this.obscureText,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: obscureText, // ใช้สำหรับซ่อนข้อความในฟิลด์กรอกข้อมูล
+      onChanged: onChanged, // เรียกใช้ฟังก์ชันเมื่อมีการกรอกข้อมูล
+      style: const TextStyle(
+        fontSize: 16, // ปรับขนาดข้อความ
+        color: Color.fromARGB(255, 158, 158, 158), // สีข้อความเมื่อไม่ได้โฟกัส
+      ),
+      decoration: InputDecoration(
+        labelText: labelText, // ข้อความใน label
+        labelStyle: const TextStyle(
+          fontSize: 16,
+          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25), // กรอบโค้งมน
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 163, 163, 163), // สีกรอบปกติ
+            width: 1, // ความหนาของเส้นกรอบ
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบเข้มเมื่อโฟกัส
+            width: 2, // ความหนาของกรอบเมื่อโฟกัส
+          ),
+        ),
+        filled: true,
+        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังฟิลด์กรอกข้อมูล
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 16, horizontal: 16), // ช่องว่างภายในฟิลด์
+      ),
+    );
+  }
+}
+
 
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {

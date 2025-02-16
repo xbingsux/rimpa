@@ -25,6 +25,7 @@ class LoginController extends GetxController {
         if (response.statusCode == 200) {
           var token = response.data['token'] ?? '';
 
+          // บันทึก token ลงใน SharedPreferences
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', token);
           await prefs.setString('email', user.email.value);
@@ -32,7 +33,8 @@ class LoginController extends GetxController {
 
           if (!rememberPassword) {
             // บันทึกเวลาล็อกอิน ถ้าไม่ได้เลือก "จำฉันไว้"
-            await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
+            await prefs.setInt(
+                'loginTime', DateTime.now().millisecondsSinceEpoch);
           }
 
           Get.snackbar('สำเร็จ', 'เข้าสู่ระบบเรียบร้อย');
@@ -54,7 +56,6 @@ class LoginController extends GetxController {
       }
     }
   }
-
 
   void deleteAccount() async {
     if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {

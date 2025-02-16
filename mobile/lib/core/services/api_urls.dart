@@ -12,4 +12,7 @@ class ApiUrls extends GetxController {
   // คำนวณ URL ของ login และ register โดยใช้ baseUrl ที่อัปเดต
   String get login => '${baseUrl.value}/login';
   String get register => '${baseUrl.value}/register';
+  String get profileMe => '${baseUrl.value}/profileMe';
+  String get forgotpassworduser => '${baseUrl.value}/forgot-password';
+  String get resetPassword => '${baseUrl.value}/reset-password';
 }
