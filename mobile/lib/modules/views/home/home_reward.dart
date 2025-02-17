@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/dropdown/app-dropdown.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
+import '../../controllers/profile/profile_controller.dart';
 
 class HomeRewardPage extends StatefulWidget {
   @override
@@ -16,6 +19,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -52,11 +57,25 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                   color: Colors.grey),
                             ),
                             SizedBox(width: 8),
-                            Text(
-                              "Username",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
+                            Obx(() {
+                              if (profileController
+                                      .profileData["profile_name"] ==
+                                  null) {
+                                return shimmerLoading(); // ต้อง return Widget เสมอ
+                              } else {
+                                return Text(
+                                  profileController
+                                          .profileData["profile_name"] ??
+                                      "Username",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                      ),
+                                );
+                              }
+                            }),
                           ],
                         ),
                         Icon(Icons.notifications_none, color: Colors.white),
@@ -372,16 +391,29 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                           ),
-                          Text(
-                            "1800",
-                            style: TextStyle(
-                              fontSize: 24,
-                              foreground: Paint()
-                                ..shader = AppGradiant.gradientX_1.createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                ),
-                            ),
-                          ),
+                          Obx(() {
+                            // ดึงค่าจาก Controller
+                            var points =
+                                profileController.profileData["profile_point"];
+
+                            // ถ้าค่าเป็น null หรือเป็น 0 ให้แสดง "0" แทน
+                            String displayPoints =
+                                (points == null || points == 0)
+                                    ? "0"
+                                    : points.toString();
+
+                            return Text(
+                              displayPoints,
+                              style: TextStyle(
+                                fontSize: 24,
+                                foreground: Paint()
+                                  ..shader =
+                                      AppGradiant.gradientX_1.createShader(
+                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                  ),
+                              ),
+                            );
+                          }),
                         ],
                       ),
                       SizedBox(width: 16),

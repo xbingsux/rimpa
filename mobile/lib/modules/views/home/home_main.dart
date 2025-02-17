@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:get/get.dart';
+
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
+import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart'; // Import AppDropdown
@@ -47,6 +51,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -68,12 +74,19 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       color: Colors.grey), // Change color to gray
                 ),
                 SizedBox(width: 8),
-                Text(
-                  'Username',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                      ),
-                )
+                Obx(() {
+                  if (profileController.profileData["profile_name"] == null) {
+                    return shimmerLoading(); // ต้อง return Widget เสมอ
+                  } else {
+                    return Text(
+                      profileController.profileData["profile_name"] ??
+                          "Username",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
+                  }
+                }),
               ],
             ),
             Icon(Icons.notifications_none, color: Colors.grey),
