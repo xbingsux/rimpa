@@ -11,11 +11,11 @@
         <div class="h-[40px] flex gap-2">
             <label for="search" class="relative flex-1">
                 <img src="search.svg" class="absolute left-[16px] top-[50%] -translate-y-[50%] w-[20px] aspect-square">
-                <input id="search" type="text" placeholder="Search"
+                <input id="search" type="text" placeholder="Search" [(ngModel)]="search" (input)="list_Filter()"
                     class="pl-[50px] h-[40px] w-full min-w-[200px] rounded-[12px] border-[1px] border-[#D9D9D9]">
             </label>
             <input type="button" (click)="api.goToLink('admin/event-update')"
-                class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Add Event">
+                class="text-white bg-[#1093ED] rounded-[12px] px-[32px] cursor-pointer" value="Add Event">
         </div>
     </div>
     <div class="">
@@ -28,8 +28,10 @@
             <div class="justify-center">Participants</div>
             <div class="justify-center">Action</div>
         </div>
-        <div *ngFor="let item of list" class="container h-[56px] grid grid-cols-[80px_1fr_200px_200px_150px_120px] gap-4 hover:bg-[#EBF5FD]
+
+        <div *ngFor="let item of data" class="container h-[56px] grid grid-cols-[80px_1fr_200px_200px_150px_120px] gap-4 hover:bg-[#EBF5FD]
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
+
             <div><input type="checkbox"></div>
             <div class="font-semibold text-start">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
@@ -52,19 +54,21 @@
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
-                <img src="edit.svg" class="w-[32px] aspect-square" (click)="api.toEdit('/admin/event-update',item.id)">
-                <img src="delete.svg" class="w-[32px] aspect-square" (click)="api.toDelete()">
+                <img src="edit.svg" class="w-[32px] aspect-square cursor-pointer"
+                    (click)="api.toEdit('/admin/event-update',item.id)">
+                <img src="delete.svg" class="w-[32px] aspect-square cursor-pointer" (click)="api.toDelete()">
             </div>
         </div>
         <div class="flex h-[78px] px-5 justify-center items-center">
             <div class="flex-1 text-[16px]">
-                <p>หน้า {{1}} จาก {{5}}</p>
+                <p>หน้า {{page_no+1}} จาก {{last_page}}</p>
             </div>
             <div class="flex gap-2 text-[14px]">
-                <img src="arrow-left.svg">
-                <div class="grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square">{{1}}
+                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer">
+                <div class="grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square">
+                    {{page_no+1}}
                 </div>
-                <img src="arrow-right.svg">
+                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer">
             </div>
         </div>
     </div>

@@ -185,6 +185,14 @@ const listBanner = async () => {
     return banners;
 };
 
+const bannerById = async (id) => {
+    let banner = await prisma.banner.findFirst({
+        where: { id: id }
+    });
+
+    return banner;
+};
+
 const listProfile = async () => {
     let profile = await prisma.user.findMany({
         select: {
@@ -229,6 +237,7 @@ const profileById = async (id) => {
 module.exports = {
     dashboard,
     upsertBanner,
+    bannerById,
     upsertUser,
     listBanner,
     listProfile,

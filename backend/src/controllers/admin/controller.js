@@ -93,6 +93,20 @@ router.post("/list-banner", auth, async (req, res) => {
   }
 });
 
+router.post("/get-banner", auth, async (req, res) => {
+  const { id } = req.body;
+  try {
+    const banner = await Service.bannerById(id)
+    return res.status(200).json({ status: "success", banner });
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 router.post("/register", async (req, res) => {
   const { email, role, profile, active } = req.body;
   try {

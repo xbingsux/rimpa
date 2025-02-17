@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const prisma = new PrismaClient();
 
-const upsertEvent = async (event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point) => {
+const upsertEvent = async (event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img) => {
     let event = await prisma.event.upsert({
         where: { id: event_id || 0 },
         create: {
@@ -44,9 +44,40 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     }
                 }
             },
-        },
+        }, include: {
+            SubEvent: true
+        }
     })
+    let list = []
+    // event_img    key, path
+    console.log(event_img);
+
+    if (typeof event_img == 'object') {
+        event_img.map((item) => {
+            console.log(item);
+            list.push(upsertEventIMG(item.path, item.id, event.SubEvent[0].id))
+        })
+    }
+    event.img = list;
+
     return event;
+}
+
+const upsertEventIMG = async (path, id, sub_event_id) => {
+    const img = await prisma.eventIMG.upsert({
+        where: { id: id },
+        create: {
+            path: path,
+            sub_event: {
+                connect: {
+                    id: sub_event_id || 0
+                }
+            }
+        }, update: {
+            path: path
+        }
+    })
+    return img;
 }
 
 const listEvent = async () => {
@@ -87,12 +118,14 @@ const listEvent = async () => {
     }));
 };
 
-
 const getEvent = async (id) => {
     const event = await prisma.event.findFirst({
         where: { id: id },
-        include: { SubEvent: true }
+        include: {
+            SubEvent: { include: { img: true } },
+        }
     })
+    // event.SubEvent[0].
     return event;
 }
 

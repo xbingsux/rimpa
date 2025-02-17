@@ -6,11 +6,13 @@
         <div class="grid">
             <label for="username">Username</label>
             <input type="text" id="username" [(ngModel)]="login.email" placeholder="Username"
+                autocomplete="new-password"
                 class="border-[1px] rounded-[16px] h-[48px] w-[575px] px-[16px] text-[20px]">
         </div>
         <div class="grid">
             <label for="password">Password</label>
             <input type="password" id="password" [(ngModel)]="login.password" placeholder="Password"
+                autocomplete="new-password"
                 class="border-[1px] rounded-[16px] h-[48px] w-[575px] px-[16px] text-[20px]">
         </div>
 

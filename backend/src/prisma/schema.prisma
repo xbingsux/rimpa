@@ -197,7 +197,6 @@ enum EventType {
 model EventIMG {
   id           Int      @id @default(autoincrement()) // Primary Key
   path         String
-  eventId      Int
   sub_event    SubEvent @relation(fields: [sub_event_id], references: [id])
   sub_event_id Int
 }
