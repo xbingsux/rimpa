@@ -15,6 +15,8 @@ bool _rememberPassword = false; // ตัวแปรจำรหัส
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   final authController = Get.put(LoginController());
+  bool _rememberPassword = false; // ตัวแปรจำรหัส
+  bool _obscureText = true; // ตัวแปรที่ใช้สำหรับเปิด/ปิดการแสดงรหัสผ่าน
 
   @override
   void initState() {
@@ -96,11 +98,24 @@ class _LoginViewState extends State<LoginView>
                               authController.user.email.value = value,
                         ),
                         SizedBox(height: AppSpacing.md),
-                        CustomTextField(
+                        // รหัสผ่าน
+                        CustomTextFieldpassword(
                           labelText: 'รหัสผ่าน',
-                          obscureText: true,
+                          obscureText: _obscureText, // ใช้ตัวแปรนี้ในการแสดงหรือซ่อนรหัสผ่าน
                           onChanged: (value) =>
                               authController.user.password.value = value,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText; // เปลี่ยนสถานะการแสดงรหัสผ่าน
+                              });
+                            },
+                          ),
                         ),
                         SizedBox(height: AppSpacing.md),
                         // ลืมรหัสและจำรหัส

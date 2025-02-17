@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 class ApiUrls extends GetxController {
   // baseUrl สามารถเปลี่ยนแปลงได้ตามต้องการ
   var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
+  var uploadsUrl = 'http://192.168.1.2:3001/upload'.obs;
 
   // ฟังก์ชันที่ใช้ในการอัปเดต baseUrl
   void updateBaseUrl(String newUrl) {
     baseUrl.value = newUrl;
+    uploadsUrl.value = newUrl;
   }
 
   // คำนวณ URL ของ login และ register โดยใช้ baseUrl ที่อัปเดต
@@ -16,4 +18,6 @@ class ApiUrls extends GetxController {
   // เกี่ยวกับรหัสผ่าน
   String get forgotpassworduser => '${baseUrl.value}/forgot-password';
   String get resetPassword => '${baseUrl.value}/reset-password';
+  // เกี่ยวกับอัพโหลดรูป
+  String get uploadprofileuser => '${uploadsUrl.value}/upload/profile';
 }

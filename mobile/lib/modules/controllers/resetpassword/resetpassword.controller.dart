@@ -12,6 +12,10 @@ class ResetPasswordController extends GetxController {
   var message = ''.obs;
   var status = ''.obs;
 
+  var isOldPasswordVisible = false.obs; // สำหรับการเปิด/ปิดมองเห็นรหัสผ่านเก่า
+  var isNewPasswordVisible = false.obs; // สำหรับการเปิด/ปิดมองเห็นรหัสผ่านใหม่
+  var isConfirmPasswordVisible = false.obs; // สำหรับการเปิด/ปิดมองเห็นรหัสผ่านยืนยัน
+
   final Dio dio = Dio();
   final apiUrlsController = Get.find<ApiUrls>(); // เรียก ApiUrls จาก GetX
 
@@ -19,7 +23,6 @@ class ResetPasswordController extends GetxController {
   Future<void> resetPassword() async {
     isLoading.value = true;
     try {
-      // ตรวจสอบว่ารหัสผ่านใหม่และยืนยันรหัสผ่านตรงกันหรือไม่
       if (newPassword.value.isEmpty || confirmPassword.value.isEmpty) {
         message.value = 'กรุณากรอกรหัสผ่านใหม่และยืนยันรหัสผ่าน';
         isLoading.value = false;
@@ -32,26 +35,20 @@ class ResetPasswordController extends GetxController {
         return;
       }
 
-      // ดึง token จาก SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
 
-      // ตรวจสอบว่า token มีค่าหรือไม่
       if (token == null) {
         message.value = 'ไม่พบ Token';
         isLoading.value = false;
         return;
       }
 
-      // พิมพ์ค่า token ออกมาดู
-      print("Token: $token");
-
-      // ทำการส่งคำขอรีเซ็ตรหัสผ่าน
       var response = await dio.post(
-        apiUrlsController.resetPassword, // ดึง URL จาก ApiUrls
+        apiUrlsController.resetPassword,
         data: {
-          "token": token, // ส่ง token ไปยัง API
-          "new_password": newPassword.value, // ส่งรหัสผ่านใหม่
+          "token": token,
+          "new_password": newPassword.value,
         },
       );
 
@@ -63,7 +60,6 @@ class ResetPasswordController extends GetxController {
         message.value = "ไม่สามารถรีเซ็ตรหัสผ่านได้";
       }
     } catch (e) {
-      print("Error: $e");
       status.value = "error";
       message.value = "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน";
     } finally {

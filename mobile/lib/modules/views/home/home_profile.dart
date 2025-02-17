@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant/app.constant.dart';
 import '../../../widgets/profileMenuWidget/menu_card.dart';
+import '../../controllers/profile/profile_controller.dart';
+import 'dart:io'; // สำหรับจัดการไฟล์
 
 class HomeProfilePage extends StatefulWidget {
   @override
@@ -16,7 +19,13 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   bool isLoggedIn = false;
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
-  final AuthService _authService = AuthService(); // สร้าง instance ของ AuthService
+  final AuthService _authService =
+      AuthService(); // สร้าง instance ของ AuthService
+  final profileController =
+      Get.put(ProfileController()); // เพิ่ม ProfileController
+  final picker = ImagePicker(); // สร้างตัวเลือกภาพ
+
+  File? _selectedImage; // ตัวแปรสำหรับเก็บไฟล์รูปที่เลือก
 
   @override
   void initState() {
@@ -35,8 +44,8 @@ class _HomeProfilePageState extends State<HomeProfilePage>
 
     _animationController.forward();
   }
-  
-void _checkLoginStatus() async {
+
+  void _checkLoginStatus() async {
     bool isLoggedInStatus = await _authService.checkLoginStatus();
     if (isLoggedInStatus) {
       _loadUserInfo();
@@ -56,15 +65,49 @@ void _checkLoginStatus() async {
   }
 
   void _logout() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('token');
-  await prefs.remove('email');
-  await prefs.remove('rememberPassword');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('rememberPassword');
 
-  setState(() {
-    isLoggedIn = false;
-  });
-}
+    setState(() {
+      isLoggedIn = false;
+    });
+  }
+
+  // ฟังก์ชันสำหรับเปิดการเลือกรูปจากอุปกรณ์
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+
+      // ถามผู้ใช้ว่าแน่ใจไหมที่จะเปลี่ยนรูป
+      Get.dialog(
+        AlertDialog(
+          title: Text('ยืนยันการเปลี่ยนรูปโปรไฟล์'),
+          content: Text('คุณต้องการเปลี่ยนรูปโปรไฟล์หรือไม่?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back(); // ปิด dialog
+              },
+              child: Text('ยกเลิก'),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.back();
+                // เรียกฟังก์ชันอัปโหลดรูป
+                profileController.uploadProfileImage(_selectedImage!);
+              },
+              child: Text('ยืนยัน'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -114,7 +157,6 @@ void _checkLoginStatus() async {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // สำหรับกรณีที่ยังไม่ได้ล็อกอิน
                               if (!isLoggedIn) ...[
                                 Text(
                                   "ยังไม่ได้ลงชื่อเข้าใช้",
@@ -138,7 +180,6 @@ void _checkLoginStatus() async {
                                   ),
                                 ),
                               ] else ...[
-                                // กรณีที่ล็อกอินแล้ว
                                 Text(
                                   "ชื่อผู้ใช้",
                                   style: TextStyle(
@@ -207,21 +248,61 @@ void _checkLoginStatus() async {
                   Positioned(
                     top: -50,
                     left: MediaQuery.of(context).size.width / 2 - 50,
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color.fromARGB(255, 218, 165, 165),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            spreadRadius: 5,
+                    child: Obx(() {
+                      String profileImage =
+                          profileController.profileData["profile_image"] ?? '';
+
+                      return Stack(
+                        children: [
+                          // รูปโปรไฟล์
+                          Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: profileImage.isEmpty
+                                  ? Color.fromARGB(255, 218, 165, 165)
+                                  : Colors.transparent,
+                              image: profileImage.isNotEmpty
+                                  ? DecorationImage(
+                                      image: NetworkImage(profileImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  spreadRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: profileImage.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      "default",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
+                          // ไอคอนเปลี่ยนรูป
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt),
+                              onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
+                              color: Colors.white,
+                            ),
                           ),
                         ],
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 ],
               ),

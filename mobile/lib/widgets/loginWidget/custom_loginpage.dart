@@ -413,6 +413,60 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+// ช่องกรอกข้อมูลรหัสผ่าน
+// ช่องกรอกข้อมูลรหัสผ่านที่มีไอคอนเปิดตาปิดตา
+class CustomTextFieldpassword extends StatelessWidget {
+  final String labelText;
+  final bool obscureText;
+  final Function(String) onChanged;
+  final Widget? suffixIcon; // เพิ่มตัวแปรสำหรับไอคอนที่ใช้ในการเปิดตาปิดตา
+
+  const CustomTextFieldpassword({
+    Key? key,
+    required this.labelText,
+    required this.obscureText,
+    required this.onChanged,
+    this.suffixIcon, // รับไอคอนที่เพิ่มเข้ามา
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: obscureText,
+      onChanged: onChanged,
+      style: const TextStyle(
+        fontSize: 14,
+        color: Color.fromARGB(255, 158, 158, 158),
+      ),
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          fontSize: 14,
+          color: Color.fromARGB(255, 95, 95, 95),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 163, 163, 163),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 37, 37, 37),
+            width: 2,
+          ),
+        ),
+        filled: true,
+        fillColor: const Color(0xFFFDFDFD),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16, horizontal: 16),
+        suffixIcon: suffixIcon, // แสดงไอคอนที่เพิ่มเข้ามา
+      ),
+    );
+  }
+}
 
 
 // ช่องกรอกข้อมูล
@@ -511,6 +565,7 @@ class CustomResetpasswordfiule extends StatelessWidget {
     );
   }
 }
+
 
 
 // ช่องกรอกสำหรับเบอร์โทร

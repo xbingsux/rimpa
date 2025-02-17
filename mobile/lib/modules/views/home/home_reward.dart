@@ -421,7 +421,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                         padding: EdgeInsets.only(
                             left: 100), // Added padding to the left
                         child: Container(
-                          width: 96, // Adjusted width to prevent overflow
+                          width: 120, // Adjusted width to prevent overflow
                           height: 40,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 209, 234, 255),
