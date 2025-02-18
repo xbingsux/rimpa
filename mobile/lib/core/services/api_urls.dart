@@ -1,14 +1,9 @@
 import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
-<<<<<<<<< Temporary merge branch 1
-  // baseUrl สามารถเปลี่ยนแปลงได้ตามต้องการ
-  var baseUrl = 'http://localhost:3001/auth'.obs;
-=========
   // Base URL และ Upload URL ที่เป็น Observable
   var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
   var uploadsUrl = 'http://192.168.1.2:3001/upload'.obs;
->>>>>>>>> Temporary merge branch 2
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;
@@ -28,7 +23,8 @@ class ApiUrls extends GetxController {
   // ฟังก์ชันที่ใช้ในการอัปเดต Base URL
   void updateBaseUrl(String newUrl) {
     baseUrl.value = newUrl;
-    uploadsUrl.value = newUrl.replaceAll('/auth', '/upload'); // อัปเดต uploadsUrl ตาม baseUrl
+    uploadsUrl.value =
+        newUrl.replaceAll('/auth', '/upload'); // อัปเดต uploadsUrl ตาม baseUrl
     updateAllUrls(); // อัปเดตค่าทั้งหมดอัตโนมัติ
   }
 

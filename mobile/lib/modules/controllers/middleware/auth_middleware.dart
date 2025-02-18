@@ -6,19 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-<<<<<<<<< Temporary merge branch 1
-    // ตัวนี้ยังคงเป็นการตรวจสอบการ redirect ไปที่หน้า login ถ้าไม่ได้ล็อกอิน
-    return null;
-  }
-
-  // ฟังก์ชันที่ใช้ตรวจสอบสถานะการล็อกอินเฉพาะฟังก์ชันใน controller
-=========
     // Don't redirect automatically, let the controller handle the logic
     return null;
   }
 
   // Function to check if the user is logged in
->>>>>>>>> Temporary merge branch 2
   Future<bool> checkLoginStatusInFunction() async {
     AuthService authService = Get.find<AuthService>();
     bool loggedIn = await authService.checkLoginStatus();
