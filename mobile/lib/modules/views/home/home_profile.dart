@@ -181,12 +181,39 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                   height:
                                       430), // เผื่อพื้นที่ป้องกัน bottom overflow
                             ] else ...[
-                              Text(
-                                "ชื่อผู้ใช้",
-                                style: TextStyle(
-                                  fontSize: AppTextSize.md,
-                                ),
-                              ),
+                              Obx(() {
+                                // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                                if (profileController.profileData.isEmpty ||
+                                    profileController
+                                            .profileData["profile_name"] ==
+                                        null) {
+                                  // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                                  return Text(
+                                    "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .md, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                } else {
+                                  // หากมีข้อมูลใน profileData
+                                  return Text(
+                                    profileController
+                                            .profileData["profile_name"] ??
+                                        "profile_name", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .md, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                }
+                              }),
                               SizedBox(height: 5),
                               Obx(() {
                                 // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
@@ -201,7 +228,8 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                         .textTheme
                                         .bodyMedium!
                                         .copyWith(
-                                          fontSize: AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
+                                          fontSize: AppTextSize
+                                              .sm, // ปรับขนาดฟอนต์เป็น 16
                                         ),
                                   );
                                 } else {
@@ -214,7 +242,8 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                         .textTheme
                                         .bodyMedium!
                                         .copyWith(
-                                          fontSize: AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
+                                          fontSize: AppTextSize
+                                              .sm, // ปรับขนาดฟอนต์เป็น 16
                                         ),
                                   );
                                 }
