@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
+import 'package:rimpa/components/imageloader/app-image.component.dart';
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant/app.constant.dart';
@@ -307,8 +308,15 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                 top: 10,
                 left: MediaQuery.of(context).size.width / 2 - 50,
                 child: Obx(() {
+                  // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
                   String profileImage =
-                      profileController.profileData["profile_image"] ?? '';
+                      profileController.profileData["profile_img"] ?? '';
+
+                  // สร้าง URL ของภาพจาก path ที่ต้องการ
+                  String imageUrl = profileImage.isEmpty
+                      ? 'assets/images/default_profile.jpg'
+                      : 'http://192.168.1.2:3001$profileImage'; // กำหนด URL รูปโปรไฟล์
+
                   return Stack(
                     children: [
                       // รูปโปรไฟล์
@@ -320,12 +328,6 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                           color: profileImage.isEmpty
                               ? Color.fromARGB(255, 218, 165, 165)
                               : Colors.transparent,
-                          image: profileImage.isNotEmpty
-                              ? DecorationImage(
-                                  image: NetworkImage(profileImage),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
@@ -334,18 +336,14 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                             ),
                           ],
                         ),
-                        child: profileImage.isEmpty
-                            ? Center(
-                                child: Text(
-                                  "default",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )
-                            : null,
+                        child: AppImageComponent(
+                          imageType:
+                              AppImageType.network, // ระบุประเภทเป็น Network
+                          imageAddress: imageUrl, // URL ของภาพโปรไฟล์
+                          aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(50)), // รูปทรงวงกลม
+                        ),
                       ),
                       // ไอคอนเปลี่ยนรูป
                       Positioned(
