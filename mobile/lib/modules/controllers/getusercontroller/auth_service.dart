@@ -40,32 +40,32 @@ class AuthService extends GetxService {
   }
 
   Future<bool> checkLoginStatus() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
-  String? token = prefs.getString('token');
-  int? loginTime = prefs.getInt('loginTime');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
+    String? token = prefs.getString('token');
+    int? loginTime = prefs.getInt('loginTime');
 
-  if (token != null && token.isNotEmpty) {
-    if (!rememberPassword) {
-      if (loginTime != null) {
-        int currentTime = DateTime.now().millisecondsSinceEpoch;
-        int expiryTime = loginTime + (24 * 60 * 60 * 1000); // +24 ชั่วโมง
-        if (currentTime > expiryTime) {
+    if (token != null && token.isNotEmpty) {
+      if (!rememberPassword) {
+        if (loginTime != null) {
+          int currentTime = DateTime.now().millisecondsSinceEpoch;
+          int expiryTime = loginTime + (24 * 60 * 60 * 1000); // +24 ชั่วโมง
+          if (currentTime > expiryTime) {
+            await clearAuth();
+            return false;
+          }
+        } else {
           await clearAuth();
           return false;
         }
-      } else {
-        await clearAuth();
-        return false;
       }
+      isLoggedIn.value =
+          true; // ทำให้ isLoggedIn เป็น true หากมี token และยังไม่หมดอายุ
+      return true;
     }
-    isLoggedIn.value = true; // ทำให้ isLoggedIn เป็น true หากมี token และยังไม่หมดอายุ
-    return true;
+    isLoggedIn.value = false; // ถ้าไม่มี token หรือหมดอายุ
+    return false;
   }
-  isLoggedIn.value = false; // ถ้าไม่มี token หรือหมดอายุ
-  return false;
-}
-
 
   Future<String> loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

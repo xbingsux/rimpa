@@ -99,11 +99,11 @@ class UserDetail extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Obx(() {
-                if (profileController.profileData["email"] == null) {
+                if (profileController.profileData["user"]["email"] == null) {
                   return shimmerLoading();
                 } else {
                   return Customtextprofile(
-                    labelText: profileController.profileData["email"] ?? 'กำลังโหลด...',
+                    labelText: profileController.profileData["user"]["email"] ?? 'กำลังโหลด...',
                     obscureText: false,
                   );
                 }

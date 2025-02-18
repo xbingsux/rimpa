@@ -65,19 +65,18 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   }
 
   void _logout() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('token');
-  await prefs.remove('email');
-  await prefs.remove('rememberPassword');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('rememberPassword');
 
-  // Clear profile data and other states
-  Get.find<ProfileController>().resetProfile();
+    // Clear profile data and other states
+    Get.find<ProfileController>().resetProfile();
 
-  setState(() {
-    isLoggedIn = false;
-  });
-}
-
+    setState(() {
+      isLoggedIn = false;
+    });
+  }
 
   // ฟังก์ชันสำหรับเปิดการเลือกรูปจากอุปกรณ์
   Future<void> _pickImage() async {
@@ -189,12 +188,37 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                 ),
                               ),
                               SizedBox(height: 5),
-                              Text(
-                                email.isEmpty ? "กำลังโหลด..." : email,
-                                style: TextStyle(
-                                  fontSize: AppTextSize.sm,
-                                ),
-                              ),
+                              Obx(() {
+                                // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                                if (profileController.profileData.isEmpty ||
+                                    profileController.profileData["user"]
+                                            ["email"] ==
+                                        null) {
+                                  // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                                  return Text(
+                                    "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                } else {
+                                  // หากมีข้อมูลใน profileData
+                                  return Text(
+                                    profileController.profileData["user"]
+                                            ["email"] ??
+                                        "email", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                }
+                              }),
                               MenuCard(
                                 title: "บัญชีและความเป็นส่วนตัว",
                                 items: [
