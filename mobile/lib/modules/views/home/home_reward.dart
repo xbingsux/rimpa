@@ -404,19 +404,19 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 color: Colors.grey),
                           ),
                           Obx(() {
-                            // ดึงค่าจาก Controller
-                            var points =
-                                profileController.profileData["profile_name"];
+                            // ดึงค่าคะแนนจากฟิลด์ที่ถูกต้องใน profileData
+                            var points = profileController.profileData[
+                                "points"]; // เปลี่ยนชื่อฟิลด์เป็น "points" หรือชื่อที่ถูกต้อง
 
                             // แปลงค่าที่เป็น String (หากมี) เป็น double และตรวจสอบว่ามีค่า
                             double? pointsValue =
                                 double.tryParse(points.toString());
 
-                            // ถ้าค่ามีทศนิยมเยอะ เช่น 0.0000000000000 ให้แปลงเป็น 0 หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
+                            // ถ้าค่ามีทศนิยมเยอะ หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
                             String displayPoints = (pointsValue == null ||
                                     pointsValue <= 0 ||
                                     pointsValue == 0.0)
-                                ? "ไม่มีคะแนน" // ถ้าไม่มีข้อมูลหรือคะแนนน้อยกว่า 0
+                                ? "ไม่มีคะแนน"
                                 : pointsValue.toStringAsFixed(
                                     2); // แสดงคะแนนและปัดทศนิยมให้เหลือ 2 ตำแหน่ง
 
@@ -425,10 +425,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 foreground: Paint()
-                                  ..shader =
-                                      AppGradiant.gradientX_1.createShader(
-                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                  ),
+                                  ..shader = AppGradiant.gradientX_1
+                                      .createShader(
+                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                               ),
                             );
                           }),
