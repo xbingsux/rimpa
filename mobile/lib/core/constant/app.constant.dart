@@ -7,6 +7,7 @@ class AppColors {
   static const Color secondary = Color(0xFFD9D9D9);
   /// สีเน้นส่วนสำคัญ Bright Blue
   static const Color accent = Color(0xFF1E54FD);
+  static const Color accent1 = Color(0xFFEBF5FD);
   /// สีเน้นส่วนสำคัญ Sky Blue
   static const Color accent2 = Color(0xFF0ACCF5);
   /// สีพื้นหลังหลัก
