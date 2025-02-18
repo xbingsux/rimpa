@@ -1,14 +1,14 @@
 <div class="bg-[#FCFBFC] relative h-screen grid grid-cols-[auto_1fr]"><!--bg color-->
   <div class="relative w-[260px]">
     <div
-      class="pt-[130px] sticky top-0 h-screen w-full bg-[#F2F2F4] border-r-[#16223B33] rounded-tr-[8px] rounded-br-[8px]">
+      class="pt-[130px] sticky top-0 h-screen w-full bg-[#2B2B2B] border-r-[#16223B33] rounded-tr-[8px] rounded-br-[8px]">
       <!-- 2B2B2B -->
       <div class="grid gap-3 py-6 grid-rows-[repeat(10,50px)] p-3">
         <div *ngFor="let item of menu" class="dashboard-btn" (click)="api.goToLink(item.path)"
           [style]="isUrl(path,item.tags) ?active:''">
           <div class="dashboard-inner">
             <img src="{{item.icon}}" class="dashboard-img"
-              [style]="isUrl(path,item.tags) ? 'filter: brightness(0) saturate(100%) invert(39%) sepia(88%) saturate(3680%) hue-rotate(191deg) brightness(95%) contrast(98%);' : ''">
+              [style]="isUrl(path,item.tags) ? 'filter: brightness(0) saturate(100%) invert(100%);' : ''">
             <p>{{item.title}}</p>
           </div>
         </div>
@@ -22,7 +22,7 @@
               class="absolute min-w-[50px] min-h-[50px] aspect-square object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
             <img *ngIf="!img_url" src="user_outline.svg" class="w-[20px] aspect-square">
           </div>
-          <div class="text-[#999] font-light"><!-- F3F3F3 -->
+          <div class="text-[#F3F3F3] font-light"><!-- F3F3F3 -->
             <p class="text-[14px]">{{username}}</p>
             <p class="text-[12px]">{{role}}</p>
           </div>

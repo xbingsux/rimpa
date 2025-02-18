@@ -139,6 +139,10 @@ const sendVertifyUser = async (email, token) => {
 
 const upsertUser = async (email, password, role, profile, active) => {
 
+    if (typeof active == 'boolean') {
+
+    }
+
     let created = 0
     let user = await prisma.user.findFirst({
         where: { email: email }

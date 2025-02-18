@@ -69,7 +69,7 @@ export class AdminComponent implements OnInit {
   ]
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, public api: ApiService) { }
-  active = 'background-color: #fff;color: #1093ED;'
+  active = 'background-color: #1c1c1c;color: #fff;'//1093ED
 
   ngOnInit() {
     this.http.post(`${environment.API_URL}/auth/profileMe`, {}).subscribe(async (respone: any) => {
