@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
 
-import '../../../components/cards/app-card.component.dart';
-import '../../../components/dropdown/app-dropdown.component.dart';
-import '../../../components/imageloader/app-image.component.dart';
-import 'homedetail/home_detail.dart';
+import '../../../../components/cards/app-card.component.dart';
+import '../../../../components/dropdown/app-dropdown.component.dart';
+import '../../../../components/imageloader/app-image.component.dart';
+import '../homedetail/home_detail.dart';
 
-class HomeEventPage extends StatefulWidget {
+class HomeEventAllcard extends StatefulWidget {
   @override
-  _HomeEventPageState createState() => _HomeEventPageState();
+  _HomeEventAllcardState createState() => _HomeEventAllcardState();
 }
 
-class _HomeEventPageState extends State<HomeEventPage> {
+class _HomeEventAllcardState extends State<HomeEventAllcard> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
@@ -52,6 +52,15 @@ class _HomeEventPageState extends State<HomeEventPage> {
         elevation: 0,
         title: Stack(
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.grey),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(

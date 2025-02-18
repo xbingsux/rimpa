@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 
-import '../../../components/cards/app-card.component.dart';
-import '../../../components/dropdown/app-dropdown.component.dart';
-import '../../../components/imageloader/app-image.component.dart';
-import 'homedetail/home_detail.dart';
+import '../../../../components/dropdown/app-dropdown.component.dart';
+import '../../../../components/cards/app-card.component.dart';
+import '../../../../components/imageloader/app-image.component.dart';
+import '../home_reward.dart';
+import '../homedetail/home_detail.dart';
 
-class HomeEventPage extends StatefulWidget {
+class RecommendedActivities extends StatefulWidget {
   @override
-  _HomeEventPageState createState() => _HomeEventPageState();
+  _RecommendedActivitiesState createState() => _RecommendedActivitiesState();
 }
 
-class _HomeEventPageState extends State<HomeEventPage> {
+class _RecommendedActivitiesState extends State<RecommendedActivities> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
@@ -52,6 +54,15 @@ class _HomeEventPageState extends State<HomeEventPage> {
         elevation: 0,
         title: Stack(
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.grey),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -93,7 +104,7 @@ class _HomeEventPageState extends State<HomeEventPage> {
                 itemCount: 8,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    Get.to(HomeDetailPage());
+                    Get.to(HomeDetailReward());
                   },
                   child: AppCardComponent(
                     child: Column(
