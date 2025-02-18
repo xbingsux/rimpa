@@ -194,5 +194,3 @@ class AppGradiant {
       begin: Alignment.centerLeft,
       end: Alignment.centerRight);
 }
-
-
