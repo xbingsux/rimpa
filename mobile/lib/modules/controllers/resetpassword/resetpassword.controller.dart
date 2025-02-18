@@ -45,7 +45,7 @@ class ResetPasswordController extends GetxController {
       }
 
       var response = await dio.post(
-        apiUrlsController.resetPassword,
+        apiUrlsController.resetPassword.value,
         data: {
           "token": token,
           "new_password": newPassword.value,

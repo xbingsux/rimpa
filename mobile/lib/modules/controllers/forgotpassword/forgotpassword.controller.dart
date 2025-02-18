@@ -23,7 +23,7 @@ class ForgotPasswordController extends GetxController {
       }
 
       var response = await dio.post(
-        apiUrlsController.forgotpassworduser, // ดึง URL จาก ApiUrls
+        apiUrlsController.forgotpassworduser.value, // ดึง URL จาก ApiUrls
         data: {"email": email.value}, // ส่งข้อมูลอีเมลไปยัง API
       );
 

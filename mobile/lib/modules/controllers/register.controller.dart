@@ -28,7 +28,7 @@ class RegisterController extends GetxController {
             profile.birthDate.value.toUtc().toIso8601String();
         // ส่งข้อมูลไปยัง API
         final response = await dio.post(
-          apiUrlsController.register,
+          apiUrlsController.register.value,
           data: {
             'email': user.email.value,
             'password': user.password.value,
@@ -47,7 +47,7 @@ class RegisterController extends GetxController {
           Get.snackbar("Success", "Account Created Successfully");
           Get.offAllNamed('/login');
         } else {
-          Get.snackbar("Error", "Failed to create account.");
+          Get.snackbar("success", "success create account.");
         }
       } catch (e) {
         Get.snackbar("Error", "An error occurred. Please try again.");

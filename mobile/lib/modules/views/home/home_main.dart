@@ -75,12 +75,21 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ),
                 SizedBox(width: 8),
                 Obx(() {
-                  if (profileController.profileData["profile_name"] == null) {
-                    return shimmerLoading(); // ต้อง return Widget เสมอ
+                  // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                  if (profileController.profileData.isEmpty ||
+                      profileController.profileData["profile_name"] == null) {
+                    // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                    return Text(
+                      "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
                   } else {
+                    // หากมีข้อมูลใน profileData
                     return Text(
                       profileController.profileData["profile_name"] ??
-                          "Username",
+                          "Username", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
                           ),

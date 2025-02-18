@@ -58,15 +58,27 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             ),
                             SizedBox(width: 8),
                             Obx(() {
-                              if (profileController
-                                      .profileData["profile_name"] ==
-                                  null) {
-                                return shimmerLoading(); // ต้อง return Widget เสมอ
-                              } else {
+                              // ดึงข้อมูลจาก Controller
+                              var profileName =
+                                  profileController.profileData["profile_name"];
+
+                              // ตรวจสอบว่า profile_name เป็น null หรือไม่
+                              if (profileName == null) {
+                                // ถ้ายังไม่ได้ล็อคอิน หรือข้อมูล profile_name เป็น null
                                 return Text(
-                                  profileController
-                                          .profileData["profile_name"] ??
-                                      "Username",
+                                  "ยังไม่ได้ล็อคอิน", // ถ้ายังไม่ได้รับข้อมูลให้แสดงข้อความนี้
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                      ),
+                                );
+                              } else {
+                                // ถ้ามีข้อมูลใน profile_name
+                                return Text(
+                                  profileName ??
+                                      "Username", // ถ้ามีชื่อแสดงชื่อผู้ใช้ ถ้าไม่มีแสดง "Username"
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -394,13 +406,19 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                           Obx(() {
                             // ดึงค่าจาก Controller
                             var points =
-                                profileController.profileData["profile_point"];
+                                profileController.profileData["profile_name"];
 
-                            // ถ้าค่าเป็น null หรือเป็น 0 ให้แสดง "0" แทน
-                            String displayPoints =
-                                (points == null || points == 0)
-                                    ? "0"
-                                    : points.toString();
+                            // แปลงค่าที่เป็น String (หากมี) เป็น double และตรวจสอบว่ามีค่า
+                            double? pointsValue =
+                                double.tryParse(points.toString());
+
+                            // ถ้าค่ามีทศนิยมเยอะ เช่น 0.0000000000000 ให้แปลงเป็น 0 หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
+                            String displayPoints = (pointsValue == null ||
+                                    pointsValue <= 0 ||
+                                    pointsValue == 0.0)
+                                ? "ไม่มีคะแนน" // ถ้าไม่มีข้อมูลหรือคะแนนน้อยกว่า 0
+                                : pointsValue.toStringAsFixed(
+                                    2); // แสดงคะแนนและปัดทศนิยมให้เหลือ 2 ตำแหน่ง
 
                             return Text(
                               displayPoints,
@@ -419,7 +437,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       SizedBox(width: 16),
                       Container(
                         padding: EdgeInsets.only(
-                            left: 100), // Added padding to the left
+                            left: 10), // Added padding to the left
                         child: Container(
                           width: 120, // Adjusted width to prevent overflow
                           height: 40,

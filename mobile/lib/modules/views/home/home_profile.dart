@@ -65,15 +65,19 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   }
 
   void _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('email');
-    await prefs.remove('rememberPassword');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('token');
+  await prefs.remove('email');
+  await prefs.remove('rememberPassword');
 
-    setState(() {
-      isLoggedIn = false;
-    });
-  }
+  // Clear profile data and other states
+  Get.find<ProfileController>().resetProfile();
+
+  setState(() {
+    isLoggedIn = false;
+  });
+}
+
 
   // ฟังก์ชันสำหรับเปิดการเลือกรูปจากอุปกรณ์
   Future<void> _pickImage() async {
@@ -124,16 +128,14 @@ class _HomeProfilePageState extends State<HomeProfilePage>
       child: SafeArea(
         child: Scaffold(
           backgroundColor: const Color.fromARGB(0, 194, 88, 88),
-          body: SlideTransition(
-            position: _slideAnimation,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  SingleChildScrollView(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.70,
+          body: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 80), // เว้นพื้นที่ด้านบนของ Profile Image
+                    Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
@@ -153,160 +155,160 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(top: 65),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              if (!isLoggedIn) ...[
-                                Text(
-                                  "ยังไม่ได้ลงชื่อเข้าใช้",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
+                        child: Column(
+                          children: [
+                            if (!isLoggedIn) ...[
+                              Text(
+                                "ยังไม่ได้ลงชื่อเข้าใช้",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: () => Get.toNamed('/login'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blueAccent,
-                                    fixedSize: Size(270, 40),
-                                  ),
-                                  child: Text(
-                                    'ไปยังหน้าล็อกอิน',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
+                              ),
+                              SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () => Get.toNamed('/login'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  fixedSize: Size(270, 40),
                                 ),
-                              ] else ...[
-                                Text(
-                                  "ชื่อผู้ใช้",
-                                  style: TextStyle(
-                                    fontSize: AppTextSize.md,
+                                child: Text(
+                                  'ไปยังหน้าล็อกอิน',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ),
+                              SizedBox(
+                                  height:
+                                      430), // เผื่อพื้นที่ป้องกัน bottom overflow
+                            ] else ...[
+                              Text(
+                                "ชื่อผู้ใช้",
+                                style: TextStyle(
+                                  fontSize: AppTextSize.md,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                email.isEmpty ? "กำลังโหลด..." : email,
+                                style: TextStyle(
+                                  fontSize: AppTextSize.sm,
+                                ),
+                              ),
+                              MenuCard(
+                                title: "บัญชีและความเป็นส่วนตัว",
+                                items: [
+                                  MenuItem(
+                                      title: "บัญชีผู้ใช้งาน",
+                                      icon: Icons.person,
+                                      route: "/user-deteil"),
+                                  MenuItem(
+                                      title: "เปลี่ยนรหัสผ่าน",
+                                      icon: Icons.lock,
+                                      route: "/chang-password"),
+                                  MenuItem(
+                                    title: "การแจ้งเตือน",
+                                    icon: Icons.notifications,
+                                    route: "/notifications",
+                                    isToggle: true,
                                   ),
+                                ],
+                              ),
+                              MenuCard(
+                                title: "อื่นๆ",
+                                items: [
+                                  MenuItem(
+                                      title: "ช่วยเหลือ",
+                                      icon: Icons.person,
+                                      route: "/profile"),
+                                  MenuItem(
+                                      title: "ลบบัญชีผู้ใช้",
+                                      icon: Icons.person,
+                                      route: "/delete-account"),
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: _logout,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFD9D9D9),
+                                  fixedSize: Size(350, 40),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
-                                  email.isEmpty ? "กำลังโหลด..." : email,
-                                  style: TextStyle(
-                                    fontSize: AppTextSize.sm,
-                                  ),
+                                child: Text(
+                                  'ออกจากระบบ',
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                                MenuCard(
-                                  title: "บัญชีและความเป็นส่วนตัว",
-                                  items: [
-                                    MenuItem(
-                                        title: "บัญชีผู้ใช้งาน",
-                                        icon: Icons.person,
-                                        route: "/user-deteil"),
-                                    MenuItem(
-                                        title: "เปลี่ยนรหัสผ่าน",
-                                        icon: Icons.lock,
-                                        route: "/chang-password"),
-                                    MenuItem(
-                                      title: "การแจ้งเตือน",
-                                      icon: Icons.notifications,
-                                      route: "/notifications",
-                                      isToggle: true,
-                                    ),
-                                  ],
-                                ),
-                                MenuCard(
-                                  title: "อื่นๆ",
-                                  items: [
-                                    MenuItem(
-                                        title: "ช่วยเหลือ",
-                                        icon: Icons.person,
-                                        route: "/profile"),
-                                    MenuItem(
-                                        title: "ลบบัญชีผู้ใช้",
-                                        icon: Icons.person,
-                                        route: "/delete-account"),
-                                  ],
-                                ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: _logout,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFD9D9D9),
-                                    fixedSize: Size(350, 40),
-                                  ),
-                                  child: Text(
-                                    'ออกจากระบบ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ],
-                          ),
+                            SizedBox(
+                                height:
+                                    100), // เผื่อพื้นที่ป้องกัน bottom overflow
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: -50,
-                    left: MediaQuery.of(context).size.width / 2 - 50,
-                    child: Obx(() {
-                      String profileImage =
-                          profileController.profileData["profile_image"] ?? '';
-
-                      return Stack(
-                        children: [
-                          // รูปโปรไฟล์
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: profileImage.isEmpty
-                                  ? Color.fromARGB(255, 218, 165, 165)
-                                  : Colors.transparent,
-                              image: profileImage.isNotEmpty
-                                  ? DecorationImage(
-                                      image: NetworkImage(profileImage),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  spreadRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: profileImage.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      "default",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                : null,
-                          ),
-                          // ไอคอนเปลี่ยนรูป
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt),
-                              onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              Positioned(
+                top: 10,
+                left: MediaQuery.of(context).size.width / 2 - 50,
+                child: Obx(() {
+                  String profileImage =
+                      profileController.profileData["profile_image"] ?? '';
+                  return Stack(
+                    children: [
+                      // รูปโปรไฟล์
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: profileImage.isEmpty
+                              ? Color.fromARGB(255, 218, 165, 165)
+                              : Colors.transparent,
+                          image: profileImage.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(profileImage),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: profileImage.isEmpty
+                            ? Center(
+                                child: Text(
+                                  "default",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            : null,
+                      ),
+                      // ไอคอนเปลี่ยนรูป
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+            ],
           ),
         ),
       ),
