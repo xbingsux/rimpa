@@ -9,7 +9,7 @@
             </p>
         </div>
         <div class="h-[40px] flex gap-2 justify-end">
-            <input type="button" class="text-white bg-[#1093ED] rounded-[12px] px-[32px]" value="Save"
+            <input type="button" class="text-white bg-[#1093ED] rounded-[12px] px-[32px] cursor-pointer" value="Save"
                 (click)="submit()">
         </div>
     </div>
@@ -102,8 +102,8 @@
                             <label for="status">Status</label>
                             <select name="status" id="status" [(ngModel)]="data.Status"
                                 class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
+                                <option [ngValue]="true">Active</option>
+                                <option [ngValue]="false">Inactive</option>
                             </select>
                         </div>
                     </div>

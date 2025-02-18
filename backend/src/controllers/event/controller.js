@@ -15,11 +15,11 @@ router.get("/test", async (req, res) => {
 });
 
 router.post("/update-event", auth, async (req, res) => {
-  const { event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point } = req.body;
+  const { event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
-    const event = await Service.upsertEvent(event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point)
+    const event = await Service.upsertEvent(event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img)
     return res.status(200).json({ status: "success", event });
 
   } catch (error) {

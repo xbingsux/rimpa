@@ -139,6 +139,10 @@ const sendVertifyUser = async (email, token) => {
 
 const upsertUser = async (email, password, role, profile, active) => {
 
+    if (typeof active == 'boolean') {
+
+    }
+
     let created = 0
     let user = await prisma.user.findFirst({
         where: { email: email }
@@ -185,6 +189,14 @@ const listBanner = async () => {
     return banners;
 };
 
+const bannerById = async (id) => {
+    let banner = await prisma.banner.findFirst({
+        where: { id: id }
+    });
+
+    return banner;
+};
+
 const listProfile = async () => {
     let profile = await prisma.user.findMany({
         select: {
@@ -229,6 +241,7 @@ const profileById = async (id) => {
 module.exports = {
     dashboard,
     upsertBanner,
+    bannerById,
     upsertUser,
     listBanner,
     listProfile,
