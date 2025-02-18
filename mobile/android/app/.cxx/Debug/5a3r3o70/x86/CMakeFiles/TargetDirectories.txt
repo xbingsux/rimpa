@@ -1,0 +1,2 @@
+C:/New project/rimpa/mobile/android/app/.cxx/Debug/5a3r3o70/x86/CMakeFiles/edit_cache.dir
+C:/New project/rimpa/mobile/android/app/.cxx/Debug/5a3r3o70/x86/CMakeFiles/rebuild_cache.dir

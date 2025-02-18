@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
+import 'package:get/get.dart';
+
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
+import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
@@ -51,9 +55,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,10 +78,28 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       color: Colors.grey), // Change color to gray
                 ),
                 SizedBox(width: 8),
-                Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
+                Obx(() {
+                  // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                  if (profileController.profileData.isEmpty ||
+                      profileController.profileData["profile_name"] == null) {
+                    // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                    return Text(
+                      "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
+                  } else {
+                    // หากมีข้อมูลใน profileData
+                    return Text(
+                      profileController.profileData["profile_name"] ??
+                          "Username", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
+                  }
+                }),
               ],
             ),
             Icon(Icons.notifications_none, color: Colors.grey),

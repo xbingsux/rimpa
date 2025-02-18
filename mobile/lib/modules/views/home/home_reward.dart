@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
 
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
+import '../../controllers/profile/profile_controller.dart';
 
 import 'seeallcards/recommended_privileges.dart';
 import 'homedetail/home_detail_reward.dart'; // Add this import
@@ -20,6 +22,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -56,11 +60,37 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                   color: Colors.grey),
                             ),
                             SizedBox(width: 8),
-                            Text(
-                              "Username",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
+                            Obx(() {
+                              // ดึงข้อมูลจาก Controller
+                              var profileName =
+                                  profileController.profileData["profile_name"];
+
+                              // ตรวจสอบว่า profile_name เป็น null หรือไม่
+                              if (profileName == null) {
+                                // ถ้ายังไม่ได้ล็อคอิน หรือข้อมูล profile_name เป็น null
+                                return Text(
+                                  "ยังไม่ได้ล็อคอิน", // ถ้ายังไม่ได้รับข้อมูลให้แสดงข้อความนี้
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                      ),
+                                );
+                              } else {
+                                // ถ้ามีข้อมูลใน profile_name
+                                return Text(
+                                  profileName ??
+                                      "Username", // ถ้ามีชื่อแสดงชื่อผู้ใช้ ถ้าไม่มีแสดง "Username"
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                      ),
+                                );
+                              }
+                            }),
                           ],
                         ),
                         Icon(Icons.notifications_none, color: Colors.white),
@@ -411,24 +441,42 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                           ),
-                          Text(
-                            "1800",
-                            style: TextStyle(
-                              fontSize: 24,
-                              foreground: Paint()
-                                ..shader = AppGradiant.gradientX_1.createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                ),
-                            ),
-                          ),
+                          Obx(() {
+                            // ดึงค่าคะแนนจากฟิลด์ที่ถูกต้องใน profileData
+                            var points = profileController.profileData[
+                                "points"]; // เปลี่ยนชื่อฟิลด์เป็น "points" หรือชื่อที่ถูกต้อง
+
+                            // แปลงค่าที่เป็น String (หากมี) เป็น double และตรวจสอบว่ามีค่า
+                            double? pointsValue =
+                                double.tryParse(points.toString());
+
+                            // ถ้าค่ามีทศนิยมเยอะ หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
+                            String displayPoints = (pointsValue == null ||
+                                    pointsValue <= 0 ||
+                                    pointsValue == 0.0)
+                                ? "ไม่มีคะแนน"
+                                : pointsValue.toStringAsFixed(
+                                    2); // แสดงคะแนนและปัดทศนิยมให้เหลือ 2 ตำแหน่ง
+
+                            return Text(
+                              displayPoints,
+                              style: TextStyle(
+                                fontSize: 24,
+                                foreground: Paint()
+                                  ..shader = AppGradiant.gradientX_1
+                                      .createShader(
+                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                              ),
+                            );
+                          }),
                         ],
                       ),
                       SizedBox(width: 16),
                       Container(
                         padding: EdgeInsets.only(
-                            left: 100), // Added padding to the left
+                            left: 10), // Added padding to the left
                         child: Container(
-                          width: 96, // Adjusted width to prevent overflow
+                          width: 120, // Adjusted width to prevent overflow
                           height: 40,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 209, 234, 255),

@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
+import '../../controllers/profile/profile_controller.dart';
 
 class AuthService extends GetxService {
   RxBool isLoggedIn = false.obs; // ใช้ RxBool แทนการใช้ async
@@ -7,34 +8,21 @@ class AuthService extends GetxService {
   String? _email;
 
   Future<AuthService> init() async {
-    await loadUserData();
     return this;
-  }
-
-  Future<void> loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token');
-    _email = prefs.getString('email');
-    
-    // ไม่ต้องเช็คการหมดอายุจาก loginTime แล้ว เพราะจะเช็คใน checkLoginStatus()
-    if (_token != null && _token!.isNotEmpty) {
-      isLoggedIn.value = true;
-    } else {
-      isLoggedIn.value = false;
-    }
   }
 
   bool isLoggedInSync() {
     return isLoggedIn.value; // เช็คสถานะล็อกอินแบบ Sync
   }
 
-  Future<void> saveAuth(String token, String email, bool rememberPassword) async {
+  Future<void> saveAuth(
+      String token, String email, bool rememberPassword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
     await prefs.setString('email', email);
     await prefs.setBool('rememberPassword', rememberPassword);
     await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
-    
+
     _token = token;
     _email = email;
     isLoggedIn.value = true;
@@ -46,37 +34,46 @@ class AuthService extends GetxService {
     await prefs.remove('email');
     await prefs.remove('rememberPassword');
     await prefs.remove('loginTime');
-    
+
     _token = null;
     _email = null;
     isLoggedIn.value = false;
   }
 
   Future<bool> checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
-    String? token = prefs.getString('token');
-    int? loginTime = prefs.getInt('loginTime'); // เวลาที่ล็อกอินล่าสุด
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool rememberPassword = prefs.getBool('rememberPassword') ?? false;
+  String? token = prefs.getString('token');
+  int? loginTime = prefs.getInt('loginTime');
 
-    if (token != null && token.isNotEmpty) {
-      if (!rememberPassword) {
-        // ตรวจสอบว่า token หมดอายุหรือยัง (24 ชั่วโมง)
-        if (loginTime != null) {
-          int currentTime = DateTime.now().millisecondsSinceEpoch;
-          int expiryTime = loginTime + (24 * 60 * 60 * 1000); // +24 ชั่วโมง
-          if (currentTime > expiryTime) {
-            await clearAuth(); // ลบ token และข้อมูลผู้ใช้
-            return false;
-          }
-        } else {
-          await clearAuth(); // ถ้าไม่มี loginTime ลบทิ้งกันพลาด
+  if (token != null && token.isNotEmpty) {
+    if (!rememberPassword) {
+      if (loginTime != null) {
+        int currentTime = DateTime.now().millisecondsSinceEpoch;
+        int expiryTime = loginTime + (24 * 60 * 60 * 1000); // +24 ชั่วโมง
+        if (currentTime > expiryTime) {
+          await clearAuth();
           return false;
         }
+      } else {
+        await clearAuth();
+        return false;
       }
-      return true; // ถ้ามี token และยังไม่หมดอายุ
     }
-    return false; // ไม่มี token หรือหมดอายุไปแล้ว
+    isLoggedIn.value = true; // ทำให้ isLoggedIn เป็น true หากมี token และยังไม่หมดอายุ
+    return true;
   }
+
+  // ไม่มี token หรือ token หมดอายุ
+  isLoggedIn.value = false; // ถ้าไม่มี token หรือหมดอายุ
+
+  // รีเซ็ตข้อมูลใน ProfileController
+  ProfileController profileController = Get.find<ProfileController>();
+  profileController.resetProfile();
+
+  return false;
+}
+
 
   Future<String> loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
