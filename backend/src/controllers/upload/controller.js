@@ -45,6 +45,34 @@ router.get("/test", auth, async (req, res) => {
 
 // เส้นทางสำหรับอัปโหลดรูปโปรไฟล์
 router.post(
+  "/update/profile",
+  auth,
+  (req, res, next) => {
+    req.uploadFolder = "profile-images";
+    next();
+  },
+  upload.single("file"),
+  async (req, res) => {
+    try {
+
+      const path = req.file.path.replace('src', '')
+      fileService.updateImgProfile(req.user.userId, path)
+
+      return res.status(200).json({
+        status: "success",
+        file: req.file,
+        path: path,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ status: "error", message: "File upload failed" });
+    }
+  }
+);
+
+router.post(
   "/upload/profile",
   auth,
   (req, res, next) => {
@@ -61,7 +89,7 @@ router.post(
       return res.status(200).json({
         status: "success",
         file: req.file,
-        path: req.file.path,
+        path: req.file.path.replace('src', ''),
       });
     } catch (error) {
       console.error(error);
@@ -89,7 +117,7 @@ router.post(
       return res.status(200).json({
         status: "success",
         file: req.file,
-        path: req.file.path,
+        path: req.file.path.replace('src', ''),
       });
     } catch (error) {
       console.error(error);
@@ -117,7 +145,7 @@ router.post(
       return res.status(200).json({
         status: "success",
         file: req.file,
-        path: req.file.path,
+        path: req.file.path.replace('src', ''),
       });
     } catch (error) {
       console.error(error);
@@ -147,7 +175,7 @@ router.post(
       return res.status(200).json({
         status: "success",
         file: req.file,
-        path: req.file.path,
+        path: req.file.path.replace('src', ''),
       });
     } catch (error) {
       console.error(error);

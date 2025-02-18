@@ -104,7 +104,19 @@ const compressImage = async (filePath) => {
 // 🚀 ทดสอบฟังก์ชัน
 // compressImage("./uploads/test-image.jpg").then((result) => console.log("✔️ Done:", result));
 
+//Prisma
+
+const updateImgProfile = async (id, path) => {
+  const profile = await prisma.profile.update({
+    where: { user: { id: id } },
+    data: {
+      profile_img: path
+    }
+  })
+  return profile;
+}
 module.exports = {
   upload,
   uploadFile,
+  updateImgProfile
 };
