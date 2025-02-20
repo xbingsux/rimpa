@@ -292,6 +292,7 @@ const profileMe = async (id) => {
           }
         }
       },
+      points: true,
       phone: true,
       birth_date: true,
       gender: true,

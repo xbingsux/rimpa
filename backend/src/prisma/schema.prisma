@@ -177,11 +177,11 @@ model EventParticipant {
   id          Int           @id @default(autoincrement()) // Primary Key
   Profile     Profile       @relation(fields: [profileId], references: [id])
   profileId   Int
+  SubEvent    SubEvent      @relation(fields: [subEventId], references: [id])
+  subEventId  Int
   createdAt   DateTime      @default(now())
   paymentType PaymentType?
   status      PaymentStatus @default(PENDING)
-  SubEvent    SubEvent      @relation(fields: [subEventId], references: [id])
-  subEventId  Int
 }
 
 enum Visibility {
@@ -258,10 +258,11 @@ model RedeemReward {
 }
 
 enum PaymentStatus {
+  //มีการจ่ายเงิน
   PENDING // รอดำเนินการ
   PAID // ชำระเงินสำเร็จ
   FAILED // การชำระเงินล้มเหลว
-
+  //มีการขนส่ง
   IN_TRANSIT // กำลังขนส่ง
   SHIPPED // จัดส่งแล้ว
 
