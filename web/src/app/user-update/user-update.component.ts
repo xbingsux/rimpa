@@ -98,6 +98,8 @@ export class UserUpdateComponent implements OnInit {
     const imgPath = await this.upload_img();
     console.log("🚀 Image Path:", imgPath);
 
+    console.log(typeof this.data.Status);
+
     this.http.post(`${environment.API_URL}/register`, {
       email: this.data.email,
       role: this.data.Role,
@@ -134,6 +136,6 @@ class User {
   birthday = ''
   gender = 'Other'
   Role = 'admin'
-  Status = true
+  Status: boolean = true
   path: string | null = null
 }

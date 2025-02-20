@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
+import '../../controllers/profile/profile_controller.dart';
 
 class AuthService extends GetxService {
   RxBool isLoggedIn = false.obs; // ใช้ RxBool แทนการใช้ async
@@ -62,7 +63,14 @@ class AuthService extends GetxService {
     isLoggedIn.value = true; // ทำให้ isLoggedIn เป็น true หากมี token และยังไม่หมดอายุ
     return true;
   }
+
+  // ไม่มี token หรือ token หมดอายุ
   isLoggedIn.value = false; // ถ้าไม่มี token หรือหมดอายุ
+
+  // รีเซ็ตข้อมูลใน ProfileController
+  ProfileController profileController = Get.find<ProfileController>();
+  profileController.resetProfile();
+
   return false;
 }
 

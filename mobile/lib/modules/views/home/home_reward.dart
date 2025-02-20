@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
-import '../../../components/dropdown/app-dropdown.component.dart';
+
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
 import '../../controllers/profile/profile_controller.dart';
+
+import 'seeallcards/recommended_privileges.dart';
+import 'homedetail/home_detail_reward.dart'; // Add this import
 
 class HomeRewardPage extends StatefulWidget {
   @override
@@ -19,6 +23,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
 
   @override
   Widget build(BuildContext context) {
+    ApiUrls apiUrls = Get.find();
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
@@ -35,10 +40,11 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                   // Custom App Bar
                   Container(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + 16,
-                        left: 16,
-                        right: 16,
-                        bottom: 16),
+                      top: MediaQuery.of(context).padding.top + 16,
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
                     decoration: BoxDecoration(
                       gradient: AppGradiant.gradientX_1,
                     ),
@@ -47,53 +53,68 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[300],
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(Icons.person_outline,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(width: 8),
+                            // รูปโปรไฟล์แทนไอคอน
                             Obx(() {
-                              // ดึงข้อมูลจาก Controller
-                              var profileName =
-                                  profileController.profileData["profile_name"];
+                              // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
+                              String profileImage = profileController
+                                      .profileData["profile_img"] ??
+                                  '';
 
-                              // ตรวจสอบว่า profile_name เป็น null หรือไม่
-                              if (profileName == null) {
-                                // ถ้ายังไม่ได้ล็อคอิน หรือข้อมูล profile_name เป็น null
-                                return Text(
-                                  "ยังไม่ได้ล็อคอิน", // ถ้ายังไม่ได้รับข้อมูลให้แสดงข้อความนี้
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                                      ),
-                                );
-                              } else {
-                                // ถ้ามีข้อมูลใน profile_name
-                                return Text(
-                                  profileName ??
-                                      "Username", // ถ้ามีชื่อแสดงชื่อผู้ใช้ ถ้าไม่มีแสดง "Username"
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                                      ),
-                                );
-                              }
+                              // สร้าง URL ของภาพจาก path ที่ต้องการ
+                              String imageUrl = profileImage.isEmpty
+                                  ? 'assets/images/default_profile.jpg'
+                                  : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+
+                              return Container(
+                                width: 40, // ขนาดเท่ากับไอคอนเดิม
+                                height: 40, // ขนาดเท่ากับไอคอนเดิม
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      Colors.grey[300], // พื้นหลังเทาเหมือนเดิม
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    imageUrl,
+                                    width: 40, // ให้รูปอยู่ในขนาด 40x40 px
+                                    height: 40,
+                                    fit: BoxFit.cover, // ปรับให้เต็มวงกลม
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.person_outline,
+                                          color: Colors.grey, size: 24);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }),
+
+                            SizedBox(width: 8),
+
+                            // ชื่อโปรไฟล์
+                            Obx(() {
+                              var profileName = profileController
+                                      .profileData["profile_name"] ??
+                                  "ยังไม่ได้ล็อคอิน";
+
+                              return Text(
+                                profileName,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                    ),
+                              );
                             }),
                           ],
                         ),
+
+                        // ไอคอนแจ้งเตือน
                         Icon(Icons.notifications_none, color: Colors.white),
                       ],
                     ),
                   ),
+
                   Container(
                     height: MediaQuery.of(context).size.height * 0.07,
                     decoration: BoxDecoration(
@@ -123,14 +144,19 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                   _currentPage = index;
                                 });
                               },
-                              itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.symmetric(horizontal: 8),
-                                child: AppImageComponent(
-                                  aspectRatio: 2.08 / 1,
-                                  fit: BoxFit.cover,
-                                  imageType: AppImageType.network,
-                                  imageAddress:
-                                      "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  Get.to(HomeDetailReward());
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 8),
+                                  child: AppImageComponent(
+                                    aspectRatio: 2.08 / 1,
+                                    fit: BoxFit.cover,
+                                    imageType: AppImageType.network,
+                                    imageAddress:
+                                        "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                                  ),
                                 ),
                               ),
                             ),
@@ -162,25 +188,30 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "ดูทั้งหมด",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(RecommendedPrivilegesPage());
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "ดูทั้งหมด",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    " >",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                                    Text(
+                                      " >",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -189,28 +220,33 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: List.generate(8, (index) {
-                                return Container(
-                                  width: 150,
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: AppCardComponent(
-                                    child: Column(
-                                      children: [
-                                        AppImageComponent(
-                                          imageType: AppImageType.network,
-                                          imageAddress:
-                                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                                        ),
-                                        SizedBox(height: 8),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          child: Text(
-                                            "Lorem Ipsum is simply dummy text of the printing",
-                                            style: TextStyle(fontSize: 12),
-                                            textAlign: TextAlign.center,
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(HomeDetailReward());
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    margin: EdgeInsets.only(right: 8),
+                                    child: AppCardComponent(
+                                      child: Column(
+                                        children: [
+                                          AppImageComponent(
+                                            imageType: AppImageType.network,
+                                            imageAddress:
+                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 8),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            child: Text(
+                                              "Lorem Ipsum is simply dummy text of the printing",
+                                              style: TextStyle(fontSize: 12),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -226,25 +262,30 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "ดูทั้งหมด",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(RecommendedPrivilegesPage());
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "ดูทั้งหมด",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    " >",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                                    Text(
+                                      " >",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -253,28 +294,33 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: List.generate(8, (index) {
-                                return Container(
-                                  width: 150,
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: AppCardComponent(
-                                    child: Column(
-                                      children: [
-                                        AppImageComponent(
-                                          imageType: AppImageType.network,
-                                          imageAddress:
-                                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                                        ),
-                                        SizedBox(height: 8),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          child: Text(
-                                            "Lorem Ipsum is simply dummy text of the printing",
-                                            style: TextStyle(fontSize: 12),
-                                            textAlign: TextAlign.center,
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(HomeDetailReward());
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    margin: EdgeInsets.only(right: 8),
+                                    child: AppCardComponent(
+                                      child: Column(
+                                        children: [
+                                          AppImageComponent(
+                                            imageType: AppImageType.network,
+                                            imageAddress:
+                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 8),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            child: Text(
+                                              "Lorem Ipsum is simply dummy text of the printing",
+                                              style: TextStyle(fontSize: 12),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -290,25 +336,30 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "ดูทั้งหมด",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(RecommendedPrivilegesPage());
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "ดูทั้งหมด",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    " >",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
+                                    Text(
+                                      " >",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -317,28 +368,33 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: List.generate(8, (index) {
-                                return Container(
-                                  width: 150,
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: AppCardComponent(
-                                    child: Column(
-                                      children: [
-                                        AppImageComponent(
-                                          imageType: AppImageType.network,
-                                          imageAddress:
-                                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                                        ),
-                                        SizedBox(height: 8),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          child: Text(
-                                            "Lorem Ipsum is simply dummy text of the printing",
-                                            style: TextStyle(fontSize: 12),
-                                            textAlign: TextAlign.center,
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(HomeDetailReward());
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    margin: EdgeInsets.only(right: 8),
+                                    child: AppCardComponent(
+                                      child: Column(
+                                        children: [
+                                          AppImageComponent(
+                                            imageType: AppImageType.network,
+                                            imageAddress:
+                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 8),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            child: Text(
+                                              "Lorem Ipsum is simply dummy text of the printing",
+                                              style: TextStyle(fontSize: 12),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -404,19 +460,19 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 color: Colors.grey),
                           ),
                           Obx(() {
-                            // ดึงค่าจาก Controller
-                            var points =
-                                profileController.profileData["profile_name"];
+                            // ดึงค่าคะแนนจากฟิลด์ที่ถูกต้องใน profileData
+                            var points = profileController.profileData[
+                                "points"]; // เปลี่ยนชื่อฟิลด์เป็น "points" หรือชื่อที่ถูกต้อง
 
                             // แปลงค่าที่เป็น String (หากมี) เป็น double และตรวจสอบว่ามีค่า
                             double? pointsValue =
                                 double.tryParse(points.toString());
 
-                            // ถ้าค่ามีทศนิยมเยอะ เช่น 0.0000000000000 ให้แปลงเป็น 0 หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
+                            // ถ้าค่ามีทศนิยมเยอะ หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
                             String displayPoints = (pointsValue == null ||
                                     pointsValue <= 0 ||
                                     pointsValue == 0.0)
-                                ? "ไม่มีคะแนน" // ถ้าไม่มีข้อมูลหรือคะแนนน้อยกว่า 0
+                                ? "ไม่มีคะแนน"
                                 : pointsValue.toStringAsFixed(
                                     2); // แสดงคะแนนและปัดทศนิยมให้เหลือ 2 ตำแหน่ง
 
@@ -425,10 +481,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 foreground: Paint()
-                                  ..shader =
-                                      AppGradiant.gradientX_1.createShader(
-                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                  ),
+                                  ..shader = AppGradiant.gradientX_1
+                                      .createShader(
+                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                               ),
                             );
                           }),

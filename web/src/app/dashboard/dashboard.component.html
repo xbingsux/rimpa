@@ -17,8 +17,13 @@
 </div>
 <div>
     <div class="flex p-10 text-[#1093ED] font-bold gap-4">
-        <div (click)="setPath('event')">Top Event</div>
-        <div (click)="setPath('reward')">Top Reward</div>
+        <div (click)="setPath('event')" class="cursor-pointer"
+            [style]="path == 'event' ? 'text-decoration-line: underline;':'color: #999999;'">Top
+            Event</div>
+        <div (click)="setPath('reward')" class="cursor-pointer"
+            [style]="path == 'reward' ? 'text-decoration-line: underline;':'color: #999999;'">
+            Top Reward
+        </div>
     </div>
     <div class="relative overflow-hidden min-h-[500px] w-full">
         <div class="absolute -top-[150px] left-0 w-full">

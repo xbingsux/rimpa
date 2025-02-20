@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms'
 import { AuthGuard } from '../service/auth-guard.service'
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,6 +19,9 @@ export class LoginComponent implements OnInit {
     if (localStorage.getItem('email')) {
       this.login.email = String(localStorage.getItem('email'))
       this.keep_me = true;
+    } else {
+      this.login.email = ''
+      this.login.password = ''
     }
   }
 

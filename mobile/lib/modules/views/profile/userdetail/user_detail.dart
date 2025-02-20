@@ -11,6 +11,7 @@ class UserDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ดึง Controller
+    
     final authController = Get.put(LoginController());
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
@@ -99,11 +100,11 @@ class UserDetail extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Obx(() {
-                if (profileController.profileData["email"] == null) {
+                if (profileController.profileData["user"]["email"] == null) {
                   return shimmerLoading();
                 } else {
                   return Customtextprofile(
-                    labelText: profileController.profileData["email"] ?? 'กำลังโหลด...',
+                    labelText: profileController.profileData["user"]["email"] ?? 'กำลังโหลด...',
                     obscureText: false,
                   );
                 }

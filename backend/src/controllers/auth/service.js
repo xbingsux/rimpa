@@ -195,7 +195,7 @@ const sendForgotPassword = async (email, token) => {
   const mailOptions = {
     from: `<${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "ยืนยันอีเมลของคุณ",
+    subject: "เปลี่ยนรหัสผ่าน",
     html: `
         <div style="width: 100%;background-color: #fff;">
         <center>
@@ -263,6 +263,8 @@ const sendForgotPassword = async (email, token) => {
 }
 
 const resetPassword = async (id, password) => {
+  console.log(id);
+
   const user = await prisma.user.update({
     where: { id: id },
     data: {

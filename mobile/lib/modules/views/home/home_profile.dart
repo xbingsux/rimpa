@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
+import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant/app.constant.dart';
@@ -65,19 +67,18 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   }
 
   void _logout() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('token');
-  await prefs.remove('email');
-  await prefs.remove('rememberPassword');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('rememberPassword');
 
-  // Clear profile data and other states
-  Get.find<ProfileController>().resetProfile();
+    // Clear profile data and other states
+    Get.find<ProfileController>().resetProfile();
 
-  setState(() {
-    isLoggedIn = false;
-  });
-}
-
+    setState(() {
+      isLoggedIn = false;
+    });
+  }
 
   // ฟังก์ชันสำหรับเปิดการเลือกรูปจากอุปกรณ์
   Future<void> _pickImage() async {
@@ -121,6 +122,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    ApiUrls apiUrls = Get.find();
     return Container(
       decoration: BoxDecoration(
         gradient: AppGradiant.gradientX_1,
@@ -180,21 +182,75 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                               ),
                               SizedBox(
                                   height:
-                                      430), // เผื่อพื้นที่ป้องกัน bottom overflow
+                                      450), // เผื่อพื้นที่ป้องกัน bottom overflow
                             ] else ...[
-                              Text(
-                                "ชื่อผู้ใช้",
-                                style: TextStyle(
-                                  fontSize: AppTextSize.md,
-                                ),
-                              ),
+                              Obx(() {
+                                // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                                if (profileController.profileData.isEmpty ||
+                                    profileController
+                                            .profileData["profile_name"] ==
+                                        null) {
+                                  // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                                  return Text(
+                                    "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .md, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                } else {
+                                  // หากมีข้อมูลใน profileData
+                                  return Text(
+                                    profileController
+                                            .profileData["profile_name"] ??
+                                        "profile_name", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .md, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                }
+                              }),
                               SizedBox(height: 5),
-                              Text(
-                                email.isEmpty ? "กำลังโหลด..." : email,
-                                style: TextStyle(
-                                  fontSize: AppTextSize.sm,
-                                ),
-                              ),
+                              Obx(() {
+                                // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                                if (profileController.profileData.isEmpty ||
+                                    profileController.profileData["user"]
+                                            ["email"] ==
+                                        null) {
+                                  // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                                  return Text(
+                                    "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .sm, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                } else {
+                                  // หากมีข้อมูลใน profileData
+                                  return Text(
+                                    profileController.profileData["user"]
+                                            ["email"] ??
+                                        "email", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontSize: AppTextSize
+                                              .sm, // ปรับขนาดฟอนต์เป็น 16
+                                        ),
+                                  );
+                                }
+                              }),
                               MenuCard(
                                 title: "บัญชีและความเป็นส่วนตัว",
                                 items: [
@@ -242,7 +298,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                             ],
                             SizedBox(
                                 height:
-                                    100), // เผื่อพื้นที่ป้องกัน bottom overflow
+                                    130), // เผื่อพื้นที่ป้องกัน bottom overflow
                           ],
                         ),
                       ),
@@ -254,8 +310,15 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                 top: 10,
                 left: MediaQuery.of(context).size.width / 2 - 50,
                 child: Obx(() {
+                  // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
                   String profileImage =
-                      profileController.profileData["profile_image"] ?? '';
+                      profileController.profileData["profile_img"] ?? '';
+
+                  // สร้าง URL ของภาพจาก path ที่ต้องการ
+                  String imageUrl = profileImage.isEmpty
+                      ? 'assets/images/default_profile.jpg'
+                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+
                   return Stack(
                     children: [
                       // รูปโปรไฟล์
@@ -267,12 +330,6 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                           color: profileImage.isEmpty
                               ? Color.fromARGB(255, 218, 165, 165)
                               : Colors.transparent,
-                          image: profileImage.isNotEmpty
-                              ? DecorationImage(
-                                  image: NetworkImage(profileImage),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
@@ -281,18 +338,14 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                             ),
                           ],
                         ),
-                        child: profileImage.isEmpty
-                            ? Center(
-                                child: Text(
-                                  "default",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )
-                            : null,
+                        child: AppImageComponent(
+                          imageType:
+                              AppImageType.network, // ระบุประเภทเป็น Network
+                          imageAddress: imageUrl, // URL ของภาพโปรไฟล์
+                          aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(50)), // รูปทรงวงกลม
+                        ),
                       ),
                       // ไอคอนเปลี่ยนรูป
                       Positioned(

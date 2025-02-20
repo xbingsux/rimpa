@@ -13,44 +13,43 @@ class ProfileController extends GetxController {
   final GetConnect _getConnect = GetConnect();
   final AuthMiddleware _authMiddleware =
       Get.find<AuthMiddleware>(); // เรียกใช้ AuthMiddleware
-void resetProfile() {
+  void resetProfile() {
     profileData.value = {}; // รีเซ็ตข้อมูลโปรไฟล์
     isLoading.value = false; // รีเซ็ตสถานะการโหลด
     uploadStatus.value = ''; // รีเซ็ตสถานะการอัปโหลด
   }
+
   // ดึงข้อมูลโปรไฟล์
   Future<void> fetchProfile() async {
-  isLoading.value = true;
-  try {
-    String? token = await _authMiddleware.getToken();
+    isLoading.value = true;
+    try {
+      String? token = await _authMiddleware.getToken();
 
-    if (token == null) {
+      if (token == null) {
+        isLoading.value = false;
+        profileData.value = {}; // รีเซ็ตข้อมูลโปรไฟล์หากไม่มี token
+        uploadStatus.value = 'ไม่สามารถดึงข้อมูลได้: ไม่มี Token';
+        return;
+      }
+      // ทำการร้องขอข้อมูลโปรไฟล์
+      final response = await _getConnect.post(
+        apiUrlsController.profileMe.value,
+        {},
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        profileData.value = response.body["profile"];
+        uploadStatus.value = ''; // รีเซ็ตสถานะการอัปโหลดเมื่อดึงข้อมูลสำเร็จ
+      } else {
+        uploadStatus.value = 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้';
+      }
+    } catch (e) {
+      uploadStatus.value = 'เกิดข้อผิดพลาดในการดึงข้อมูล';
+    } finally {
       isLoading.value = false;
-      profileData.value = {}; // รีเซ็ตข้อมูลโปรไฟล์หากไม่มี token
-      uploadStatus.value = 'ไม่สามารถดึงข้อมูลได้: ไม่มี Token';
-      return;
     }
-
-    // ทำการร้องขอข้อมูลโปรไฟล์
-    final response = await _getConnect.post(
-      apiUrlsController.profileMe.value,
-      {},
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode == 200) {
-      profileData.value = response.body["profile"];
-      uploadStatus.value = ''; // รีเซ็ตสถานะการอัปโหลดเมื่อดึงข้อมูลสำเร็จ
-    } else {
-      uploadStatus.value = 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้';
-    }
-  } catch (e) {
-    uploadStatus.value = 'เกิดข้อผิดพลาดในการดึงข้อมูล';
-  } finally {
-    isLoading.value = false;
   }
-}
-
 
   // ฟังก์ชันสำหรับอัปโหลดโปรไฟล์ภาพ
   Future<void> uploadProfileImage(File imageFile) async {
