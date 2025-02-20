@@ -1,6 +1,7 @@
 import 'package:get/get.dart'; // ใช้ GetX สำหรับการทำงานกับ API
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io'; // สำหรับการจัดการไฟล์
+import 'dart:async';
 import '../../../core/services/api_urls.dart'; // นำเข้าที่เก็บ API URL
 import '../middleware/auth_middleware.dart'; // นำเข้า AuthMiddleware
 
@@ -8,6 +9,7 @@ class ProfileController extends GetxController {
   var isLoading = false.obs;
   var profileData = {}.obs; // ทำให้เป็น Rx เพื่อให้ข้อมูลอัพเดตใน UI
   var uploadStatus = ''.obs; // สถานะการอัปโหลด
+  Timer? timer;
 
   final apiUrlsController = Get.find<ApiUrls>(); // เรียก ApiUrls จาก GetX
   final GetConnect _getConnect = GetConnect();
@@ -98,5 +100,13 @@ class ProfileController extends GetxController {
   void onInit() {
     fetchProfile(); // ดึงข้อมูลโปรไฟล์เมื่อเริ่มต้น
     super.onInit();
+    timer = Timer.periodic(
+        Duration(seconds: 1), (Timer t) => fetchProfile()); // อัปเดตทุก 1 วิ
+  }
+
+  @override
+  void onClose() {
+    timer?.cancel(); // หยุดตัวจับเวลาเมื่อปิดหน้าจอ
+    super.onClose();
   }
 }

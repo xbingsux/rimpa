@@ -436,82 +436,92 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                     ],
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max, // ใช้พื้นที่เต็ม
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // เว้นระยะระหว่าง elements
                     children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          gradient: AppGradiant.gradientX_1, // Applied gradient
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.star, color: Colors.white),
-                      ),
-                      SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "คะเเนน",
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              gradient:
+                                  AppGradiant.gradientX_1, // Applied gradient
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.star, color: Colors.white),
                           ),
-                          Obx(() {
-                            // ดึงค่าคะแนนจากฟิลด์ที่ถูกต้องใน profileData
-                            var points = profileController.profileData[
-                                "points"]; // เปลี่ยนชื่อฟิลด์เป็น "points" หรือชื่อที่ถูกต้อง
-
-                            // แปลงค่าที่เป็น String (หากมี) เป็น double และตรวจสอบว่ามีค่า
-                            double? pointsValue =
-                                double.tryParse(points.toString());
-
-                            // ถ้าค่ามีทศนิยมเยอะ หรือค่าน้อยกว่า 0 แสดง "ไม่มีคะแนน"
-                            String displayPoints = (pointsValue == null ||
-                                    pointsValue <= 0 ||
-                                    pointsValue == 0.0)
-                                ? "ไม่มีคะแนน"
-                                : pointsValue.toStringAsFixed(
-                                    2); // แสดงคะแนนและปัดทศนิยมให้เหลือ 2 ตำแหน่ง
-
-                            return Text(
-                              displayPoints,
-                              style: TextStyle(
-                                fontSize: 24,
-                                foreground: Paint()
-                                  ..shader = AppGradiant.gradientX_1
-                                      .createShader(
-                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                          SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "คะเเนน",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            );
-                          }),
+                              Obx(() {
+                                // ดึงค่าคะแนนจาก profileData
+                                var points =
+                                    profileController.profileData["points"];
+                                double? pointsValue =
+                                    double.tryParse(points.toString());
+
+                                // ถ้าคะแนนผิดพลาดหรือน้อยกว่าหรือเท่ากับ 0 ให้แสดง "0"
+                                String displayPoints = (pointsValue == null ||
+                                        pointsValue <= 0)
+                                    ? "0"
+                                    : (pointsValue > 999999)
+                                        ? "999999" // จำกัดตัวเลขสูงสุด 6 หลัก
+                                        : pointsValue.toStringAsFixed(
+                                            2); // ปัดเศษ 2 ตำแหน่ง
+
+                                return Text(
+                                  displayPoints,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    foreground: Paint()
+                                      ..shader =
+                                          AppGradiant.gradientX_1.createShader(
+                                        Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                      ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
                         ],
                       ),
-                      SizedBox(width: 16),
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: 10), // Added padding to the left
-                        child: Container(
-                          width: 120, // Adjusted width to prevent overflow
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 209, 234, 255),
-                            borderRadius: BorderRadius.circular(
-                                16), // Added border radius
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.av_timer_rounded, color: Colors.blue),
-                              SizedBox(width: 8),
-                              Text(
-                                "ประวัติ",
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.blue),
-                              ),
-                            ],
+
+                      // ใช้ Expanded + Align เพื่อให้ "ประวัติ" ชิดขวาเสมอ
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 120, // ป้องกัน Overflow
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 209, 234, 255),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.av_timer_rounded,
+                                    color: Colors.blue),
+                                SizedBox(width: 8),
+                                Text(
+                                  "ประวัติ",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.blue),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

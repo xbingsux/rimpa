@@ -631,23 +631,25 @@ class CustomPhoneTextFieldProfile extends StatelessWidget {
 
     return IntlPhoneField(
       controller: controller, // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
+      style: const TextStyle( // เพิ่มการตั้งค่าสีของตัวเลขในช่องกรอก
+        color: Colors.black, // ตัวเลขสีดำ
+        fontSize: 16,
+      ),
       decoration: InputDecoration(
-        labelText: 'เบอร์โทรศัพท์มือถือ',
         labelStyle: const TextStyle(
-          fontSize: 14,
+          fontSize: 16,
           color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 180, 180, 180), // กรอบเทาอ่อน
+            color: Color.fromARGB(255, 0, 0, 0), // กรอบสีดำ
             width: 1,
           ),
         ),
         filled: true,
         fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH', // ให้ค่าเริ่มต้นเป็นประเทศไทย 🇹🇭
       showCountryFlag: true, // แสดงธงชาติ
@@ -667,6 +669,7 @@ class CustomPhoneTextFieldProfile extends StatelessWidget {
     );
   }
 }
+
 
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;
