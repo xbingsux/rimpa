@@ -9,6 +9,8 @@ class UserModel {
   var createdAt = DateTime.now().obs;
   var updatedAt = DateTime.now().obs;
   var active = true.obs;
+
+  get confirmPassword => null;
 }
 
 class ProfileModel {
