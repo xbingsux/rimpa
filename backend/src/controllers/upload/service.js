@@ -108,11 +108,7 @@ const compressImage = async (filePath) => {
 
 const updateImgProfile = async (id, path) => {
   const profile = await prisma.profile.update({
-<<<<<<< HEAD
     where:  { user_id: id } ,
-=======
-    where: { user_id: id },
->>>>>>> 2a81374c5fb1309519d1cec6ac1c16a1a436c921
     data: {
       profile_img: path
     }
