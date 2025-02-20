@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
 import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant/app.constant.dart';
@@ -121,6 +122,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    ApiUrls apiUrls = Get.find();
     return Container(
       decoration: BoxDecoration(
         gradient: AppGradiant.gradientX_1,
@@ -315,7 +317,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                   // สร้าง URL ของภาพจาก path ที่ต้องการ
                   String imageUrl = profileImage.isEmpty
                       ? 'assets/images/default_profile.jpg'
-                      : 'http://192.168.1.2:3001$profileImage'; // กำหนด URL รูปโปรไฟล์
+                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
                   return Stack(
                     children: [
