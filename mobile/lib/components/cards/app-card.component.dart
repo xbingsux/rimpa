@@ -11,17 +11,15 @@ class AppCardComponent extends StatelessWidget {
   final Color backgroundColor;
   final Widget child;
   const AppCardComponent(
-    {
-      super.key, 
-      this.aspectRatio = 2 / 3, 
-      this.incardPadding = const EdgeInsets.all(AppSpacing.sm), 
-      this.outcardPadding = const EdgeInsets.all(0), 
-      this.border = const Border.fromBorderSide(BorderSide(width: 1, color: AppColors.secondary)),
+      {super.key,
+      this.aspectRatio = 2 / 3,
+      this.incardPadding = const EdgeInsets.all(AppSpacing.sm),
+      this.outcardPadding = const EdgeInsets.all(0),
+      this.border = const Border.fromBorderSide(
+          BorderSide(width: 0.1, )),
       this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)),
-      this.backgroundColor = AppColors.white, 
-      required this.child
-    }
-  );
+      this.backgroundColor = AppColors.white,
+      required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,9 @@ class AppCardComponent extends StatelessWidget {
         child: Container(
           padding: incardPadding,
           decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            border: border
-          ),
+              color: Theme.of(context).cardColor, // ใช้สีจาก Theme
+              borderRadius: borderRadius,
+              border: border),
           child: child,
         ),
       ),

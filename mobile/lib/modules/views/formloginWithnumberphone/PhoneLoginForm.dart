@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import '../../../widgets/custom_loginpage.dart';
+import '../../../widgets/loginWidget/custom_loginpage.dart';
 
 class PhoneLoginForm extends StatelessWidget {
   final String phoneNumber;
@@ -43,7 +43,7 @@ class PhoneLoginForm extends StatelessWidget {
            SizedBox(height: AppSpacing.md),
           //  ฟิลด์ป้อนเบอร์โทร
           CustomPhoneTextField(
-            onChanged: (value) => value,
+            
           ),
           SizedBox(height: AppSpacing.md),
           Align(

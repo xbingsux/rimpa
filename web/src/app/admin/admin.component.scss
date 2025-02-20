@@ -1,0 +1,37 @@
+.dashboard-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    font-weight: 400;
+    font-size: 1rem;
+    text-align: start;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: #999
+}
+
+.dashboard-btn:hover {
+    // color: white;
+    background-color: #1c1c1c
+}
+
+.dashboard-inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    justify-content: start;
+    align-items: center;
+    gap: 0;
+}
+
+.dashboard-inner p {
+    width: 100%;
+}
+
+.dashboard-img {
+    width: 20px;
+    aspect-ratio: 1 / 1;
+}

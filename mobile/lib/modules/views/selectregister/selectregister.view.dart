@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/widgets/custom_loginpage.dart'; 
+import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart'; 
 import '../../../core/constant/app.constant.dart';
 import '../formloginWithnumberphone/PhoneLoginForm.dart'; // ✅ นำเข้า PhoneLoginForm
 
@@ -11,7 +11,7 @@ class LoginSelectionView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 🔹 ปุ่มย้อนกลับ
+            // ปุ่มย้อนกลับ
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
               child: Row(
@@ -26,7 +26,7 @@ class LoginSelectionView extends StatelessWidget {
 
             SizedBox(height: AppSpacing.xl),
 
-            // 🔹 โลโก้ตรงกลาง
+            // โลโก้ตรงกลาง
             Align(
               alignment: Alignment.center,
               child: Image.asset(
@@ -37,7 +37,7 @@ class LoginSelectionView extends StatelessWidget {
 
             SizedBox(height: AppSpacing.xl),
 
-            // 🔹 หัวข้อ "เข้าสู่ระบบ" ตรงกลาง
+            // หัวข้อ "เข้าสู่ระบบ" ตรงกลาง
             Text(
               'สร้างบัญชีครั้งแรก',
               style: TextStyle(fontSize: 24),
@@ -45,7 +45,7 @@ class LoginSelectionView extends StatelessWidget {
 
             SizedBox(height: AppSpacing.lg),
 
-            // 🔹 ปุ่มเลือกล็อกอิน
+            // ปุ่มเลือกล็อกอิน
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -58,7 +58,7 @@ class LoginSelectionView extends StatelessWidget {
                   ),
                   SizedBox(height: AppSpacing.lg),
 
-                  // 🔹 ปุ่มเข้าสู่ระบบด้วยเบอร์โทรศัพท์ (เรียก Bottom Sheet)
+                  //ปุ่มเข้าสู่ระบบด้วยเบอร์โทรศัพท์ (เรียก Bottom Sheet)
                   CustomButton(
                     text: 'เข้าสู่ระบบด้วยเบอร์โทรศัพท์',
                     onPressed: () {
@@ -100,7 +100,7 @@ class LoginSelectionView extends StatelessWidget {
                   ),
                   SizedBox(height: AppSpacing.xxl),
 
-                  // 🔹 ปุ่มสมัครสมาชิก
+                  //ปุ่มสมัครสมาชิก
                   Haveaccountbutton(
                     onPressed: () => Get.toNamed('/login'),
                   ),
