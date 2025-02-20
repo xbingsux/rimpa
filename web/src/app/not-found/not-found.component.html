@@ -1,1 +1,14 @@
-<p>not-found works!</p>
+<div class="grid justify-center items-center gap-[50px]">
+    <div>
+        <img src="error-404.gif">
+        <p class="text-center text-[28px] font-semibold text-[#999]">
+            Page not found or no longer available.
+        </p>
+    </div>
+    <div class="flex justify-center pt-5">
+        <div class="flex gap-3 font-semibold cursor-pointer text-[#999]" (click)="api.goToLink('/login')">
+            <img src="arrow-left.svg" style="filter: invert(60%);">
+            Back to log in
+        </div>
+    </div>
+</div>

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'dart:async';
+import 'package:get/get.dart';
+
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
+import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
-import '../../../components/imageloader/app-image.component.dart'; // Import AppDropdown
+import '../../../components/imageloader/app-image.component.dart';
+import 'seeallcards/home_event_allcard.dart';
+
+import 'homedetail/home_detail.dart'; // Add this import
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -47,9 +55,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,10 +78,28 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       color: Colors.grey), // Change color to gray
                 ),
                 SizedBox(width: 8),
-                Text(
-                  "Username",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
+                Obx(() {
+                  // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
+                  if (profileController.profileData.isEmpty ||
+                      profileController.profileData["profile_name"] == null) {
+                    // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
+                    return Text(
+                      "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
+                  } else {
+                    // หากมีข้อมูลใน profileData
+                    return Text(
+                      profileController.profileData["profile_name"] ??
+                          "Username", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                          ),
+                    );
+                  }
+                }),
               ],
             ),
             Icon(Icons.notifications_none, color: Colors.grey),
@@ -93,14 +123,19 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       _currentPage = index;
                     });
                   },
-                  itemBuilder: (context, index) => Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    child: AppImageComponent(
-                      aspectRatio: 2.08 / 1,
-                      fit: BoxFit.cover,
-                      imageType: AppImageType.network,
-                      imageAddress:
-                          "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Get.to(HomeDetailPage());
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: AppImageComponent(
+                        aspectRatio: 2.08 / 1,
+                        fit: BoxFit.cover,
+                        imageType: AppImageType.network,
+                        imageAddress:
+                            "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                      ),
                     ),
                   ),
                 ),
@@ -129,25 +164,30 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     "กิจกรรมแนะนำ",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "ดูทั้งหมด",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(HomeEventAllcard());
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "ดูทั้งหมด",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      Text(
-                        " >",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                        Text(
+                          " >",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -156,28 +196,33 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(8, (index) {
-                    return Container(
-                      width: 150,
-                      margin: EdgeInsets.only(right: 8),
-                      child: AppCardComponent(
-                        child: Column(
-                          children: [
-                            AppImageComponent(
-                              imageType: AppImageType.network,
-                              imageAddress:
-                                  "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                            ),
-                            SizedBox(height: 8),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Text(
-                                "Lorem Ipsum is simply dummy text of the printing",
-                                style: TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(HomeDetailPage());
+                      },
+                      child: Container(
+                        width: 150,
+                        margin: EdgeInsets.only(right: 8),
+                        child: AppCardComponent(
+                          child: Column(
+                            children: [
+                              AppImageComponent(
+                                imageType: AppImageType.network,
+                                imageAddress:
+                                    "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  "Lorem Ipsum is simply dummy text of the printing",
+                                  style: TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -220,24 +265,29 @@ class _HomeMainPageState extends State<HomeMainPage> {
                   childAspectRatio: 2 / 3,
                 ),
                 itemCount: 8,
-                itemBuilder: (context, index) => AppCardComponent(
-                  child: Column(
-                    children: [
-                      AppImageComponent(
-                        imageType: AppImageType.network,
-                        imageAddress:
-                            "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                      ),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Text(
-                          "Lorem Ipsum is simply dummy text of the printing",
-                          style: TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () {
+                    Get.to(HomeDetailPage());
+                  },
+                  child: AppCardComponent(
+                    child: Column(
+                      children: [
+                        AppImageComponent(
+                          imageType: AppImageType.network,
+                          imageAddress:
+                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Text(
+                            "Lorem Ipsum is simply dummy text of the printing",
+                            style: TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

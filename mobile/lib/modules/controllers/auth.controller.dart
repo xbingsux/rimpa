@@ -5,56 +5,55 @@ import '../../core/routes/app_pages.dart';
 import '../../core/services/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/getusercontroller/auth_service.dart';
+import '../controllers/profile/profile_controller.dart';
 
 class LoginController extends GetxController {
   final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
   Dio dio = Dio();
 
   void loginwithemail(bool rememberPassword) async {
-    if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
-      try {
-        final apiUrlsController = Get.find<ApiUrls>();
-        final response = await dio.post(
-          apiUrlsController.login,
-          data: {
-            'email': user.email.value,
-            'password': user.password.value,
-          },
-        );
+  if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
+    try {
+      final apiUrlsController = Get.find<ApiUrls>();
+      final response = await dio.post(
+        apiUrlsController.login.value,
+        data: {
+          'email': user.email.value,
+          'password': user.password.value,
+        },
+      );
 
-        if (response.statusCode == 200) {
-          var token = response.data['token'] ?? '';
+      if (response.statusCode == 200) {
+        var token = response.data['token'] ?? '';
 
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', token);
-          await prefs.setString('email', user.email.value);
-          await prefs.setBool('rememberPassword', rememberPassword);
+        // บันทึก token ลงใน SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setString('email', user.email.value);
+        await prefs.setBool('rememberPassword', rememberPassword);
 
-          if (!rememberPassword) {
-            // บันทึกเวลาล็อกอิน ถ้าไม่ได้เลือก "จำฉันไว้"
-            await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
-          }
-
-          Get.snackbar('สำเร็จ', 'เข้าสู่ระบบเรียบร้อย');
-          Get.offNamed('/home');
-        } else {
-          Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');
+        if (!rememberPassword) {
+          // บันทึกเวลาล็อกอิน ถ้าไม่ได้เลือก "จำฉันไว้"
+          await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
         }
-      } catch (e) {
-        Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน');
-        print("Error: $e");
-      }
-    } else {
-      final authService = Get.find<AuthService>();
-      if (await authService.isLoggedIn()) {
-        Get.snackbar('สำเร็จ', 'เข้าสู่ระบบโดยใช้ token ที่บันทึกไว้');
+
+        // เรียกฟังก์ชัน fetchProfile() เพื่ออัปเดตข้อมูลโปรไฟล์
+        final profileController = Get.find<ProfileController>();
+        await profileController.fetchProfile();
+
+        Get.snackbar('สำเร็จ', 'เข้าสู่ระบบเรียบร้อย');
         Get.offNamed('/home');
       } else {
-        Get.snackbar('ข้อผิดพลาด', 'โปรดกรอกข้อมูลให้ครบถ้วน');
+        Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');
       }
+    } catch (e) {
+      Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน');
+      print("Error: $e");
     }
+  } else {
+    Get.snackbar('ข้อผิดพลาด', 'โปรดกรอกข้อมูลให้ครบถ้วน');
   }
-
+}
 
   void deleteAccount() async {
     if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
@@ -67,7 +66,7 @@ class LoginController extends GetxController {
 
         // ส่งข้อมูลผ่าน POST request ไปยัง Backend
         final response = await dio.post(
-          apiUrlsController.login,
+          apiUrlsController.login.value,
           data: {
             'email': user.email.value,
             'password': user.password.value,

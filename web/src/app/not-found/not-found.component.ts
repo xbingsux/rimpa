@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-not-found',
@@ -9,4 +10,5 @@ import { Component } from '@angular/core';
 })
 export class NotFoundComponent {
 
+  constructor(public api: ApiService) { }
 }

@@ -1,0 +1,114 @@
+<div class="min-w-full min-h-full px-[48px] pb-[48px]">
+    <div class="w-full h-[150px] grid items-center grid-cols-2">
+        <div>
+            <p class="text-[32px] font-bold">
+                User Management
+            </p>
+            <p class="text-[#1093ED] text-[16px] font-medium underline" (click)="api.goToLink('/admin/users')">
+                All User
+            </p>
+        </div>
+        <div class="h-[40px] flex gap-2 justify-end">
+            <input type="button" class="text-white bg-[#1093ED] rounded-[12px] px-[32px] cursor-pointer" value="Save"
+                (click)="submit()">
+        </div>
+    </div>
+    <div class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
+        <div class="h-[65px] text-[18px] px-4 grid items-center font-semibold bg-[#EBF5FD]">
+            General Information
+        </div>
+        <div
+            class="min-h-[calc(100vh-265px)] grid grid-cols-[1fr_70%] gap-8 p-8 border-b-[1px] text-[16px] font-normal">
+            <div class="flex flex-col gap-y-2">
+                <label for="upload" class="block">Upload Media</label>
+                <div
+                    class="relative w-full aspect-square rounded-[12px] text-[#1093ED] hover:bg-gray-100 hover:text-[#999] border-[#D9D9D9] border-[1px] transition">
+                    <label for="upload"
+                        class="cursor-pointer select-none text-[42px] w-full aspect-square grid justify-center items-center grid-cols-1">
+                        <img *ngIf="img_path" [src]="img_path" class="w-full aspect-square object-cover rounded-[12px]">
+                        <p *ngIf="!img_path" class="text-center">+</p>
+                    </label>
+                    <input type="file" id="upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        (change)="onFileSelected($event)">
+                </div>
+            </div>
+            <div class="flex flex-col gap-y-2">
+                <div class="flex flex-col gap-y-2">
+                    <label for="name">Username</label>
+                    <input type="text" id="name" placeholder="Username" [(ngModel)]="data.username"
+                        class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                </div>
+                <div class="flex flex-col gap-y-2">
+                    <div class="flex gap-4">
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="start-date">First Name</label>
+                            <input type="text" id="start-date" placeholder="First Name" [(ngModel)]="data.first_name"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="end-date">Last name</label>
+                            <input type="text" id="end-date" placeholder="Last name" [(ngModel)]="data.last_name"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="quota">Email</label>
+                            <input type="text" id="quota" placeholder="Email" [(ngModel)]="data.email"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="point">Phone number</label>
+                            <input type="text" id="point" placeholder="Phone number" [(ngModel)]="data.mobileNo"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" placeholder="Date of Birth" [(ngModel)]="data.birthday"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="gender">Gender</label>
+                            <select name="gender" id="gender" [(ngModel)]="data.gender"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                                <option value="Other">
+                                    Other
+                                </option>
+                                <option value="Male">
+                                    Male
+                                </option>
+                                <option value="Female">
+                                    Female
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="role">Role</label>
+                            <select name="role" id="role" [(ngModel)]="data.Role"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                                <option value="admin">
+                                    Admin
+                                </option>
+                                <option value="user">
+                                    User
+                                </option>
+                            </select>
+                        </div>
+                        <div class="flex-1 flex flex-col gap-y-2">
+                            <label for="status">Status</label>
+                            <select name="status" id="status" [(ngModel)]="data.Status"
+                                class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                                <option [ngValue]="true">Active</option>
+                                <option [ngValue]="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

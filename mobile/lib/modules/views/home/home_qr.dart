@@ -1,5 +1,7 @@
+// HomeQRPage.dart
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Add this import
+import 'package:get/get.dart';
+import '../../../widgets/popupdialog/popupeventpoint_dialog.dart'; // นำเข้า CustomDialog
 
 class HomeQRPage extends StatelessWidget {
   @override
@@ -12,7 +14,7 @@ class HomeQRPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Get.back(); // Use Get.back() for navigation
+            Get.back();
           },
         ),
         title: Center(
@@ -23,13 +25,27 @@ class HomeQRPage extends StatelessWidget {
         ),
         actions: [
           Container(
-            width: 48, // To center the title properly
+            width: 48, // ทำให้ Title อยู่ตรงกลางพอดี
           ),
         ],
       ),
       body: Center(
-        child: Text("QR Code Scanner"),
+        child: ElevatedButton(
+          onPressed: () {
+            showPopup(context);
+          },
+          child: Text("Show Popup"),
+        ),
       ),
+    );
+  }
+
+  void showPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialog(context: context); // ใช้ CustomDialog ที่สร้างขึ้น
+      },
     );
   }
 }
