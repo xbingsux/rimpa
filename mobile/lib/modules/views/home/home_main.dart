@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
@@ -55,6 +56,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    ApiUrls apiUrls = Get.find();
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
@@ -68,40 +70,58 @@ class _HomeMainPageState extends State<HomeMainPage> {
           children: [
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey[300],
-                  ),
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.person_outline,
-                      color: Colors.grey), // Change color to gray
-                ),
-                SizedBox(width: 8),
+                // รูปโปรไฟล์แทนไอคอน
                 Obx(() {
-                  // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
-                  if (profileController.profileData.isEmpty ||
-                      profileController.profileData["profile_name"] == null) {
-                    // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
-                    return Text(
-                      "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                          ),
-                    );
-                  } else {
-                    // หากมีข้อมูลใน profileData
-                    return Text(
+                  // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
+                  String profileImage =
+                      profileController.profileData["profile_img"] ?? '';
+
+                  // สร้าง URL ของภาพจาก path ที่ต้องการ
+                  String imageUrl = profileImage.isEmpty
+                      ? 'assets/images/default_profile.jpg'
+                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+
+                  return Container(
+                    width: 40, // ขนาดเดิม
+                    height: 40, // ขนาดเดิม
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[300], // พื้นหลังเทาเหมือนเดิม
+                    ),
+                    child: ClipOval(
+                      child: Image.network(
+                        imageUrl,
+                        width: 40, // ให้รูปอยู่ในขนาด 40x40 px
+                        height: 40,
+                        fit: BoxFit.cover, // ปรับให้เต็มวงกลม
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.person_outline,
+                              color: Colors.grey, size: 24);
+                        },
+                      ),
+                    ),
+                  );
+                }),
+
+                SizedBox(width: 8),
+
+                // ชื่อโปรไฟล์
+                Obx(() {
+                  var profileName =
                       profileController.profileData["profile_name"] ??
-                          "Username", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                          ),
-                    );
-                  }
+                          "ยังไม่มีข้อมูล";
+
+                  return Text(
+                    profileName,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                        ),
+                  );
                 }),
               ],
             ),
+
+            // ไอคอนแจ้งเตือน
             Icon(Icons.notifications_none, color: Colors.grey),
           ],
         ),
