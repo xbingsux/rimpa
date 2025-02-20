@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
@@ -22,6 +23,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
 
   @override
   Widget build(BuildContext context) {
+    ApiUrls apiUrls = Get.find();
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
@@ -38,10 +40,11 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                   // Custom App Bar
                   Container(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + 16,
-                        left: 16,
-                        right: 16,
-                        bottom: 16),
+                      top: MediaQuery.of(context).padding.top + 16,
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
                     decoration: BoxDecoration(
                       gradient: AppGradiant.gradientX_1,
                     ),
@@ -50,53 +53,68 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[300],
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(Icons.person_outline,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(width: 8),
+                            // รูปโปรไฟล์แทนไอคอน
                             Obx(() {
-                              // ดึงข้อมูลจาก Controller
-                              var profileName =
-                                  profileController.profileData["profile_name"];
+                              // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
+                              String profileImage = profileController
+                                      .profileData["profile_img"] ??
+                                  '';
 
-                              // ตรวจสอบว่า profile_name เป็น null หรือไม่
-                              if (profileName == null) {
-                                // ถ้ายังไม่ได้ล็อคอิน หรือข้อมูล profile_name เป็น null
-                                return Text(
-                                  "ยังไม่ได้ล็อคอิน", // ถ้ายังไม่ได้รับข้อมูลให้แสดงข้อความนี้
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                                      ),
-                                );
-                              } else {
-                                // ถ้ามีข้อมูลใน profile_name
-                                return Text(
-                                  profileName ??
-                                      "Username", // ถ้ามีชื่อแสดงชื่อผู้ใช้ ถ้าไม่มีแสดง "Username"
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                                      ),
-                                );
-                              }
+                              // สร้าง URL ของภาพจาก path ที่ต้องการ
+                              String imageUrl = profileImage.isEmpty
+                                  ? 'assets/images/default_profile.jpg'
+                                  : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+
+                              return Container(
+                                width: 40, // ขนาดเท่ากับไอคอนเดิม
+                                height: 40, // ขนาดเท่ากับไอคอนเดิม
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      Colors.grey[300], // พื้นหลังเทาเหมือนเดิม
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    imageUrl,
+                                    width: 40, // ให้รูปอยู่ในขนาด 40x40 px
+                                    height: 40,
+                                    fit: BoxFit.cover, // ปรับให้เต็มวงกลม
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.person_outline,
+                                          color: Colors.grey, size: 24);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }),
+
+                            SizedBox(width: 8),
+
+                            // ชื่อโปรไฟล์
+                            Obx(() {
+                              var profileName = profileController
+                                      .profileData["profile_name"] ??
+                                  "ยังไม่ได้ล็อคอิน";
+
+                              return Text(
+                                profileName,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
+                                    ),
+                              );
                             }),
                           ],
                         ),
+
+                        // ไอคอนแจ้งเตือน
                         Icon(Icons.notifications_none, color: Colors.white),
                       ],
                     ),
                   ),
+
                   Container(
                     height: MediaQuery.of(context).size.height * 0.07,
                     decoration: BoxDecoration(

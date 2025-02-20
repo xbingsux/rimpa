@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
+  var imgUrl = 'http://192.168.1.2:3001'.obs;
   var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
   var uploadsUrl = 'http://192.168.1.2:3001/upload'.obs;
 
@@ -18,6 +19,12 @@ class ApiUrls extends GetxController {
     super.onInit();
     updateAllUrls(); // อัปเดตค่า URL ทั้งหมดเมื่อเริ่มต้น
     baseUrl.listen((_) => updateAllUrls()); // ฟังการเปลี่ยนแปลงของ baseUrl
+  }
+
+// ฟั่งชั่นนำแหน่งรูปภาพ
+// ฟังก์ชันที่ใช้ในการสร้าง URL รูปโปรไฟล์
+  String getProfileImageUrl(String imagePath) {
+    return '${imgUrl.value}/$imagePath';
   }
 
   // ฟังก์ชันที่ใช้ในการอัปเดต Base URL
