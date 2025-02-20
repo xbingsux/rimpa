@@ -9,11 +9,7 @@ class AppColors {
 
   /// สีเน้นส่วนสำคัญ Bright Blue
   static const Color accent = Color(0xFF1E54FD);
-<<<<<<< HEAD
-  static const Color accent1 = Color(0xFFEBF5FD);
-=======
 
->>>>>>> a19976bba31e1624fcf8b7bbf5a0694c5d61d8d6
   /// สีเน้นส่วนสำคัญ Sky Blue
   static const Color accent2 = Color(0xFF0ACCF5);
 
@@ -198,5 +194,3 @@ class AppGradiant {
       begin: Alignment.centerLeft,
       end: Alignment.centerRight);
 }
-
-
