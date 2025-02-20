@@ -238,6 +238,44 @@ const profileById = async (id) => {
     return profile;
 }
 
+const listEvent = async () => {
+    let events = await prisma.event.findMany({
+        select: {
+            id: true,
+            event_name: true,
+            title: true,
+            description: true,
+            startDate: true,
+            endDate: true,
+            releaseDate: true,
+            max_attendees: true,
+            SubEvent: {
+                include: { img: true, checkIn: true, EventParticipant: true }
+            },
+            _count: {
+                select: {
+                    EventView: true,
+                    EventLike: true
+                }
+            }
+        }
+    });
+
+    return events.map((item) => ({
+        id: item.id,
+        event_name: item.event_name,
+        title: item.title,
+        description: item.description,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        releaseDate: item.releaseDate,
+        max_attendees: item.max_attendees,
+        sub_event: item.SubEvent,
+        likes: item._count.EventLike,
+        views: item._count.EventView
+    }));
+};
+
 module.exports = {
     dashboard,
     upsertBanner,
@@ -246,5 +284,6 @@ module.exports = {
     listBanner,
     listProfile,
     profileById,
-    sendVertifyUser
+    sendVertifyUser,
+    listEvent
 };

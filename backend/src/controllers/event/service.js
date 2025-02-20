@@ -81,7 +81,13 @@ const upsertEventIMG = async (path, id, sub_event_id) => {
 }
 
 const listEvent = async () => {
+    const currentDate = new Date();
+
     let events = await prisma.event.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+        },
         select: {
             id: true,
             event_name: true,
@@ -129,8 +135,66 @@ const getEvent = async (id) => {
     return event;
 }
 
+const joinEvent = async (user_id, sub_event_id) => {
+
+    let event = await prisma.eventParticipant.findFirst({
+        where: {
+            Profile: { user_id: user_id }, subEventId: sub_event_id, OR: [{ status: 'PAID' }, { status: 'PENDING' }]
+        }
+    })
+
+    if (event) throw new Error('Transaction Failed')
+
+    event = await prisma.eventParticipant.create({
+        data: {
+            Profile: { user_id: user_id }, subEventId: sub_event_id
+        }
+    })
+    return event;
+    // const point = await prisma.profile.up
+}
+
+const checkIn = async (user_id, sub_event_id) => {
+    let checkIn = await prisma.checkIn.findFirst({
+        where: { sub_event_id: sub_event_id, profile: { user_id: user_id } }
+    })
+
+    let sub_event = await prisma.subEvent.findFirst({
+        where: { id: sub_event_id }
+    })
+
+    if (checkIn) throw new Error('You have already claimed the point.')
+
+    checkIn = await prisma.checkIn.create({
+        data: {
+            sub_event_id: sub_event_id,
+            profile: { user_id: user_id },
+        }
+    });
+
+    const point = await prisma.point.create({
+        data: {
+            points: sub_event.point,
+            Profile: { user_id: user_id },
+            type: 'EARN',
+            description: 'รับคะแนนจากกิจกรรม'
+        }
+    })
+
+    const profile = prisma.profile.update({
+        where: { user_id: user_id },
+        data: {
+            points: { increment: sub_event.point }
+        }
+    })
+
+    return point;
+}
+
 module.exports = {
     upsertEvent,
     listEvent,
-    getEvent
+    getEvent,
+    joinEvent,
+    checkIn
 };

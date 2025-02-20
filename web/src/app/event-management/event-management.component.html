@@ -1,4 +1,4 @@
-<div class="min-w-full min-h-full px-[48px]">
+<div class="relative min-w-full min-h-full px-[48px]">
     <div class="w-full h-[150px] grid items-center grid-cols-2">
         <div>
             <p class="text-[32px] font-bold">
@@ -70,6 +70,27 @@
                 </div>
                 <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer">
             </div>
+        </div>
+    </div>
+    <!-- delete -->
+    <div class="hidden absolute top-0 left-0 w-full h-full bg-[#00000033] flex justify-center items-center">
+        <div class="shadow-[0_4px_4px_#00000040] rounded-[16px]">
+            <div>
+                <img src="delete.svg" alt="">
+            </div>
+            <div>
+                <p>คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้</p>
+                <p>การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            </div>
+            <div class="flex gap-2 justify-center items-center">
+                <button class="text-white bg-red-600 text-[12px] rounded-[8px] px-4 py-1">
+                    Delete
+                </button>
+                <button class="border-[#999999] text-[#999999] bg-white text-[12px] rounded-[8px] px-4 py-1">
+                    Cancel
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
