@@ -182,7 +182,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                               ),
                               SizedBox(
                                   height:
-                                      430), // เผื่อพื้นที่ป้องกัน bottom overflow
+                                      450), // เผื่อพื้นที่ป้องกัน bottom overflow
                             ] else ...[
                               Obx(() {
                                 // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
@@ -298,7 +298,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                             ],
                             SizedBox(
                                 height:
-                                    100), // เผื่อพื้นที่ป้องกัน bottom overflow
+                                    130), // เผื่อพื้นที่ป้องกัน bottom overflow
                           ],
                         ),
                       ),

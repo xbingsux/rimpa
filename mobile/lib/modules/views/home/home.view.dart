@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-     
+
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
@@ -48,8 +48,6 @@ class _HomePageState extends State<HomePage> {
     _pageController.dispose();
     super.dispose();
   }
-
-  
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -80,7 +78,7 @@ class _HomePageState extends State<HomePage> {
         child: _pages[_selectedIndex], // เนื้อหาหลัก
       ),
       bottomNavigationBar: Container(
-        height: 130, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
+        height: 98, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           unselectedItemColor: Colors.grey,
@@ -130,7 +128,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 4), // ให้ความห่างระหว่างไอคอนกับข้อความ
           Padding(
             padding: const EdgeInsets.only(
-                top: 4), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
+                top: 0), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
             child: isActive
                 ? ShaderMask(
                     shaderCallback: (bounds) =>
@@ -154,8 +152,8 @@ class _HomePageState extends State<HomePage> {
   BottomNavigationBarItem _buildQRItem(int index) {
     return BottomNavigationBarItem(
       icon: SizedBox(
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         child: Container(
           padding: EdgeInsets.only(top: 0),
           decoration: BoxDecoration(
