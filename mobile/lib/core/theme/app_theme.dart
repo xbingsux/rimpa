@@ -15,9 +15,9 @@ class AppTheme {
 
     fontFamily: 'fontappsetting',
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-      bodyMedium: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-      displayLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+      bodyLarge: TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
+      bodyMedium: TextStyle(color: Color.fromARGB(255, 36, 36, 36)),
+      displayLarge: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
     ),
   );
 

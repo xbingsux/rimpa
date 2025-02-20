@@ -57,9 +57,11 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+
 class CustomButtonResetpassword extends StatelessWidget {
   final String text;
-  final VoidCallback? onPressed; // เปลี่ยนเป็น VoidCallback? เพื่อรองรับค่า null
+  final VoidCallback?
+      onPressed; // เปลี่ยนเป็น VoidCallback? เพื่อรองรับค่า null
 
   const CustomButtonResetpassword({
     Key? key,
@@ -107,7 +109,6 @@ class CustomButtonResetpassword extends StatelessWidget {
     );
   }
 }
-
 
 // ปุ่มสร้างบัญชี
 class CreateAccountButton extends StatelessWidget {
@@ -228,7 +229,6 @@ class Haveaccountbutton extends StatelessWidget {
   }
 }
 
-
 class CustomDatePicker extends StatelessWidget {
   final String labelText;
   final DateTime? selectedDate;
@@ -271,12 +271,14 @@ class CustomDatePicker extends StatelessWidget {
           ),
           filled: true,
           fillColor: const Color(0xFFFDFDFD),
-          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         ),
         child: Text(
           selectedDate == null
               ? 'กรุณาเลือกวันที่'
-              : DateFormat('yyyy-MM-dd').format(selectedDate!), // รูปแบบการแสดงผล
+              : DateFormat('yyyy-MM-dd')
+                  .format(selectedDate!), // รูปแบบการแสดงผล
           style: const TextStyle(
             fontSize: 14,
             color: Color.fromARGB(255, 158, 158, 158),
@@ -286,6 +288,7 @@ class CustomDatePicker extends StatelessWidget {
     );
   }
 }
+
 class CustomDropdown extends StatelessWidget {
   final String labelText;
   final String? selectedValue;
@@ -312,7 +315,8 @@ class CustomDropdown extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้ง
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
+            color: Color.fromARGB(
+                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
             width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
           ),
         ),
@@ -326,7 +330,7 @@ class CustomDropdown extends StatelessWidget {
         filled: true,
         fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
       ),
       child: DropdownButton<String>(
         value: selectedValue,
@@ -343,7 +347,6 @@ class CustomDropdown extends StatelessWidget {
     );
   }
 }
-
 
 // ช่องกรอกข้อมูล
 class CustomTextField extends StatelessWidget {
@@ -394,7 +397,8 @@ class CustomTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้ง
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
+            color: Color.fromARGB(
+                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
             width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
           ),
         ),
@@ -408,11 +412,12 @@ class CustomTextField extends StatelessWidget {
         filled: true,
         fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
       ),
     );
   }
 }
+
 // ช่องกรอกข้อมูลรหัสผ่าน
 // ช่องกรอกข้อมูลรหัสผ่านที่มีไอคอนเปิดตาปิดตา
 class CustomTextFieldpassword extends StatelessWidget {
@@ -460,14 +465,13 @@ class CustomTextFieldpassword extends StatelessWidget {
         ),
         filled: true,
         fillColor: const Color(0xFFFDFDFD),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         suffixIcon: suffixIcon, // แสดงไอคอนที่เพิ่มเข้ามา
       ),
     );
   }
 }
-
 
 // ช่องกรอกข้อมูล
 class Customtextprofile extends StatelessWidget {
@@ -516,6 +520,7 @@ class Customtextprofile extends StatelessWidget {
     );
   }
 }
+
 class CustomResetpasswordfiule extends StatelessWidget {
   final String labelText;
   final bool obscureText;
@@ -566,8 +571,6 @@ class CustomResetpasswordfiule extends StatelessWidget {
   }
 }
 
-
-
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {
   const CustomPhoneTextField({
@@ -613,12 +616,13 @@ class CustomPhoneTextField extends StatelessWidget {
     );
   }
 }
+
 class CustomPhoneTextFieldProfile extends StatelessWidget {
-  final String phoneNumber;  // เพิ่มพารามิเตอร์นี้
+  final String phoneNumber; // เพิ่มพารามิเตอร์นี้
 
   const CustomPhoneTextFieldProfile({
     Key? key,
-    required this.phoneNumber,  // ใช้ required เพื่อให้ต้องรับค่า
+    required this.phoneNumber, // ใช้ required เพื่อให้ต้องรับค่า
   }) : super(key: key);
 
   @override
@@ -626,7 +630,7 @@ class CustomPhoneTextFieldProfile extends StatelessWidget {
     TextEditingController controller = TextEditingController(text: phoneNumber);
 
     return IntlPhoneField(
-      controller: controller,  // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
+      controller: controller, // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
       decoration: InputDecoration(
         labelText: 'เบอร์โทรศัพท์มือถือ',
         labelStyle: const TextStyle(
@@ -663,7 +667,6 @@ class CustomPhoneTextFieldProfile extends StatelessWidget {
     );
   }
 }
-
 
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;
@@ -711,7 +714,8 @@ class CustomPhoneRegisTextField extends StatelessWidget {
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
       onChanged: (phone) {
         // เมื่อมีการเปลี่ยนแปลงข้อมูล
-        onChanged(phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
+        onChanged(
+            phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
       },
     );
   }
@@ -818,7 +822,6 @@ class RememberPasswordWidget extends StatelessWidget {
   }
 }
 
-
 // หรือ///
 class Ordesign extends StatelessWidget {
   final String text;
@@ -902,16 +905,16 @@ class SocialLoginButtons extends StatelessWidget {
         height: 55,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 28,
-            ),
+            // Icon(
+            //   icon,
+            //   color: Colors.white,
+            //   size: 28,
+            // ),
             SizedBox(width: 10),
             Text(
               text,

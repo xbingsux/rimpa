@@ -8,13 +8,15 @@ import '../../modules/views/profile/userdetail/user_detail.dart';
 import '../../modules/views/profile/changpassword/chang_password.dart';
 import '../../modules/views/profile/deleteaccount/delete_account.dart';
 class AppPages {
-  static const initial = '/home';
+  static const initial = '/home';  // หน้าเริ่มต้นที่แอปเปิดขึ้นมา
   static final routes = [
     GetPage(
       name: '/login',
       page: () => LoginView(),
+      transition: Transition.fade,  // เลือก transition ที่ต้องการ
+      transitionDuration: Duration(milliseconds: 500),  // ใช้ transitionDuration แทน duration
     ),
-     GetPage(
+    GetPage(
       name: '/create-account',
       page: () => CreateAccountView(),
     ),
@@ -30,10 +32,6 @@ class AppPages {
       name: '/forgot-password',
       page: () => ForgotPasswordView(),
     ),
-
-
-
-
     // Profile routes detail
     GetPage(
       name: '/user-deteil',
@@ -47,7 +45,5 @@ class AppPages {
       name: '/delete-account',
       page: () => DeleteAccount(),
     ),
-
   ];
 }
- 
