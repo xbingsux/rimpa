@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import '../../../core/constant/app.constant.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
@@ -14,6 +15,7 @@ import 'seeallcards/home_event_allcard.dart';
 
 import 'homedetail/home_detail.dart'; // Add this import
 import '../../controllers/listevent/listevent.controller.dart';
+import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -25,6 +27,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
   int _currentPage = 0;
   Timer? _timer;
   final listEventController = Get.put(ListEventController());
+  final listBannerController = Get.put(ListBannerController()); // Add this line
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
       PopupDialog.checkAndShowPopup(context);
     });
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < 7) {
+      if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -129,7 +132,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
         ),
       ),
       body: Obx(() {
-        if (listEventController.isLoading.value) {
+        if (listEventController.isLoading.value ||
+            listBannerController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
           return SingleChildScrollView(
@@ -143,33 +147,37 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     height: 150,
                     child: PageView.builder(
                       controller: _pageController,
-                      itemCount: 8,
+                      itemCount: listBannerController.banners.length,
                       onPageChanged: (index) {
                         setState(() {
                           _currentPage = index;
                         });
                       },
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          Get.to(HomeDetailPage());
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          child: AppImageComponent(
-                            aspectRatio: 2.08 / 1,
-                            fit: BoxFit.cover,
-                            imageType: AppImageType.network,
-                            imageAddress:
-                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                      itemBuilder: (context, index) {
+                        var banner = listBannerController.banners[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(HomeDetailPage());
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: AppImageComponent(
+                              aspectRatio: 16 / 9,
+                              fit: BoxFit.cover,
+                              imageType: AppImageType.network,
+                              imageAddress:
+                                  '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}',
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(8, (index) {
+                    children: List.generate(listBannerController.banners.length,
+                        (index) {
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 4),
                         width: _currentPage == index ? 12 : 8,
@@ -237,7 +245,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                                   AppImageComponent(
                                     imageType: AppImageType.network,
                                     imageAddress:
-                                        'http://localhost:3001${event.subEvents[0].imagePath}',
+                                        '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                                   ),
                                   SizedBox(height: 8),
                                   Padding(
@@ -293,33 +301,36 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 2 / 3,
                     ),
-                    itemCount: 8,
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () {
-                        Get.to(HomeDetailPage());
-                      },
-                      child: AppCardComponent(
-                        child: Column(
-                          children: [
-                            AppImageComponent(
-                              imageType: AppImageType.network,
-                              imageAddress:
-                                  "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                            ),
-                            SizedBox(height: 8),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Text(
-                                "Lorem Ipsum is simply dummy text of the printing",
-                                style: TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
+                    itemCount: listEventController.events.length,
+                    itemBuilder: (context, index) {
+                      var event = listEventController.events[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(HomeDetailPage());
+                        },
+                        child: AppCardComponent(
+                          child: Column(
+                            children: [
+                              AppImageComponent(
+                                imageType: AppImageType.network,
+                                imageAddress:
+                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  event.title,
+                                  style: TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

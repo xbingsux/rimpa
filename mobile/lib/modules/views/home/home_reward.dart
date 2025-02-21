@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/core/services/api_urls.dart';
+import 'dart:async';
 
+import '../../../core/services/api_urls.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
-
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
 import '../../controllers/profile/profile_controller.dart';
-
 import 'seeallcards/recommended_privileges.dart';
 import 'homedetail/home_detail_reward.dart'; // Add this import
+import '../../controllers/listreward/listreward.controller.dart'; // Add this import
+import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
+import '../../controllers/listevent/listevent.controller.dart'; // Add this import
 
 class HomeRewardPage extends StatefulWidget {
   @override
@@ -20,6 +22,36 @@ class HomeRewardPage extends StatefulWidget {
 class _HomeRewardPageState extends State<HomeRewardPage> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
+  Timer? _timer;
+  final listRewardController = Get.put(ListRewardController()); // Add this line
+  final listBannerController = Get.put(ListBannerController()); // Add this line
+  final listEventController = Get.put(ListEventController()); // Add this line
+
+  @override
+  void initState() {
+    super.initState();
+
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < listBannerController.banners.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+
+      _pageController.animateToPage(
+        _currentPage,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,37 +166,50 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                           // Removed card here
                           SizedBox(height: 40),
                           // Banner slider
-                          SizedBox(
-                            height: 150,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: 8,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentPage = index;
-                                });
-                              },
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Get.to(HomeDetailReward());
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 8),
-                                  child: AppImageComponent(
-                                    aspectRatio: 2.08 / 1,
-                                    fit: BoxFit.cover,
-                                    imageType: AppImageType.network,
-                                    imageAddress:
-                                        "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                                  ),
+                          Obx(() {
+                            if (listBannerController.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return SizedBox(
+                                height: 150,
+                                child: PageView.builder(
+                                  controller: _pageController,
+                                  itemCount:
+                                      listBannerController.banners.length,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentPage = index;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    var banner =
+                                        listBannerController.banners[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(HomeDetailReward());
+                                      },
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        child: AppImageComponent(
+                                          aspectRatio: 16 / 9,
+                                          fit: BoxFit.cover,
+                                          imageType: AppImageType.network,
+                                          imageAddress:
+                                              '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}', // Use AppApi.urlApi
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                            ),
-                          ),
+                              );
+                            }
+                          }),
                           SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(8, (index) {
+                            children: List.generate(
+                                listBannerController.banners.length, (index) {
                               return Container(
                                 margin: EdgeInsets.symmetric(horizontal: 4),
                                 width: _currentPage == index ? 12 : 8,
@@ -216,43 +261,52 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             ],
                           ),
                           SizedBox(height: 8),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(8, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(HomeDetailReward());
-                                  },
-                                  child: Container(
-                                    width: 150,
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: AppCardComponent(
-                                      child: Column(
-                                        children: [
-                                          AppImageComponent(
-                                            imageType: AppImageType.network,
-                                            imageAddress:
-                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                          Obx(() {
+                            if (listRewardController.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: listRewardController.rewards
+                                      .map((reward) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(HomeDetailReward());
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        margin: EdgeInsets.only(right: 8),
+                                        child: AppCardComponent(
+                                          child: Column(
+                                            children: [
+                                              AppImageComponent(
+                                                imageType: AppImageType.network,
+                                                imageAddress:
+                                                    '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // Use AppApi.urlApi
+                                              ),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
+                                                child: Text(
+                                                  reward.rewardName,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 8),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: Text(
-                                              "Lorem Ipsum is simply dummy text of the printing",
-                                              style: TextStyle(fontSize: 12),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            }
+                          }),
                           SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -290,43 +344,52 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             ],
                           ),
                           SizedBox(height: 8),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(8, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(HomeDetailReward());
-                                  },
-                                  child: Container(
-                                    width: 150,
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: AppCardComponent(
-                                      child: Column(
-                                        children: [
-                                          AppImageComponent(
-                                            imageType: AppImageType.network,
-                                            imageAddress:
-                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                          Obx(() {
+                            if (listEventController.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children:
+                                      listEventController.events.map((event) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(HomeDetailReward());
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        margin: EdgeInsets.only(right: 8),
+                                        child: AppCardComponent(
+                                          child: Column(
+                                            children: [
+                                              AppImageComponent(
+                                                imageType: AppImageType.network,
+                                                imageAddress:
+                                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}', // Use AppApi
+                                              ),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
+                                                child: Text(
+                                                  event.title,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 8),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: Text(
-                                              "Lorem Ipsum is simply dummy text of the printing",
-                                              style: TextStyle(fontSize: 12),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            }
+                          }),
                           SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -364,43 +427,52 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             ],
                           ),
                           SizedBox(height: 8),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(8, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(HomeDetailReward());
-                                  },
-                                  child: Container(
-                                    width: 150,
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: AppCardComponent(
-                                      child: Column(
-                                        children: [
-                                          AppImageComponent(
-                                            imageType: AppImageType.network,
-                                            imageAddress:
-                                                "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                          Obx(() {
+                            if (listEventController.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children:
+                                      listEventController.events.map((event) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(HomeDetailReward());
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        margin: EdgeInsets.only(right: 8),
+                                        child: AppCardComponent(
+                                          child: Column(
+                                            children: [
+                                              AppImageComponent(
+                                                imageType: AppImageType.network,
+                                                imageAddress:
+                                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}', // Use AppApi
+                                              ),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
+                                                child: Text(
+                                                  event.title,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 8),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: Text(
-                                              "Lorem Ipsum is simply dummy text of the printing",
-                                              style: TextStyle(fontSize: 12),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            }
+                          }),
                           SizedBox(height: 16),
                           // Add dashed line
                         ],

@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../core/constant/app.constant.dart'; // Update this import
 import '../../modules/models/listevent.model.dart';
 
 class ApiListEvent {
   static Future<List<Event>> fetchEvents() async {
-    final response =
-        await http.post(Uri.parse('http://localhost:3001/event/list-event'));
+    final response = await http.post(
+        Uri.parse('${AppApi.urlApi}/event/list-event')); // Use AppApi.urlApi
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
