@@ -26,6 +26,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
     ApiUrls apiUrls = Get.find();
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
+    final pointsController =
+        Get.put(PointsController()); // เพิ่ม ProfileController
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -468,7 +470,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               Obx(() {
                                 // ดึงค่าคะแนนจาก profileData
                                 var points =
-                                    profileController.profileData["points"];
+                                    pointsController.pointsData["points"];
                                 double? pointsValue =
                                     double.tryParse(points.toString());
 

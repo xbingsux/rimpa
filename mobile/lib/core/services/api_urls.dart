@@ -9,6 +9,7 @@ class ApiUrls extends GetxController {
   var login = ''.obs;
   var register = ''.obs;
   var profileMe = ''.obs;
+  var updateprofileMe = ''.obs;
   var forgotpassworduser = ''.obs;
   var resetPassword = ''.obs;
   var uploadprofileuser = ''.obs;
@@ -39,8 +40,9 @@ class ApiUrls extends GetxController {
     login.value = '${baseUrl.value}/login';
     register.value = '${baseUrl.value}/register';
     profileMe.value = '${baseUrl.value}/profileMe';
+    updateprofileMe.value = '${baseUrl.value}/updateProfileMe';
     forgotpassworduser.value = '${baseUrl.value}/forgot-password';
-    resetPassword.value = '${baseUrl.value}/reset-password';
+    resetPassword.value = '${baseUrl.value}/reset-password-user';
     uploadprofileuser.value = '${imgUrl.value}/update/profile';
   }
 }

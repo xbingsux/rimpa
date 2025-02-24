@@ -540,49 +540,40 @@ class CustomTextFieldpassword extends StatelessWidget {
 class Customtextprofile extends StatelessWidget {
   final String labelText;
   final bool obscureText;
+  final TextEditingController controller;
 
   const Customtextprofile({
     Key? key,
     required this.labelText,
     required this.obscureText,
+    required this.controller, // เพิ่ม controller
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller, // ใช้ controller สำหรับค่าที่กรอก
       obscureText: obscureText,
-      style: const TextStyle(
-          fontSize: AppTextSize.sm,
-          color: Color.fromARGB(255, 158, 158, 158)), // สีข้อความปกติ
+      style: const TextStyle(fontSize: 16, color: Color(0xFF9E9E9E)),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: const TextStyle(
-          fontSize: AppTextSize.sm,
-          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
-        ),
+        labelStyle: const TextStyle(fontSize: 16, color: Color(0xFF5F5F5F)),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้ง
-          borderSide: const BorderSide(
-            color: Color.fromARGB(
-                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
-            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
-          ),
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(color: Color(0xFFA3A3A3), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
-            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
-          ),
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(color: Color(0xFF252525), width: 2),
         ),
         filled: true,
-        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+        fillColor: const Color(0xFFFDFDFD),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
     );
   }
 }
+
 
 class CustomResetpasswordfiule extends StatelessWidget {
   final String labelText;
@@ -681,59 +672,40 @@ class CustomPhoneTextField extends StatelessWidget {
 }
 
 class CustomPhoneTextFieldProfile extends StatelessWidget {
-  final String phoneNumber; // เพิ่มพารามิเตอร์นี้
+  final String phoneNumber;
+  final TextEditingController controller;
 
   const CustomPhoneTextFieldProfile({
     Key? key,
-    required this.phoneNumber, // ใช้ required เพื่อให้ต้องรับค่า
+    required this.phoneNumber,
+    required this.controller, // ใช้ controller สำหรับกรอก
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController(text: phoneNumber);
-
     return IntlPhoneField(
-      controller: controller, // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
-      style: const TextStyle(
-        // เพิ่มการตั้งค่าสีของตัวเลขในช่องกรอก
-        color: Colors.black, // ตัวเลขสีดำ
-        fontSize: 16,
-      ),
+      controller: controller,
+      style: const TextStyle(color: Colors.black, fontSize: 16),
       decoration: InputDecoration(
-        labelStyle: const TextStyle(
-          fontSize: 16,
-          color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
-        ),
+        labelStyle: const TextStyle(fontSize: 16, color: Color(0xFF323232)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 0, 0, 0), // กรอบสีดำ
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF000000), width: 1),
         ),
         filled: true,
-        fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
-      initialCountryCode: 'TH', // ให้ค่าเริ่มต้นเป็นประเทศไทย 🇹🇭
-      showCountryFlag: true, // แสดงธงชาติ
-      dropdownTextStyle: const TextStyle(
-        fontSize: 16,
-        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
-      ),
-      dropdownIcon: const Icon(
-        Icons.arrow_drop_down,
-        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อน
-        size: 24,
-      ), // ไอคอนลูกศรเลือกประเทศ
-      dropdownDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25), // โค้งมน
-      ),
-      disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+      initialCountryCode: 'TH',
+      showCountryFlag: true,
+      dropdownTextStyle: const TextStyle(fontSize: 16, color: Color(0xFF323232)),
+      dropdownIcon: const Icon(Icons.arrow_drop_down, color: Color(0xFF323232), size: 24),
+      dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+      disableLengthCheck: true,
     );
   }
 }
+
 
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;

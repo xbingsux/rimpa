@@ -26,16 +26,25 @@ class _LoginViewState extends State<LoginView>
         children: [
           /// **โลโก้ด้านบน**
           AspectRatio(
-            aspectRatio: 5.4 / 3,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/logoapp/logoiconic.png'),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
+  aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
+  child: Container(
+    decoration: BoxDecoration(
+      color: AppColors.light, // ใส่สีพื้นหลัง
+    ),
+    child: Align(
+      alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
+      child: SizedBox(
+        width: 220, // กำหนดขนาดรูป
+        height: 120,
+        child: Image.asset(
+          'assets/logoapp/logoiconic.png', // รูปภาพของยูววว์~ 💕
+          fit: BoxFit.contain,
+        ),
+      ),
+    ),
+  ),
+),
+
 
           /// 🔹 **Bottom Sheet ที่ยืดหยุ่นและเลื่อนได้**
           Align(

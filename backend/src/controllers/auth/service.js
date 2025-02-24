@@ -273,6 +273,12 @@ const resetPassword = async (id, password) => {
   })
   return user;
 }
+const findUserById = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id: id }
+  });
+  return user;
+};
 
 const profileMe = async (id) => {
   const profile = await prisma.profile.findFirst({
@@ -301,8 +307,45 @@ const profileMe = async (id) => {
   })
   return profile;
 }
+const updateProfile = async (id, updatedData) => {
+  try {
+    const profile = await prisma.profile.update({
+      where: { user_id: id },
+      data: updatedData, 
+      select: {
+        profile_name: true,
+        first_name: true,
+        last_name: true,
+        phone: true,
+        birth_date: true,
+        gender: true,
+        profile_img: true,
+        points: true,
+        user: {
+          select: {
+            email: true,
+            active: true,
+            role: {
+              select: {
+                role_name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return profile;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating profile");
+  }
+};
+
 
 module.exports = {
+  updateProfile,
+  findUserById,
   authenticateEmail,
   register,
   sendVertifyUser,
