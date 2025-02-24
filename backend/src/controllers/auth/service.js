@@ -273,6 +273,7 @@ const resetPassword = async (id, password) => {
   })
   return user;
 }
+
 const findUserById = async (id) => {
   const user = await prisma.user.findUnique({
     where: { id: id }
