@@ -23,6 +23,19 @@ app.use("/", require("./controllers/upload/controller"));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //start server
+
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 app.listen(port, () => {
+  prisma.role.upsert({
+    where: {
+      role_name: 'admin'
+    },
+    create: {
+      role_name: 'admin'
+    }, update: {
+
+    }
+  })
   console.log(`Listening on port ${port}`);
 });
