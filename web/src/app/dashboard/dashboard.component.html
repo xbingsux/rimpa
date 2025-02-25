@@ -1,4 +1,4 @@
-<div class="w-full h-[115px] p-4 px-10 text-[32px] font-bold">
+<div class="w-full h-[115px] p-4 px-[48px] text-[32px] font-bold grid items-center">
     Dashboard
 </div>
 <div *ngIf="dashboard_total.length != 0" class="flex h-[125px] gap-10 px-10">
@@ -25,9 +25,9 @@
             Top Reward
         </div>
     </div>
-    <div class="relative overflow-hidden min-h-[500px] w-full">
-        <div class="absolute -top-[150px] left-0 w-full">
-            <app-event-management *ngIf="path == 'event'"></app-event-management>
+    <div class="relative overflow-hidden w-full h-[calc(100vh-140px)]">
+        <div class="absolute -top-[140px] left-0 w-full h-[100vh]">
+            <app-event-management *ngIf="path == 'event'" class="h-[100vh]"></app-event-management>
             <app-reward-management *ngIf="path == 'reward'"></app-reward-management>
         </div>
     </div>

@@ -36,7 +36,7 @@
                 <div
                     class="relative rounded-[50%] overflow-hidden w-[40px] aspect-square bg-[#E7E7E7] flex justify-center items-center">
                     <img *ngIf="item.profile.profile_img" [src]="getImg(item.profile.profile_img)"
-                        class="absolute min-w-[50px] min-h-[50px] aspect-square object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
+                        class="absolute min-h-[40px] min-w-[40px] object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
                     <img *ngIf="!item.profile.profile_img" src="user_outline.svg" class="w-[20px] aspect-square">
                 </div>
                 <div>
@@ -70,21 +70,32 @@
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
-                <img src="edit.svg" class="w-[32px] aspect-square cursor-pointer"
-                    (click)="api.toEdit('/admin/user-update',item.profile.id)">
-                <img src="delete.svg" class="w-[32px] aspect-square cursor-pointer">
+                <div (click)="api.toEdit('/admin/user-update',item.profile.id)"
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-[#999] rounded-[8px]">
+                    <img src="edit.svg" class="w-[18px] aspect-square">
+                </div>
+                <div
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-red-600 rounded-[8px]">
+                    <img src="delete.svg" class="w-[26px] aspect-square">
+                </div>
             </div>
         </div>
-        <div class="flex h-[78px] px-5 justify-center items-center">
+        <div *ngIf="data.length != 0" class="flex h-[78px] px-5 justify-center items-center">
             <div class="flex-1 text-[16px]">
-                <p>หน้า {{page_no+1}} จาก {{last_page}}</p>
+                <p>หน้า {{page_no+1}} จาก {{data_size}}</p>
             </div>
-            <div class="flex gap-2 text-[14px]">
-                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer">
-                <div class="grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square">
-                    {{page_no+1}}
+            <div class="flex gap-2 text-[14px] select-none text-[#999]">
+                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer invert-[60%]">
+                <div class="flex gap-1">
+                    <div *ngFor="let num of getPageArray(); let i = index;" (click)="updatePage(num)"
+                        [style]="num == page_no ? 'background-color: #1093ED;color:#fff':''" class="cursor-pointer grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square
+                        hover:bg-[#EBF5FD]">
+                        <p>
+                            {{num+1}}
+                        </p>
+                    </div>
                 </div>
-                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer">
+                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer invert-[60%]">
             </div>
         </div>
     </div>

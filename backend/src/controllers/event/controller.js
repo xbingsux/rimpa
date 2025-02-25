@@ -86,4 +86,34 @@ router.post("/checkIn", auth, async (req, res) => {
   }
 });
 
+router.post("/list-banner", async (req, res) => {
+  const { } = req.body;
+  try {
+
+    const banner = await Service.listBanner()
+    return res.status(200).json({ status: "success", banner });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.post("/get-banner", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const banner = await Service.bannerById(id)
+    return res.status(200).json({ status: "success", banner });
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

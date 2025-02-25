@@ -8,10 +8,10 @@ const nodemailer = require("nodemailer");
 const prisma = new PrismaClient();
 
 const dashboard = async () => {
-    const event = await prisma.event.findMany({})
+    const event = await prisma.event.findMany({ where: { active: true } })
     const attendees = await prisma.eventParticipant.findMany({})
-    const reward = await prisma.reward.findMany({})
-    const user = await prisma.user.findMany({})
+    const reward = await prisma.reward.findMany({ where: { active: true } })
+    const user = await prisma.user.findMany({ where: { active: true } })
 
     return [
         {
@@ -189,17 +189,10 @@ const listBanner = async () => {
     return banners;
 };
 
-const bannerById = async (id) => {
-    let banner = await prisma.banner.findFirst({
-        where: { id: id }
-    });
-
-    return banner;
-};
-
 const listProfile = async () => {
     let profile = await prisma.user.findMany({
         select: {
+            id: true,
             email: true,
             role: { select: { role_name: true } },
             profile: true,
@@ -240,6 +233,7 @@ const profileById = async (id) => {
 
 const listEvent = async () => {
     let events = await prisma.event.findMany({
+        where: { active: true },
         select: {
             id: true,
             event_name: true,
@@ -276,14 +270,71 @@ const listEvent = async () => {
     }));
 };
 
+const getEvent = async (id) => {
+    const event = await prisma.event.findFirst({
+        where: {
+            id: id,
+            active: true
+        },
+        include: {
+            SubEvent: { include: { img: true } },
+        }
+    })
+    // event.SubEvent[0].
+    return event;
+}
+
+const deleteUser = async (id) => {
+    const user = await prisma.user.update({
+        where: {
+            id: id,
+            active: true
+        }
+    })
+    return user;
+}
+
+const deleteEvent = async (id) => {
+    const event = await prisma.event.update({
+        where: {
+            id: id,
+            active: true
+        }
+    })
+    return event;
+}
+
+const deleteReward = async (id) => {
+    const reward = await prisma.reward.findFirst({
+        where: {
+            id: id,
+            active: true
+        }
+    })
+    return reward;
+}
+
+const deleteBanner = async (id) => {
+    const banner = await prisma.banner.delete({
+        where: {
+            id: id,
+        }
+    })
+    return banner;
+}
+
 module.exports = {
     dashboard,
     upsertBanner,
-    bannerById,
     upsertUser,
     listBanner,
     listProfile,
     profileById,
     sendVertifyUser,
-    listEvent
+    listEvent,
+    getEvent,
+    deleteUser,
+    deleteEvent,
+    deleteReward,
+    deleteBanner
 };

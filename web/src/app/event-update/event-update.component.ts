@@ -23,7 +23,7 @@ export class EventUpdateComponent implements OnInit {
 
       if (param.get('id')) {
         this.data.id = Number(param.get('id'))
-        this.http.post(`${environment.API_URL}/event/get-event`, { id: this.data.id }).subscribe(async (item: any) => {
+        this.http.post(`${environment.API_URL}/get-event`, { id: this.data.id }).subscribe(async (item: any) => {
           console.log(item);
 
           let event = item.event;

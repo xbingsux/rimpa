@@ -33,7 +33,7 @@
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
             <div><input type="checkbox"></div>
             <div class="grid justify-center">
-                <img *ngIf="item.path" [src]="getImg(item.path)" class="h-[40px]">
+                <img *ngIf="item.path" [src]="getImg(item.path)" class="h-[40px] object-cover aspect-[16/9]">
             </div>
             <div class="font-semibold text-start">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
@@ -52,20 +52,32 @@
             </div>
 
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
-                <img src="edit.svg" class="w-[32px] aspect-square cursor-pointer" (click)="api.toEdit('/admin/banner-update',item.id)">
-                <img src="delete.svg" class="w-[32px] aspect-square cursor-pointer" (click)="api.toDelete()">
+                <div (click)="api.toEdit('/admin/banner-update',item.id)"
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-[#999] rounded-[8px]">
+                    <img src="edit.svg" class="w-[18px] aspect-square">
+                </div>
+                <div (click)="api.toDelete()"
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-red-600 rounded-[8px]">
+                    <img src="delete.svg" class="w-[26px] aspect-square">
+                </div>
             </div>
         </div>
-        <div class="flex h-[78px] px-5 justify-center items-center">
+        <div *ngIf="data.length != 0" class="flex h-[78px] px-5 justify-center items-center">
             <div class="flex-1 text-[16px]">
-                <p>หน้า {{page_no+1}} จาก {{last_page}}</p>
+                <p>หน้า {{page_no+1}} จาก {{data_size}}</p>
             </div>
-            <div class="flex gap-2 text-[14px]">
-                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer">
-                <div class="grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square">
-                    {{page_no+1}}
+            <div class="flex gap-2 text-[14px] select-none text-[#999]">
+                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer invert-[60%]">
+                <div class="flex gap-1">
+                    <div *ngFor="let num of getPageArray(); let i = index;" (click)="updatePage(num)"
+                        [style]="num == page_no ? 'background-color: #1093ED;color:#fff':''" class="cursor-pointer grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square
+                        hover:bg-[#EBF5FD]">
+                        <p>
+                            {{num+1}}
+                        </p>
+                    </div>
                 </div>
-                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer">
+                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer invert-[60%]">
             </div>
         </div>
     </div>

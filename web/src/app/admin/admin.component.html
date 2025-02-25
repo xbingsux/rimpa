@@ -1,4 +1,4 @@
-<div class="bg-[#FCFBFC] relative h-screen grid grid-cols-[auto_1fr]"><!--bg color-->
+<div class="bg-[#FCFBFC] relative min-h-screen grid grid-cols-[auto_1fr] grid-rows-[auto]"><!--bg color-->
   <div class="relative w-[260px]">
     <div
       class="pt-[130px] sticky top-0 h-screen w-full bg-[#2B2B2B] border-r-[#16223B33] rounded-tr-[8px] rounded-br-[8px]">
@@ -19,7 +19,7 @@
           <div
             class="relative rounded-[50%] overflow-hidden w-[40px] aspect-square bg-[#E7E7E7] flex justify-center items-center">
             <img *ngIf="img_url" [src]="img_url"
-              class="absolute min-w-[50px] min-h-[50px] aspect-square object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
+              class="absolute min-h-[40px] min-w-[40px] object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
             <img *ngIf="!img_url" src="user_outline.svg" class="w-[20px] aspect-square">
           </div>
           <div class="text-[#F3F3F3] font-light"><!-- F3F3F3 -->
@@ -27,7 +27,9 @@
             <p class="text-[12px]">{{role}}</p>
           </div>
         </div>
-        <img src="logout.svg" class="w-[16px] aspect-square cursor-pointer" (click)="logout()">
+        <div class="hover:bg-[#999] p-2 rounded-[50%] cursor-pointer" (click)="logout()">
+          <img src="logout.svg" class="w-[16px] aspect-square">
+        </div>
       </div>
     </div>
   </div>

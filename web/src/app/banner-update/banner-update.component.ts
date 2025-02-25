@@ -21,7 +21,7 @@ export class BannerUpdateComponent {
     this.route.paramMap.subscribe((param) => {
       console.log(param.get('id'));
       if (param.get('id')) {
-        this.http.post(`${environment.API_URL}/get-banner`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
+        this.http.post(`${environment.API_URL}/event/get-banner`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
           console.log(response);
           let item = response.banner;
           this.data.id = item.id;
