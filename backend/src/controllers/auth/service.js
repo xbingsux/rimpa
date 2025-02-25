@@ -308,11 +308,19 @@ const profileMe = async (id) => {
   })
   return profile;
 }
+
 const updateProfile = async (id, updatedData) => {
   try {
+    if (updatedData.birth_date) {
+      updatedData.birth_date = new Date(updatedData.birth_date).toISOString();
+    } else {
+      delete updatedData.birth_date;
+    }
+
+    const { email, ...profileData } = updatedData;
     const profile = await prisma.profile.update({
       where: { user_id: id },
-      data: updatedData, 
+      data: profileData, 
       select: {
         profile_name: true,
         first_name: true,
@@ -336,13 +344,22 @@ const updateProfile = async (id, updatedData) => {
       },
     });
 
+    if (email) {
+      const updatedUser = await prisma.user.update({
+        where: { id: id },
+        data: {
+          email: email,  
+        },
+      });
+      console.log(updatedUser); 
+    }
+
     return profile;
   } catch (error) {
     console.log(error);
     throw new Error("Error updating profile");
   }
 };
-
 
 module.exports = {
   updateProfile,

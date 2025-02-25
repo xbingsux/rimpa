@@ -378,53 +378,53 @@ router.post("/profileMe", auth, async (req, res) => {
   }
 });
 router.put("/updateProfileMe", auth, async (req, res) => {
-  const { profile_name, first_name, last_name, phone, birth_date, gender, profile_img } = req.body;
+  const { profile_name, first_name, last_name, phone, birth_date, gender, profile_img, email } = req.body;
 
-let formattedBirthDate = birth_date;
-if (birth_date) {
-  const date = new Date(birth_date); 
-  if (isNaN(date.getTime())) {
-    // Invalid date
-    return res.status(400).json({
+  let formattedBirthDate = null; 
+  if (birth_date) {
+    const date = new Date(birth_date); 
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid birth_date format. Expected format: YYYY-MM-DD.",
+      });
+    }
+    formattedBirthDate = date.toISOString().split('T')[0];
+  }
+
+  const updatedData = {
+    profile_name,
+    first_name,
+    last_name,
+    phone,
+    birth_date: formattedBirthDate, 
+    gender,
+    profile_img,
+    email, 
+  };
+
+  try {
+    const updatedProfile = await Service.updateProfile(req.user.userId, updatedData);
+
+    if (updatedProfile) {
+      return res.status(200).json({
+        status: "success",
+        message: "Profile updated successfully",
+        profile: updatedProfile,
+      });
+    } else {
+      return res.status(404).json({
+        status: "error",
+        message: "Profile not found",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       status: "error",
-      message: "Invalid birth_date format. Expected format: YYYY-MM-DD.",
+      message: error.message || "Internal Server Error",
     });
   }
-  formattedBirthDate = date.toISOString().split('T')[0]; 
-}
-
-const updatedData = {
-  profile_name,
-  first_name,
-  last_name,
-  phone,
-  birth_date: formattedBirthDate,
-  gender,
-  profile_img,
-};
-
-try {
-  const updatedProfile = await Service.updateProfile(req.user.userId, updatedData);
-
-  if (updatedProfile) {
-    return res.status(200).json({
-      status: "success",
-      message: "Profile updated successfully",
-      profile: updatedProfile,
-    });
-  } else {
-    return res.status(404).json({
-      status: "error",
-      message: "Profile not found",
-    });
-  }
-} catch (error) {
-  console.error(error);
-  return res.status(500).json({
-    status: "error",
-    message: error.message || "Internal Server Error",
-  });
-}
 });
 
 

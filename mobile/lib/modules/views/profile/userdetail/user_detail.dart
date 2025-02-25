@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
@@ -15,7 +16,18 @@ class UserDetail extends StatelessWidget {
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+// ใช้ Map เพื่อแปลงค่าจาก DB -> UI และ UI -> DB
+    Map<String, String> genderMapping = {
+      'Male': 'ชาย',
+      'Female': 'หญิง',
+      'Other': 'ไม่ระบุ',
+    };
 
+    Map<String, String> reverseGenderMapping = {
+      'ชาย': 'Male',
+      'หญิง': 'Female',
+      'ไม่ระบุ': 'Other',
+    };
     // สร้าง TextEditingController สำหรับแต่ละฟิลด์
     TextEditingController profileNameController = TextEditingController();
     TextEditingController firstNameController = TextEditingController();
@@ -153,14 +165,24 @@ class UserDetail extends StatelessWidget {
               const SizedBox(height: 12),
               Obx(() {
                 if (profileController.profileData["birth_date"] == null) {
-                  return shimmerLoading();
+                  return shimmerLoading(); // กรณีที่ยังไม่มีข้อมูลวันเกิด
                 } else {
-                  birthDateController.text =
-                      profileController.profileData["birth_date"] ?? '';
-                  return Customtextprofile(
-                    labelText: birthDateController.text,
-                    obscureText: false,
-                    controller: birthDateController,
+                  // ตรวจสอบวันเกิดจาก profileController และใช้ค่าที่ได้
+                  DateTime birthDate =
+                      profileController.profileData["birth_date"] != null
+                          ? DateTime.parse(
+                              profileController.profileData["birth_date"])
+                          : DateTime.now();
+
+                  return CustomDatePicker(
+                    labelText: 'วันเกิด',
+                    selectedDate: birthDate,
+                    onChanged: (DateTime value) {
+                      profileController.profileData["birth_date"] =
+                          value.toIso8601String();
+                      birthDateController.text = DateFormat('yyyy-MM-dd')
+                          .format(value); // อัปเดต birthDateController.text
+                    },
                   );
                 }
               }),
@@ -174,33 +196,65 @@ class UserDetail extends StatelessWidget {
                 if (profileController.profileData["gender"] == null) {
                   return shimmerLoading();
                 } else {
-                  genderController.text =
-                      profileController.profileData["gender"] ?? '';
-                  return Customtextprofile(
-                    labelText: genderController.text,
-                    obscureText: false,
-                    controller: genderController,
+                  // ดึงค่าจาก Database (เป็น ENUM)
+                  String currentGender =
+                      profileController.profileData["gender"] ?? 'Other';
+
+                  // แปลงค่า ENUM เป็นภาษาไทยสำหรับแสดงผล
+                  String displayGender =
+                      genderMapping[currentGender] ?? 'ไม่ระบุ';
+
+                  // อัปเดต GenderController ให้ตรงกับ UI
+                  genderController.text = displayGender;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Dropdown สำหรับเลือกเพศ
+                      CustomDropdown(
+                        labelText: 'เพศ',
+                        selectedValue: displayGender,
+                        onChanged: (value) {
+                          if (value != null) {
+                            // แปลงค่ากลับเป็น ENUM ที่ฐานข้อมูลรองรับ
+                            String newGender =
+                                reverseGenderMapping[value] ?? 'Other';
+
+                            // อัปเดต GenderController และ ProfileController
+                            genderController.text = value;
+                            profileController.profileData["gender"] = newGender;
+                          }
+                        },
+                        items: ['ชาย', 'หญิง', 'ไม่ระบุ'],
+                      ),
+
+                      // Text field แสดงค่า Gender
+                    ],
                   );
                 }
               }),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'บันทึกข้อมูลใหม่',
-                onPressed: () {
-                  // ส่งข้อมูลที่อัปเดตไปแยกตามฟิลด์
-                  Map<String, dynamic> updatedData = {
-                    'profile_name': profileNameController.text,
-                    'first_name': firstNameController.text,
-                    'last_name': lastNameController.text,
-                    'email': emailController.text, // ส่งข้อมูลอีเมลเพื่ออัปเดต
-                    'phone': phoneController.text,
-                    'birth_date': birthDateController.text,
-                    'gender': genderController.text,
-                  };
-                  profileController
-                      .updateProfile(updatedData); // เรียกฟังก์ชันอัปเดตข้อมูล
-                },
-              ),
+                  text: 'บันทึกข้อมูลใหม่',
+                  onPressed: () {
+                    String selectedGender =
+                        reverseGenderMapping[genderController.text] ?? 'Other';
+                    Map<String, dynamic> updatedData = {
+                      'profile_name': profileNameController.text,
+                      'first_name': firstNameController.text,
+                      'last_name': lastNameController.text,
+                      'email': emailController.text,
+                      'phone': phoneController.text,
+                      'birth_date': birthDateController.text,
+                      'gender': selectedGender,
+                    };
+                    print(
+                        "Updated Data to send: $updatedData"); // ตรวจสอบข้อมูลที่ส่งไป
+                    profileController
+                        .updateProfile(updatedData)
+                        .then((response) {})
+                        .catchError((error) {});
+                  }),
             ],
           ),
         ),

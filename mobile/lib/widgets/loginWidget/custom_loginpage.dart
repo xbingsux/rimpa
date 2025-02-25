@@ -546,7 +546,7 @@ class Customtextprofile extends StatelessWidget {
     Key? key,
     required this.labelText,
     required this.obscureText,
-    required this.controller, // เพิ่ม controller
+    required this.controller,
   }) : super(key: key);
 
   @override
