@@ -87,6 +87,7 @@ const listEvent = async () => {
         where: {
             startDate: { lte: currentDate },
             endDate: { gte: currentDate },
+            active: true
         },
         select: {
             id: true,
@@ -125,8 +126,15 @@ const listEvent = async () => {
 };
 
 const getEvent = async (id) => {
+    const currentDate = new Date();
+
     const event = await prisma.event.findFirst({
-        where: { id: id },
+        where: {
+            id: id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
         include: {
             SubEvent: { include: { img: true } },
         }
@@ -191,10 +199,32 @@ const checkIn = async (user_id, sub_event_id) => {
     return point;
 }
 
+const listBanner = async () => {
+    const currentDate = new Date();
+    let banners = await prisma.banner.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+        }
+    });
+
+    return banners;
+};
+
+const bannerById = async (id) => {
+    let banner = await prisma.banner.findFirst({
+        where: { id: id }
+    });
+
+    return banner;
+};
+
 module.exports = {
     upsertEvent,
     listEvent,
     getEvent,
     joinEvent,
-    checkIn
+    checkIn,
+    listBanner,
+    bannerById
 };

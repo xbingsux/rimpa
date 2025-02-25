@@ -4,7 +4,7 @@
             <p class="text-[32px] font-bold">
                 Event Management
             </p>
-            <p class="text-[#1093ED] text-[16px] font-medium underline" (click)="api.goToLink('/admin/event')">
+            <p class="text-[#1093ED] text-[16px] font-medium underline cursor-pointer" (click)="api.goToLink('/admin/event')">
                 All Event
             </p>
         </div>
@@ -32,10 +32,10 @@
             <div class="flex flex-col gap-y-2">
                 <label for="upload" class="block">Upload Media</label>
                 <div
-                    class="relative w-full aspect-square rounded-[12px] text-[#1093ED] hover:bg-gray-100 hover:text-[#999] border-[#D9D9D9] border-[1px] transition">
+                    class="relative w-full aspect-[4/3] rounded-[12px] text-[#1093ED] hover:bg-gray-100 hover:text-[#999] border-[#D9D9D9] border-[1px] transition">
                     <label for="upload"
-                        class="cursor-pointer select-none text-[42px] w-full aspect-square grid justify-center items-center grid-cols-1">
-                        <img *ngIf="img_path" [src]="img_path" class="w-full aspect-square object-cover rounded-[12px]">
+                        class="cursor-pointer select-none text-[42px] w-full aspect-[4/3] grid justify-center items-center grid-cols-1">
+                        <img *ngIf="img_path" [src]="img_path" class="w-full aspect-[4/3] object-cover rounded-[12px]">
                         <p *ngIf="!img_path" class="text-center">+</p>
                     </label>
                     <input type="file" id="upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

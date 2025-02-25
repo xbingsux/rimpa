@@ -137,6 +137,11 @@ router.get("/verify-user", async (req, res) => {
 
   if (!item.status && expired) {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -156,6 +161,11 @@ router.get("/verify-user", async (req, res) => {
       `)
   } else if (item.status && !expired) {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -177,6 +187,11 @@ router.get("/verify-user", async (req, res) => {
       `)
   } else {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -251,16 +266,6 @@ router.post("/reset-password", async (req, res) => {
     status: "success",
     user: user,
   });
-
-  // let isSuccess = (item && item.user.active)
-
-  // if (!item.status && expired) {
-
-  // } else if (item.status && !expired) {
-
-  // } else {
-  //   return res.status(401).send("Invalid token");
-  // }
 });
 
 router.post("/forgot-password", async (req, res) => {
@@ -283,11 +288,17 @@ router.post("/forgot-password", async (req, res) => {
 
       console.log(token);
       await Service.sendForgotPassword(email, token)
+
+      return res.status(201).json({
+        status: "success",
+        user: user,
+      });
+    } else {
+      return res.status(404).json({
+        status: "fail",
+        message: "No such user exists in the system."
+      });
     }
-    return res.status(201).json({
-      status: "success",
-      user: user,
-    });
 
   } catch (error) {
     console.error(error);

@@ -113,6 +113,7 @@ model Event {
   startDate      DateTime
   endDate        DateTime
   releaseDate    DateTime?
+  active         Boolean          @default(true)
   SubEvent       SubEvent[]
   EventView      EventView[]
   EventLike      EventLike[]
@@ -162,6 +163,7 @@ model SubEvent {
   cost        Decimal? //กำหนดค่าใช้งานในการเข้าร่วม event
   PaymentType PaymentType? //กำหนดประเภทการจ่ายเงิน CASH and POINTS
   img         EventIMG[]
+  qrcode      String       @unique @default(cuid())
 
   checkIn          CheckIn[]
   EventParticipant EventParticipant[]
@@ -169,6 +171,7 @@ model SubEvent {
   event_type EventType   @default(Sub) //ประเภทอีเวน [หลัก ,รอง]
   isHidden   Boolean? //ซ่อน event จากผู้ใช้
   visibility Visibility? //ประเภทผู้เข้าร่วม
+  active     Boolean     @default(true)
   Event      Event       @relation(fields: [eventId], references: [id])
   eventId    Int
 }
