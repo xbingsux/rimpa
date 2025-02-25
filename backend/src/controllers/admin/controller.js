@@ -107,7 +107,7 @@ router.post("/get-banner", auth,async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", auth, async (req, res) => {
   const { email, role, profile, active } = req.body;
   try {
     password = 'e6g3!Xh@aMwhyJx'
@@ -133,6 +133,22 @@ router.post("/register", async (req, res) => {
       status: "error",
       message: error.message//"Internal Server Error",
     });
+  }
+});
+
+router.post("/list-event", auth, async (req, res) => {
+  const { } = req.body;
+  try {
+
+    const event = await Service.listEvent()
+    return res.status(200).json({ status: "success", event });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
   }
 });
 

@@ -52,27 +52,32 @@ class AuthService extends GetxService {
         int currentTime = DateTime.now().millisecondsSinceEpoch;
         int expiryTime = loginTime + (24 * 60 * 60 * 1000); // +24 ชั่วโมง
         if (currentTime > expiryTime) {
-          await clearAuth();
-          return false;
+          await clearAuth(); // ลบข้อมูลการเข้าสู่ระบบ
+          return false; // ไม่อนุญาตให้เข้าใช้งาน
         }
       } else {
         await clearAuth();
         return false;
       }
     }
-    isLoggedIn.value = true; // ทำให้ isLoggedIn เป็น true หากมี token และยังไม่หมดอายุ
+    isLoggedIn.value = true; // ตั้งค่าผู้ใช้เข้าสู่ระบบ
     return true;
   }
 
   // ไม่มี token หรือ token หมดอายุ
-  isLoggedIn.value = false; // ถ้าไม่มี token หรือหมดอายุ
+  isLoggedIn.value = false; // ตั้งค่าผู้ใช้ไม่เข้าสู่ระบบ
 
   // รีเซ็ตข้อมูลใน ProfileController
   ProfileController profileController = Get.find<ProfileController>();
   profileController.resetProfile();
 
+  // ใช้ transition เพื่อให้การเปลี่ยนหน้าเรียบง่าย
+  Get.toNamed('/login');
+
   return false;
 }
+
+
 
 
   Future<String> loadUserInfo() async {

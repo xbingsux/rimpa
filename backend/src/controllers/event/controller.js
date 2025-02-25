@@ -31,7 +31,7 @@ router.post("/update-event", auth, async (req, res) => {
   }
 });
 
-router.post("/list-event",  async (req, res) => {
+router.post("/list-event", auth, async (req, res) => {
   const { } = req.body;
   try {
 
@@ -47,7 +47,7 @@ router.post("/list-event",  async (req, res) => {
   }
 });
 
-router.post("/get-event", auth, async (req, res) => {
+router.post("/get-event", async (req, res) => {
   const { id } = req.body;
   try {
 
@@ -60,6 +60,29 @@ router.post("/get-event", auth, async (req, res) => {
     return res
       .status(500)
       .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.post("/checkIn", auth, async (req, res) => {
+  const { sub_event_id } = req.body;
+
+  try {
+    const event = await Service.checkIn(req.user.userId, sub_event_id);
+    return res.status(200).json({ status: "success", event });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    if (error.message === 'Transaction Failed') {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Transaction Failed" });
+    } else {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Internal Server Error" });
+    }
+
   }
 });
 

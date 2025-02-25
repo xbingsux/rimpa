@@ -33,7 +33,7 @@ class PopupDialog {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: theme.textTheme.bodyLarge?.color, // ใช้สีจากธีม
+                  color: Colors.black, // ใช้สีจากธีม
                 ),
               ),
               SizedBox(height: 10),

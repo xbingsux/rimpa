@@ -10,7 +10,8 @@ class LoginView extends StatefulWidget {
   _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMixin {
+class _LoginViewState extends State<LoginView>
+    with SingleTickerProviderStateMixin {
   final authController = Get.put(LoginController());
   bool _rememberPassword = false;
   bool _obscureText = true;
@@ -23,18 +24,27 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
     return Scaffold(
       body: Stack(
         children: [
-          /// 🔹 **โลโก้ด้านบน**
+          /// **โลโก้ด้านบน**
           AspectRatio(
-            aspectRatio: 4 / 3,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/logoapp/logoiconic.png'),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
+  aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
+  child: Container(
+    decoration: BoxDecoration(
+      color: AppColors.light, // ใส่สีพื้นหลัง
+    ),
+    child: Align(
+      alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
+      child: SizedBox(
+        width: 220, // กำหนดขนาดรูป
+        height: 120,
+        child: Image.asset(
+          'assets/logoapp/logoiconic.png', // รูปภาพของยูววว์~ 💕
+          fit: BoxFit.contain,
+        ),
+      ),
+    ),
+  ),
+),
+
 
           /// 🔹 **Bottom Sheet ที่ยืดหยุ่นและเลื่อนได้**
           Align(
@@ -68,7 +78,10 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                       SizedBox(height: AppSpacing.sm),
                       Text(
                         'ยินดีต้อนรับเข้าสู่ระบบ',
-                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 16, 147, 237)),
                       ),
                       SizedBox(height: AppSpacing.md),
 
@@ -78,7 +91,8 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                           CustomTextField(
                             labelText: 'อีเมล',
                             obscureText: false,
-                            onChanged: (value) => authController.user.email.value = value,
+                            onChanged: (value) =>
+                                authController.user.email.value = value,
                           ),
                           SizedBox(height: AppSpacing.md),
 
@@ -86,9 +100,12 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                           CustomTextFieldpassword(
                             labelText: 'รหัสผ่าน',
                             obscureText: _obscureText,
-                            onChanged: (value) => authController.user.password.value = value,
+                            onChanged: (value) =>
+                                authController.user.password.value = value,
                             suffixIcon: IconButton(
-                              icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                              icon: Icon(_obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
                               onPressed: () {
                                 setState(() {
                                   _obscureText = !_obscureText;
@@ -106,14 +123,16 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                 _rememberPassword = value;
                               });
                             },
-                            onForgotPassword: () => Get.toNamed('/forgot-password'),
+                            onForgotPassword: () =>
+                                Get.toNamed('/forgot-password'),
                           ),
                           SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **ปุ่มเข้าสู่ระบบ**
                           CustomButton(
                             text: 'เข้าสู่ระบบ',
-                            onPressed: () => authController.loginwithemail(_rememberPassword),
+                            onPressed: () => authController
+                                .loginwithemail(_rememberPassword),
                           ),
                           SizedBox(height: AppSpacing.md),
 
@@ -123,7 +142,8 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
 
                           /// 🔹 **ปุ่มเข้าสู่ระบบด้วย Google**
                           SocialLoginButtons(
-                            onGooglePressed: () => print("เข้าสู่ระบบด้วย Google"),
+                            onGooglePressed: () =>
+                                print("เข้าสู่ระบบด้วย Google"),
                           ),
                           SizedBox(height: AppSpacing.md),
 
@@ -131,7 +151,8 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                           CreateAccountButton(
                             onPressed: () => Get.toNamed('/select-create'),
                           ),
-                          SizedBox(height: screenHeight * 0.02), // ปรับระยะห่างล่าง
+                          SizedBox(
+                              height: screenHeight * 0.02), // ปรับระยะห่างล่าง
                         ],
                       ),
                     ],

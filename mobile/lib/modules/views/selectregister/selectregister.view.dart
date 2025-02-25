@@ -59,45 +59,45 @@ class LoginSelectionView extends StatelessWidget {
                   SizedBox(height: AppSpacing.lg),
 
                   //ปุ่มเข้าสู่ระบบด้วยเบอร์โทรศัพท์ (เรียก Bottom Sheet)
-                  CustomButton(
-                    text: 'เข้าสู่ระบบด้วยเบอร์โทรศัพท์',
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.white, //  พื้นหลังสีขาว
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20), //  มุมโค้ง
-                          ),
-                        ),
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.6, //  ตั้งให้ Bottom Sheet อยู่กึ่งกลาง (50% ของจอ)
-                            child: PhoneLoginForm(
-                              phoneNumber: Get.arguments ?? '', //  รับค่าจากหน้าอื่น (ถ้ามี)
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  SizedBox(height: AppSpacing.lg),
+                  // CustomButton(
+                  //   text: 'เข้าสู่ระบบด้วยเบอร์โทรศัพท์',
+                  //   onPressed: () {
+                  //     showModalBottomSheet(
+                  //       context: context,
+                  //       isScrollControlled: true,
+                  //       backgroundColor: Colors.white, //  พื้นหลังสีขาว
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.vertical(
+                  //           top: Radius.circular(20), //  มุมโค้ง
+                  //         ),
+                  //       ),
+                  //       builder: (context) {
+                  //         return FractionallySizedBox(
+                  //           heightFactor: 0.6, //  ตั้งให้ Bottom Sheet อยู่กึ่งกลาง (50% ของจอ)
+                  //           child: PhoneLoginForm(
+                  //             phoneNumber: Get.arguments ?? '', //  รับค่าจากหน้าอื่น (ถ้ามี)
+                  //           ),
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // ),
+                  // SizedBox(height: AppSpacing.lg),
 
-                  CustomButton(
-                    text: 'เข้าสู่ระบบด้วย Google',
-                    onPressed: () {
-                      // TODO: ใส่โค้ด Google Login
-                    },
-                  ),
-                  SizedBox(height: AppSpacing.lg),
+                  // CustomButton(
+                  //   text: 'เข้าสู่ระบบด้วย Google',
+                  //   onPressed: () {
+                  //     // TODO: ใส่โค้ด Google Login
+                  //   },
+                  // ),
+                  // SizedBox(height: AppSpacing.lg),
 
-                  CustomButton(
-                    text: 'เข้าสู่ระบบด้วย Facebook',
-                    onPressed: () {
-                      // TODO: ใส่โค้ด Facebook Login
-                    },
-                  ),
+                  // CustomButton(
+                  //   text: 'เข้าสู่ระบบด้วย Facebook',
+                  //   onPressed: () {
+                  //     // TODO: ใส่โค้ด Facebook Login
+                  //   },
+                  // ),
                   SizedBox(height: AppSpacing.xxl),
 
                   //ปุ่มสมัครสมาชิก
