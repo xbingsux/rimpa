@@ -284,6 +284,52 @@ const getEvent = async (id) => {
     return event;
 }
 
+const listReward = async () => {
+    let rewards = await prisma.reward.findMany({
+        include: {
+            RedeemReward: true
+        }
+    });
+
+    return rewards;
+};
+
+const rewardById = async (id) => {
+    const reward = await prisma.reward.findFirst({
+        where: {
+            id: id,
+            active: true
+        },
+    })
+    return reward
+}
+
+const upsertReward = async (id, reward_name, description, startDate, endDate, img, stock, cost) => {
+    const banner = await prisma.reward.upsert({
+        where: { id: id || 0 },
+        create: {
+            reward_name: reward_name,
+            description: description,
+            startDate: startDate,
+            endDate: endDate,
+            img: img,
+            stock: stock,
+            cost: cost,
+            paymentType: 'Point'
+        },
+        update: {
+            reward_name: reward_name,
+            description: description,
+            startDate: startDate,
+            endDate: endDate,
+            img: img,
+            stock: stock,
+            cost: cost,
+        }
+    })
+    return banner;
+}
+
 const deleteUser = async (id) => {
     const user = await prisma.user.update({
         where: {
@@ -325,16 +371,22 @@ const deleteBanner = async (id) => {
 
 module.exports = {
     dashboard,
-    upsertBanner,
-    upsertUser,
-    listBanner,
     listProfile,
+    upsertUser,
     profileById,
+    deleteUser,
     sendVertifyUser,
+    //reward
+    listReward,
+    upsertReward,
+    rewardById,
+    deleteReward,
+    //banner
+    listBanner,
+    upsertBanner,
+    deleteBanner,
+    //event
     listEvent,
     getEvent,
-    deleteUser,
     deleteEvent,
-    deleteReward,
-    deleteBanner
 };
