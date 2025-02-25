@@ -4,6 +4,7 @@ class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
   var imgUrl = 'http://192.168.1.2:3001'.obs;
   var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
+  var eventsUrl = 'http://192.168.1.2:3001/event'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;
@@ -13,12 +14,15 @@ class ApiUrls extends GetxController {
   var forgotpassworduser = ''.obs;
   var resetPassword = ''.obs;
   var uploadprofileuser = ''.obs;
+  var listsbanners = ''.obs;
+  var getbanner = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     updateAllUrls(); // อัปเดตค่า URL ทั้งหมดเมื่อเริ่มต้น
     baseUrl.listen((_) => updateAllUrls()); // ฟังการเปลี่ยนแปลงของ baseUrl
+    imgUrl.listen((_) => updateAllUrls()); // ฟังการเปลี่ยนแปลงของ baseUrl
   }
 
 // ฟั่งชั่นนำแหน่งรูปภาพ
@@ -27,7 +31,7 @@ class ApiUrls extends GetxController {
     return '${imgUrl.value}/$imagePath';
   }
 
-  // ฟังก์ชันที่ใช้ในการอัปเดต Base URL
+  // ฟังก์ชันที่ใช้ในการอัปเดต 
   void updateBaseUrl(String newUrl) {
     baseUrl.value = newUrl;
     imgUrl.value =
@@ -44,5 +48,7 @@ class ApiUrls extends GetxController {
     forgotpassworduser.value = '${baseUrl.value}/forgot-password';
     resetPassword.value = '${baseUrl.value}/reset-password-user';
     uploadprofileuser.value = '${imgUrl.value}/update/profile';
+    listsbanners.value = '${eventsUrl.value}/list-banner';
+    getbanner.value = '${eventsUrl.value}/get-banner';
   }
 }

@@ -7,6 +7,7 @@ import '../../modules/views/forgotpasswords/forgotpassworduser.dart';
 import '../../modules/views/profile/userdetail/user_detail.dart';
 import '../../modules/views/profile/changpassword/chang_password.dart';
 import '../../modules/views/profile/deleteaccount/delete_account.dart';
+import '../../modules/views/home/banners/bannersd_detail.dart';
 class AppPages {
   static const initial = '/home';  // หน้าเริ่มต้นที่แอปเปิดขึ้นมา
   static final routes = [
@@ -44,6 +45,12 @@ class AppPages {
     GetPage(
       name: '/delete-account',
       page: () => DeleteAccount(),
+    ),
+
+    // bannerdetail
+    GetPage(
+      name: '/detail-banner',
+      page: () => BannersDetailPage(),
     ),
   ];
 }
