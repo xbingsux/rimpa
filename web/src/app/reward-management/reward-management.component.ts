@@ -20,7 +20,7 @@ export class RewardManagementComponent {
   list: any[] = []
 
   ngOnInit(): void {
-    this.http.post(`${environment.API_URL}/reward/list-reward`, {}).subscribe(async (response: any) => {
+    this.http.post(`${environment.API_URL}/list-reward`, {}).subscribe(async (response: any) => {
       // console.log(response.reward);
       this.list = response.reward
 

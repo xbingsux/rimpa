@@ -20,7 +20,7 @@ export class RewardUpdateComponent implements OnInit {
     this.route.paramMap.subscribe((param) => {
       console.log(param.get('id'));
       if (param.get('id')) {
-        this.http.post(`${environment.API_URL}/reward/get-reward`, { profile_id: Number(param.get('id')) }).subscribe(async (response: any) => {
+        this.http.post(`${environment.API_URL}/get-reward`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
           console.log(response);
 
           let item = response.reward;
@@ -88,7 +88,7 @@ export class RewardUpdateComponent implements OnInit {
     const imgPath = await this.upload_img();
     console.log("🚀 Image Path:", imgPath);
 
-    this.http.post(`${environment.API_URL}/reward/update-reward`, {
+    this.http.post(`${environment.API_URL}/update-reward`, {
       id: this.data.id,
       reward_name: this.data.reward_name,
       description: this.data.description,

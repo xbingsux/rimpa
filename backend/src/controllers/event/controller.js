@@ -63,6 +63,29 @@ router.post("/get-event", async (req, res) => {
   }
 });
 
+router.post("/scan", auth, async (req, res) => {
+  const { qrcode } = req.body;
+
+  try {
+    const event = await Service.scan(req.user.userId, qrcode);
+    return res.status(200).json({ status: "success", event });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    if (error.message === 'QR code not found.' || error.message === 'You have already claimed the point.') {
+      return res
+        .status(500)
+        .json({ status: "error", message: error.message });
+    } else {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Internal Server Error" });
+    }
+
+  }
+});
+
 router.post("/checkIn", auth, async (req, res) => {
   const { sub_event_id } = req.body;
 
@@ -73,10 +96,10 @@ router.post("/checkIn", auth, async (req, res) => {
   } catch (error) {
     console.error(error);
     console.log("error");
-    if (error.message === 'Transaction Failed') {
+    if (error.message === 'You have already claimed the point.' || error.message === 'No information available or out of the event period') {
       return res
         .status(500)
-        .json({ status: "error", message: "Transaction Failed" });
+        .json({ status: "error", message: error.message });
     } else {
       return res
         .status(500)
