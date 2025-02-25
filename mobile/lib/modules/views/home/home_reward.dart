@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'dart:async';
 
 import '../../../core/services/api_urls.dart';
@@ -403,7 +404,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(RecommendedPrivilegesPage());
+                                  Get.to(HomeEventAllcard());
                                 },
                                 child: Row(
                                   children: [

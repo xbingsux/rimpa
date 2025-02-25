@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
 import '../../../models/listevent.model.dart';
+import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
 class HomeDetailPage extends StatelessWidget {
   final ListEvent event;
@@ -16,8 +18,8 @@ class HomeDetailPage extends StatelessWidget {
     // Extract event details
     String title = event.title;
     String description = event.description;
-    String startDate = event.startDate;
-    String endDate = event.endDate;
+    String startDate = _formatDate(event.startDate); // Update this line
+    String endDate = _formatDate(event.endDate); // Update this line
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     String mapUrl = event.subEvents[0].map;
@@ -211,6 +213,14 @@ class HomeDetailPage extends StatelessWidget {
                       right: AppRadius.md,
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialog(context: context);
+                        },
+                      );
+                    },
                     child: Container(
                       width: double.infinity,
                       padding:
@@ -219,13 +229,30 @@ class HomeDetailPage extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(AppRadius.rounded),
                           gradient: AppGradiant.gradientX_1),
-                      child: const Center(
-                          child: Text(
-                        'แลกรับสิทธิ์',
-                        style: TextStyle(
-                            fontSize: AppTextSize.lg,
-                            color: AppTextColors.white),
-                      )),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                gradient:
+                                    AppGradiant.gradientX_1, // Applied gradient
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.star, color: Colors.white),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              '100 คะแนน',
+                              style: TextStyle(
+                                  fontSize: AppTextSize.lg,
+                                  color: AppTextColors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 )
@@ -235,5 +262,15 @@ class HomeDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDate(String date) {
+    DateTime dateTime = DateTime.parse(date);
+    var thaiDateFormat = DateFormat('d MMM', 'th_TH');
+    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
+    String formattedDate = thaiDateFormat.format(dateTime);
+    String thaiYear =
+        (dateTime.year + 543).toString(); // Convert to Buddhist year
+    return '$formattedDate $thaiYear';
   }
 }
