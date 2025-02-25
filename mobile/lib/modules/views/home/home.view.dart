@@ -1,3 +1,5 @@
+import 'dart:math' as Math;
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
@@ -7,6 +9,7 @@ import 'home_event.dart';
 import 'home_qr.dart';
 import 'home_reward.dart';
 import 'home_profile.dart';
+import '../../../core/constant/icon_navgition_constant.dart';
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -93,11 +96,11 @@ class _HomePageState extends State<HomePage> {
           selectedFontSize: 10, // ลดขนาดตัวอักษร
           unselectedFontSize: 10, // ลดขนาดตัวอักษร
           items: [
-            _buildNavItem(Icons.home, "หน้าหลัก", 0),
-            _buildNavItem(Icons.event, "กิจกรรม", 1),
+            _buildNavItem("หน้าหลัก", 0),
+            _buildNavItem("กิจกรรม", 1),
             _buildQRItem(2),
-            _buildNavItem(Icons.star, "รีวอร์ด", 3),
-            _buildNavItem(Icons.person, "โปรไฟล์", 4),
+            _buildNavItem("รีวอร์ด", 3),
+            _buildNavItem("โปรไฟล์", 4),
           ],
         ),
       ),
@@ -105,9 +108,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(
-      IconData icon, String label, int index) {
+  BottomNavigationBarItem _buildNavItem(String label, int index) {
     bool isActive = _selectedIndex == index;
+
+    CustomPainter painter;
+    if (label == "หน้าหลัก") {
+      painter = HomeIconPainter(isActive: isActive); // ส่ง isActive
+    } else if (label == "กิจกรรม") {
+      painter = ActivityIconPainter(isActive: isActive);
+    } else if (label == "รีวอร์ด") {
+      painter = RewardIconPainter(isActive: isActive);
+    } else if (label == "โปรไฟล์") {
+      painter = ProfileIconPainter(isActive: isActive);
+    } else {
+      painter = EmtyPainter(); // ให้มันไม่ทำการวาดอะไรเลยในกรณีนี้
+    }
 
     return BottomNavigationBarItem(
       icon: Column(
@@ -115,32 +130,38 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-                top: 0), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
+            padding: const EdgeInsets.only(top: 0),
             child: isActive
                 ? ShaderMask(
-                    shaderCallback: (bounds) =>
-                        AppGradiant.gradientX_1.createShader(bounds),
-                    child: Icon(icon, color: Colors.white, size: 24),
+                    shaderCallback: (bounds) => AppGradiant.gradientX_1
+                        .createShader(bounds), // ใช้ gradientX_1
+                    child: CustomPaint(
+                      size: Size(24, 24),
+                      painter: painter, // ใช้ painter ที่กำหนดไว้
+                    ),
                   )
-                : Icon(icon, color: Colors.grey, size: 24),
+                : CustomPaint(
+                    size: Size(24, 24),
+                    painter: painter, // ใช้ painter ที่กำหนดไว้
+                  ),
           ),
-          const SizedBox(height: 4), // ให้ความห่างระหว่างไอคอนกับข้อความ
+          const SizedBox(height: 4),
           Padding(
-            padding: const EdgeInsets.only(
-                top: 0), // เพิ่ม padding ด้านบนให้เท่ากันทั้งสองกรณี
+            padding: const EdgeInsets.only(top: 0),
             child: isActive
                 ? ShaderMask(
-                    shaderCallback: (bounds) =>
-                        AppGradiant.gradientX_1.createShader(bounds),
+                    shaderCallback: (bounds) => AppGradiant.gradientX_1
+                        .createShader(bounds), // ใช้ gradientX_1
                     child: Text(
                       label,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: const Color.fromARGB(255, 182, 182, 182)),
                     ),
                   )
                 : Text(
                     label,
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                        color: Colors.grey), // สีเทาสำหรับข้อความเมื่อไม่เลือก
                   ),
           ),
         ],
@@ -148,22 +169,29 @@ class _HomePageState extends State<HomePage> {
       label: "",
     );
   }
+}
 
-  BottomNavigationBarItem _buildQRItem(int index) {
-    return BottomNavigationBarItem(
-      icon: SizedBox(
-        width: 50,
-        height: 50,
-        child: Container(
-          padding: EdgeInsets.only(top: 0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            gradient: AppGradiant.gradientX_1,
+BottomNavigationBarItem _buildQRItem(int index) {
+  return BottomNavigationBarItem(
+    icon: SizedBox(
+      width: 50,
+      height: 50,
+      child: Container(
+        padding: EdgeInsets.only(top: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          gradient: AppGradiant.gradientX_1,
+        ),
+        child: Align(
+          alignment: Alignment.center, // ทำให้ไอคอนวาดเองอยู่ตรงกลาง
+          child: CustomPaint(
+            size: Size(30, 30), // ขนาดของ CustomPaint
+            painter: QrIconPainter(
+                isActive: index == 2), // ใช้ CustomPainter ที่วาดไอคอน
           ),
-          child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 30),
         ),
       ),
-      label: "",
-    );
-  }
+    ),
+    label: "",
+  );
 }
