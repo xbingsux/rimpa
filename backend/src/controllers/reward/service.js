@@ -6,34 +6,14 @@ require('dotenv').config();
 
 const prisma = new PrismaClient();
 
-const upsertReward = async (id, reward_name, description, startDate, endDate, img, stock, cost) => {
-    const banner = await prisma.reward.upsert({
-        where: { id: id || 0 },
-        create: {
-            reward_name: reward_name,
-            description: description,
-            startDate: startDate,
-            endDate: endDate,
-            img: img,
-            stock: stock,
-            cost: cost,
-            paymentType: 'Point'
-        },
-        update: {
-            reward_name: reward_name,
-            description: description,
-            startDate: startDate,
-            endDate: endDate,
-            img: img,
-            stock: stock,
-            cost: cost,
-        }
-    })
-    return banner;
-}
-
 const listReward = async () => {
+    const currentDate = new Date();
     let rewards = await prisma.reward.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
         include: {
             RedeemReward: true
         }
@@ -43,14 +23,19 @@ const listReward = async () => {
 };
 
 const rewardById = async (id) => {
+    const currentDate = new Date();
     const reward = await prisma.reward.findFirst({
-        where: { id: id },
+        where: {
+            id: id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
     })
     return reward
 }
 
 module.exports = {
-    upsertReward,
     listReward,
     rewardById
 };
