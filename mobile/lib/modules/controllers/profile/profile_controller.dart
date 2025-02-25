@@ -180,22 +180,23 @@ class ProfileController extends GetxController {
         birthDateLoading.value = false;
         genderLoading.value = false;
         Get.snackbar(
-  "อัปเดทข้อมูลสำเร็จ", 
-  "",
-  snackPosition: SnackPosition.TOP, // แสดงที่มุมบนของหน้าจอ
-  backgroundColor: Colors.white,
-  colorText: const Color.fromARGB(255, 21, 189, 255), // เปลี่ยนสีข้อความ
-  duration: Duration(seconds: 3), // แสดง 3 วินาที
-  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // ลด padding ให้น้อยลง
-  titleText: Text(
-    "อัปเดทข้อมูลสำเร็จ",
-    style: TextStyle(
-      fontSize: 14, // ขนาดตัวอักษรเล็กลง
-    ),
-  ),
-  messageText: Container(), // เอาข้อความออกไปเพื่อให้แสดงแค่ title
-);
-
+          "อัปเดทข้อมูลสำเร็จ",
+          "",
+          snackPosition: SnackPosition.TOP, // แสดงที่มุมบนของหน้าจอ
+          backgroundColor: Colors.white,
+          colorText:
+              const Color.fromARGB(255, 21, 189, 255), // เปลี่ยนสีข้อความ
+          duration: Duration(seconds: 3), // แสดง 3 วินาที
+          padding: EdgeInsets.symmetric(
+              horizontal: 16, vertical: 8), // ลด padding ให้น้อยลง
+          titleText: Text(
+            "อัปเดทข้อมูลสำเร็จ",
+            style: TextStyle(
+              fontSize: 14, // ขนาดตัวอักษรเล็กลง
+            ),
+          ),
+          messageText: Container(), // เอาข้อความออกไปเพื่อให้แสดงแค่ title
+        );
 
         // Set shimmer animation back to true
         profileNameLoading.value = true;
