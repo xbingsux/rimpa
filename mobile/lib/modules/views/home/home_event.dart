@@ -6,6 +6,7 @@ import '../../../components/cards/app-card.component.dart';
 import '../../../components/dropdown/app-dropdown.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
+import '../../models/listevent.model.dart';
 import 'homedetail/home_detail.dart';
 import '../../controllers/listevent/listevent.controller.dart'; // Add this import
 
@@ -19,6 +20,7 @@ class _HomeEventPageState extends State<HomeEventPage> {
   int _currentPage = 0;
   Timer? _timer;
   final listEventController = Get.put(ListEventController()); // Add this line
+  String _sortOrder = "ใหม่สุด"; // Add this line
 
   @override
   void initState() {
@@ -73,6 +75,13 @@ class _HomeEventPageState extends State<HomeEventPage> {
         if (listEventController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
+          List<ListEvent> sortedEvents = listEventController.events.toList();
+          if (_sortOrder == "ใหม่สุด") {
+            sortedEvents.sort((a, b) => b.id.compareTo(a.id));
+          } else {
+            sortedEvents.sort((a, b) => a.id.compareTo(b.id));
+          }
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -82,10 +91,12 @@ class _HomeEventPageState extends State<HomeEventPage> {
                   // Grid Section
                   AppDropdown(
                     onChanged: (value) {
-                      // Handle sorting action
+                      setState(() {
+                        _sortOrder = value;
+                      });
                     },
                     choices: ["ใหม่สุด", "เก่าสุด"],
-                    active: "เรียงตาม",
+                    active: _sortOrder,
                   ),
                   SizedBox(height: 8),
                   GridView.builder(
@@ -97,13 +108,13 @@ class _HomeEventPageState extends State<HomeEventPage> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 2 / 3,
                     ),
-                    itemCount: listEventController.events.length,
+                    itemCount: sortedEvents.length,
                     itemBuilder: (context, index) {
-                      var event = listEventController.events[index];
+                      var event = sortedEvents[index];
                       return GestureDetector(
-                        onTap: () {
-                          Get.to(HomeDetailPage());
-                        },
+                        // onTap: () {
+                        //   Get.to(HomeDetailPage());
+                        // },
                         child: AppCardComponent(
                           child: Column(
                             children: [

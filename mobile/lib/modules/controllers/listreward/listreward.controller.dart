@@ -18,6 +18,7 @@ class ListRewardController extends GetxController {
       var rewardList = await ApiListReward.fetchRewards();
       if (rewardList != null) {
         rewards.assignAll(rewardList);
+        rewards.sort((a, b) => b.id.compareTo(a.id)); // Sort by latest first
       }
     } finally {
       isLoading(false);

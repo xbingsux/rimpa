@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
+import '../../../models/listevent.model.dart';
 
 class HomeDetailPage extends StatelessWidget {
-  const HomeDetailPage({super.key});
+  final ListEvent event;
+
+  const HomeDetailPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
+    // Extract event details
+    String title = event.title;
+    String description = event.description;
+    String startDate = event.startDate;
+    String endDate = event.endDate;
+    String imageUrl =
+        '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
+    String mapUrl = event.subEvents[0].map;
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -22,14 +33,11 @@ class HomeDetailPage extends StatelessWidget {
                   children: [
                     Stack(
                       children: [
-                        const AppCarousel(
+                        AppCarousel(
                           imageSrc: AppImageType.network,
-                          images: [
-                            'https://cdn.prod.website-files.com/61605770a2776f05aa1e318c/66038cbd59912e971580fb95_Cat%20Care%20Routine_%20Tips%20for%20a%20Healthy%2C%20Happy%2C%20%26%20Fabulous%20Cat.webp',
-                            'https://cdn.prod.website-files.com/61605770a2776f05aa1e318c/66038cbd59912e971580fb95_Cat%20Care%20Routine_%20Tips%20for%20a%20Healthy%2C%20Happy%2C%20%26%20Fabulous%20Cat.webp',
-                          ],
+                          images: [imageUrl],
                           ratio: 4 / 3,
-                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                          indicatorBottomSpace: 0,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(AppSpacing.md),
@@ -97,8 +105,8 @@ class HomeDetailPage extends StatelessWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Lorem Ipsum",
+                                    Text(
+                                      title,
                                       style: TextStyle(
                                           fontSize: AppTextSize.xxl,
                                           color: AppTextColors.black,
@@ -113,8 +121,8 @@ class HomeDetailPage extends StatelessWidget {
                                           color: AppColors.accent,
                                         ),
                                         const SizedBox(width: 5),
-                                        const Text(
-                                          '2 ก.พ. 2568 - 3 ก.พ. 2568',
+                                        Text(
+                                          '$startDate - $endDate',
                                           style: TextStyle(
                                               fontSize: AppTextSize.xs,
                                               color: AppTextColors.secondary),
@@ -124,9 +132,11 @@ class HomeDetailPage extends StatelessWidget {
                                   ],
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    // Handle map icon tap
-                                  },
+                                  // onTap: () {
+                                  //   if (mapUrl.isNotEmpty) {
+                                  //     Get.to(() => WebViewPage(url: mapUrl));
+                                  //   }
+                                  // },
                                   child: Container(
                                     padding:
                                         const EdgeInsets.all(AppSpacing.sm),
@@ -157,7 +167,7 @@ class HomeDetailPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.md,
                                 vertical: AppSpacing.md),
-                            child: const Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -170,7 +180,7 @@ class HomeDetailPage extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.all(AppSpacing.xs),
                                   child: Text(
-                                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                                    description,
                                     style: TextStyle(
                                       fontSize: AppTextSize.sm,
                                       color: AppTextColors.secondary,

@@ -31,7 +31,7 @@ router.post("/update-event", auth, async (req, res) => {
   }
 });
 
-router.post("/list-event", auth, async (req, res) => {
+router.post("/list-event",  async (req, res) => {
   const { } = req.body;
   try {
 

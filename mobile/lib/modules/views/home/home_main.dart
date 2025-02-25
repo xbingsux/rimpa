@@ -11,6 +11,7 @@ import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
+import '../../models/listevent.model.dart';
 import 'seeallcards/home_event_allcard.dart';
 
 import 'homedetail/home_detail.dart'; // Add this import
@@ -28,6 +29,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Timer? _timer;
   final listEventController = Get.put(ListEventController());
   final listBannerController = Get.put(ListBannerController()); // Add this line
+  String _sortOrder = "ใหม่สุด"; // Add this line
 
   @override
   void initState() {
@@ -136,6 +138,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
             listBannerController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
+          List<ListEvent> sortedEvents = listEventController.events.toList();
+          if (_sortOrder == "ใหม่สุด") {
+            sortedEvents.sort((a, b) => b.id.compareTo(a.id));
+          } else {
+            sortedEvents.sort((a, b) => a.id.compareTo(b.id));
+          }
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -156,9 +165,10 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       itemBuilder: (context, index) {
                         var banner = listBannerController.banners[index];
                         return GestureDetector(
-                          onTap: () {
-                            Get.to(HomeDetailPage());
-                          },
+                          // onTap: () {
+                          //   Get.to(HomeDetailPage(
+                          //       event: listBannerController.banners[index]));
+                          // },
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 8),
                             child: AppImageComponent(
@@ -234,7 +244,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       children: listEventController.events.map((event) {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(HomeDetailPage());
+                            Get.to(() => HomeDetailPage(event: event));
                           },
                           child: Container(
                             width: 150,
@@ -286,10 +296,12 @@ class _HomeMainPageState extends State<HomeMainPage> {
                   // Grid Section
                   AppDropdown(
                     onChanged: (value) {
-                      // Handle sorting action
+                      setState(() {
+                        _sortOrder = value;
+                      });
                     },
                     choices: ["ใหม่สุด", "เก่าสุด"],
-                    active: "เรียงตาม",
+                    active: _sortOrder,
                   ),
                   SizedBox(height: 8),
                   GridView.builder(
@@ -301,12 +313,12 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 2 / 3,
                     ),
-                    itemCount: listEventController.events.length,
+                    itemCount: sortedEvents.length,
                     itemBuilder: (context, index) {
-                      var event = listEventController.events[index];
+                      var event = sortedEvents[index];
                       return GestureDetector(
                         onTap: () {
-                          Get.to(HomeDetailPage());
+                          Get.to(() => HomeDetailPage(event: event));
                         },
                         child: AppCardComponent(
                           child: Column(

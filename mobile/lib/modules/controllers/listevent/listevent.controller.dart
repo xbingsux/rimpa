@@ -3,7 +3,7 @@ import '../../models/listevent.model.dart';
 import '../../../core/services/api_listevent.dart';
 
 class ListEventController extends GetxController {
-  var events = <Event>[].obs;
+  var events = <ListEvent>[].obs;
   var isLoading = true.obs;
 
   @override
@@ -17,6 +17,7 @@ class ListEventController extends GetxController {
       isLoading(true);
       var eventList = await ApiListEvent.fetchEvents();
       events.assignAll(eventList);
+      events.sort((a, b) => b.id.compareTo(a.id)); // Sort by latest first
     } finally {
       isLoading(false);
     }

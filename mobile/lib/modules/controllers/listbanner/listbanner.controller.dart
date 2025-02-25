@@ -18,6 +18,7 @@ class ListBannerController extends GetxController {
       var bannerList = await ApiListBanner.fetchBanners();
       if (bannerList != null) {
         banners.assignAll(bannerList);
+        banners.sort((a, b) => b.id.compareTo(a.id)); // Sort by latest first
       }
     } finally {
       isLoading(false);
