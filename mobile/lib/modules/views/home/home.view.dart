@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 0),
             child: isActive
                 ? ShaderMask(
-                    shaderCallback: (bounds) => AppGradiant.gradientX_1
+                    shaderCallback: (bounds) => AppGradiant.gradientY_1
                         .createShader(bounds), // ใช้ gradientX_1
                     child: CustomPaint(
                       size: Size(24, 24),
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 0),
             child: isActive
                 ? ShaderMask(
-                    shaderCallback: (bounds) => AppGradiant.gradientX_1
+                    shaderCallback: (bounds) => AppGradiant.gradientY_1
                         .createShader(bounds), // ใช้ gradientX_1
                     child: Text(
                       label,

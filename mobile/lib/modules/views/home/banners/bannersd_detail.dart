@@ -6,16 +6,14 @@ import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/events/list_banner_controller_.dart';
 
 class BannersDetailPage extends StatelessWidget {
+  final int bannerId;
   final BannerEventController controller = Get.find();
+
+  BannersDetailPage({required this.bannerId});
 
   @override
   Widget build(BuildContext context) {
-    final int bannerId =
-        Get.arguments['bannerId']; // รับค่า id จากการนำทาง (แบบ Map)
-
-    // ดึงข้อมูลรายละเอียดของแบนเนอร์
-    controller.fetchBannerDetail(bannerId);
-
+  controller.fetchBannerDetail(bannerId);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -125,8 +123,7 @@ class BannersDetailPage extends StatelessWidget {
                             Obx(() {
                               var banner = controller.bannerDetail.value;
                               // แปลงวันที่จาก API เป็นรูปแบบไทย
-                              var startDate =
-                                  DateTime.parse(banner["startDate"]);
+                              var startDate = DateTime.parse(banner["startDate"]);
                               var endDate = DateTime.parse(banner["endDate"]);
                               var formatter = DateFormat('d MMM yyyy');
                               return Row(
@@ -153,6 +150,23 @@ class BannersDetailPage extends StatelessWidget {
                           onTap: () {
                             // Handle map icon tap
                           },
+                          child: Container(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                                color: Colors.transparent,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.rounded),
+                              color: Colors.blue,
+                            ),
+                            child: const Icon(
+                              Icons.location_on_outlined,
+                              size: AppTextSize.xxl,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -173,7 +187,33 @@ class BannersDetailPage extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         height: 2,
+                        color: AppColors.secondary,
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: AppSpacing.md,
+                            left: AppSpacing.md,
+                            right: AppRadius.md,
+                            bottom: AppSpacing.lg),
+                        child: GestureDetector(
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: AppRadius.xs),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.rounded),
+                                gradient: AppGradiant.gradientX_1),
+                            child: const Center(
+                                child: Text(
+                              'แลกรับสิทธิ์',
+                              style: TextStyle(
+                                  fontSize: AppTextSize.lg,
+                                  color: AppTextColors.white),
+                            )),
+                          ),
+                        ),
+                      )
                     ],
                   )
                 ],

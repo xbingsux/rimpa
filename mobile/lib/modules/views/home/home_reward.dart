@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/modules/views/home/rewardbanners/rewardbannner_slider.dart';
 
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
@@ -133,53 +134,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Removed card here
-                          SizedBox(height: 40),
-                          // Banner slider
-                          SizedBox(
-                            height: 150,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: 8,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentPage = index;
-                                });
-                              },
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Get.to(HomeDetailReward());
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 8),
-                                  child: AppImageComponent(
-                                    aspectRatio: 2.08 / 1,
-                                    fit: BoxFit.cover,
-                                    imageType: AppImageType.network,
-                                    imageAddress:
-                                        "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(8, (index) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(horizontal: 4),
-                                width: _currentPage == index ? 12 : 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: _currentPage == index
-                                      ? Colors.blue
-                                      : Colors.grey,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              );
-                            }),
-                          ),
+                          SizedBox(height: 50),
+                          RewardBannerSliderComponent(),
                           SizedBox(height: 16),
                           // Activities Section
                           Row(

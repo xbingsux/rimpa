@@ -5,6 +5,7 @@ class ApiUrls extends GetxController {
   var imgUrl = 'http://192.168.1.2:3001'.obs;
   var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
   var eventsUrl = 'http://192.168.1.2:3001/event'.obs;
+  var rewardUrl = 'http://192.168.1.2:3001/reward'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;
@@ -16,6 +17,10 @@ class ApiUrls extends GetxController {
   var uploadprofileuser = ''.obs;
   var listsbanners = ''.obs;
   var getbanner = ''.obs;
+  var listsreward = ''.obs;
+  var getreward = ''.obs;
+  var redeemReward = ''.obs;
+  var checkRewardRedemption = ''.obs;
 
   @override
   void onInit() {
@@ -50,5 +55,9 @@ class ApiUrls extends GetxController {
     uploadprofileuser.value = '${imgUrl.value}/update/profile';
     listsbanners.value = '${eventsUrl.value}/list-banner';
     getbanner.value = '${eventsUrl.value}/get-banner';
+    listsreward.value = '${rewardUrl.value}/list-reward';
+    getreward.value = '${rewardUrl.value}/get-reward';
+    redeemReward.value = '${rewardUrl.value}/redeem-rewards';
+    checkRewardRedemption.value = '${rewardUrl.value}/check-redeem-status';
   }
 }

@@ -285,6 +285,7 @@ const profileMe = async (id) => {
   const profile = await prisma.profile.findFirst({
     where: { user_id: id },
     select: {
+      id: true,
       profile_name: true,
       first_name: true,
       last_name: true,

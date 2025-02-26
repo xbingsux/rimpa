@@ -2,32 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async'; // นำเข้าคลาส Timer
 import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/modules/views/home/banners/bannersd_detail.dart';
 import '../../../controllers/events/list_banner_controller_.dart'; // นำเข้าคอนโทรลเลอร์
 import '../../../../components/imageloader/app-image.component.dart';
-import '../homedetail/home_detail.dart';
+class BannerSliderComponent extends StatefulWidget {
+  @override
+  _BannerSliderComponentState createState() => _BannerSliderComponentState();
+}
 
-class BannerSliderComponent extends StatelessWidget {
+class _BannerSliderComponentState extends State<BannerSliderComponent> {
   ApiUrls apiUrls = Get.find();
   final BannerEventController controller = Get.put(BannerEventController());
   final PageController _pageController = PageController();
   Timer? _timer;
 
   @override
-  Widget build(BuildContext context) {
-    controller.fetchBanners();
+  void initState() {
+    super.initState();
+    controller.fetchBanners(); // ดึงข้อมูลแบนเนอร์
+    startAutoScroll(); // เริ่มการเลื่อนแบนเนอร์อัตโนมัติ
+  }
 
-    // เริ่มตั้งเวลาให้เลื่อนแบนเนอร์ทุก 5 วินาที
+  void startAutoScroll() {
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      int currentIndex = _pageController.page?.round() ?? 0;
-      if (currentIndex == controller.banners.length - 1) {
-        _pageController.animateToPage(0,
-            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-      } else {
-        _pageController.nextPage(
-            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      if (_pageController.hasClients) {
+        int currentIndex = _pageController.page?.round() ?? 0;
+        int nextPage = (currentIndex + 1) % controller.banners.length;
+
+        _pageController.animateToPage(nextPage,
+            duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       }
     });
+  }
 
+  void stopAutoScroll() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    stopAutoScroll(); // หยุด Timer เมื่อ Widget ถูกทำลาย
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
@@ -60,20 +80,20 @@ class BannerSliderComponent extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    // เรียก fetchBannerDetail เพื่อดึงรายละเอียดแบนเนอร์
+                    stopAutoScroll(); // หยุด Timer เมื่อกดเข้าไปดูแบนเนอร์
                     var bannerId = banners[index]['id'];
-                    controller.fetchBannerDetail(bannerId);  // เรียก fetchBannerDetail
-
-                    // ส่งข้อมูลแบนเนอร์ที่โหลดแล้วไปยังหน้ารายละเอียด
-                    Get.toNamed('/detail-banner', arguments: {
-                      'bannerId': bannerId,
-                      'bannerDetail': banners[index], // ส่งข้อมูลของแบนเนอร์
+                    controller.fetchBannerDetail(bannerId);
+                    
+                    Get.to(() => BannersDetailPage(bannerId: bannerId), arguments: bannerId)
+?.then((_) {
+                      // เมื่อกลับมาที่หน้าหลัก ให้เริ่มการเลื่อนใหม่
+                      startAutoScroll();
                     });
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 8),
                     child: AppImageComponent(
-                      aspectRatio: 2.08 / 1,
+                      aspectRatio: 16 / 9,
                       fit: BoxFit.cover,
                       imageType: AppImageType.network,
                       imageAddress: imageUrl,

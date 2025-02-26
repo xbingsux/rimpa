@@ -16,13 +16,11 @@ class BannerEventController extends GetxController {
     isLoading.value = true;
     try {
       var response = await dio.post(apiUrlsController.listsbanners.value);
-
       if (response.statusCode == 200 && response.data['status'] == "success") {
         banners.value = response.data['banner'];
       } else {
         errorMessage.value = "ไม่สามารถโหลดข้อมูลแบนเนอร์ได้";
       }
-      print(response.data); // เพื่อดูข้อมูลที่ได้รับ
     } catch (e) {
       print("Error: $e");
 

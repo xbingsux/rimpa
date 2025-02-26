@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
-import 'package:rimpa/modules/views/home/banners/banner_slider_component.dart';
+import 'package:rimpa/modules/views/home/banners/banner_slider.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';

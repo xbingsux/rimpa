@@ -44,7 +44,7 @@ const redeemReward = async (idProfile, idReward) => {
             rewardId: idReward,
         },
     });
-
+    
     if (existingRedemption) {
         throw new Error("You have already redeemed this reward!");
     }

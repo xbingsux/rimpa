@@ -46,11 +46,5 @@ class AppPages {
       name: '/delete-account',
       page: () => DeleteAccount(),
     ),
-
-    // bannerdetail
-    GetPage(
-      name: '/detail-banner',
-      page: () => BannersDetailPage(),
-    ),
   ];
 }
