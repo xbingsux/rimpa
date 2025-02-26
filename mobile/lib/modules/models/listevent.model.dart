@@ -35,18 +35,42 @@ class SubEvent {
   final int id;
   final String imagePath;
   final String map;
+  final List<EventImage> img;
 
   SubEvent({
     required this.id,
     required this.imagePath,
     required this.map,
+    required this.img,
   });
 
   factory SubEvent.fromJson(Map<String, dynamic> json) {
+    var imgList = json['img'] as List;
+    List<EventImage> images =
+        imgList.map((i) => EventImage.fromJson(i)).toList();
+
     return SubEvent(
       id: json['id'],
       imagePath: json['img'][0]['path'],
       map: json['map'],
+      img: images,
+    );
+  }
+}
+
+class EventImage {
+  final int id;
+  final String path;
+
+  EventImage({
+    required this.id,
+    required this.path,
+  });
+
+  factory EventImage.fromJson(Map<String, dynamic> json) {
+    return EventImage(
+      id: json['id'],
+      path: json['path'],
     );
   }
 }

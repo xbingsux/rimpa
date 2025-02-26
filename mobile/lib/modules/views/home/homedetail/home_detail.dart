@@ -20,8 +20,9 @@ class HomeDetailPage extends StatelessWidget {
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
     String endDate = _formatDate(event.endDate); // Update this line
-    String imageUrl =
-        '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
+    List<String> imageUrls = event.subEvents[0].img
+        .map((image) => '${AppApi.urlApi}${image.path.replaceAll("\\", "/")}')
+        .toList(); // Update this line
     String mapUrl = event.subEvents[0].map;
 
     return SafeArea(
@@ -37,7 +38,7 @@ class HomeDetailPage extends StatelessWidget {
                       children: [
                         AppCarousel(
                           imageSrc: AppImageType.network,
-                          images: [imageUrl],
+                          images: imageUrls, // Update this line
                           ratio: 4 / 3,
                           indicatorBottomSpace: 0,
                         ),
