@@ -37,17 +37,7 @@ const rewardById = async (id) => {
 
 const redeemReward = async (idProfile, idReward) => {
     try {
-       // เช็คว่าผู้ใช้แลกไปแล้วหรือยัง
-       const existingRedemption = await prisma.redeemReward.findFirst({
-        where: {
-            profileId: idProfile,
-            rewardId: idReward,
-        },
-    });
 
-    if (existingRedemption) {
-        throw new Error("You have already redeemed this reward!");
-    }
 
         // ดึงข้อมูลโปรไฟล์
         const profile = await prisma.profile.findUnique({
@@ -66,13 +56,34 @@ const redeemReward = async (idProfile, idReward) => {
             throw new Error("Reward not found");
         }
 
+      // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
+      if (reward.max_per_user !== null && reward.max_per_user > 0) {
+        const userRedeemedCount = await prisma.redeemReward.count({
+            where: {
+                profileId: idProfile,
+                rewardId: idReward,
+            },
+        });
+
+        if (userRedeemedCount >= reward.max_per_user) {
+            throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+        }
+    }
+
+
         // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
         const now = new Date();
-        const startDate = new Date(reward.startDate);
-        const endDate = new Date(reward.endDate);
-
-        if (now < startDate || now > endDate) {
+        if (now < new Date(reward.startDate) || now > new Date(reward.endDate)) {
             throw new Error("Reward is not available at this time");
+        }
+
+        // ตรวจสอบว่าสินค้าถูกแลกไปแล้วกี่ครั้ง
+        const redeemedCount = await prisma.redeemReward.count({
+            where: { rewardId: idReward },
+        });
+
+        if (redeemedCount >= reward.stock) {
+            throw new Error("Reward is out of stock");
         }
 
         // ตรวจสอบว่ามีคะแนนพอหรือไม่
@@ -81,34 +92,27 @@ const redeemReward = async (idProfile, idReward) => {
             throw new Error("Insufficient points");
         }
 
-        // ตรวจสอบว่าสินค้ามีสต็อกหรือไม่
-        if (reward.stock !== null && reward.stock <= 0) {
-            throw new Error("Reward is out of stock");
-        }
-
-        // ทำรายการแลกรางวัล
-        await prisma.$transaction([
-            prisma.profile.update({
+        // ทำธุรกรรมแบบป้องกัน race condition
+        await prisma.$transaction(async (tx) => {
+            // ลดคะแนน
+            await tx.profile.update({
                 where: { id: idProfile },
-                data: {
-                    points: {
-                        decrement: cost,
-                    },
-                },
-            }),
-            prisma.redeemReward.create({
+                data: { points: { decrement: reward.cost } },
+            });
+
+            // บันทึกการแลกรางวัล
+            await tx.redeemReward.create({
                 data: {
                     profileId: idProfile,
                     rewardId: idReward,
-                    quantity: 1, // แลก 1 ชิ้น
+                    quantity: 1,
                     base_fee: 0,
-                    addressId: null, 
-                    delivery: "Pickup", 
+                    addressId: null,
+                    delivery: "Pickup",
                     status: "PAID",
                 },
-            }),
-        ]);
-
+            });
+        });
         return { status: "success", message: "Reward redeemed successfully" };
     } catch (error) {
         console.error(error);
