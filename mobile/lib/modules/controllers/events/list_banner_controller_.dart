@@ -29,8 +29,7 @@ class BannerEventController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-  }
-
+  } 
   // ฟังก์ชันดึงข้อมูลรายละเอียดของแบนเนอร์ตาม `id`
   Future<void> fetchBannerDetail(int id) async {
     isLoading.value = true;
