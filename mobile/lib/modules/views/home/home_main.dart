@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
-import 'package:url_launcher/url_launcher.dart'; // Add this import
 import '../../../core/constant/app.constant.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
@@ -30,15 +29,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
   final listEventController = Get.put(ListEventController());
   final listBannerController = Get.put(ListBannerController()); // Add this line
   String _sortOrder = "ใหม่สุด"; // Add this line
-
-  void _launchURL() async {
-    const url = 'https://maps.app.goo.gl/Y7uQhbb8sjmdAPnp6';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   void initState() {
@@ -138,10 +128,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
             ),
 
             // ไอคอนแจ้งเตือน
-            GestureDetector(
-              onTap: _launchURL,
-              child: Icon(Icons.notifications_none, color: Colors.grey),
-            ),
+            Icon(Icons.notifications_none, color: Colors.grey),
           ],
         ),
       ),
