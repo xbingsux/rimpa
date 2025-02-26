@@ -7,6 +7,7 @@ import 'core/routes/app_pages.dart';
 import 'core/services/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './modules/controllers/middleware/auth_middleware.dart';
+import 'package:url_launcher/url_launcher.dart'; // Add this import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

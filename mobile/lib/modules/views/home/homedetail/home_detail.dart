@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
+import 'package:url_launcher/url_launcher.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
@@ -20,9 +21,8 @@ class HomeDetailPage extends StatelessWidget {
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
     String endDate = _formatDate(event.endDate); // Update this line
-    List<String> imageUrls = event.subEvents[0].img
-        .map((image) => '${AppApi.urlApi}${image.path.replaceAll("\\", "/")}')
-        .toList(); // Update this line
+    String imageUrl =
+        '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     String mapUrl = event.subEvents[0].map;
 
     return SafeArea(
@@ -38,7 +38,7 @@ class HomeDetailPage extends StatelessWidget {
                       children: [
                         AppCarousel(
                           imageSrc: AppImageType.network,
-                          images: imageUrls, // Update this line
+                          images: [imageUrl],
                           ratio: 4 / 3,
                           indicatorBottomSpace: 0,
                         ),
@@ -135,11 +135,11 @@ class HomeDetailPage extends StatelessWidget {
                                   ],
                                 ),
                                 GestureDetector(
-                                  // onTap: () {
-                                  //   if (mapUrl.isNotEmpty) {
-                                  //     Get.to(() => WebViewPage(url: mapUrl));
-                                  //   }
-                                  // },
+                                  onTap: () {
+                                    if (mapUrl.isNotEmpty) {
+                                      _launchURL(mapUrl); // Update this line
+                                    }
+                                  },
                                   child: Container(
                                     padding:
                                         const EdgeInsets.all(AppSpacing.sm),
@@ -229,14 +229,15 @@ class HomeDetailPage extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(AppRadius.rounded),
-                          gradient: AppGradiant.gradientX_1),
+                          color:
+                              Color(0xFFEBF5FD)), // Corrected color definition
                       child: Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              width: 48,
-                              height: 48,
+                              width: 38,
+                              height: 38,
                               decoration: BoxDecoration(
                                 gradient:
                                     AppGradiant.gradientX_1, // Applied gradient
@@ -244,12 +245,26 @@ class HomeDetailPage extends StatelessWidget {
                               ),
                               child: Icon(Icons.star, color: Colors.white),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8), // Added missing comma
                             Text(
                               '100 คะแนน',
                               style: TextStyle(
                                   fontSize: AppTextSize.lg,
-                                  color: AppTextColors.white),
+                                  color: AppTextColors.accent2),
+                            ),
+                            Opacity(
+                              // space
+                              opacity: 0,
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  gradient: AppGradiant
+                                      .gradientX_1, // Applied gradient
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.star, color: Colors.white),
+                              ),
                             ),
                           ],
                         ),
@@ -263,6 +278,20 @@ class HomeDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url); // Parse the URL
+    Uri googleMapsUri =
+        Uri.parse('google.navigation:q=$url'); // Google Maps URL scheme
+
+    if (await canLaunchUrl(googleMapsUri)) {
+      await launchUrl(googleMapsUri);
+    } else if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   String _formatDate(String date) {
