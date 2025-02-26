@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
-import 'package:get/get.dart';
-
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
 import '../../../core/constant/app.constant.dart';
@@ -12,9 +10,10 @@ import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../models/listevent.model.dart';
+import '../../models/listbanner.model.dart'; // Add this import
 import 'seeallcards/home_event_allcard.dart';
-
-import 'homedetail/home_detail.dart'; // Add this import
+import 'homedetail/home_detail.dart';
+import 'homedetail/banner_detail.dart'; // Add this import
 import '../../controllers/listevent/listevent.controller.dart';
 import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 
@@ -165,10 +164,10 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       itemBuilder: (context, index) {
                         var banner = listBannerController.banners[index];
                         return GestureDetector(
-                          // onTap: () {
-                          //   Get.to(HomeDetailPage(
-                          //       event: listBannerController.banners[index]));
-                          // },
+                          onTap: () {
+                            Get.to(() => BannerDetailPage(
+                                banner: banner)); // Corrected line
+                          },
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 8),
                             child: AppImageComponent(

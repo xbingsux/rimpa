@@ -9,6 +9,8 @@ import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
 import '../../controllers/profile/profile_controller.dart';
+import 'homedetail/banner_detail.dart';
+import 'homedetail/home_detail.dart';
 import 'seeallcards/recommended_privileges.dart';
 import 'homedetail/home_detail_reward.dart'; // Add this import
 import '../../controllers/listreward/listreward.controller.dart'; // Add this import
@@ -67,6 +69,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
           clipBehavior: Clip.none,
           children: [
             Container(
+              // Corrected instantiation
               decoration: BoxDecoration(
                 gradient: AppGradiant.gradientX_1,
               ),
@@ -189,7 +192,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                         listBannerController.banners[index];
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(HomeDetailReward());
+                                        Get.to(() => BannerDetailPage(
+                                            banner: banner)); // Corrected line
                                       },
                                       child: Container(
                                         margin:
@@ -275,7 +279,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       .map((reward) {
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(HomeDetailReward());
+                                        Get.to(HomeDetailReward(
+                                            reward:
+                                                reward)); // Pass reward object
                                       },
                                       child: Container(
                                         width: 150,
@@ -354,11 +360,13 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
-                                  children:
-                                      listEventController.events.map((event) {
+                                  children: listRewardController.rewards
+                                      .map((reward) {
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(HomeDetailReward());
+                                        Get.to(HomeDetailReward(
+                                            reward:
+                                                reward)); // Pass reward object
                                       },
                                       child: Container(
                                         width: 150,
@@ -369,7 +377,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                               AppImageComponent(
                                                 imageType: AppImageType.network,
                                                 imageAddress:
-                                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}', // Use AppApi
+                                                    '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // Use AppApi.urlApi
                                               ),
                                               SizedBox(height: 8),
                                               Padding(
@@ -377,7 +385,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 4.0),
                                                 child: Text(
-                                                  event.title,
+                                                  reward.rewardName,
                                                   style:
                                                       TextStyle(fontSize: 12),
                                                   textAlign: TextAlign.center,
@@ -441,7 +449,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       listEventController.events.map((event) {
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(HomeDetailReward());
+                                        Get.to(
+                                            () => HomeDetailPage(event: event));
                                       },
                                       child: Container(
                                         width: 150,

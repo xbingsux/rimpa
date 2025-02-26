@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
+import '../../../models/listreward.model.dart'; // Add this import
+import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart'; // Add this import
 
 class HomeDetailReward extends StatelessWidget {
-  const HomeDetailReward({super.key});
+  final ListReward reward; // Add this line
+
+  const HomeDetailReward(
+      {super.key, required this.reward}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
+    // Extract reward details
+    String title = reward.rewardName;
+    String description = reward.description;
+    String startDate = _formatDate(reward.startDate); // Add this line
+    String endDate = _formatDate(reward.endDate); // Add this line
+    String imageUrl =
+        '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}'; // Add this line
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -22,13 +36,9 @@ class HomeDetailReward extends StatelessWidget {
                   children: [
                     Stack(
                       children: [
-                        const AppCarousel(
+                        AppCarousel(
                           imageSrc: AppImageType.network,
-                          images: [
-                            'https://cdn.prod.website-files.com/61605770a2776f05aa1e318c/66038cbd59912e971580fb95_Cat%20Care%20Routine_%20Tips%20for%20a%20Healthy%2C%20Happy%2C%20%26%20Fabulous%20Cat.webp',
-                            'https://cdn.prod.website-files.com/61605770a2776f05aa1e318c/66038cbd59912e971580fb95_Cat%20Care%20Routine_%20Tips%20for%20a%20Healthy%2C%20Happy%2C%20%26%20Fabulous%20Cat.webp',
-                            // Add more image URLs here
-                          ],
+                          images: [imageUrl], // Use reward image
                           ratio: 4 / 3,
                           borderRadius: BorderRadius.all(Radius.circular(0)),
                         ),
@@ -105,12 +115,12 @@ class HomeDetailReward extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.md,
                                 vertical: AppSpacing.md),
                             child: Text(
-                              "Lorem Ipsum",
+                              title, // Use reward name
                               style: TextStyle(
                                   fontSize: AppTextSize.xxl,
                                   color: AppTextColors.black,
@@ -179,9 +189,10 @@ class HomeDetailReward extends StatelessWidget {
                                                           .gradientY_1
                                                           .createShader(bounds);
                                                     },
-                                                    child: const Text(
-                                                      '500',
-                                                      style: TextStyle(
+                                                    child: Text(
+                                                      reward
+                                                          .cost, // Use reward cost
+                                                      style: const TextStyle(
                                                           fontSize:
                                                               AppTextSize.md,
                                                           color: AppTextColors
@@ -238,9 +249,9 @@ class HomeDetailReward extends StatelessWidget {
                                               const SizedBox(
                                                 width: 5,
                                               ),
-                                              const Text(
-                                                '2 ก.พ. 2568 - 3 ก.พ. 2568',
-                                                style: TextStyle(
+                                              Text(
+                                                '$startDate - $endDate', // Use reward dates
+                                                style: const TextStyle(
                                                     fontSize: AppTextSize.xs,
                                                     color: AppTextColors.black),
                                               )
@@ -262,10 +273,10 @@ class HomeDetailReward extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.md,
                                 vertical: AppSpacing.md),
-                            child: const Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'เงื่อนไขการรับสิทธิ์',
                                   style: TextStyle(
                                       fontSize: AppTextSize.sm,
@@ -273,10 +284,10 @@ class HomeDetailReward extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(AppSpacing.xs),
+                                  padding: const EdgeInsets.all(AppSpacing.xs),
                                   child: Text(
-                                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-                                    style: TextStyle(
+                                    description, // Use reward description
+                                    style: const TextStyle(
                                       fontSize: AppTextSize.sm,
                                       color: AppTextColors.secondary,
                                     ),
@@ -306,6 +317,14 @@ class HomeDetailReward extends StatelessWidget {
                       right: AppRadius.md,
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialog(context: context);
+                        },
+                      );
+                    },
                     child: Container(
                       width: double.infinity,
                       padding:
@@ -330,5 +349,15 @@ class HomeDetailReward extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    DateTime dateTime = date;
+    var thaiDateFormat = DateFormat('d MMM', 'th_TH');
+    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
+    String formattedDate = thaiDateFormat.format(dateTime);
+    String thaiYear =
+        (dateTime.year + 543).toString(); // Convert to Buddhist year
+    return '$formattedDate $thaiYear';
   }
 }

@@ -121,9 +121,9 @@ class _HomeEventAllcardState extends State<HomeEventAllcard> {
                     itemBuilder: (context, index) {
                       var event = sortedEvents[index];
                       return GestureDetector(
-                        // onTap: () {
-                        //   Get.to(HomeDetailPage());
-                        // },
+                        onTap: () {
+                          Get.to(() => HomeDetailPage(event: event));
+                        },
                         child: AppCardComponent(
                           child: Column(
                             children: [
