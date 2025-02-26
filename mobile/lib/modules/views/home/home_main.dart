@@ -175,7 +175,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                   children: List.generate(8, (index) {
                     return GestureDetector(
                       onTap: () {
-                        Get.to(HomeDetailPage());
+                        
                       },
                       child: Container(
                         width: 150,
@@ -244,7 +244,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 itemCount: 8,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    Get.to(HomeDetailPage());
+                    
                   },
                   child: AppCardComponent(
                     child: Column(

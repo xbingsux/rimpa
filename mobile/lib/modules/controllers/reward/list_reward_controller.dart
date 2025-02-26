@@ -27,7 +27,6 @@ class RewardController extends GetxController {
           return item;
         }).toList();
 
-        print("Fetched rewards: ${rewards.value}");
       } else {
         errorMessage.value = "ไม่สามารถโหลดข้อมูลรางวัลได้";
         print("Error Message: ${errorMessage.value}");
@@ -66,8 +65,6 @@ Future<void> redeemReward(
     String idProfile, String idReward, Decimal points, Decimal cost) async {
   if (isLoading.value) return;
   isLoading.value = true;
-  print("points: $points");
-  print("cost: $cost");
 
   try {
     int profileId = int.parse(idProfile);

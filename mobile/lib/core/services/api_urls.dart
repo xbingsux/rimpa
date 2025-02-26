@@ -17,6 +17,10 @@ class ApiUrls extends GetxController {
   var uploadprofileuser = ''.obs;
   var listsbanners = ''.obs;
   var getbanner = ''.obs;
+  var listsevents = ''.obs;
+  var getEventDetails = ''.obs;
+  var Scanevent = ''.obs;
+  var checkin = ''.obs;
   var listsreward = ''.obs;
   var getreward = ''.obs;
   var redeemReward = ''.obs;
@@ -54,7 +58,11 @@ class ApiUrls extends GetxController {
     resetPassword.value = '${baseUrl.value}/reset-password-user';
     uploadprofileuser.value = '${imgUrl.value}/update/profile';
     listsbanners.value = '${eventsUrl.value}/list-banner';
+    listsevents.value = '${eventsUrl.value}/list-event';
+    getEventDetails.value = '${eventsUrl.value}/get-event';
+    Scanevent.value = '${eventsUrl.value}/scan';
     getbanner.value = '${eventsUrl.value}/get-banner';
+    checkin.value = '${eventsUrl.value}/checkIn';
     listsreward.value = '${rewardUrl.value}/list-reward';
     getreward.value = '${rewardUrl.value}/get-reward';
     redeemReward.value = '${rewardUrl.value}/redeem-rewards';

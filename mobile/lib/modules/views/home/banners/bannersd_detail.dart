@@ -13,7 +13,9 @@ class BannersDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  controller.fetchBannerDetail(bannerId);
+    if (controller.bannerDetail.value.isEmpty) {
+      controller.fetchBannerDetail(bannerId);
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -33,7 +35,7 @@ class BannersDetailPage extends StatelessWidget {
 
                   var banner = controller.bannerDetail.value;
                   return AppImageComponent(
-                    aspectRatio: 4 / 3, // ใช้ ratio เดียวกัน
+                    aspectRatio: 4 / 3,
                     borderRadius: BorderRadius.all(Radius.circular(0)),
                     imageType: AppImageType.network,
                     imageAddress:
@@ -123,7 +125,8 @@ class BannersDetailPage extends StatelessWidget {
                             Obx(() {
                               var banner = controller.bannerDetail.value;
                               // แปลงวันที่จาก API เป็นรูปแบบไทย
-                              var startDate = DateTime.parse(banner["startDate"]);
+                              var startDate =
+                                  DateTime.parse(banner["startDate"]);
                               var endDate = DateTime.parse(banner["endDate"]);
                               var formatter = DateFormat('d MMM yyyy');
                               return Row(

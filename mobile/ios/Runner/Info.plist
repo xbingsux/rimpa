@@ -5,7 +5,16 @@
  	<!-- ขออนุญาติเข้าถึงกล้อง  -->
     <key>NSCameraUsageDescription</key>
     <string>We need access to your camera to scan QR codes</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ต้องการใช้กล้องเพื่อสแกน QR Code</string>
 
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ต้องการเข้าถึงแกลเลอรี่เพื่อเลือกภาพ QR Code</string>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>http</string>
+  <string>https</string>
+</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

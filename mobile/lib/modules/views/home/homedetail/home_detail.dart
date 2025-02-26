@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
-import '../../../../components/imageloader/app-image.component.dart';
-import '../../../../core/constant/app.constant.dart';
+import 'package:intl/intl.dart'; // สำหรับการจัดการวันที่
+import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
+import 'package:url_launcher/url_launcher.dart'; // เพิ่ม import นี้
 
 class HomeDetailPage extends StatelessWidget {
-  const HomeDetailPage({super.key});
+  final EventController controller = Get.find();
+  final int bannerId = Get.arguments; // รับค่า arguments
+  ApiUrls apiUrls = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    // Move data fetching inside builder or initState if using StatefulWidget
+    if (controller.eventdetail.value.isEmpty) {
+      controller.fetcheventdetail(bannerId);
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -17,12 +26,36 @@ class HomeDetailPage extends StatelessWidget {
           children: [
             Stack(
               children: [
-                const AppImageComponent(
+                // การแสดงภาพแบนเนอร์
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (controller.errorMessage.value.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  } else if (controller.eventdetail.value.isEmpty) {
+                    return const Center(child: Text("ไม่พบข้อมูลกิจกรรม"));
+                  }
+
+                  var event = controller.eventdetail.value;
+
+                  // ดึง path ของภาพจาก SubEvent และ img
+                  var imagePath =
+                      event["SubEvent"] != null && event["SubEvent"].isNotEmpty
+                          ? event["SubEvent"][0]["img"][0]["path"]
+                              .replaceAll('\\', '/')
+                          : '';
+
+                  return AppImageComponent(
                     aspectRatio: 4 / 3,
                     borderRadius: BorderRadius.all(Radius.circular(0)),
                     imageType: AppImageType.network,
-                    imageAddress:
-                        'https://cdn.prod.website-files.com/61605770a2776f05aa1e318c/66038cbd59912e971580fb95_Cat%20Care%20Routine_%20Tips%20for%20a%20Healthy%2C%20Happy%2C%20%26%20Fabulous%20Cat.webp'),
+                    imageAddress: imagePath.isNotEmpty
+                        ? '${apiUrls.imgUrl.value}$imagePath'
+                        : '', // ถ้าไม่มี path จะให้เป็นค่าว่าง
+                  );
+                }),
+
+                // ปุ่มย้อนกลับ
                 Padding(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   child: Row(
@@ -50,6 +83,7 @@ class HomeDetailPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                // พื้นที่ด้านล่าง
                 Positioned(
                   bottom: -1,
                   left: 0,
@@ -70,10 +104,10 @@ class HomeDetailPage extends StatelessWidget {
                 ),
               ],
             ),
+            // Content below banner
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(width: 0, color: Colors.transparent),
                 color: AppColors.white,
               ),
               child: Column(
@@ -88,39 +122,70 @@ class HomeDetailPage extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Lorem Ipsum",
-                              style: TextStyle(
+                            Obx(() {
+                              var event = controller.eventdetail.value;
+                              return Text(
+                                event["title"] ?? "ไม่มีหัวข้อ",
+                                style: TextStyle(
                                   fontSize: AppTextSize.xxl,
                                   color: AppTextColors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            }),
                             const SizedBox(height: AppSpacing.xs),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.calendar_month_outlined,
-                                  size: AppTextSize.sm,
-                                  color: AppColors.accent,
-                                ),
-                                const SizedBox(width: 5),
-                                const Text(
-                                  '2 ก.พ. 2568 - 3 ก.พ. 2568',
-                                  style: TextStyle(
-                                      fontSize: AppTextSize.xs,
-                                      color: AppTextColors.secondary),
-                                ),
-                              ],
-                            ),
+                            Obx(() {
+                              var events = controller.eventdetail.value;
+                              if (events["startDate"] != null &&
+                                  events["endDate"] != null) {
+                                var startDate =
+                                    DateTime.parse(events["startDate"]);
+                                var endDate = DateTime.parse(events["endDate"]);
+                                var formatter = DateFormat('d MMM yyyy');
+                                return Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_month_outlined,
+                                      size: AppTextSize.sm,
+                                      color: AppColors.accent,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      '${formatter.format(startDate)} - ${formatter.format(endDate)}',
+                                      style: TextStyle(
+                                        fontSize: AppTextSize.xs,
+                                        color: AppTextColors.secondary,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            }),
                           ],
                         ),
                         GestureDetector(
-                          onTap: () {
-                            // Handle map icon tap
+                          onTap: () async {
+                            var event = controller.eventdetail.value;
+                            var mapUrl = event["SubEvent"] != null &&
+                                    event["SubEvent"].isNotEmpty
+                                ? event["SubEvent"][0]["map"]
+                                : null;
+
+                            if (mapUrl != null && mapUrl.isNotEmpty) {
+                              final Uri mapUri = Uri.parse(mapUrl);
+
+                              if (await canLaunchUrl(mapUri)) {
+                                await launchUrl(mapUri); // เปิดลิงค์แผนที่
+                              } else {
+                                // กรณีไม่สามารถเปิด URL ได้
+                                throw 'ไม่สามารถเปิด URL แผนที่ได้: $mapUrl';
+                              }
+                            }
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(
-                                AppSpacing.sm), // Increase padding
+                            padding: const EdgeInsets.all(AppSpacing.sm),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 0.5,
@@ -128,48 +193,28 @@ class HomeDetailPage extends StatelessWidget {
                               ),
                               borderRadius:
                                   BorderRadius.circular(AppRadius.rounded),
-
-                              color:
-                                  Colors.blue, // Set background color to blue
+                              color: Colors.blue,
                             ),
                             child: const Icon(
                               Icons.location_on_outlined,
-                              size: AppTextSize.xxl, // Increase icon size
-                              color: Colors.white, // Set icon color to white
+                              size: AppTextSize.xxl,
+                              color: Colors.white,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height * 0.3,
-                    ),
+                  Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md, vertical: AppSpacing.md),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'รายละเอียดกิจกรรม ',
-                          style: TextStyle(
-                              fontSize: AppTextSize.sm,
-                              color: AppTextColors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(AppSpacing.xs),
-                          child: Text(
-                            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-                            style: TextStyle(
-                              fontSize: AppTextSize.sm,
-                              color: AppTextColors.secondary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Obx(() {
+                      var event = controller.eventdetail.value;
+                      return Text(
+                        event["description"] ?? "ไม่มีรายละเอียดแบนเนอร์",
+                        style: const TextStyle(fontSize: AppTextSize.sm),
+                      );
+                    }),
                   ),
                   Column(
                     children: [

@@ -27,7 +27,9 @@ class RewardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchRewardDetail(bannerId);
+    if (controller.rewardDetail.value.isEmpty) {
+      controller.fetchRewardDetail(bannerId);
+    }
     String? idProfile = profileController.profileData['id']
         ?.toString(); // ดึง id ของโปรไฟล์จากข้อมูลที่ได้
     // พิมพ์ค่า idProfile ออกมาใน console

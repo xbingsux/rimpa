@@ -4,6 +4,7 @@ import '../../../core/services/api_urls.dart'; // นำเข้าที่เ
 
 class BannerEventController extends GetxController {
   var isLoading = false.obs;
+   var checkInSuccess = false.obs;
   var banners = [].obs; // เก็บข้อมูลแบนเนอร์ทั้งหมด
   var bannerDetail = {}.obs; // เก็บข้อมูลรายละเอียดแบนเนอร์
   var errorMessage = ''.obs;
@@ -48,6 +49,37 @@ class BannerEventController extends GetxController {
     } catch (e) {
       print("Error: $e");
       errorMessage.value = "เกิดข้อผิดพลาดในการโหลดข้อมูล";
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+   // ฟังก์ชันเช็คอิน
+  Future<void> checkIn(int subEventId) async {
+    isLoading.value = true;
+    errorMessage.value = ''; // reset error message
+
+    try {
+      // URL ที่ใช้สำหรับ API ของคุณ
+      final response = await dio.post(
+        apiUrlsController.checkin.value, // URL สำหรับดึงรายละเอียดแบนเนอร์
+        data: {
+          'sub_event_id': subEventId, // ส่ง sub_event_id ไปใน body ของ request
+        },
+      );
+
+      // ตรวจสอบการตอบกลับจาก API
+      if (response.statusCode == 200) {
+        // ถ้าเช็คอินสำเร็จ
+        checkInSuccess.value = true;
+      } else {
+        // ถ้าเกิดข้อผิดพลาดจาก API
+        errorMessage.value = response.data['message'];
+      }
+    } catch (error) {
+      // ถ้าเกิดข้อผิดพลาดในการเชื่อมต่อกับ API
+      errorMessage.value = 'Internal Server Error';
+      print(error);
     } finally {
       isLoading.value = false;
     }
