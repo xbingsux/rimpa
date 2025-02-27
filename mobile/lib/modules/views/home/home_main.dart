@@ -10,12 +10,11 @@ import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../models/listevent.model.dart';
-import '../../models/listbanner.model.dart'; // Add this import
+import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 import 'seeallcards/home_event_allcard.dart';
 import 'homedetail/home_detail.dart';
 import 'homedetail/banner_detail.dart'; // Add this import
 import '../../controllers/listevent/listevent.controller.dart';
-import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -108,7 +107,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     ),
                   );
                 }),
-
                 SizedBox(width: 8),
 
                 // ชื่อโปรไฟล์
