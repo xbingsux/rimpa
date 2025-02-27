@@ -19,10 +19,10 @@ export class BannerUpdateComponent {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
-      console.log(param.get('id'));
+      // console.log(param.get('id'));
       if (param.get('id')) {
         this.http.post(`${environment.API_URL}/event/get-banner`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
-          console.log(response);
+          // console.log(response);
           let item = response.banner;
           this.data.id = item.id;
           this.data.title = item.title;
@@ -81,7 +81,7 @@ export class BannerUpdateComponent {
 
   async submit() {
     const imgPath = await this.upload_img();
-    console.log("🚀 Image Path:", imgPath);
+    // console.log("🚀 Image Path:", imgPath);
 
     this.http.post(`${environment.API_URL}/update-banner`, {
       id: this.data.id,
@@ -91,7 +91,7 @@ export class BannerUpdateComponent {
       endDate: new Date(this.data.endDate),
       path: imgPath || this.data.path
     }).subscribe(async (response: any) => {
-      console.log(response);
+      // console.log(response);
       if (response.status == 'success') this.router.navigate(['/admin/banner'])
     }, error => {
       console.error('Error:', error);

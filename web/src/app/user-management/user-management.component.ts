@@ -20,7 +20,7 @@ export class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.post(`${environment.API_URL}/list-profile`, {}).subscribe(async (response: any) => {
-      console.log(response.profile);
+      // console.log(response.profile);
 
       this.list = response.profile
 

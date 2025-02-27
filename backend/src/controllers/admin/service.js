@@ -286,6 +286,9 @@ const getEvent = async (id) => {
 
 const listReward = async () => {
     let rewards = await prisma.reward.findMany({
+        where: {
+            active: true
+        },
         include: {
             RedeemReward: true
         }
@@ -314,6 +317,7 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
             endDate: endDate,
             img: img,
             stock: stock,
+            max_per_user:1,//default
             cost: cost,
             paymentType: 'Point'
         },
@@ -345,16 +349,22 @@ const deleteEvent = async (id) => {
         where: {
             id: id,
             active: true
+        },
+        data: {
+            active: false
         }
     })
     return event;
 }
 
 const deleteReward = async (id) => {
-    const reward = await prisma.reward.findFirst({
+    const reward = await prisma.reward.update({
         where: {
             id: id,
             active: true
+        },
+        data: {
+            active: false
         }
     })
     return reward;

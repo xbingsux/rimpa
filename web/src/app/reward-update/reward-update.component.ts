@@ -18,10 +18,10 @@ export class RewardUpdateComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute, public api: ApiService) { }
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
-      console.log(param.get('id'));
+      // console.log(param.get('id'));
       if (param.get('id')) {
         this.http.post(`${environment.API_URL}/get-reward`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
-          console.log(response);
+          // console.log(response);
 
           let item = response.reward;
           this.data.id = item.id
@@ -86,7 +86,7 @@ export class RewardUpdateComponent implements OnInit {
 
   async submit() {
     const imgPath = await this.upload_img();
-    console.log("🚀 Image Path:", imgPath);
+    // console.log("🚀 Image Path:", imgPath);
 
     this.http.post(`${environment.API_URL}/update-reward`, {
       id: this.data.id,
@@ -98,7 +98,7 @@ export class RewardUpdateComponent implements OnInit {
       stock: +this.data.stock,
       cost: +this.data.cost
     }).subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
       if (response.status == 'success') this.router.navigate(['/admin/reward']);
     }, error => {
       console.error('Error:', error);

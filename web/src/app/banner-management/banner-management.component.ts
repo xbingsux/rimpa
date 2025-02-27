@@ -95,4 +95,15 @@ export class BannerManagementComponent {
     }
     this.list_Filter()
   }
+
+  delete_id: number | null = null;
+  deleteBanner() {
+    this.http.post(`${environment.API_URL}/delete-banner`, { id: this.delete_id }).subscribe(async (response: any) => {
+      console.log(response);
+      this.ngOnInit()
+      this.delete_id = null;
+    }, error => {
+      console.error('Error:', error);
+    });
+  }
 }
