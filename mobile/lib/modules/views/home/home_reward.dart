@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/core/services/api_urls.dart';
-import 'package:rimpa/modules/views/home/rewardbanners/rewardbannner_slider.dart';
+import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
+import 'dart:async';
 
 import '../../../core/services/api_urls.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
@@ -169,8 +169,67 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 50),
-                          RewardBannerSliderComponent(),
+                          // Removed card here
+                          SizedBox(height: 40),
+                          // Banner slider
+                          Obx(() {
+                            if (listBannerController.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return SizedBox(
+                                height: 150,
+                                child: PageView.builder(
+                                  controller: _pageController,
+                                  itemCount:
+                                      listBannerController.banners.length,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentPage = index;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    var banner =
+                                        listBannerController.banners[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => BannerDetailPage(
+                                            banner: banner)); // Corrected line
+                                      },
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        child: AppImageComponent(
+                                          aspectRatio: 16 / 9,
+                                          fit: BoxFit.cover,
+                                          imageType: AppImageType.network,
+                                          imageAddress:
+                                              '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}', // Use AppApi.urlApi
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          }),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                                listBannerController.banners.length, (index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                                width: _currentPage == index ? 12 : 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: _currentPage == index
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              );
+                            }),
+                          ),
                           SizedBox(height: 16),
                           // Activities Section
                           Row(
