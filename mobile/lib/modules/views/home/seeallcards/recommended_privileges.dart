@@ -6,8 +6,11 @@ import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 import '../../../../components/dropdown/app-dropdown.component.dart';
 import '../../../../components/cards/app-card.component.dart';
 import '../../../../components/imageloader/app-image.component.dart';
+import '../../../../core/constant/app.constant.dart';
 import '../home_reward.dart';
 import '../homedetail/home_detail.dart';
+import '../../../controllers/listreward/listreward.controller.dart'; // Add this import
+import '../../../models/listreward.model.dart'; // Add this import
 
 class RecommendedPrivilegesPage extends StatefulWidget {
   @override
@@ -19,6 +22,8 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
+  final listRewardController = Get.put(ListRewardController()); // Add this line
+  String _sortOrder = "ใหม่สุด"; // Add this line
 
   @override
   void initState() {
@@ -78,61 +83,81 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Grid Section
-              AppDropdown(
-                onChanged: (value) {
-                  // Handle sorting action
-                },
-                choices: ["ใหม่สุด", "เก่าสุด"],
-                active: "เรียงตาม",
-              ),
-              SizedBox(height: 8),
-              GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 2 / 3,
-                ),
-                itemCount: 8,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    Get.to(HomeDetailReward());
-                  },
-                  child: AppCardComponent(
-                    child: Column(
-                      children: [
-                        AppImageComponent(
-                          imageType: AppImageType.network,
-                          imageAddress:
-                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                        ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            "Lorem Ipsum is simply dummy text of the printing",
-                            style: TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
+      body: Obx(() {
+        if (listRewardController.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          List<ListReward> sortedRewards =
+              listRewardController.rewards.toList();
+          if (_sortOrder == "ใหม่สุด") {
+            sortedRewards.sort((a, b) => b.id.compareTo(a.id));
+          } else {
+            sortedRewards.sort((a, b) => a.id.compareTo(b.id));
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Grid Section
+                  AppDropdown(
+                    onChanged: (value) {
+                      setState(() {
+                        _sortOrder = value;
+                      });
+                    },
+                    choices: ["ใหม่สุด", "เก่าสุด"],
+                    active: _sortOrder,
+                  ),
+                  SizedBox(height: 8),
+                  GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 2 / 3,
+                    ),
+                    itemCount: sortedRewards.length,
+                    itemBuilder: (context, index) {
+                      var reward = sortedRewards[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => HomeDetailReward(reward: reward));
+                        },
+                        child: AppCardComponent(
+                          child: Column(
+                            children: [
+                              AppImageComponent(
+                                imageType: AppImageType.network,
+                                imageAddress:
+                                    '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
+                              ),
+                              SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  reward.rewardName,
+                                  style: TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      }),
     );
   }
 }

@@ -96,6 +96,11 @@ class HomeDetailPage extends StatelessWidget {
                           topLeft: Radius.circular(AppRadius.xl),
                           topRight: Radius.circular(AppRadius.xl),
                         ),
+                      ],
+                    ),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
                         border: Border.all(width: 0, color: Colors.transparent),
                         color: AppColors.white,
                       ),
@@ -233,29 +238,139 @@ class HomeDetailPage extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
-                                vertical: AppRadius.xs),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.rounded),
-                                gradient: AppGradiant.gradientX_1),
-                            child: const Center(
-                                child: Text(
-                              'แลกรับสิทธิ์',
-                              style: TextStyle(
-                                  fontSize: AppTextSize.lg,
-                                  color: AppTextColors.white),
-                            )),
+                                horizontal: AppSpacing.md,
+                                vertical: AppSpacing.md),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'รายละเอียดกิจกรรม ',
+                                  style: TextStyle(
+                                      fontSize: AppTextSize.sm,
+                                      color: AppTextColors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(AppSpacing.xs),
+                                  child: Text(
+                                    description,
+                                    style: TextStyle(
+                                      fontSize: AppTextSize.sm,
+                                      color: AppTextColors.secondary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 2,
+                  color: AppColors.secondary,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: AppSpacing.md,
+                      left: AppSpacing.md,
+                      right: AppRadius.md,
+                      bottom: AppSpacing.lg),
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialog(context: context);
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding:
+                          const EdgeInsets.symmetric(vertical: AppRadius.xs),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(AppRadius.rounded),
+                          color:
+                              Color(0xFFEBF5FD)), // Corrected color definition
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              width: 38,
+                              height: 38,
+                              decoration: BoxDecoration(
+                                gradient:
+                                    AppGradiant.gradientX_1, // Applied gradient
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.star, color: Colors.white),
+                            ),
+                            SizedBox(width: 8), // Added missing comma
+                            Text(
+                              '100 คะแนน',
+                              style: TextStyle(
+                                  fontSize: AppTextSize.lg,
+                                  color: AppTextColors.accent2),
+                            ),
+                            Opacity(
+                              // space
+                              opacity: 0,
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  gradient: AppGradiant
+                                      .gradientX_1, // Applied gradient
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.star, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
     );
+  }
+
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url); // Parse the URL
+    Uri googleMapsUri =
+        Uri.parse('google.navigation:q=$url'); // Google Maps URL scheme
+
+    if (await canLaunchUrl(googleMapsUri)) {
+      await launchUrl(googleMapsUri);
+    } else if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  String _formatDate(String date) {
+    DateTime dateTime = DateTime.parse(date);
+    var thaiDateFormat = DateFormat('d MMM', 'th_TH');
+    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
+    String formattedDate = thaiDateFormat.format(dateTime);
+    String thaiYear =
+        (dateTime.year + 543).toString(); // Convert to Buddhist year
+    return '$formattedDate $thaiYear';
   }
 }

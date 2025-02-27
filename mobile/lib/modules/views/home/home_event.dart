@@ -5,7 +5,10 @@ import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/dropdown/app-dropdown.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
+import '../../../core/constant/app.constant.dart';
+import '../../models/listevent.model.dart';
 import 'homedetail/home_detail.dart';
+import '../../controllers/listevent/listevent.controller.dart'; // Add this import
 
 class HomeEventPage extends StatefulWidget {
   @override

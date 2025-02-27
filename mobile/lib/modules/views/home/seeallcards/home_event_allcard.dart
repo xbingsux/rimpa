@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import '../../../../components/cards/app-card.component.dart';
 import '../../../../components/dropdown/app-dropdown.component.dart';
 import '../../../../components/imageloader/app-image.component.dart';
+import '../../../../core/constant/app.constant.dart';
+import '../../../models/listevent.model.dart';
+import '../../../controllers/listevent/listevent.controller.dart';
 import '../homedetail/home_detail.dart';
 
 class HomeEventAllcard extends StatefulWidget {
@@ -16,6 +19,8 @@ class _HomeEventAllcardState extends State<HomeEventAllcard> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
+  final listEventController = Get.put(ListEventController());
+  String _sortOrder = "ใหม่สุด";
 
   @override
   void initState() {
@@ -121,15 +126,15 @@ class _HomeEventAllcardState extends State<HomeEventAllcard> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      }),
     );
   }
 }
