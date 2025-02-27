@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
@@ -17,6 +17,8 @@ import html2canvasLib from 'html2canvas';
 })
 export class EventManagementComponent implements OnInit {
 
+  @Input() routeScreen = false
+
   constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
@@ -26,7 +28,7 @@ export class EventManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.post(`${environment.API_URL}/list-event`, {}).subscribe(async (response: any) => {
-      console.log(response.event);
+      // console.log(response.event);
       this.list = response.event;
       this.list_Filter()
     }, error => {
@@ -51,9 +53,6 @@ export class EventManagementComponent implements OnInit {
       console.error('Error capturing QR Code:', error);
     }
   }
-
-
-
 
   //Search Func
   search = ''
@@ -108,8 +107,15 @@ export class EventManagementComponent implements OnInit {
     this.list_Filter()
   }
 
-}
-function html2canvas(nativeElement: any) {
-  throw new Error('Function not implemented.');
+  deleteEvent() {
+    this.http.post(`${environment.API_URL}/delete-event`, { id: this.delete_id }).subscribe(async (response: any) => {
+      // console.log(response);
+      this.ngOnInit()
+      this.delete_id = null;
+    }, error => {
+      console.error('Error:', error);
+    });
+  }
+
 }
 

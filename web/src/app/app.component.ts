@@ -9,7 +9,7 @@ import { RouterOutlet, Router, ActivatedRoute } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'econmassapp';
+  title = 'rimpaapp';
 
   ngOnInit() {
   }

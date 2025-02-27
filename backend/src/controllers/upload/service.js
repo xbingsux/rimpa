@@ -29,26 +29,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // กำหนดนามสกุลเป็น .jpg เสมอ
     let extension = path.extname(file.originalname); // ใช้นามสกุลจากไฟล์ที่อัปโหลดจริง
-
-    if (req.body.id) {
-      const profileId = req.body.id.toString().padStart(3, "0"); // เติม 0 ให้ profileId ให้มีความยาว 3 หลัก
-
-      // ดึงวันที่และเวลา
-      const now = new Date();
-      const day = now.getDate().toString().padStart(2, "0"); // เติม 0 ให้วัน
-      const month = (now.getMonth() + 1).toString().padStart(2, "0"); // เติม 0 ให้เดือน
-      const year = now.getFullYear();
-      const hours = now.getHours().toString().padStart(2, "0"); // เติม 0 ให้ชั่วโมง
-      const minutes = now.getMinutes().toString().padStart(2, "0"); // เติม 0 ให้นาที
-
-      // สร้าง timestamp ในรูปแบบที่ต้องการ
-      const timestamp = `${profileId}-${year}${month}${day}-${hours}${minutes}`;
-
-
-      cb(null, `${timestamp}${extension}`);
-    } else {
-      cb(null, `${Date.now()}${extension}`);
-    }
+    let random = (Math.random() * 1e4).toFixed(0).padStart(4, '0')
+    cb(null, `${Date.now()}${random}${extension}`);
   }
 });
 
@@ -80,14 +62,14 @@ const compressImage = async (filePath) => {
     const cleanFileName = fileName.replace(/^test/, ''); // ลบคำว่า 'test' ที่อยู่ข้างหน้า  
     const outputFilePath = path.join(path.dirname(filePath), `${cleanFileName}${extension}`); // สร้างชื่อไฟล์ใหม่
 
-    // ใช้ sharp ลดขนาดภาพและบีบอัด
-    await sharp(filePath)
-      .resize(512, 512, { fit: "cover" }) // ปรับเป็น 1:1 (ครอบภาพ)
-      .jpeg({ quality: 70 }) // ลดคุณภาพภาพลง 70%
-      .toFile(outputFilePath); // บันทึกไฟล์ที่บีบอัดไปที่ outputFilePath
+    // // ใช้ sharp ลดขนาดภาพและบีบอัด
+    // await sharp(filePath)
+    //   .resize(512, 512, { fit: "cover" }) // ปรับเป็น 1:1 (ครอบภาพ)
+    //   .jpeg({ quality: 70 }) // ลดคุณภาพภาพลง 70%
+    //   .toFile(outputFilePath); // บันทึกไฟล์ที่บีบอัดไปที่ outputFilePath
 
-    // ลบไฟล์ต้นฉบับหลังจากการบีบอัดเสร็จ
-    fs.unlinkSync(filePath);
+    // // ลบไฟล์ต้นฉบับหลังจากการบีบอัดเสร็จ
+    // fs.unlinkSync(filePath);
 
     return outputFilePath; // คืน path ของไฟล์ที่ถูกบีบอัด
   } catch (error) {

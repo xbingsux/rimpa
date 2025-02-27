@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
@@ -14,6 +14,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './reward-management.component.scss'
 })
 export class RewardManagementComponent {
+
+  @Input() routeScreen = false
 
   constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
@@ -103,6 +105,17 @@ export class RewardManagementComponent {
       this.page_no = page_no;
     }
     this.list_Filter()
+  }
+
+  delete_id: number | null = null;
+  deleteReward() {
+    this.http.post(`${environment.API_URL}/delete-reward`, { id: this.delete_id }).subscribe(async (response: any) => {
+      // console.log(response);
+      this.ngOnInit()
+      this.delete_id = null;
+    }, error => {
+      console.error('Error:', error);
+    });
   }
 
 }

@@ -286,6 +286,9 @@ const getEvent = async (id) => {
 
 const listReward = async () => {
     let rewards = await prisma.reward.findMany({
+        where: {
+            active: true
+        },
         include: {
             RedeemReward: true
         }
@@ -345,16 +348,22 @@ const deleteEvent = async (id) => {
         where: {
             id: id,
             active: true
+        },
+        data: {
+            active: false
         }
     })
     return event;
 }
 
 const deleteReward = async (id) => {
-    const reward = await prisma.reward.findFirst({
+    const reward = await prisma.reward.update({
         where: {
             id: id,
             active: true
+        },
+        data: {
+            active: false
         }
     })
     return reward;

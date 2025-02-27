@@ -45,18 +45,34 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 }
             },
         }, include: {
-            SubEvent: true
+            SubEvent: {
+                include: {
+                    img: true
+                }
+            },
         }
     })
+
+    const missingImgIds = await Promise.all(
+        event.SubEvent[0].img
+            .filter(item => !event_img.some(img => img.id === item.id))
+            .map(async item => {
+                return await prisma.eventIMG.delete({
+                    where: { id: item.id }
+                });
+            })
+    );
+
+    // console.log(missingImgIds);
+
     let list = []
     // event_img    key, path
-    console.log(event_img);
+    // console.log(event_img);
 
     if (typeof event_img == 'object') {
-        event_img.map((item) => {
-            console.log(item);
-            list.push(upsertEventIMG(item.path, item.id, event.SubEvent[0].id))
-        })
+        for (const item of event_img) {
+            list.push(await upsertEventIMG(item.path, item.id, event.SubEvent[0].id));
+        }
     }
     event.img = list;
 

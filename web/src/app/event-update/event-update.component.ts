@@ -1,6 +1,6 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -9,7 +9,7 @@ import { ApiService } from '../api/api.service';
 @Component({
   selector: 'app-event-update',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule, NgIf, NgFor],
   templateUrl: './event-update.component.html',
   styleUrl: './event-update.component.scss'
 })
@@ -19,12 +19,11 @@ export class EventUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
-      console.log(param.get('id'));
-
+      // console.log(param.get('id'));
       if (param.get('id')) {
         this.data.id = Number(param.get('id'))
         this.http.post(`${environment.API_URL}/get-event`, { id: this.data.id }).subscribe(async (item: any) => {
-          console.log(item);
+          // console.log(item);
 
           let event = item.event;
           this.data.id = event.id;
@@ -37,73 +36,94 @@ export class EventUpdateComponent implements OnInit {
           this.data.endDate = new Date(event.endDate).toISOString().slice(0, 16)
           this.data.point = event.SubEvent[0].point;
 
-          if (event.SubEvent[0].img.length != 0) {
-            this.data.list_img = event.SubEvent[0].img;
-            let path = `${environment.API_URL}${event.SubEvent[0].img[0].path.replace('src', '')}`;
+          event.SubEvent[0].img.filter(async (item: any) => {
+            let path = `${environment.API_URL}${item.path.replace('src', '')}`;
+            let name = path.split(/[/\\]/).pop();
             path = await this.api.checkImageExists(path) != 500 ? path : ''
-            this.img_path = path;
-            // console.log(this.data.list_img);
-            // this.data.list_img[0].id = event.SubEvent[0].img[0].id
-            // this.data.list_img[0].path = event.SubEvent[0].img[0].paths
-          }
+
+            this.data.list_img.push(new Img({ id: item.id, path: item.path.replace('src', ''), realpath: path, name }))
+            this.list_file = this.data.list_img;
+          })
         })
       }
-
-
     })
   }
 
-  img_path = ''//base64
   img_file: File | null = null;
+  list_file: any[] = [];
 
-  onFileSelected(event: Event) {
+  onFileChange(event: Event, n: number) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.img_file = file;
       const reader = new FileReader();
       reader.onload = () => {
-        this.img_path = reader.result as string;
+        const path = reader.result as string;
+        this.list_file[n] = new Img({ id: this.list_file[n].id, file, path, realpath: path });
       };
       reader.readAsDataURL(file);
     }
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const path = reader.result as string;
+        this.list_file.push(new Img({ file, path, realpath: path }))
+
+        input.value = ''
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  deleteFile(n: number) {
+    this.list_file.splice(n, 1);
+  }
+
   data: AddEvent = new AddEvent()
 
-  upload_img(): Promise<string | null> {
+  upload_img(file: File): Promise<string | null> {
     return new Promise((resolve, reject) => {
       let formData = new FormData();
-      if (this.img_file) {
-        formData.append('file', this.img_file);
-        this.http.post(`${environment.API_URL}/upload/event`, formData).subscribe(
-          (item: any) => {
-            if (item.path) {
-              resolve(item.path);
-            } else {
-              resolve(null);
-            }
-          },
-          (error) => {
-            console.error("🚨 Upload Error:", error);
-            reject(error);
+      formData.append('file', file);
+      this.http.post(`${environment.API_URL}/upload/event`, formData).subscribe(
+        (item: any) => {
+          if (item.path) {
+            resolve(item.path);
+          } else {
+            resolve(null);
           }
-        );
-      } else {
-        resolve(null);
-      }
+        },
+        (error) => {
+          console.error("🚨 Upload Error:", error);
+          reject(error);
+        }
+      );
     });
   }
 
   async submit() {
-    const imgPath = await this.upload_img();
-    console.log("🚀 Image Path:", imgPath);
-    if (imgPath != null) {
-      if (this.data.list_img.length != 0) {
-        this.data.list_img[0].path = imgPath;
-      } else {
-        this.data.list_img[0] = new Img(0, imgPath)
-      }
-    }
+    // console.log(this.data.list_img);
+    // this.data.list_img 
+    const imgs = await Promise.all(
+      this.list_file.map(async (item, index) => {
+        if (item.file) {
+          const imgPath = await this.upload_img(item.file);
+          // console.log("🚀 Image Path:", imgPath);
+          if (imgPath != null) {
+            item.path = imgPath;
+          }
+        }
+        return { index, id: item.id, path: item.path };
+      })
+    ).then(results => results.sort((a, b) => a.index - b.index));
+
+    // console.log(imgs);
+
+    // console.log(this.data.list_img);
 
 
     this.http.post(`${environment.API_URL}/event/update-event`, {
@@ -117,24 +137,31 @@ export class EventUpdateComponent implements OnInit {
       startDate: new Date(this.data.startDate),
       endDate: new Date(this.data.endDate),
       point: +this.data.point,
-      event_img: this.data.list_img
+      event_img: imgs
     }).subscribe(async (response: any) => {
-      console.log(response);
+      // console.log(response);
       if (response.status == 'success') this.router.navigate(['/admin/event'])
     }, error => {
       console.error('Error:', error);
     });
   }
-
 }
 class Img {
-  id = 0
-  path = ''
+  id: number
+  path: string
+  realpath: string
+  name: string
   sub_event_id = 0
-  constructor(id: number, path: string) {
+  file: File | null
+
+  constructor({ id = 0, path = '', realpath = '', name = '', file = null }: Partial<Img> = {}) {
     this.id = id
     this.path = path
+    this.realpath = realpath
+    this.name = name
+    this.file = file
   }
+
 }
 class AddEvent {
   id: number = 0
