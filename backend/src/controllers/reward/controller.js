@@ -47,4 +47,19 @@ router.post("/get-reward", async (req, res) => {
   }
 });
 
+router.post("/redeem-rewards", async (req, res) => {
+  const { idProfile,idReward } = req.body;
+  try {
+    const reward = await Service.redeemReward(idProfile,idReward)
+    return res.status(200).json({ status: "success", reward });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

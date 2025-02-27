@@ -317,6 +317,7 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
             endDate: endDate,
             img: img,
             stock: stock,
+            max_per_user:1,//default
             cost: cost,
             paymentType: 'Point'
         },
