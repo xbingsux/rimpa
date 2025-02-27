@@ -29,7 +29,8 @@
                         <img *ngIf="img_path" [src]="img_path" class="w-full aspect-square object-cover rounded-[12px]">
                         <p *ngIf="!img_path" class="text-center">+</p>
                     </label>
-                    <input type="file" id="upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    <input type="file" accept="image/*" id="upload"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         (change)="onFileSelected($event)">
                 </div>
             </div>

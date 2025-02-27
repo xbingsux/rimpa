@@ -47,7 +47,7 @@
                                         {{item.file?.name||item.name || 'Filename'}}
                                     </p>
                                 </label>
-                                <input id="upload_{{i}}" type="file"
+                                <input id="upload_{{i}}" type="file" accept="image/*"
                                     class="absolute -z-10 inset-0 w-full h-full opacity-0"
                                     (change)="onFileChange($event,i)">
                             </div>
@@ -60,7 +60,7 @@
                             <label for="add_upload" class="flex items-center gap-2">
                                 <img src="upload.svg" class="w-[16px]">
                                 <p class="text-[12px]">Choose files</p>
-                                <input type="file" id="add_upload"
+                                <input type="file" id="add_upload" accept="image/*"
                                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     (input)="onFileSelected($event)">
                             </label>
@@ -75,7 +75,7 @@
                         <img *ngIf="img_path" [src]="img_path" class="w-full aspect-[4/3] object-cover rounded-[12px]">
                         <p *ngIf="!img_path" class="text-center">+</p>
                     </label>
-                    <input type="file" id="upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    <input type="file" accept="image/*" id="upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         (change)="onFileSelected($event)">
                 </div> -->
             </div>

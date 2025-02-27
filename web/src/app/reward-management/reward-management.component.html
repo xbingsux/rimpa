@@ -1,4 +1,4 @@
-<div class="min-w-full min-h-full px-[48px]">
+<div class="relative min-w-full min-h-full px-[48px]">
     <div *ngIf="!routeScreen" class="w-full h-[150px] grid items-center grid-cols-2">
         <div>
             <p class="text-[32px] font-bold">
@@ -20,7 +20,7 @@
     </div>
     <div class="">
         <div
-            class="container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_200px_200px_120px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
+            class="container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
             <div><input type="checkbox"></div>
             <div></div>
             <div>Reward</div>
@@ -29,7 +29,7 @@
             <div class="justify-center">Quota</div>
             <div class="justify-center">Action</div>
         </div>
-        <div *ngFor="let item of data" class="container h-[56px] grid grid-cols-[80px_80px_1fr_200px_200px_120px_120px] gap-4 hover:bg-[#EBF5FD]
+        <div *ngFor="let item of data" class="container h-[56px] grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 hover:bg-[#EBF5FD]
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
             <div><input type="checkbox"></div>
             <div class="grid justify-center">
@@ -88,7 +88,7 @@
     </div>
     <!-- delete -->
     <div *ngIf="delete_id != null"
-        class="absolute top-0 left-0 w-full h-full bg-[#00000033] flex justify-center items-center">
+        class="absolute top-0 right-0 w-full h-full bg-[#00000033] flex justify-center items-center">
         <!-- delete -->
         <div *ngIf="delete_id != null"
             class="absolute z-10 grid gap-6 justify-center items-center select-none py-[32px] px-[64px] shadow-[0_4px_4px_#00000040] rounded-[16px] bg-white">
