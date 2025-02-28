@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 
@@ -50,23 +51,36 @@ class AppImageComponent extends StatelessWidget {
   }
 
   Widget imageNetwork() {
-    return AspectRatio(
-      aspectRatio: aspectRatio,
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: Image.network(
-          imageAddress, 
-          fit: fit,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.secondary,
-              child: const Center(
-                child: Icon(Icons.image_not_supported, size: AppTextSize.xxl, color: AppTextColors.secondary,),
+  return AspectRatio(
+    aspectRatio: aspectRatio,
+    child: ClipRRect(
+      borderRadius: borderRadius,
+      child: Image.network(
+        imageAddress, 
+        fit: fit,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: AppColors.secondary,
+            child: const Center(
+              child: CupertinoActivityIndicator(), // หรือ CircularProgressIndicator()
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: AppColors.secondary,
+            child: const Center(
+              child: Icon(
+                Icons.image_not_supported, 
+                size: AppTextSize.xxl, 
+                color: AppTextColors.secondary,
               ),
-            );
-          },
-        ),
-      ), 
-    );
-  }
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
 }
