@@ -322,7 +322,57 @@ const deleteUser = async (id) => {
   })
   return user;
 }
+const updateProfile = async (id, updatedData) => {
+  try {
+    if (updatedData.birth_date) {
+      updatedData.birth_date = new Date(updatedData.birth_date).toISOString();
+    } else {
+      delete updatedData.birth_date;
+    }
 
+    const { email, ...profileData } = updatedData;
+    const profile = await prisma.profile.update({
+      where: { user_id: id },
+      data: profileData, 
+      select: {
+        profile_name: true,
+        first_name: true,
+        last_name: true,
+        phone: true,
+        birth_date: true,
+        gender: true,
+        profile_img: true,
+        points: true,
+        user: {
+          select: {
+            email: true,
+            active: true,
+            role: {
+              select: {
+                role_name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (email) {
+      const updatedUser = await prisma.user.update({
+        where: { id: id },
+        data: {
+          email: email,  
+        },
+      });
+      console.log(updatedUser); 
+    }
+
+    return profile;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating profile");
+  }
+};
 module.exports = {
   updateProfile,
   findUserById,

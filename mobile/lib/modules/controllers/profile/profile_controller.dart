@@ -91,36 +91,45 @@ class ProfileController extends GetxController {
   }
 
   Future<void> deleteUser() async {
-    isLoading.value = true; // ตั้งค่าให้กำลังโหลด
-    try {
-      String? token = await _authMiddleware.getToken();
+  isLoading.value = true; // ตั้งค่าให้กำลังโหลด
+  try {
+    String? token = await _authMiddleware.getToken();
 
-      if (token == null) {
-        isLoading.value = false;
-        uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้: ไม่มี Token';
-        return;
-      }
-
-      final response = await _getConnect.post(
-        apiUrlsController.uploadprofileuser.value, // URL สำหรับลบผู้ใช้
-        {},
-        headers: {"Authorization": "Bearer $token"},
-      );
-
-      if (response.statusCode == 200) {
-        uploadStatus.value = 'ลบผู้ใช้สำเร็จ';
-        print("User deleted successfully");
-      } else {
-        uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้';
-        print("Failed to delete user: ${response.body}");
-      }
-    } catch (e) {
-      uploadStatus.value = 'เกิดข้อผิดพลาดในการลบผู้ใช้';
-      print("Error deleting user: $e");
-    } finally {
-      isLoading.value = false; // ปิดสถานะโหลดเมื่อเสร็จสิ้น
+    if (token == null) {
+      isLoading.value = false;
+      uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้: ไม่มี Token';
+      return;
     }
+
+    final response = await _getConnect.post(
+      apiUrlsController.deleterofileMe.value, // URL สำหรับลบผู้ใช้
+      {},
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 200) {
+      uploadStatus.value = 'ลบผู้ใช้สำเร็จ';
+      print("User deleted successfully");
+
+      // ล้างข้อมูลใน SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear();  // ล้างข้อมูลทั้งหมดใน SharedPreferences
+
+      // นำทางไปยังหน้า home
+      Get.offAllNamed('/home');  // ใช้ offAll เพื่อออกจากหน้าทั้งหมดและไปหน้าใหม่
+
+    } else {
+      uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้';
+      print("Failed to delete user: ${response.body}");
+    }
+  } catch (e) {
+    uploadStatus.value = 'เกิดข้อผิดพลาดในการลบผู้ใช้';
+    print("Error deleting user: $e");
+  } finally {
+    isLoading.value = false; // ปิดสถานะโหลดเมื่อเสร็จสิ้น
   }
+}
+
 
   /// ตัวแปร isLoading สำหรับแต่ละฟิลด์
   var profileNameLoading = false.obs;

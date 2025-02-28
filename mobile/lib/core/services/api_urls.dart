@@ -54,7 +54,7 @@ class ApiUrls extends GetxController {
     login.value = '${baseUrl.value}/login';
     register.value = '${baseUrl.value}/register';
     profileMe.value = '${baseUrl.value}/profileMe';
-    deleterofileMe.value = '${baseUrl.value}/profileMe';
+    deleterofileMe.value = '${baseUrl.value}/delete-user';
     updateprofileMe.value = '${baseUrl.value}/updateProfileMe';
     forgotpassworduser.value = '${baseUrl.value}/forgot-password';
     resetPassword.value = '${baseUrl.value}/reset-password-user';
