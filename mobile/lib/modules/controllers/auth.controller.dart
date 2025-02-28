@@ -25,6 +25,19 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
         var token = response.data['token'] ?? '';
+        var role = response.data['role'] ?? '';
+
+        // ตรวจสอบว่า role เป็น 'admin' หรือไม่
+        if (role == 'admin') {
+          Get.snackbar('ข้อผิดพลาด', 'คุณมาผิดที่นะ');
+          return;
+        }
+
+        // ตรวจสอบว่า role เป็น 'user' หรือไม่
+        if (role != 'user') {
+          Get.snackbar('ข้อผิดพลาด', 'คุณไม่ใช่ผู้ใช้ระบบ');
+          return;
+        }
 
         // บันทึก token ลงใน SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -34,7 +47,8 @@ class LoginController extends GetxController {
 
         if (!rememberPassword) {
           // บันทึกเวลาล็อกอิน ถ้าไม่ได้เลือก "จำฉันไว้"
-          await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
+          await prefs.setInt(
+              'loginTime', DateTime.now().millisecondsSinceEpoch);
         }
 
         // เรียกฟังก์ชัน fetchProfile() เพื่ออัปเดตข้อมูลโปรไฟล์
@@ -54,6 +68,7 @@ class LoginController extends GetxController {
     Get.snackbar('ข้อผิดพลาด', 'โปรดกรอกข้อมูลให้ครบถ้วน');
   }
 }
+
 
   void deleteAccount() async {
     if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {

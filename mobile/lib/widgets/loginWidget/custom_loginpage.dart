@@ -250,39 +250,57 @@ class CustomDatePicker extends StatelessWidget {
           initialDate: selectedDate ?? DateTime.now(),
           firstDate: DateTime(1900),
           lastDate: DateTime.now(),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.blue, // ปรับสีปุ่มและพื้นหลัง
+                dialogBackgroundColor: Colors.white, // สีพื้นหลังของ dialog
+                buttonTheme:
+                    ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                colorScheme: ColorScheme.light(primary: Colors.blue)
+                    .copyWith(background: Colors.white),
+              ),
+              child: child!,
+            );
+          },
         );
         if (pickedDate != null) {
-          onChanged(pickedDate); // ส่งค่าที่เลือกไปยัง controller
+          onChanged(pickedDate);
         }
       },
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: labelText,
+          labelText: labelText, // ใช้ label ที่เป็นภาษาไทย
           labelStyle: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 95, 95, 95),
+            fontSize: 16,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500, // เพิ่มความหนาให้ตัวอักษร
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25),
             borderSide: const BorderSide(
-              color: Color.fromARGB(255, 163, 163, 163),
-              width: 1,
+              color: Colors.blueAccent,
+              width: 2,
             ),
           ),
           filled: true,
-          fillColor: const Color(0xFFFDFDFD),
+          fillColor: Colors.white, // สีพื้นหลังเป็นสีขาว
           contentPadding:
               const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         ),
-        child: Text(
-          selectedDate == null
-              ? 'กรุณาเลือกวันที่'
-              : DateFormat('yyyy-MM-dd')
-                  .format(selectedDate!), // รูปแบบการแสดงผล
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 158, 158, 158),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              selectedDate == null
+                  ? 'กรุณาเลือกวันที่เกิด'
+                  : '${DateFormat('d MMMM yyyy').format(selectedDate!)}', // แสดงวันที่พร้อมเดือนไทย
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(255, 158, 158, 158),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -309,22 +327,23 @@ class CustomDropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(
-          fontSize: 14,
-          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
+          fontSize: 16,
+          color: Colors.grey, // สีข้อความ label
+          fontWeight: FontWeight.w500, // เพิ่มความหนาให้ตัวอักษร
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้ง
           borderSide: const BorderSide(
             color: Color.fromARGB(
                 255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
-            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
+            width: 1, // ความหนาของเส้น
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
-            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
+            color: Colors.blueAccent, // สีกรอบตอนโฟกัส
+            width: 2,
           ),
         ),
         filled: true,
@@ -334,9 +353,14 @@ class CustomDropdown extends StatelessWidget {
       ),
       child: DropdownButton<String>(
         value: selectedValue,
-        hint: const Text('เลือกเพศ'),
+        hint: const Text('กรุณาเลือก'),
         isExpanded: true,
         onChanged: onChanged,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.black, // สีตัวหนังสือใน dropdown
+        ),
+        dropdownColor: const Color(0xFFFDFDFD), // สีพื้นหลังของ dropdown
         items: items.map((value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -568,12 +592,12 @@ class Customtextprofile extends StatelessWidget {
         ),
         filled: true,
         fillColor: const Color(0xFFFDFDFD),
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
     );
   }
 }
-
 
 class CustomResetpasswordfiule extends StatelessWidget {
   final String labelText;
@@ -694,18 +718,21 @@ class CustomPhoneTextFieldProfile extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH',
       showCountryFlag: true,
-      dropdownTextStyle: const TextStyle(fontSize: 16, color: Color(0xFF323232)),
-      dropdownIcon: const Icon(Icons.arrow_drop_down, color: Color(0xFF323232), size: 24),
-      dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+      dropdownTextStyle:
+          const TextStyle(fontSize: 16, color: Color(0xFF323232)),
+      dropdownIcon:
+          const Icon(Icons.arrow_drop_down, color: Color(0xFF323232), size: 24),
+      dropdownDecoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(25)),
       disableLengthCheck: true,
     );
   }
 }
-
 
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;
@@ -733,8 +760,7 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH', // กำหนดประเทศเริ่มต้นเป็นประเทศไทย 🇹🇭
       showCountryFlag: true, // แสดงธงชาติ
@@ -751,14 +777,18 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+      style: const TextStyle(
+        color: Colors.black, // สีของข้อความที่กรอก
+      ),
       onChanged: (phone) {
         // เมื่อมีการเปลี่ยนแปลงข้อมูล
-        onChanged(
-            phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
+        onChanged(phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
       },
     );
   }
 }
+
+
 
 // ช่องกรอกสร้างบัญชี
 class CreatTextField extends StatelessWidget {

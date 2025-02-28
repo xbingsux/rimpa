@@ -15,13 +15,26 @@ class ListBannerController extends GetxController {
   void fetchBanners() async {
     try {
       isLoading(true);
+      print("Fetching banners...");
+
       var bannerList = await ApiListBanner.fetchBanners();
+      
       if (bannerList != null) {
+        print("Banners fetched successfully: $bannerList");
+
         banners.assignAll(bannerList);
+
+        // Sorting the banners
         banners.sort((a, b) => b.id.compareTo(a.id)); // Sort by latest first
+        print("Sorted banners: $banners");
+      } else {
+        print("No banners found.");
       }
+    } catch (e) {
+      print("Error fetching banners: $e");
     } finally {
       isLoading(false);
+      print("Finished fetching banners.");
     }
   }
 }

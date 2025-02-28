@@ -7,15 +7,17 @@ import 'core/routes/app_pages.dart';
 import 'core/services/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './modules/controllers/middleware/auth_middleware.dart';
-import 'package:url_launcher/url_launcher.dart'; // Add this import
+import 'package:intl/intl.dart';  // เพิ่มการ import intl
+import 'package:intl/date_symbol_data_local.dart'; // เพิ่มการ import สำหรับการจัดการวันที่
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('th_TH', null); // Correct call
-  Get.put(AuthMiddleware());
-  Get.put(ApiUrls());
-  Get.put(ThemeController());
-  runApp(MyApp());
+void main() {
+  // เรียกใช้ initializeDateFormatting ก่อน
+  initializeDateFormatting('th_TH', null).then((_) {
+    Get.put(AuthMiddleware());
+    Get.put(ApiUrls());
+    Get.put(ThemeController());
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

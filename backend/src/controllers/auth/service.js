@@ -285,6 +285,7 @@ const profileMe = async (id) => {
   const profile = await prisma.profile.findFirst({
     where: { user_id: id },
     select: {
+      id: true,
       profile_name: true,
       first_name: true,
       last_name: true,
@@ -309,6 +310,18 @@ const profileMe = async (id) => {
   return profile;
 }
 
+const deleteUser = async (id) => {
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+      active: true
+    },
+    data: {
+      active: false
+    }
+  })
+  return user;
+}
 const updateProfile = async (id, updatedData) => {
   try {
     if (updatedData.birth_date) {
@@ -360,7 +373,6 @@ const updateProfile = async (id, updatedData) => {
     throw new Error("Error updating profile");
   }
 };
-
 module.exports = {
   updateProfile,
   findUserById,
@@ -371,5 +383,6 @@ module.exports = {
   user,
   sendForgotPassword,
   resetPassword,
-  profileMe
+  profileMe,
+  deleteUser
 };

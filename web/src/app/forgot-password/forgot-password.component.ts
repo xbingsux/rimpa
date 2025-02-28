@@ -19,7 +19,7 @@ export class ForgotPasswordComponent {
 
   reset_password() {
     this.http.post(`${environment.API_URL}/auth/forgot-password`, { email: this.email }).subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
     })
   }
 }

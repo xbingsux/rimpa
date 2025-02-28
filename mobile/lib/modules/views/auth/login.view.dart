@@ -26,25 +26,24 @@ class _LoginViewState extends State<LoginView>
         children: [
           /// **โลโก้ด้านบน**
           AspectRatio(
-  aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
-  child: Container(
-    decoration: BoxDecoration(
-      color: AppColors.light, // ใส่สีพื้นหลัง
-    ),
-    child: Align(
-      alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
-      child: SizedBox(
-        width: 220, // กำหนดขนาดรูป
-        height: 120,
-        child: Image.asset(
-          'assets/logoapp/logoiconic.png', // รูปภาพของยูววว์~ 💕
-          fit: BoxFit.contain,
-        ),
-      ),
-    ),
-  ),
-),
-
+            aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.light, // ใส่สีพื้นหลัง
+              ),
+              child: Align(
+                alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
+                child: SizedBox(
+                  width: 220, // กำหนดขนาดรูป
+                  height: 120,
+                  child: Image.asset(
+                    'assets/logoapp/logoiconic.png', 
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ),
 
           /// 🔹 **Bottom Sheet ที่ยืดหยุ่นและเลื่อนได้**
           Align(
@@ -85,7 +84,7 @@ class _LoginViewState extends State<LoginView>
                       ),
                       SizedBox(height: AppSpacing.md),
 
-                      /// 🔹 **ฟอร์มล็อกอิน**
+                      /// 
                       Column(
                         children: [
                           CustomTextField(
@@ -96,7 +95,7 @@ class _LoginViewState extends State<LoginView>
                           ),
                           SizedBox(height: AppSpacing.md),
 
-                          /// 🔹 **ฟิลด์รหัสผ่าน**
+                          /// **ฟิลด์รหัสผ่าน**
                           CustomTextFieldpassword(
                             labelText: 'รหัสผ่าน',
                             obscureText: _obscureText,

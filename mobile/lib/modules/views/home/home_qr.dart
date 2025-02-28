@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rimpa/core/services/api_urls.dart';
 import 'dart:io';
+import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
+import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
 
 class HomeQRPage extends StatefulWidget {
   @override
@@ -11,16 +14,34 @@ class HomeQRPage extends StatefulWidget {
 
 class _HomeQRPageState extends State<HomeQRPage> {
   String? scannedResult;
+  ApiUrls apiUrls = Get.find();
+  final profileController =
+      Get.put(ProfileController()); // เพิ่ม ProfileController
+  late final EventController
+      eventController; // Define EventController as a late variable
+
+  @override
+  void initState() {
+    super.initState();
+    eventController =
+        Get.put(EventController()); // Register EventController here
+
+    // ดึง idProfile จาก ProfileController
+    String? idProfile = profileController.profileData['id']?.toString();
+
+    // ตรวจสอบว่า idProfile และ scannedResult ไม่เป็น null ก่อนเรียกฟังก์ชัน scanQRCode
+    if (idProfile != null && scannedResult != null) {
+      eventController.scanQRCode(idProfile, scannedResult!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    String? idProfile = profileController.profileData['id']?.toString();
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-              120, 0, 0, 0) // ใช้ alpha 120 เพื่อให้โปร่งใสกว่า
-          .withOpacity(0.7), // ทำให้พื้นหลังมีความทึบขึ้น
+      backgroundColor: const Color.fromARGB(120, 0, 0, 0).withOpacity(0.7),
       body: Stack(
         children: [
-          // กล้องเต็มจอ
           Positioned.fill(
             child: ClipPath(
               clipper: QRScannerClipper(),
@@ -32,7 +53,7 @@ class _HomeQRPageState extends State<HomeQRPage> {
                       scannedResult = barcode.rawValue ?? "ไม่มีข้อมูล";
                     });
 
-                    // แสดง Popup Dialog เมื่อสแกนได้
+                    eventController.scanQRCode('idProfile', scannedResult!);
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -53,7 +74,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
               ),
             ),
           ),
-          // ปุ่มย้อนกลับ
           Positioned(
             top: 40,
             left: 10,
@@ -75,10 +95,8 @@ class _HomeQRPageState extends State<HomeQRPage> {
               ],
             ),
           ),
-
-          // หมายเหตุอยู่ใต้กล่อง
           Positioned(
-            top: 550, // วางให้ต่ำกว่ากล่อง
+            top: 550,
             left: 20,
             right: 20,
             child: Text(
@@ -91,7 +109,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
               textAlign: TextAlign.center,
             ),
           ),
-          // ส่วนเลือกภาพจากแกลเลอรี่
           Positioned(
             bottom: 100,
             left: 20,
@@ -103,12 +120,11 @@ class _HomeQRPageState extends State<HomeQRPage> {
                   icon: const Icon(Icons.image),
                   label: const Text("เลือกจากแกลเลอรี่"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent, // ปรับสีปุ่ม
+                    backgroundColor: Colors.blueAccent,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(20), // เพิ่มมุมโค้งของปุ่ม
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
@@ -136,7 +152,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
     if (image != null) {
       final String imagePath = image.path;
 
-      // ใช้ mobile_scanner เพื่อสแกน QR จากภาพ
       final MobileScanner scanner = MobileScanner(onDetect: (capture) {
         final List<Barcode> barcodes = capture.barcodes;
         for (final barcode in barcodes) {
@@ -144,7 +159,8 @@ class _HomeQRPageState extends State<HomeQRPage> {
             scannedResult = barcode.rawValue ?? "ไม่มีข้อมูล";
           });
 
-          // แสดงผล QR Code ที่สแกนได้
+          eventController.scanQRCode('idProfile', scannedResult!);
+
           showDialog(
             context: context,
             builder: (context) {
@@ -163,7 +179,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
         }
       });
 
-      // สแกน QR จากไฟล์ภาพ
       final result = await scanner.scanImage(File(imagePath));
 
       if (result != null) {
@@ -188,7 +203,6 @@ class QRScannerClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
 
-    // สร้างกรอบสี่เหลี่ยมที่มีมุมโค้ง
     path.addRRect(RRect.fromRectAndRadius(
       Rect.fromLTWH(30, 180, size.width - 60, 350),
       Radius.circular(20),

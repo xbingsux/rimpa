@@ -73,7 +73,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.http.post(`${environment.API_URL}/auth/profileMe`, {}).subscribe(async (respone: any) => {
-      console.log(respone.profile);
+      // console.log(respone.profile);
       let profile = respone.profile
       this.username = profile.profile_name;
       this.role = profile.user.role.role_name;

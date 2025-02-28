@@ -54,9 +54,8 @@ router.post(
   upload.single("file"),
   async (req, res) => {
     try {
-
       const path = req.file.path.replace('src', '')
-      fileService.updateImgProfile(req.user.userId, path)
+      await fileService.updateImgProfile(req.user.userId, path)
 
       return res.status(200).json({
         status: "success",

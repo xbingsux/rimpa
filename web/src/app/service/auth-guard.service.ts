@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
         this.router.navigate(['admin/dashboard']);
       }
     })
-    console.log('login', response);
+    // console.log('login', response);
 
     return response
   }
