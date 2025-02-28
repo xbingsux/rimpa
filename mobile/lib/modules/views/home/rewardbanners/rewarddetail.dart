@@ -383,7 +383,7 @@ class RewardDetail extends StatelessWidget {
                                   isLoading.value = true; // เริ่มโหลด
                                   rewardController
                                       .redeemReward(
-                                          idProfile, idReward, points, cost)
+                                          idProfile, idReward, points,)
                                       .then((_) {
                                     isLoading.value =
                                         false; // หยุดโหลดเมื่อเสร็จ

@@ -20,7 +20,7 @@ class ApiUrls extends GetxController {
   var listsevents = ''.obs;
   var getEventDetails = ''.obs;
   var Scanevent = ''.obs;
-  var checkin = ''.obs;
+  var checkinevent = ''.obs;
   var listsreward = ''.obs;
   var getreward = ''.obs;
   var redeemReward = ''.obs;
@@ -62,7 +62,7 @@ class ApiUrls extends GetxController {
     getEventDetails.value = '${eventsUrl.value}/get-event';
     Scanevent.value = '${eventsUrl.value}/scan';
     getbanner.value = '${eventsUrl.value}/get-banner';
-    checkin.value = '${eventsUrl.value}/checkIn';
+    checkinevent.value = '${eventsUrl.value}/checkIn';
     listsreward.value = '${rewardUrl.value}/list-reward';
     getreward.value = '${rewardUrl.value}/get-reward';
     redeemReward.value = '${rewardUrl.value}/redeem-rewards';

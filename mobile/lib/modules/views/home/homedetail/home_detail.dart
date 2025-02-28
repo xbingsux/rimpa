@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
+import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
@@ -11,12 +12,17 @@ import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
 class HomeDetailPage extends StatelessWidget {
   final ListEvent event;
-
-  const HomeDetailPage({super.key, required this.event});
+  const HomeDetailPage({
+    super.key,
+    required this.event,
+  });
 
   @override
   Widget build(BuildContext context) {
     // Extract event details
+    Get.put(EventController()); // เพิ่มการสร้าง EventController
+    String id_event = event.subEvents[0].id
+        .toString(); 
     String title = event.title;
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
@@ -24,7 +30,7 @@ class HomeDetailPage extends StatelessWidget {
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     String mapUrl = event.subEvents[0].map;
-
+    final evencontroller = Get.find<EventController>();
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -215,13 +221,13 @@ class HomeDetailPage extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomDialog(context: context);
-                        },
-                      );
-                    },
+  // รับค่า id_event จาก event.subEvents[0].id
+  int subEventId = event.subEvents[0].id;
+
+  // เรียกใช้งานฟังก์ชัน checkIn พร้อมส่ง sub_event_id และ context
+  evencontroller.checkIn(subEventId, context);
+},
+
                     child: Container(
                       width: double.infinity,
                       padding:

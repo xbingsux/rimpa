@@ -179,26 +179,33 @@ const joinEvent = async (user_id, sub_event_id) => {
 }
 
 const scan = async (user_id, qrcode) => {
-    const currentDate = new Date();
+    const currentDate = new Date();  // ดึงวันที่และเวลาปัจจุบัน
+  
+    // ค้นหากิจกรรมที่มี QR Code ที่ตรงกับที่ส่งมา และตรวจสอบช่วงเวลา startDate และ endDate
     const sub_event = await prisma.subEvent.findFirst({
-        where: {
-            qrcode: qrcode,
-            startDate: { lte: currentDate },
-            endDate: { gte: currentDate },
-            active: true
-        }
-    })
-
-    if (!sub_event) throw new Error('QR code not found.')
-
+      where: {
+        qrcode: qrcode,  // ตรวจสอบ QR Code
+        startDate: { lte: currentDate },  // วันที่เริ่มต้นต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน
+        endDate: { gte: currentDate },  // วันที่สิ้นสุดต้องมากกว่าหรือเท่ากับวันที่ปัจจุบัน
+        active: true  // ตรวจสอบว่ากิจกรรมนั้นเปิดใช้งานอยู่
+      }
+    });
+  
+    // ถ้าไม่พบกิจกรรม
+    if (!sub_event) throw new Error('QR code not found or event is not active.');
+  
+    // ตรวจสอบว่าผู้ใช้ได้ทำการเข้าร่วมกิจกรรมนี้แล้วหรือยัง
     const checkIn = await prisma.checkIn.findFirst({
-        where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
-    })
-
-    if (checkIn) throw new Error('You have already claimed the point.')
-
+      where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
+    });
+  
+    // ถ้าผู้ใช้เคยเข้าร่วมกิจกรรมนี้แล้ว
+    if (checkIn) throw new Error('You have already claimed the point.');
+  
     return sub_event;
-}
+  };
+  
+  
 
 const checkIn = async (user_id, sub_event_id) => {
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/modules/controllers/reward/list_reward_controller.dart';
 import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'dart:async';
 
@@ -29,11 +30,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   final listRewardController = Get.put(ListRewardController()); // Add this line
   final listBannerController = Get.put(ListBannerController()); // Add this line
   final listEventController = Get.put(ListEventController()); // Add this line
-
+  final rewardController = Get.put(RewardController()); //  ใส่ตรงนี้
   @override
   void initState() {
     super.initState();
-
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
@@ -353,6 +353,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                             ],
                           ),
                           SizedBox(height: 8),
+                         
                           Obx(() {
                             if (listEventController.isLoading.value) {
                               return Center(child: CircularProgressIndicator());

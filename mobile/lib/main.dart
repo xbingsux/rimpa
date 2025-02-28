@@ -13,7 +13,6 @@ import 'package:intl/date_symbol_data_local.dart'; // เพิ่มการ i
 void main() {
   // เรียกใช้ initializeDateFormatting ก่อน
   initializeDateFormatting('th_TH', null).then((_) {
-    // เรียกใช้ middleware และ service ต่างๆ
     Get.put(AuthMiddleware());
     Get.put(ApiUrls());
     Get.put(ThemeController());

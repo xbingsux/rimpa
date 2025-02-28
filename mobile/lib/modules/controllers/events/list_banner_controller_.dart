@@ -61,7 +61,7 @@ class BannerEventController extends GetxController {
     try {
       // URL ที่ใช้สำหรับ API ของคุณ
       final response = await dio.post(
-        apiUrlsController.checkin.value, // URL สำหรับดึงรายละเอียดแบนเนอร์
+        apiUrlsController.checkinevent.value, // URL สำหรับดึงรายละเอียดแบนเนอร์
         data: {
           'sub_event_id': subEventId, // ส่ง sub_event_id ไปใน body ของ request
         },

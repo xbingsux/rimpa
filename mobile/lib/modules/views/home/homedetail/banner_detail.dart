@@ -15,6 +15,7 @@ class BannerDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     // Extract banner details
     String title = banner.title;
     String description = banner.description;

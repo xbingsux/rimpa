@@ -65,6 +65,13 @@ router.post("/get-event", async (req, res) => {
 
 router.post("/scan", auth, async (req, res) => {
   const { qrcode } = req.body;
+  
+  if (!qrcode) {
+    return res.status(400).json({
+      status: "error",
+      message: "QR code is required"
+    });
+  }
 
   try {
     const event = await Service.scan(req.user.userId, qrcode);
@@ -82,9 +89,9 @@ router.post("/scan", auth, async (req, res) => {
         .status(500)
         .json({ status: "error", message: "Internal Server Error" });
     }
-
   }
 });
+
 
 router.post("/checkIn", auth, async (req, res) => {
   const { sub_event_id } = req.body;
@@ -92,7 +99,6 @@ router.post("/checkIn", auth, async (req, res) => {
   try {
     const event = await Service.checkIn(req.user.userId, sub_event_id);
     return res.status(200).json({ status: "success", event });
-
   } catch (error) {
     console.error(error);
     console.log("error");
@@ -105,7 +111,6 @@ router.post("/checkIn", auth, async (req, res) => {
         .status(500)
         .json({ status: "error", message: "Internal Server Error" });
     }
-
   }
 });
 

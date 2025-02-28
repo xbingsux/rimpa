@@ -62,7 +62,7 @@ class RewardController extends GetxController {
   }
 
 Future<void> redeemReward(
-    String idProfile, String idReward, Decimal points, Decimal cost) async {
+    String idProfile, String idReward, Decimal cost) async {  // เอา points ออกจากพารามิเตอร์
   if (isLoading.value) return;
   isLoading.value = true;
 
@@ -82,7 +82,7 @@ Future<void> redeemReward(
       rewardDetail.value = response.data['reward'];
       errorMessage.value = "";
 
-      // แสดง Dialog พร้อมส่งค่า points และ cost
+      // แสดง Dialog พร้อมส่งค่า cost
       showDialog(
         context: Get.context!,
         builder: (BuildContext context) {
@@ -92,7 +92,7 @@ Future<void> redeemReward(
           );
         },
       ).then((_) {
-        Get.back(); // ปิด Dialog แล้วกลับไปหน้าก่อนหน้า
+        Get.back(); // ปิด Dialog หลังจากเสร็จสิ้น
       });
     } else if (response.data['message'] == 'You have already redeemed this reward!') {
       errorMessage.value = "คุณเคยแลกรางวัลนี้ไปแล้ว";
@@ -106,4 +106,6 @@ Future<void> redeemReward(
     isLoading.value = false;
   }
 }
+
+
 }
