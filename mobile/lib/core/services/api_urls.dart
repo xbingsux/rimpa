@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
-  var imgUrl = 'http://localhost:3001'.obs;
-  var baseUrl = 'http://localhost:3001/auth'.obs;
+  var imgUrl = 'https://api-rimpa.nightbears.co'.obs;
+  var baseUrl = 'https://api-rimpa.nightbears.co/auth'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;

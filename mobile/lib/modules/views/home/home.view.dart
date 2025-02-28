@@ -33,12 +33,6 @@ class _HomePageState extends State<HomePage> {
       } else {
         _currentPage = 0;
       }
-
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
     });
   }
 
