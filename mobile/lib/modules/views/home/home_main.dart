@@ -4,7 +4,9 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/modules/views/notify/notify.view.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
@@ -122,7 +124,17 @@ class _HomeMainPageState extends State<HomeMainPage> {
             ),
 
             // ไอคอนแจ้งเตือน
-            Icon(Icons.notifications_none, color: Colors.grey),
+            
+            GestureDetector(
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotifyView(),)),
+              child: Container(
+                decoration: const BoxDecoration(),
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                child: const Center(
+                  child: Icon(Icons.notifications_none, color: Colors.grey),
+                ),
+              ),
+            )
           ],
         ),
       ),

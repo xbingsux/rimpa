@@ -11,6 +11,7 @@ class NotifyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: AppBar(
           backgroundColor: AppColors.light,
           centerTitle: true,
@@ -26,35 +27,51 @@ class NotifyView extends StatelessWidget {
             ),
           ),
         ),
-        body: showNoti([{'adsf':'sdf'}, {'adsf':'sdf'}, {'adsf':'sdf'}]),
+        body: Padding(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+          child: showNoti([]),
+        ),
       )
     );
   }
 
   Widget showNoti(List<Map<String, dynamic>> noti) {
     if (noti.isEmpty) {
-      return Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.transparent),
-              borderRadius: BorderRadius.circular(AppRadius.rounded),
-              color: AppColors.accent1
+      return SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.transparent),
+                borderRadius: BorderRadius.circular(AppRadius.rounded),
+                color: AppColors.accent1
+              ),
+              child: const Center(
+                child: AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/icon/noti/nullnoti.png'),
+              ),
             ),
-            child: const Center(
-              child: AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/icon/noti/nullnoti.png'),
-            ),
-          )
-        ],
+            const Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Text('ยังไม่มีการแจ้งเตือน', style: TextStyle(fontSize: AppTextSize.xl, color: AppTextColors.primary),),
+            )
+          ],
+        ),
       );
     } else {
       return SingleChildScrollView(
         child: Column(
           children: List.generate(noti.length, (index) {
-            return const NotifierBoxComponent(icons: Icons.notifications_none, topics: 'test', content: 'hi, this is test noti', footnote: '2020-02-14');
+            return const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: NotifierBoxComponent(icons: Icons.notifications_none, topics: 'test', content: 'hi, this is test noti', footnote: '2020-02-14'),
+            );
           },),
         ),
       );

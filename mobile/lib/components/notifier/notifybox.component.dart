@@ -36,57 +36,60 @@ class NotifierBoxComponent extends StatelessWidget {
         Expanded(
           flex: 5,
           child: Center(
-            child: AspectRatio(
-              aspectRatio: 3.23 / 1,
-              child: Container(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  border: Border.all(width: 1, color: Colors.transparent),
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(AppRadius.sm),
-                    bottomRight: Radius.circular(AppRadius.sm),
-                    bottomLeft: Radius.circular(AppRadius.sm)
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal:  AppSpacing.sm),
+              child: AspectRatio(
+                aspectRatio: 3.23 / 1,
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    border: Border.all(width: 1, color: Colors.transparent),
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(AppRadius.sm),
+                      bottomRight: Radius.circular(AppRadius.sm),
+                      bottomLeft: Radius.circular(AppRadius.sm)
+                    ),
+                    boxShadow: [AppShadow.custom(color: AppColors.secondary, blurRadius: 3, spreadRadius: 1)]
                   ),
-                  boxShadow: [AppShadow.custom(color: AppColors.secondary, blurRadius: 3, spreadRadius: 1)]
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          topics,
-                          style: const TextStyle(
-                            fontSize: AppTextSize.md,
-                            color: AppTextColors.black,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            topics,
+                            style: const TextStyle(
+                              fontSize: AppTextSize.md,
+                              color: AppTextColors.black,
+                            ),
                           ),
-                        ),
-                        Text(
-                          content,
+                          Text(
+                            content,
+                            style: const TextStyle(
+                              fontSize: AppTextSize.sm,
+                              color: AppTextColors.secondary
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          footnote,
                           style: const TextStyle(
-                            fontSize: AppTextSize.sm,
+                            fontSize: AppTextSize.xs,
                             color: AppTextColors.secondary
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        footnote,
-                        style: const TextStyle(
-                          fontSize: AppTextSize.xs,
-                          color: AppTextColors.secondary
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
