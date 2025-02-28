@@ -11,6 +11,7 @@ class ChangePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final authController = Get.put(LoginController());
     final resetPasswordController = Get.put(ResetPasswordController());
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -25,7 +26,8 @@ class ChangePassword extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.blue),
           onPressed: () => Get.back(),
         ),
-        title: const Text("เปลี่ยนรหัสผ่าน", style: TextStyle(color: Colors.black)),
+        title: const Text("เปลี่ยนรหัสผ่าน",
+            style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
       body: Obx(() {
@@ -43,17 +45,20 @@ class ChangePassword extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("โปรดป้อนรหัสผ่านปัจจุบันและรหัสผ่านใหม่",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 30),
-
-                const Text("รหัสผ่านเก่า", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text("รหัสผ่านเก่า",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 Obx(() {
                   return Stack(
                     children: [
                       CustomResetpasswordfiule(
                         labelText: 'กรอกรหัสผ่านเก่า',
-                        obscureText: !resetPasswordController.isOldPasswordVisible.value,
+                        obscureText:
+                            !resetPasswordController.isOldPasswordVisible.value,
                         onChanged: (value) {
                           resetPasswordController.oldPassword.value = value;
                         },
@@ -70,23 +75,26 @@ class ChangePassword extends StatelessWidget {
                           ),
                           onPressed: () {
                             resetPasswordController.isOldPasswordVisible.value =
-                                !resetPasswordController.isOldPasswordVisible.value;
+                                !resetPasswordController
+                                    .isOldPasswordVisible.value;
                           },
                         ),
                       ),
                     ],
                   );
                 }),
-
                 const SizedBox(height: 18),
-                const Text("รหัสผ่านใหม่", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text("รหัสผ่านใหม่",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 Obx(() {
                   return Stack(
                     children: [
                       CustomResetpasswordfiule(
                         labelText: 'กรอกรหัสผ่านใหม่',
-                        obscureText: !resetPasswordController.isNewPasswordVisible.value,
+                        obscureText:
+                            !resetPasswordController.isNewPasswordVisible.value,
                         onChanged: (value) {
                           resetPasswordController.newPassword.value = value;
                         },
@@ -103,23 +111,26 @@ class ChangePassword extends StatelessWidget {
                           ),
                           onPressed: () {
                             resetPasswordController.isNewPasswordVisible.value =
-                                !resetPasswordController.isNewPasswordVisible.value;
+                                !resetPasswordController
+                                    .isNewPasswordVisible.value;
                           },
                         ),
                       ),
                     ],
                   );
                 }),
-
                 const SizedBox(height: 18),
-                const Text("ยืนยันรหัสผ่านใหม่", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text("ยืนยันรหัสผ่านใหม่",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 Obx(() {
                   return Stack(
                     children: [
                       CustomResetpasswordfiule(
                         labelText: 'ยืนยันรหัสผ่านใหม่',
-                        obscureText: !resetPasswordController.isConfirmPasswordVisible.value,
+                        obscureText: !resetPasswordController
+                            .isConfirmPasswordVisible.value,
                         onChanged: (value) {
                           resetPasswordController.confirmPassword.value = value;
                         },
@@ -130,22 +141,23 @@ class ChangePassword extends StatelessWidget {
                         bottom: 0,
                         child: IconButton(
                           icon: Icon(
-                            resetPasswordController.isConfirmPasswordVisible.value
+                            resetPasswordController
+                                    .isConfirmPasswordVisible.value
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                           ),
                           onPressed: () {
-                            resetPasswordController.isConfirmPasswordVisible.value =
-                                !resetPasswordController.isConfirmPasswordVisible.value;
+                            resetPasswordController
+                                    .isConfirmPasswordVisible.value =
+                                !resetPasswordController
+                                    .isConfirmPasswordVisible.value;
                           },
                         ),
                       ),
                     ],
                   );
                 }),
-
                 const Spacer(),
-
                 if (message.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
@@ -157,21 +169,28 @@ class ChangePassword extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 CustomButtonResetpassword(
                   text: isLoading ? 'กำลังบันทึก...' : 'บันทึกรหัสผ่านใหม่',
                   onPressed: isLoading
                       ? null
                       : () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
                           String? token = prefs.getString('token');
                           if (token == null) {
                             Get.snackbar('ข้อผิดพลาด', 'ไม่พบ Token');
                             return;
                           }
-                          resetPasswordController.resetPassword();
+
+                          await resetPasswordController.resetPassword();
+
+                          // ถ้าเปลี่ยนรหัสผ่านสำเร็จ ให้รีเซ็ตช่องกรอกข้อมูล
+                          if (resetPasswordController.status.value ==
+                              "success") {
+                            resetPasswordController.clearFields();
+                          }
                         },
-                )
+                ),
               ],
             ),
           ),
@@ -180,4 +199,3 @@ class ChangePassword extends StatelessWidget {
     );
   }
 }
-

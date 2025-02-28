@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
-import 'package:url_launcher/url_launcher.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
-import '../../../models/listevent.model.dart';
+import '../../../models/listbanner.model.dart';
 import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
-class HomeDetailPage extends StatelessWidget {
-  final ListEvent event;
+class BannerDetailPage extends StatelessWidget {
+  final ListBanner banner;
 
-  const HomeDetailPage({super.key, required this.event});
+  const BannerDetailPage({super.key, required this.banner});
 
   @override
   Widget build(BuildContext context) {
-    // Extract event details
-    String title = event.title;
-    String description = event.description;
-    String startDate = _formatDate(event.startDate); // Update this line
-    String endDate = _formatDate(event.endDate); // Update this line
-    String imageUrl =
-        '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
-    String mapUrl = event.subEvents[0].map;
+    // Extract banner details
+    String title = banner.title;
+    String description = banner.description;
+    String startDate = _formatDate(banner.startDate); // Updated line
+    String endDate = _formatDate(banner.endDate); // Updated line
+    String imageUrl = '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}';
 
     return SafeArea(
       child: Scaffold(
@@ -134,31 +131,6 @@ class HomeDetailPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (mapUrl.isNotEmpty) {
-                                      _launchURL(mapUrl); // Update this line
-                                    }
-                                  },
-                                  child: Container(
-                                    padding:
-                                        const EdgeInsets.all(AppSpacing.sm),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 0.5,
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius: BorderRadius.circular(
-                                          AppRadius.rounded),
-                                      color: Colors.blue,
-                                    ),
-                                    child: const Icon(
-                                      Icons.location_on_outlined,
-                                      size: AppTextSize.xxl,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -174,7 +146,7 @@ class HomeDetailPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'รายละเอียดกิจกรรม ',
+                                  'รายละเอียด',
                                   style: TextStyle(
                                       fontSize: AppTextSize.sm,
                                       color: AppTextColors.black,
@@ -200,102 +172,15 @@ class HomeDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 2,
-                  color: AppColors.secondary,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: AppSpacing.md,
-                      left: AppSpacing.md,
-                      right: AppRadius.md,
-                      bottom: AppSpacing.lg),
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomDialog(context: context);
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: AppRadius.xs),
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppRadius.rounded),
-                          color:
-                              Color(0xFFEBF5FD)), // Corrected color definition
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: 38,
-                              height: 38,
-                              decoration: BoxDecoration(
-                                gradient:
-                                    AppGradiant.gradientX_1, // Applied gradient
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.star, color: Colors.white),
-                            ),
-                            SizedBox(width: 8), // Added missing comma
-                            Text(
-                              '100 คะแนน',
-                              style: TextStyle(
-                                  fontSize: AppTextSize.lg,
-                                  color: AppTextColors.accent2),
-                            ),
-                            Opacity(
-                              // space
-                              opacity: 0,
-                              child: Container(
-                                width: 38,
-                                height: 38,
-                                decoration: BoxDecoration(
-                                  gradient: AppGradiant
-                                      .gradientX_1, // Applied gradient
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.star, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )
           ],
         ),
       ),
     );
   }
 
-  void _launchURL(String url) async {
-    Uri uri = Uri.parse(url); // Parse the URL
-    Uri googleMapsUri =
-        Uri.parse('google.navigation:q=$url'); // Google Maps URL scheme
-
-    if (await canLaunchUrl(googleMapsUri)) {
-      await launchUrl(googleMapsUri);
-    } else if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  String _formatDate(String date) {
-    DateTime dateTime = DateTime.parse(date);
+  String _formatDate(DateTime date) {
+    // Updated parameter type
+    DateTime dateTime = date; // Updated line
     var thaiDateFormat = DateFormat('d MMM', 'th_TH');
     var thaiYearFormat = DateFormat('yyyy', 'th_TH');
     String formattedDate = thaiDateFormat.format(dateTime);

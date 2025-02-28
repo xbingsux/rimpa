@@ -104,7 +104,7 @@ class _RecommendedActivitiesState extends State<RecommendedActivities> {
                 itemCount: 8,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    Get.to(HomeDetailReward());
+                    // Get.to(() => HomeDetailPage(event: event));
                   },
                   child: AppCardComponent(
                     child: Column(

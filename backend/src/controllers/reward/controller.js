@@ -33,7 +33,7 @@ router.post("/update-reward", auth, async (req, res) => {
   }
 });
 
-router.post("/list-reward", auth, async (req, res) => {
+router.post("/list-reward",  async (req, res) => {
   const { } = req.body;
   try {
 

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
-import 'package:get/get.dart';
-
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import '../../../core/constant/app.constant.dart';
 import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
+import '../../models/listevent.model.dart';
+import '../../models/listbanner.model.dart'; // Add this import
 import 'seeallcards/home_event_allcard.dart';
-
-import 'homedetail/home_detail.dart'; // Add this import
+import 'homedetail/home_detail.dart';
+import 'homedetail/banner_detail.dart'; // Add this import
+import '../../controllers/listevent/listevent.controller.dart';
+import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 
 class HomeMainPage extends StatefulWidget {
   @override
@@ -23,6 +26,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
+  final listEventController = Get.put(ListEventController());
+  final listBannerController = Get.put(ListBannerController()); // Add this line
+  String _sortOrder = "ใหม่สุด"; // Add this line
 
   @override
   void initState() {
@@ -33,7 +39,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
       PopupDialog.checkAndShowPopup(context);
     });
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < 7) {
+      if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -126,117 +132,207 @@ class _HomeMainPageState extends State<HomeMainPage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Banner slider
-              SizedBox(
-                height: 150,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: 8,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Get.to(HomeDetailPage());
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: AppImageComponent(
-                        aspectRatio: 2.08 / 1,
-                        fit: BoxFit.cover,
-                        imageType: AppImageType.network,
-                        imageAddress:
-                            "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(8, (index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentPage == index ? 12 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: _currentPage == index ? Colors.blue : Colors.grey,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  );
-                }),
-              ),
-              SizedBox(height: 16),
-              // Activities Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Obx(() {
+        if (listEventController.isLoading.value ||
+            listBannerController.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          List<ListEvent> sortedEvents = listEventController.events.toList();
+          if (_sortOrder == "ใหม่สุด") {
+            sortedEvents.sort((a, b) => b.id.compareTo(a.id));
+          } else {
+            sortedEvents.sort((a, b) => a.id.compareTo(b.id));
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "กิจกรรมแนะนำ",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(HomeEventAllcard());
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          "ดูทั้งหมด",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                  // Banner slider
+                  SizedBox(
+                    height: 150,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: listBannerController.banners.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        var banner = listBannerController.banners[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(() => BannerDetailPage(
+                                banner: banner)); // Corrected line
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: AppImageComponent(
+                              aspectRatio: 16 / 9,
+                              fit: BoxFit.cover,
+                              imageType: AppImageType.network,
+                              imageAddress:
+                                  '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}',
+                            ),
                           ),
-                        ),
-                        Text(
-                          " >",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(8, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(HomeDetailPage());
-                      },
-                      child: Container(
-                        width: 150,
-                        margin: EdgeInsets.only(right: 8),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(listBannerController.banners.length,
+                        (index) {
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentPage == index ? 12 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color:
+                              _currentPage == index ? Colors.blue : Colors.grey,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 16),
+                  // Activities Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "กิจกรรมแนะนำ",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(HomeEventAllcard());
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "ดูทั้งหมด",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              " >",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: listEventController.events.map((event) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(() => HomeDetailPage(event: event));
+                          },
+                          child: Container(
+                            width: 150,
+                            margin: EdgeInsets.only(right: 8),
+                            child: AppCardComponent(
+                              child: Column(
+                                children: [
+                                  AppImageComponent(
+                                    imageType: AppImageType.network,
+                                    imageAddress:
+                                        '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                                  ),
+                                  SizedBox(height: 8),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    child: Text(
+                                      event.title,
+                                      style: TextStyle(fontSize: 12),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  // Add dashed line
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: List.generate(60, (index) {
+                        return Expanded(
+                          child: Container(
+                            color: index % 2 == 0
+                                ? Colors.transparent
+                                : Colors.grey,
+                            height: 1,
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  // Grid Section
+                  AppDropdown(
+                    onChanged: (value) {
+                      setState(() {
+                        _sortOrder = value;
+                      });
+                    },
+                    choices: ["ใหม่สุด", "เก่าสุด"],
+                    active: _sortOrder,
+                  ),
+                  SizedBox(height: 8),
+                  GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 2 / 3,
+                    ),
+                    itemCount: sortedEvents.length,
+                    itemBuilder: (context, index) {
+                      var event = sortedEvents[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => HomeDetailPage(event: event));
+                        },
                         child: AppCardComponent(
                           child: Column(
                             children: [
                               AppImageComponent(
                                 imageType: AppImageType.network,
                                 imageAddress:
-                                    "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
+                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                               ),
                               SizedBox(height: 8),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 4.0),
                                 child: Text(
-                                  "Lorem Ipsum is simply dummy text of the printing",
+                                  event.title,
                                   style: TextStyle(fontSize: 12),
                                   textAlign: TextAlign.center,
                                 ),
@@ -244,77 +340,15 @@ class _HomeMainPageState extends State<HomeMainPage> {
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              SizedBox(height: 16),
-              // Add dashed line
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: List.generate(60, (index) {
-                    return Expanded(
-                      child: Container(
-                        color:
-                            index % 2 == 0 ? Colors.transparent : Colors.grey,
-                        height: 1,
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              // Grid Section
-              AppDropdown(
-                onChanged: (value) {
-                  // Handle sorting action
-                },
-                choices: ["ใหม่สุด", "เก่าสุด"],
-                active: "เรียงตาม",
-              ),
-              SizedBox(height: 8),
-              GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 2 / 3,
-                ),
-                itemCount: 8,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    Get.to(HomeDetailPage());
-                  },
-                  child: AppCardComponent(
-                    child: Column(
-                      children: [
-                        AppImageComponent(
-                          imageType: AppImageType.network,
-                          imageAddress:
-                              "https://scontent.fbkk22-3.fna.fbcdn.net/v/t39.30808-6/470805346_1138761717820563_3034092518607465864_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGAqyEMQM1w0WCxcU9HbQtVgomPYyEmDp6CiY9jISYOnhLKioAFlnwgv1uyEqsea1kTwsVCn5v_2GsQLAcVdDih&_nc_ohc=r3eTzvX-TVkQ7kNvgFmDn7z&_nc_oc=AdiiKB0hIaIRZaZz3K_aH3pFxesBB-86mMZ1PYScK5xM4ioPhjuTnhrpRWt4Gf-2Yd0&_nc_zt=23&_nc_ht=scontent.fbkk22-3.fna&_nc_gid=AyRlRwqf4KmjNu7q7jrxM5s&oh=00_AYDQPWrMF1CPOcwNVZ5e07P3u3DtWuUpzGM7xs2EoXyVYQ&oe=67B37379",
-                        ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            "Lorem Ipsum is simply dummy text of the printing",
-                            style: TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      }),
     );
   }
 }

@@ -77,7 +77,7 @@ router.post("/update-banner", auth, async (req, res) => {
   }
 });
 
-router.post("/list-banner", auth, async (req, res) => {
+router.post("/list-banner",  async (req, res) => {
   const { } = req.body;
   try {
 
@@ -93,7 +93,7 @@ router.post("/list-banner", auth, async (req, res) => {
   }
 });
 
-router.post("/get-banner", auth, async (req, res) => {
+router.post("/get-banner", auth,async (req, res) => {
   const { id } = req.body;
   try {
     const banner = await Service.bannerById(id)
