@@ -1,5 +1,5 @@
-<div class="min-w-full min-h-full px-[48px]">
-    <div class="w-full h-[150px] grid items-center grid-cols-2">
+<div class="relative min-w-full min-h-full px-[48px]">
+    <div *ngIf="!routeScreen" class="w-full h-[150px] grid items-center grid-cols-2">
         <div>
             <p class="text-[32px] font-bold">
                 Reward Management
@@ -20,7 +20,7 @@
     </div>
     <div class="">
         <div
-            class="container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_200px_200px_120px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
+            class="container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
             <div><input type="checkbox"></div>
             <div></div>
             <div>Reward</div>
@@ -29,11 +29,12 @@
             <div class="justify-center">Quota</div>
             <div class="justify-center">Action</div>
         </div>
-        <div *ngFor="let item of data" class="container h-[56px] grid grid-cols-[80px_80px_1fr_200px_200px_120px_120px] gap-4 hover:bg-[#EBF5FD]
+        <div *ngFor="let item of data" class="container h-[56px] grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 hover:bg-[#EBF5FD]
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
             <div><input type="checkbox"></div>
             <div class="grid justify-center">
-                <img *ngIf="item.img && item.img != ''" [src]="getImg(item.img)" class="h-[40px] object-contain">
+                <img *ngIf="item.img && item.img != ''" [src]="getImg(item.img)"
+                    class="h-[40px] aspect-[4/3] object-cover">
             </div>
             <div class="font-semibold text-start">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
@@ -56,21 +57,60 @@
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
-                <img src="edit.svg" class="w-[32px] aspect-square cursor-pointer" (click)="api.toEdit('/admin/reward-update',item.id)">
-                <img src="delete.svg" class="w-[32px] aspect-square cursor-pointer" (click)="api.toDelete()">
+                <div (click)="api.toEdit('/admin/reward-update',item.id)"
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-[#999] rounded-[8px]">
+                    <img src="edit.svg" class="w-[18px] aspect-square">
+                </div>
+                <div (click)="delete_id = item.id"
+                    class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-red-600 rounded-[8px]">
+                    <img src="delete.svg" class="w-[26px] aspect-square">
+                </div>
             </div>
         </div>
-        <div class="flex h-[78px] px-5 justify-center items-center">
+        <div *ngIf="data.length != 0" class="flex h-[78px] px-5 justify-center items-center">
             <div class="flex-1 text-[16px]">
-                <p>หน้า {{page_no+1}} จาก {{last_page}}</p>
+                <p>หน้า {{page_no+1}} จาก {{data_size}}</p>
             </div>
-            <div class="flex gap-2 text-[14px]">
-                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer">
-                <div class="grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square">
-                    {{page_no+1}}
+            <div class="flex gap-2 text-[14px] select-none text-[#999]">
+                <img src="arrow-left.svg" (click)="updatePage(page_no-1)" class="cursor-pointer invert-[60%]">
+                <div class="flex gap-1">
+                    <div *ngFor="let num of getPageArray(); let i = index;" (click)="updatePage(num)"
+                        [style]="num == page_no ? 'background-color: #1093ED;color:#fff':''" class="cursor-pointer grid justify-center items-center border-[1px] rounded-[4px] w-[28px] aspect-square
+                        hover:bg-[#EBF5FD]">
+                        <p>
+                            {{num+1}}
+                        </p>
+                    </div>
                 </div>
-                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer">
+                <img src="arrow-right.svg" (click)="updatePage(page_no+1)" class="cursor-pointer invert-[60%]">
             </div>
+        </div>
+    </div>
+    <!-- delete -->
+    <div *ngIf="delete_id != null"
+        class="absolute top-0 right-0 w-full h-full bg-[#00000033] flex justify-center items-center">
+        <!-- delete -->
+        <div *ngIf="delete_id != null"
+            class="absolute z-10 grid gap-6 justify-center items-center select-none py-[32px] px-[64px] shadow-[0_4px_4px_#00000040] rounded-[16px] bg-white">
+            <div class="flex justify-center">
+                <div class="grid justify-center items-center w-[40px] aspect-square bg-[#FFE5E5] rounded-[16px]">
+                    <img src="delete.svg" alt="">
+                </div>
+            </div>
+            <div class="text-center">
+                <p class="text-[16px] font-medium">คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้</p>
+                <p class="text-[14px] text-[#999]">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            </div>
+            <div class="flex gap-2 justify-center items-center">
+                <button class="text-white bg-red-600 text-[12px] rounded-[8px] px-4 py-1" (click)="deleteReward()">
+                    Delete
+                </button>
+                <button (click)="delete_id = null"
+                    class="border-[1px] border-[#999999] text-[#999999] bg-white text-[12px] rounded-[8px] px-4 py-1">
+                    Cancel
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

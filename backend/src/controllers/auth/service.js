@@ -360,7 +360,20 @@ const updateProfile = async (id, updatedData) => {
     console.log(error);
     throw new Error("Error updating profile");
   }
+  
 };
+const deleteUser = async (id) => {
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+      active: true
+    },
+    data: {
+      active: false
+    }
+  })
+  return user;
+}
 
 module.exports = {
   updateProfile,
@@ -372,5 +385,6 @@ module.exports = {
   user,
   sendForgotPassword,
   resetPassword,
-  profileMe
+  profileMe,
+  deleteUser
 };

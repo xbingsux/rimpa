@@ -45,18 +45,34 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 }
             },
         }, include: {
-            SubEvent: true
+            SubEvent: {
+                include: {
+                    img: true
+                }
+            },
         }
     })
+
+    const missingImgIds = await Promise.all(
+        event.SubEvent[0].img
+            .filter(item => !event_img.some(img => img.id === item.id))
+            .map(async item => {
+                return await prisma.eventIMG.delete({
+                    where: { id: item.id }
+                });
+            })
+    );
+
+    // console.log(missingImgIds);
+
     let list = []
     // event_img    key, path
-    console.log(event_img);
+    // console.log(event_img);
 
     if (typeof event_img == 'object') {
-        event_img.map((item) => {
-            console.log(item);
-            list.push(upsertEventIMG(item.path, item.id, event.SubEvent[0].id))
-        })
+        for (const item of event_img) {
+            list.push(await upsertEventIMG(item.path, item.id, event.SubEvent[0].id));
+        }
     }
     event.img = list;
 
@@ -87,6 +103,7 @@ const listEvent = async () => {
         where: {
             startDate: { lte: currentDate },
             endDate: { gte: currentDate },
+            active: true
         },
         select: {
             id: true,
@@ -125,8 +142,15 @@ const listEvent = async () => {
 };
 
 const getEvent = async (id) => {
+    const currentDate = new Date();
+
     const event = await prisma.event.findFirst({
-        where: { id: id },
+        where: {
+            id: id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
         include: {
             SubEvent: { include: { img: true } },
         }
@@ -154,16 +178,47 @@ const joinEvent = async (user_id, sub_event_id) => {
     // const point = await prisma.profile.up
 }
 
+const scan = async (user_id, qrcode) => {
+    const currentDate = new Date();
+    const sub_event = await prisma.subEvent.findFirst({
+        where: {
+            qrcode: qrcode,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        }
+    })
+
+    if (!sub_event) throw new Error('QR code not found.')
+
+    const checkIn = await prisma.checkIn.findFirst({
+        where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
+    })
+
+    if (checkIn) throw new Error('You have already claimed the point.')
+
+    return sub_event;
+}
+
 const checkIn = async (user_id, sub_event_id) => {
+
     let checkIn = await prisma.checkIn.findFirst({
         where: { sub_event_id: sub_event_id, profile: { user_id: user_id } }
     })
 
+    if (checkIn) throw new Error('You have already claimed the point.')
+
+    const currentDate = new Date();
     let sub_event = await prisma.subEvent.findFirst({
-        where: { id: sub_event_id }
+        where: {
+            id: sub_event_id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        }
     })
 
-    if (checkIn) throw new Error('You have already claimed the point.')
+    if (!sub_event) throw new Error('No information available or out of the event period')
 
     checkIn = await prisma.checkIn.create({
         data: {
@@ -191,10 +246,33 @@ const checkIn = async (user_id, sub_event_id) => {
     return point;
 }
 
+const listBanner = async () => {
+    const currentDate = new Date();
+    let banners = await prisma.banner.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+        }
+    });
+
+    return banners;
+};
+
+const bannerById = async (id) => {
+    let banner = await prisma.banner.findFirst({
+        where: { id: id }
+    });
+
+    return banner;
+};
+
 module.exports = {
     upsertEvent,
     listEvent,
     getEvent,
     joinEvent,
-    checkIn
+    checkIn,
+    listBanner,
+    bannerById,
+    scan
 };

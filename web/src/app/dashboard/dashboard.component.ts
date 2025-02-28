@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class DashboardComponent implements OnInit {
-
+  repeatTimes  = Array(4).fill(0)
   dashboard_total: any[] = []
 
   path: String = 'event'
