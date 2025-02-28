@@ -760,8 +760,7 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH', // กำหนดประเทศเริ่มต้นเป็นประเทศไทย 🇹🇭
       showCountryFlag: true, // แสดงธงชาติ
@@ -778,14 +777,18 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+      style: const TextStyle(
+        color: Colors.black, // สีของข้อความที่กรอก
+      ),
       onChanged: (phone) {
         // เมื่อมีการเปลี่ยนแปลงข้อมูล
-        onChanged(
-            phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
+        onChanged(phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
       },
     );
   }
 }
+
+
 
 // ช่องกรอกสร้างบัญชี
 class CreatTextField extends StatelessWidget {
