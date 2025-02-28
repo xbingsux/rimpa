@@ -16,6 +16,7 @@ class NotifyView extends StatelessWidget {
           centerTitle: true,
           title: const Text('การแจ้งเตือน', style: TextStyle(fontSize: AppTextSize.xl, color: AppTextColors.accent)),
           leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
             child: Container(
               decoration: const BoxDecoration(),
               padding: const EdgeInsets.all(AppSpacing.sm),
