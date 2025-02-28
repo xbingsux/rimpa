@@ -274,10 +274,18 @@ const resetPassword = async (id, password) => {
   return user;
 }
 
+const findUserById = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id: id }
+  });
+  return user;
+};
+
 const profileMe = async (id) => {
   const profile = await prisma.profile.findFirst({
     where: { user_id: id },
     select: {
+      id: true,
       profile_name: true,
       first_name: true,
       last_name: true,
@@ -292,6 +300,7 @@ const profileMe = async (id) => {
           }
         }
       },
+      points: true,
       phone: true,
       birth_date: true,
       gender: true,
@@ -301,7 +310,72 @@ const profileMe = async (id) => {
   return profile;
 }
 
+const deleteUser = async (id) => {
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+      active: true
+    },
+    data: {
+      active: false
+    }
+  })
+  return user;
+}
+const updateProfile = async (id, updatedData) => {
+  try {
+    if (updatedData.birth_date) {
+      updatedData.birth_date = new Date(updatedData.birth_date).toISOString();
+    } else {
+      delete updatedData.birth_date;
+    }
+
+    const { email, ...profileData } = updatedData;
+    const profile = await prisma.profile.update({
+      where: { user_id: id },
+      data: profileData, 
+      select: {
+        profile_name: true,
+        first_name: true,
+        last_name: true,
+        phone: true,
+        birth_date: true,
+        gender: true,
+        profile_img: true,
+        points: true,
+        user: {
+          select: {
+            email: true,
+            active: true,
+            role: {
+              select: {
+                role_name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (email) {
+      const updatedUser = await prisma.user.update({
+        where: { id: id },
+        data: {
+          email: email,  
+        },
+      });
+      console.log(updatedUser); 
+    }
+
+    return profile;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating profile");
+  }
+};
 module.exports = {
+  updateProfile,
+  findUserById,
   authenticateEmail,
   register,
   sendVertifyUser,
@@ -309,5 +383,6 @@ module.exports = {
   user,
   sendForgotPassword,
   resetPassword,
-  profileMe
+  profileMe,
+  deleteUser
 };

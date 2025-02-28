@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+class AppApi {
+  static const String urlApi = 'http://192.168.1.2:3001'; // Rename to urlApi
+}
+
 class AppColors {
   /// สีหลัก Dodger Blue
   static const Color primary = Color(0xFF1093ED);

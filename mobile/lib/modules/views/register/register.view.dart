@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart'; 
+import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/register.controller.dart';
 
 class CreateAccountView extends StatelessWidget {
@@ -24,7 +24,8 @@ class CreateAccountView extends StatelessWidget {
                     children: [
                       // ปุ่มย้อนกลับ
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 16.0),
                         child: Row(
                           children: [
                             IconButton(
@@ -40,7 +41,8 @@ class CreateAccountView extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Text(
                           'ยืนยันสร้างบัญชี',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -53,22 +55,22 @@ class CreateAccountView extends StatelessWidget {
                             CustomTextField(
                               labelText: 'ชื่อผู้ใช้',
                               obscureText: false,
-                              onChanged: (value) =>
-                                  registerController.profile.profileName.value = value,
+                              onChanged: (value) => registerController
+                                  .profile.profileName.value = value,
                             ),
                             SizedBox(height: 16),
                             CustomTextField(
                               labelText: 'ชื่อ',
                               obscureText: false,
-                              onChanged: (value) =>
-                                  registerController.profile.firstName.value = value,
+                              onChanged: (value) => registerController
+                                  .profile.firstName.value = value,
                             ),
                             SizedBox(height: 16),
                             CustomTextField(
                               labelText: 'นามสกุล',
                               obscureText: false,
-                              onChanged: (value) =>
-                                  registerController.profile.lastName.value = value,
+                              onChanged: (value) => registerController
+                                  .profile.lastName.value = value,
                             ),
                             SizedBox(height: 16),
                             CustomTextField(
@@ -86,21 +88,25 @@ class CreateAccountView extends StatelessWidget {
                             SizedBox(height: 16),
                             CustomDatePicker(
                               labelText: 'วันเกิด',
-                              selectedDate: registerController.profile.birthDate.value,
+                              selectedDate:
+                                  registerController.profile.birthDate.value,
                               onChanged: (DateTime value) {
-                                registerController.profile.birthDate.value = value;
+                                registerController.profile.birthDate.value =
+                                    value;
                               },
                             ),
                             SizedBox(height: 16),
                             Obx(() {
                               return CustomDropdown(
                                 labelText: 'เพศ',
-                                selectedValue: registerController.profile.gender.value.isEmpty
+                                selectedValue: registerController
+                                        .profile.gender.value.isEmpty
                                     ? 'ไม่ระบุ'
                                     : registerController.profile.gender.value,
                                 onChanged: (value) {
                                   if (value != null) {
-                                    registerController.profile.gender.value = value;
+                                    registerController.profile.gender.value =
+                                        value;
                                   }
                                 },
                                 items: ['ชาย', 'หญิง', 'ไม่ระบุ'],
@@ -110,15 +116,15 @@ class CreateAccountView extends StatelessWidget {
                             CustomTextField(
                               labelText: 'รหัสผ่าน',
                               obscureText: true,
-                              onChanged: (value) =>
-                                  registerController.user.password.value = value,
+                              onChanged: (value) => registerController
+                                  .user.password.value = value,
                             ),
                             SizedBox(height: 16),
                             CustomTextField(
                               labelText: 'ยืนยันรหัสผ่าน',
                               obscureText: true,
-                              onChanged: (value) =>
-                                  registerController.user.password.value = value,
+                              onChanged: (value) => registerController
+                                  .user.password.value = value,
                             ),
                           ],
                         ),

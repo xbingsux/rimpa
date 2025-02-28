@@ -137,6 +137,11 @@ router.get("/verify-user", async (req, res) => {
 
   if (!item.status && expired) {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -156,6 +161,11 @@ router.get("/verify-user", async (req, res) => {
       `)
   } else if (item.status && !expired) {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -177,6 +187,11 @@ router.get("/verify-user", async (req, res) => {
       `)
   } else {
     res.send(`
+      <style>
+        body {
+            margin: 0;
+        }
+      </style>
       <div style="background-color:#F2F2F4;position: relative;width: 100vw;height: 100vh;">
         <div style="display: grid;justify-content: center;align-items: center;row-gap: 0px;width: 500px;height: 320px;position: absolute;top: 45%;left: 50%;transform: translate(-50%,-50%);
         box-shadow: 0 4px 4px #00000040;border-radius: 16px;">
@@ -251,17 +266,64 @@ router.post("/reset-password", async (req, res) => {
     status: "success",
     user: user,
   });
-
-  // let isSuccess = (item && item.user.active)
-
-  // if (!item.status && expired) {
-
-  // } else if (item.status && !expired) {
-
-  // } else {
-  //   return res.status(401).send("Invalid token");
-  // }
 });
+router.post("/reset-password-user", async (req, res) => {
+  const { token, old_password, new_password } = req.body;
+
+  if (!token) {
+    return res.status(401).send("No token");
+  }
+
+  let decoded;
+  let expired = false;
+  try {
+    decoded = jwt.verify(token, process.env.SECRET_KEY);
+  } catch (e) {
+    if (e.message === "jwt expired") {
+      expired = true;
+    }
+    return res.status(401).send("Invalid or expired token");
+  }
+
+  if (!decoded || !decoded.userId) {
+    return res.status(401).send("Invalid token or missing user ID");
+  }
+
+  const user = await Service.findUserById(decoded.userId);  
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  const isMatch = await bcrypt.compare(old_password, user.password);
+  if (!isMatch) {
+    return res.status(400).send("Incorrect old password");
+  }
+
+  if (old_password === new_password) {
+    return res.status(400).send("New password cannot be the same as the old password");
+  }
+
+  const hashedPassword = await bcrypt.hash(new_password, 10);
+
+  try {
+    const updatedUser = await Service.resetPassword(decoded.userId, hashedPassword);
+
+    if (!updatedUser) {
+      return res.status(500).send("Failed to reset password");
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    return res.status(500).send("Error updating password");
+  }
+});
+
+
+
+
 
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -283,11 +345,17 @@ router.post("/forgot-password", async (req, res) => {
 
       console.log(token);
       await Service.sendForgotPassword(email, token)
+
+      return res.status(201).json({
+        status: "success",
+        user: user,
+      });
+    } else {
+      return res.status(404).json({
+        status: "fail",
+        message: "No such user exists in the system."
+      });
     }
-    return res.status(201).json({
-      status: "success",
-      user: user,
-    });
 
   } catch (error) {
     console.error(error);
@@ -318,6 +386,71 @@ router.post("/profileMe", auth, async (req, res) => {
       status: "error",
       message: "Internal Server Error",
     });
+  }
+});
+router.put("/updateProfileMe", auth, async (req, res) => {
+  const { profile_name, first_name, last_name, phone, birth_date, gender, profile_img, email } = req.body;
+
+  let formattedBirthDate = null; 
+  if (birth_date) {
+    const date = new Date(birth_date); 
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid birth_date format. Expected format: YYYY-MM-DD.",
+      });
+    }
+    formattedBirthDate = date.toISOString().split('T')[0];
+  }
+
+  const updatedData = {
+    profile_name,
+    first_name,
+    last_name,
+    phone,
+    birth_date: formattedBirthDate, 
+    gender,
+    profile_img,
+    email, 
+  };
+
+  try {
+    const updatedProfile = await Service.updateProfile(req.user.userId, updatedData);
+
+    if (updatedProfile) {
+      return res.status(200).json({
+        status: "success",
+        message: "Profile updated successfully",
+        profile: updatedProfile,
+      });
+    } else {
+      return res.status(404).json({
+        status: "error",
+        message: "Profile not found",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: error.message || "Internal Server Error",
+    });
+  }
+});
+
+
+
+router.post("/delete-user", auth, async (req, res) => {
+  try {
+    const event = await Service.deleteUser(req.user.userId);
+    return res.status(200).json({ status: "success", event });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
   }
 });
 

@@ -88,6 +88,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     style: TextStyle(
                       fontSize: AppTextSize.xl,
                       fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 16, 147, 237)
                     ),
                   ),
                   SizedBox(height: 10),

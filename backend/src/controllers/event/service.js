@@ -45,18 +45,34 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 }
             },
         }, include: {
-            SubEvent: true
+            SubEvent: {
+                include: {
+                    img: true
+                }
+            },
         }
     })
+
+    const missingImgIds = await Promise.all(
+        event.SubEvent[0].img
+            .filter(item => !event_img.some(img => img.id === item.id))
+            .map(async item => {
+                return await prisma.eventIMG.delete({
+                    where: { id: item.id }
+                });
+            })
+    );
+
+    // console.log(missingImgIds);
+
     let list = []
     // event_img    key, path
-    console.log(event_img);
+    // console.log(event_img);
 
     if (typeof event_img == 'object') {
-        event_img.map((item) => {
-            console.log(item);
-            list.push(upsertEventIMG(item.path, item.id, event.SubEvent[0].id))
-        })
+        for (const item of event_img) {
+            list.push(await upsertEventIMG(item.path, item.id, event.SubEvent[0].id));
+        }
     }
     event.img = list;
 
@@ -81,7 +97,14 @@ const upsertEventIMG = async (path, id, sub_event_id) => {
 }
 
 const listEvent = async () => {
+    const currentDate = new Date();
+
     let events = await prisma.event.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
         select: {
             id: true,
             event_name: true,
@@ -119,8 +142,15 @@ const listEvent = async () => {
 };
 
 const getEvent = async (id) => {
+    const currentDate = new Date();
+
     const event = await prisma.event.findFirst({
-        where: { id: id },
+        where: {
+            id: id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        },
         include: {
             SubEvent: { include: { img: true } },
         }
@@ -129,8 +159,127 @@ const getEvent = async (id) => {
     return event;
 }
 
+const joinEvent = async (user_id, sub_event_id) => {
+
+    let event = await prisma.eventParticipant.findFirst({
+        where: {
+            Profile: { user_id: user_id }, subEventId: sub_event_id, OR: [{ status: 'PAID' }, { status: 'PENDING' }]
+        }
+    })
+
+    if (event) throw new Error('Transaction Failed')
+
+    event = await prisma.eventParticipant.create({
+        data: {
+            Profile: { user_id: user_id }, subEventId: sub_event_id
+        }
+    })
+    return event;
+    // const point = await prisma.profile.up
+}
+
+const scan = async (user_id, qrcode) => {
+    const currentDate = new Date();  // ดึงวันที่และเวลาปัจจุบัน
+  
+    // ค้นหากิจกรรมที่มี QR Code ที่ตรงกับที่ส่งมา และตรวจสอบช่วงเวลา startDate และ endDate
+    const sub_event = await prisma.subEvent.findFirst({
+      where: {
+        qrcode: qrcode,  // ตรวจสอบ QR Code
+        startDate: { lte: currentDate },  // วันที่เริ่มต้นต้องน้อยกว่าหรือเท่ากับวันที่ปัจจุบัน
+        endDate: { gte: currentDate },  // วันที่สิ้นสุดต้องมากกว่าหรือเท่ากับวันที่ปัจจุบัน
+        active: true  // ตรวจสอบว่ากิจกรรมนั้นเปิดใช้งานอยู่
+      }
+    });
+  
+    // ถ้าไม่พบกิจกรรม
+    if (!sub_event) throw new Error('QR code not found or event is not active.');
+  
+    // ตรวจสอบว่าผู้ใช้ได้ทำการเข้าร่วมกิจกรรมนี้แล้วหรือยัง
+    const checkIn = await prisma.checkIn.findFirst({
+      where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
+    });
+  
+    // ถ้าผู้ใช้เคยเข้าร่วมกิจกรรมนี้แล้ว
+    if (checkIn) throw new Error('You have already claimed the point.');
+  
+    return sub_event;
+  };
+  
+  
+
+const checkIn = async (user_id, sub_event_id) => {
+
+    let checkIn = await prisma.checkIn.findFirst({
+        where: { sub_event_id: sub_event_id, profile: { user_id: user_id } }
+    })
+
+    if (checkIn) throw new Error('You have already claimed the point.')
+
+    const currentDate = new Date();
+    let sub_event = await prisma.subEvent.findFirst({
+        where: {
+            id: sub_event_id,
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+            active: true
+        }
+    })
+
+    if (!sub_event) throw new Error('No information available or out of the event period')
+
+    checkIn = await prisma.checkIn.create({
+        data: {
+            sub_event_id: sub_event_id,
+            profile: { user_id: user_id },
+        }
+    });
+
+    const point = await prisma.point.create({
+        data: {
+            points: sub_event.point,
+            Profile: { user_id: user_id },
+            type: 'EARN',
+            description: 'รับคะแนนจากกิจกรรม'
+        }
+    })
+
+    const profile = prisma.profile.update({
+        where: { user_id: user_id },
+        data: {
+            points: { increment: sub_event.point }
+        }
+    })
+
+    return point;
+}
+
+const listBanner = async () => {
+    const currentDate = new Date();
+    let banners = await prisma.banner.findMany({
+        where: {
+            startDate: { lte: currentDate },
+            endDate: { gte: currentDate },
+        }
+    });
+
+    return banners;
+};
+
+const bannerById = async (id) => {
+    let banner = await prisma.banner.findFirst({
+        where: { id: id }
+    });
+
+    return banner;
+};
+
 module.exports = {
     upsertEvent,
     listEvent,
-    getEvent
+    getEvent,
+    joinEvent,
+    checkIn,
+    listBanner,
+    bannerById,
+    scan
 };

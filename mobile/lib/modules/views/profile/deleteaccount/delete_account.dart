@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
+import 'package:rimpa/modules/views/profile/deleteaccount/delete_confirm_account.dart';
 import '../../../controllers/auth.controller.dart';
 import '../../../../core/constant/app.constant.dart';
 
@@ -11,7 +13,8 @@ class DeleteAccount extends StatelessWidget {
     // ตรวจสอบโหมดธีมที่ใช้งาน
     final authController = Get.put(LoginController());
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    final profileController =
+        Get.find<ProfileController>(); // ดึง ProfileController มาใช้
     return Scaffold(
       appBar: AppBar(
         backgroundColor: isDarkMode
@@ -86,12 +89,24 @@ class DeleteAccount extends StatelessWidget {
                   // ปุ่มยืนยันลบ
                   Expanded(
                     child: Custombottomaccep(
-                      text: 'ยืนยันลบ',
-                      onPressed: () => authController.deleteAccount(),
-                      buttonColor: Colors.transparent, // ไม่มีสีพื้นหลัง
-                      gradient: AppGradiant.gradientX_1, // ใช้ gradient
-                      borderRadius:
-                          BorderRadius.circular(20), // border radius 20
+                      text: 'ลบ',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DeleteConfirmationPage(
+                              onConfirmDelete: () {
+                                profileController
+                                    .deleteUser(); // เรียก deleteUser() เมื่อกดตกลง
+                                Navigator.pop(context); // ปิดหน้ายืนยันหลังลบ
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      buttonColor: Colors.transparent,
+                      gradient: AppGradiant.gradientX_1,
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ],

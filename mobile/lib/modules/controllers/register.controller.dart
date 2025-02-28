@@ -9,7 +9,6 @@ class RegisterController extends GetxController {
   final UserModel user = UserModel();
   final ProfileModel profile = ProfileModel();
   Dio dio = Dio();
-// เปลี่ยนวันที่ให้เป็นรูปแบบที่ต้องการ
 
   // ฟังก์ชันเพื่อส่งข้อมูลลง backend
   void register() async {
@@ -22,10 +21,15 @@ class RegisterController extends GetxController {
         profile.birthDate != null) {
       try {
         final apiUrlsController = Get.find<ApiUrls>();
-        String genderValue = profile.gender.value == 'ไม่ระบุ' ? 'Other' : profile.gender.value == 'ชาย' ? 'Male' : 'Female';
+        String genderValue = profile.gender.value == 'ไม่ระบุ'
+            ? 'Other'
+            : profile.gender.value == 'ชาย'
+                ? 'Male'
+                : 'Female';
         // แปลงวันที่ให้เป็นรูปแบบ ISO-8601 พร้อมเวลาและเขตเวลา
         String formattedDate =
             profile.birthDate.value.toUtc().toIso8601String();
+
         // ส่งข้อมูลไปยัง API
         final response = await dio.post(
           apiUrlsController.register.value,
@@ -38,16 +42,20 @@ class RegisterController extends GetxController {
               'last_name': profile.lastName.value,
               'phone': profile.phone.value,
               'birth_date': formattedDate, // ใช้วันที่ที่แปลงแล้ว
-              'gender': genderValue,  // ส่งค่า gender ที่เลือก
+              'gender': genderValue, // ส่งค่า gender ที่เลือก
             },
           },
         );
 
+        // ตรวจสอบสถานะของการตอบกลับจาก API
         if (response.statusCode == 200) {
           Get.snackbar("Success", "Account Created Successfully");
           Get.offAllNamed('/login');
+        } else if (response.data['message'] == 'อีเมลนี้ถูกใช้ไปแล้ว') {
+          Get.snackbar("Error", "อีเมลนี้ถูกใช้ไปแล้ว");
         } else {
-          Get.snackbar("success", "success create account.");
+          Get.snackbar("เสร็จสิ้น", "สมัครบัญซีเสร็จสิ้น");
+          Get.toNamed('/login');
         }
       } catch (e) {
         Get.snackbar("Error", "An error occurred. Please try again.");

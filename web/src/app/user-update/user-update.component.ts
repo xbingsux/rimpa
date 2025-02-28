@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +19,7 @@ export class UserUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
-      console.log(param.get('id'));
+      // console.log(param.get('id'));
       if (param.get('id')) {
         this.http.post(`${environment.API_URL}/profile`, { profile_id: Number(param.get('id')) }).subscribe(async (response: any) => {
           let item = response.profile;
@@ -96,9 +96,9 @@ export class UserUpdateComponent implements OnInit {
 
   async submit() {
     const imgPath = await this.upload_img();
-    console.log("🚀 Image Path:", imgPath);
+    // console.log("🚀 Image Path:", imgPath);
 
-    console.log(typeof this.data.Status);
+    // console.log(typeof this.data.Status);
 
     this.http.post(`${environment.API_URL}/register`, {
       email: this.data.email,
@@ -117,14 +117,18 @@ export class UserUpdateComponent implements OnInit {
     }).subscribe(
       async (response: any) => {
         // console.log("✅ Register Success:", response);
-        if (response.status == 'success') this.router.navigate(['/admin/users']);
+        if (response.status === 'success') {
+          this.router.navigate(['/admin/users']).then(() => {
+            window.location.reload();
+          });
+        }
+
       },
       (error) => {
         console.error("🚨 Register Error:", error);
       }
     );
   }
-
 
 }
 class User {

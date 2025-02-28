@@ -57,9 +57,11 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+
 class CustomButtonResetpassword extends StatelessWidget {
   final String text;
-  final VoidCallback? onPressed; // เปลี่ยนเป็น VoidCallback? เพื่อรองรับค่า null
+  final VoidCallback?
+      onPressed; // เปลี่ยนเป็น VoidCallback? เพื่อรองรับค่า null
 
   const CustomButtonResetpassword({
     Key? key,
@@ -107,7 +109,6 @@ class CustomButtonResetpassword extends StatelessWidget {
     );
   }
 }
-
 
 // ปุ่มสร้างบัญชี
 class CreateAccountButton extends StatelessWidget {
@@ -228,7 +229,6 @@ class Haveaccountbutton extends StatelessWidget {
   }
 }
 
-
 class CustomDatePicker extends StatelessWidget {
   final String labelText;
   final DateTime? selectedDate;
@@ -250,42 +250,63 @@ class CustomDatePicker extends StatelessWidget {
           initialDate: selectedDate ?? DateTime.now(),
           firstDate: DateTime(1900),
           lastDate: DateTime.now(),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.blue, // ปรับสีปุ่มและพื้นหลัง
+                dialogBackgroundColor: Colors.white, // สีพื้นหลังของ dialog
+                buttonTheme:
+                    ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                colorScheme: ColorScheme.light(primary: Colors.blue)
+                    .copyWith(background: Colors.white),
+              ),
+              child: child!,
+            );
+          },
         );
         if (pickedDate != null) {
-          onChanged(pickedDate); // ส่งค่าที่เลือกไปยัง controller
+          onChanged(pickedDate);
         }
       },
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: labelText,
+          labelText: labelText, // ใช้ label ที่เป็นภาษาไทย
           labelStyle: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 95, 95, 95),
+            fontSize: 16,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500, // เพิ่มความหนาให้ตัวอักษร
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25),
             borderSide: const BorderSide(
-              color: Color.fromARGB(255, 163, 163, 163),
-              width: 1,
+              color: Colors.blueAccent,
+              width: 2,
             ),
           ),
           filled: true,
-          fillColor: const Color(0xFFFDFDFD),
-          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          fillColor: Colors.white, // สีพื้นหลังเป็นสีขาว
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         ),
-        child: Text(
-          selectedDate == null
-              ? 'กรุณาเลือกวันที่'
-              : DateFormat('yyyy-MM-dd').format(selectedDate!), // รูปแบบการแสดงผล
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 158, 158, 158),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              selectedDate == null
+                  ? 'กรุณาเลือกวันที่เกิด'
+                  : '${DateFormat('d MMMM yyyy').format(selectedDate!)}', // แสดงวันที่พร้อมเดือนไทย
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(255, 158, 158, 158),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
 class CustomDropdown extends StatelessWidget {
   final String labelText;
   final String? selectedValue;
@@ -306,33 +327,40 @@ class CustomDropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(
-          fontSize: 14,
-          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
+          fontSize: 16,
+          color: Colors.grey, // สีข้อความ label
+          fontWeight: FontWeight.w500, // เพิ่มความหนาให้ตัวอักษร
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้ง
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
-            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
+            color: Color.fromARGB(
+                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
+            width: 1, // ความหนาของเส้น
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
           borderSide: const BorderSide(
-            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
-            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
+            color: Colors.blueAccent, // สีกรอบตอนโฟกัส
+            width: 2,
           ),
         ),
         filled: true,
         fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
       ),
       child: DropdownButton<String>(
         value: selectedValue,
-        hint: const Text('เลือกเพศ'),
+        hint: const Text('กรุณาเลือก'),
         isExpanded: true,
         onChanged: onChanged,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.black, // สีตัวหนังสือใน dropdown
+        ),
+        dropdownColor: const Color(0xFFFDFDFD), // สีพื้นหลังของ dropdown
         items: items.map((value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -344,75 +372,139 @@ class CustomDropdown extends StatelessWidget {
   }
 }
 
-
-// ช่องกรอกข้อมูล
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String labelText;
   final bool obscureText;
   final Function(String) onChanged;
-  final bool isDateField; // เพิ่มตัวแปรสำหรับเช็คว่าเป็นช่องวันที่
+  final bool isDateField;
+  final bool isEmailField;
 
   const CustomTextField({
     Key? key,
     required this.labelText,
     required this.obscureText,
     required this.onChanged,
-    this.isDateField = false, // กำหนดค่าเริ่มต้นเป็น false
+    this.isDateField = false,
+    this.isEmailField = false,
   }) : super(key: key);
 
   @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _obscureText;
+  String? _emailError;
+  String? _passwordGuide;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  void _validateEmail(String value) {
+    if (widget.isEmailField) {
+      final emailRegExp =
+          RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+      if (!emailRegExp.hasMatch(value)) {
+        setState(() {
+          _emailError = 'กรุณากรอกอีเมลที่ถูกต้อง';
+        });
+      } else {
+        setState(() {
+          _emailError = null;
+        });
+      }
+    }
+  }
+
+  void _validatePassword(String value) {
+    if (widget.labelText == 'รหัสผ่าน') {
+      setState(() {
+        _passwordGuide =
+            value.length < 6 ? 'รหัสผ่านควรมีอย่างน้อย 6 ตัวอักษร' : null;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return TextField(
-      obscureText: obscureText,
-      onChanged: (value) {
-        if (isDateField) {
-          // ถ้าเป็นช่องวันที่ แปลงค่าจาก String เป็น DateTime
-          try {
-            // ใช้ DateFormat เพื่อแปลงวันที่จาก String ไปเป็น DateTime
-            DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(value);
-            // ส่งค่าผ่าน onChanged
-            onChanged(parsedDate.toString());
-          } catch (e) {
-            print('Invalid date format');
-            onChanged(value); // ถ้าผิดพลาด ก็ส่งค่าตามเดิม
-          }
-        } else {
-          // ถ้าไม่ใช่ช่องวันที่ ก็ส่งค่าปกติ
-          onChanged(value);
-        }
-      },
-      style: const TextStyle(
-        fontSize: 14,
-        color: Color.fromARGB(255, 158, 158, 158), // สีข้อความปกติ
-      ),
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(
-          fontSize: 14,
-          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้ง
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
-            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          obscureText: _obscureText,
+          onChanged: (value) {
+            widget.onChanged(value);
+            if (widget.isEmailField) _validateEmail(value);
+            if (widget.labelText == 'รหัสผ่าน') _validatePassword(value);
+          },
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 158, 158, 158),
+          ),
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            labelStyle: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 95, 95, 95),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 163, 163, 163),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 37, 37, 37),
+                width: 2,
+              ),
+            ),
+            filled: true,
+            fillColor: const Color(0xFFFDFDFD),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            suffixIcon: (widget.labelText == 'รหัสผ่าน' ||
+                    widget.labelText == 'ยืนยันรหัสผ่าน')
+                ? IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                    onPressed: _togglePasswordVisibility,
+                  )
+                : null,
           ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
-            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
+        if (_emailError != null) ...[
+          SizedBox(height: 8),
+          Text(
+            _emailError!,
+            style: TextStyle(color: Colors.red, fontSize: 12),
           ),
-        ),
-        filled: true,
-        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
-      ),
+        ],
+        if (_passwordGuide != null) ...[
+          SizedBox(height: 8),
+          Text(
+            _passwordGuide!,
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          ),
+        ],
+      ],
     );
   }
 }
+
 // ช่องกรอกข้อมูลรหัสผ่าน
 // ช่องกรอกข้อมูลรหัสผ่านที่มีไอคอนเปิดตาปิดตา
 class CustomTextFieldpassword extends StatelessWidget {
@@ -460,62 +552,53 @@ class CustomTextFieldpassword extends StatelessWidget {
         ),
         filled: true,
         fillColor: const Color(0xFFFDFDFD),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         suffixIcon: suffixIcon, // แสดงไอคอนที่เพิ่มเข้ามา
       ),
     );
   }
 }
 
-
 // ช่องกรอกข้อมูล
 class Customtextprofile extends StatelessWidget {
   final String labelText;
   final bool obscureText;
+  final TextEditingController controller;
 
   const Customtextprofile({
     Key? key,
     required this.labelText,
     required this.obscureText,
+    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller, // ใช้ controller สำหรับค่าที่กรอก
       obscureText: obscureText,
-      style: const TextStyle(
-          fontSize: AppTextSize.sm,
-          color: Color.fromARGB(255, 158, 158, 158)), // สีข้อความปกติ
+      style: const TextStyle(fontSize: 16, color: Color(0xFF9E9E9E)),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: const TextStyle(
-          fontSize: AppTextSize.sm,
-          color: Color.fromARGB(255, 95, 95, 95), // สีข้อความ label เทาอ่อน
-        ),
+        labelStyle: const TextStyle(fontSize: 16, color: Color(0xFF5F5F5F)),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้ง
-          borderSide: const BorderSide(
-            color: Color.fromARGB(
-                255, 163, 163, 163), // สีกรอบเทาอ่อนเมื่อไม่ได้โฟกัส
-            width: 1, // ความหนาของเส้นปรับเป็น 1 เพื่อให้แสดงผลถูกต้อง
-          ),
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(color: Color(0xFFA3A3A3), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // กรอบโค้งเหมือนเดิม
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 37, 37, 37), // สีกรอบดำเข้มเมื่อโฟกัส
-            width: 2, // ทำให้เส้นตอนโฟกัสดูเด่นขึ้น
-          ),
+          borderRadius: BorderRadius.circular(25),
+          borderSide: const BorderSide(color: Color(0xFF252525), width: 2),
         ),
         filled: true,
-        fillColor: const Color(0xFFFDFDFD), // สีพื้นหลังขาวนวล
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: 16, horizontal: 16), // ปรับช่องว่างในกรอบ
+        fillColor: const Color(0xFFFDFDFD),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
     );
   }
 }
+
 class CustomResetpasswordfiule extends StatelessWidget {
   final String labelText;
   final bool obscureText;
@@ -566,8 +649,6 @@ class CustomResetpasswordfiule extends StatelessWidget {
   }
 }
 
-
-
 // ช่องกรอกสำหรับเบอร์โทร
 class CustomPhoneTextField extends StatelessWidget {
   const CustomPhoneTextField({
@@ -613,57 +694,45 @@ class CustomPhoneTextField extends StatelessWidget {
     );
   }
 }
+
 class CustomPhoneTextFieldProfile extends StatelessWidget {
-  final String phoneNumber;  // เพิ่มพารามิเตอร์นี้
+  final String phoneNumber;
+  final TextEditingController controller;
 
   const CustomPhoneTextFieldProfile({
     Key? key,
-    required this.phoneNumber,  // ใช้ required เพื่อให้ต้องรับค่า
+    required this.phoneNumber,
+    required this.controller, // ใช้ controller สำหรับกรอก
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController(text: phoneNumber);
-
     return IntlPhoneField(
-      controller: controller,  // ใช้ controller สำหรับการจัดการค่าภายในฟิลด์
+      controller: controller,
+      style: const TextStyle(color: Colors.black, fontSize: 16),
       decoration: InputDecoration(
-        labelText: 'เบอร์โทรศัพท์มือถือ',
-        labelStyle: const TextStyle(
-          fontSize: 14,
-          color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
-        ),
+        labelStyle: const TextStyle(fontSize: 16, color: Color(0xFF323232)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 180, 180, 180), // กรอบเทาอ่อน
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF000000), width: 1),
         ),
         filled: true,
-        fillColor: Colors.white, // พื้นหลังขาว
+        fillColor: Colors.white,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
-      initialCountryCode: 'TH', // ให้ค่าเริ่มต้นเป็นประเทศไทย 🇹🇭
-      showCountryFlag: true, // แสดงธงชาติ
-      dropdownTextStyle: const TextStyle(
-        fontSize: 16,
-        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อนๆ
-      ),
-      dropdownIcon: const Icon(
-        Icons.arrow_drop_down,
-        color: Color.fromARGB(255, 50, 50, 50), // สีดำอ่อน
-        size: 24,
-      ), // ไอคอนลูกศรเลือกประเทศ
-      dropdownDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25), // โค้งมน
-      ),
-      disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+      initialCountryCode: 'TH',
+      showCountryFlag: true,
+      dropdownTextStyle:
+          const TextStyle(fontSize: 16, color: Color(0xFF323232)),
+      dropdownIcon:
+          const Icon(Icons.arrow_drop_down, color: Color(0xFF323232), size: 24),
+      dropdownDecoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(25)),
+      disableLengthCheck: true,
     );
   }
 }
-
 
 class CustomPhoneRegisTextField extends StatelessWidget {
   final Function(String) onChanged;
@@ -691,8 +760,7 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH', // กำหนดประเทศเริ่มต้นเป็นประเทศไทย 🇹🇭
       showCountryFlag: true, // แสดงธงชาติ
@@ -709,6 +777,9 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(25), // โค้งมน
       ),
       disableLengthCheck: true, // ปิดการตรวจสอบความยาวหมายเลข
+      style: const TextStyle(
+        color: Colors.black, // สีของข้อความที่กรอก
+      ),
       onChanged: (phone) {
         // เมื่อมีการเปลี่ยนแปลงข้อมูล
         onChanged(phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
@@ -716,6 +787,8 @@ class CustomPhoneRegisTextField extends StatelessWidget {
     );
   }
 }
+
+
 
 // ช่องกรอกสร้างบัญชี
 class CreatTextField extends StatelessWidget {
@@ -818,7 +891,6 @@ class RememberPasswordWidget extends StatelessWidget {
   }
 }
 
-
 // หรือ///
 class Ordesign extends StatelessWidget {
   final String text;
@@ -902,16 +974,16 @@ class SocialLoginButtons extends StatelessWidget {
         height: 55,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 28,
-            ),
+            // Icon(
+            //   icon,
+            //   color: Colors.white,
+            //   size: 28,
+            // ),
             SizedBox(width: 10),
             Text(
               text,
