@@ -101,4 +101,16 @@ export class UserManagementComponent implements OnInit {
     }
     this.list_Filter()
   }
+
+
+  delete_id: number | null = null;
+  deleteUser() {
+    this.http.post(`${environment.API_URL}/delete-user`, { id: this.delete_id }).subscribe(async (response: any) => {
+      // console.log(response);
+      this.ngOnInit()
+      this.delete_id = null;
+    }, error => {
+      console.error('Error:', error);
+    });
+  }
 }

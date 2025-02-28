@@ -317,7 +317,7 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
             endDate: endDate,
             img: img,
             stock: stock,
-            max_per_user:1,//default
+            max_per_user: 1,//default
             cost: cost,
             paymentType: 'Point'
         },
@@ -339,6 +339,9 @@ const deleteUser = async (id) => {
         where: {
             id: id,
             active: true
+        },
+        data: {
+            active: false
         }
     })
     return user;

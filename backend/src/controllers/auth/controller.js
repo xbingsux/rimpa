@@ -439,4 +439,18 @@ router.put("/updateProfileMe", auth, async (req, res) => {
 });
 
 
+router.post("/delete-user", auth, async (req, res) => {
+  try {
+    const event = await Service.deleteUser(req.user.userId);
+    return res.status(200).json({ status: "success", event });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;
