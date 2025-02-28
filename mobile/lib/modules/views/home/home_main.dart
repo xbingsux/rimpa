@@ -4,13 +4,12 @@ import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
 import '../../../core/constant/app.constant.dart';
-import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../models/listevent.model.dart';
-import '../../models/listbanner.model.dart'; // Add this import
+// Add this import
 import 'seeallcards/home_event_allcard.dart';
 import 'homedetail/home_detail.dart';
 import 'homedetail/banner_detail.dart'; // Add this import
@@ -18,6 +17,8 @@ import '../../controllers/listevent/listevent.controller.dart';
 import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 
 class HomeMainPage extends StatefulWidget {
+  const HomeMainPage({super.key});
+
   @override
   _HomeMainPageState createState() => _HomeMainPageState();
 }

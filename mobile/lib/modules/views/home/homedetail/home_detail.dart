@@ -110,7 +110,7 @@ class HomeDetailPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: AppTextSize.xxl,
                                           color: AppTextColors.black,
                                           fontWeight: FontWeight.bold),
@@ -126,7 +126,7 @@ class HomeDetailPage extends StatelessWidget {
                                         const SizedBox(width: 5),
                                         Text(
                                           '$startDate - $endDate',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: AppTextSize.xs,
                                               color: AppTextColors.secondary),
                                         ),
@@ -173,7 +173,7 @@ class HomeDetailPage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'รายละเอียดกิจกรรม ',
                                   style: TextStyle(
                                       fontSize: AppTextSize.sm,
@@ -181,10 +181,10 @@ class HomeDetailPage extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(AppSpacing.xs),
+                                  padding: const EdgeInsets.all(AppSpacing.xs),
                                   child: Text(
                                     description,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: AppTextSize.sm,
                                       color: AppTextColors.secondary,
                                     ),
@@ -230,7 +230,7 @@ class HomeDetailPage extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(AppRadius.rounded),
                           color:
-                              Color(0xFFEBF5FD)), // Corrected color definition
+                              const Color(0xFFEBF5FD)), // Corrected color definition
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -238,15 +238,15 @@ class HomeDetailPage extends StatelessWidget {
                             Container(
                               width: 38,
                               height: 38,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 gradient:
                                     AppGradiant.gradientX_1, // Applied gradient
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.star, color: Colors.white),
+                              child: const Icon(Icons.star, color: Colors.white),
                             ),
-                            SizedBox(width: 8), // Added missing comma
-                            Text(
+                            const SizedBox(width: 8), // Added missing comma
+                            const Text(
                               '100 คะแนน',
                               style: TextStyle(
                                   fontSize: AppTextSize.lg,
@@ -258,12 +258,12 @@ class HomeDetailPage extends StatelessWidget {
                               child: Container(
                                 width: 38,
                                 height: 38,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   gradient: AppGradiant
                                       .gradientX_1, // Applied gradient
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.star, color: Colors.white),
+                                child: const Icon(Icons.star, color: Colors.white),
                               ),
                             ),
                           ],
@@ -297,7 +297,6 @@ class HomeDetailPage extends StatelessWidget {
   String _formatDate(String date) {
     DateTime dateTime = DateTime.parse(date);
     var thaiDateFormat = DateFormat('d MMM', 'th_TH');
-    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
     String formattedDate = thaiDateFormat.format(dateTime);
     String thaiYear =
         (dateTime.year + 543).toString(); // Convert to Buddhist year

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
 
@@ -121,7 +120,7 @@ class HomeDetailReward extends StatelessWidget {
                                 vertical: AppSpacing.md),
                             child: Text(
                               title, // Use reward name
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: AppTextSize.xxl,
                                   color: AppTextColors.black,
                                   fontWeight: FontWeight.bold),
@@ -354,7 +353,6 @@ class HomeDetailReward extends StatelessWidget {
   String _formatDate(DateTime date) {
     DateTime dateTime = date;
     var thaiDateFormat = DateFormat('d MMM', 'th_TH');
-    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
     String formattedDate = thaiDateFormat.format(dateTime);
     String thaiYear =
         (dateTime.year + 543).toString(); // Convert to Buddhist year

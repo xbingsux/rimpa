@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import 'package:rimpa/core/theme/theme_controller.dart';
 import '../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/forgotpassword/forgotpassword.controller.dart';
 
 class ForgotPasswordView extends StatefulWidget {
+  const ForgotPasswordView({super.key});
+
   @override
   _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }

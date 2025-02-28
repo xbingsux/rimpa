@@ -5,9 +5,8 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/api_urls.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './modules/controllers/middleware/auth_middleware.dart';
-import 'package:url_launcher/url_launcher.dart'; // Add this import
+// Add this import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,10 +14,12 @@ void main() async {
   Get.put(AuthMiddleware());
   Get.put(ApiUrls());
   Get.put(ThemeController());
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();

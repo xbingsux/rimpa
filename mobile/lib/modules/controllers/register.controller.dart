@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
-import '../models/users.model.dart';
 import '../models/users.model.dart';
 import '../../core/services/api_urls.dart';
 
@@ -17,8 +15,7 @@ class RegisterController extends GetxController {
         profile.profileName.isNotEmpty &&
         profile.firstName.isNotEmpty &&
         profile.lastName.isNotEmpty &&
-        profile.phone.isNotEmpty &&
-        profile.birthDate != null) {
+        profile.phone.isNotEmpty) {
       try {
         final apiUrlsController = Get.find<ApiUrls>();
         String genderValue = profile.gender.value == 'ไม่ระบุ'

@@ -1,10 +1,8 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../models/users.model.dart';
-import '../../core/routes/app_pages.dart';
 import '../../core/services/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../controllers/getusercontroller/auth_service.dart';
 import '../controllers/profile/profile_controller.dart';
 
 class LoginController extends GetxController {

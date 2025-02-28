@@ -12,7 +12,7 @@ class UserDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ดึง Controller
-    final authController = Get.put(LoginController());
+    Get.put(LoginController());
     final profileController =
         Get.put(ProfileController()); // เพิ่ม ProfileController
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;

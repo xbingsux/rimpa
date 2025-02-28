@@ -11,6 +11,8 @@ import '../../controllers/profile/profile_controller.dart';
 import 'dart:io'; // สำหรับจัดการไฟล์
 
 class HomeProfilePage extends StatefulWidget {
+  const HomeProfilePage({super.key});
+
   @override
   _HomeProfilePageState createState() => _HomeProfilePageState();
 }
@@ -20,7 +22,6 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   String email = '';
   bool isLoggedIn = false;
   late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
   final AuthService _authService =
       AuthService(); // สร้าง instance ของ AuthService
   final profileController =
@@ -35,14 +36,9 @@ class _HomeProfilePageState extends State<HomeProfilePage>
     _checkLoginStatus(); // ตรวจสอบสถานะการล็อกอินเมื่อเริ่มต้น
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0))
-        .animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
 
     _animationController.forward();
   }
@@ -91,14 +87,14 @@ class _HomeProfilePageState extends State<HomeProfilePage>
       // ถามผู้ใช้ว่าแน่ใจไหมที่จะเปลี่ยนรูป
       Get.dialog(
         AlertDialog(
-          title: Text('ยืนยันการเปลี่ยนรูปโปรไฟล์'),
-          content: Text('คุณต้องการเปลี่ยนรูปโปรไฟล์หรือไม่?'),
+          title: const Text('ยืนยันการเปลี่ยนรูปโปรไฟล์'),
+          content: const Text('คุณต้องการเปลี่ยนรูปโปรไฟล์หรือไม่?'),
           actions: [
             TextButton(
               onPressed: () {
                 Get.back(); // ปิด dialog
               },
-              child: Text('ยกเลิก'),
+              child: const Text('ยกเลิก'),
             ),
             TextButton(
               onPressed: () {
@@ -106,7 +102,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                 // เรียกฟังก์ชันอัปโหลดรูป
                 profileController.uploadProfileImage(_selectedImage!);
               },
-              child: Text('ยืนยัน'),
+              child: const Text('ยืนยัน'),
             ),
           ],
         ),
@@ -124,7 +120,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   Widget build(BuildContext context) {
     ApiUrls apiUrls = Get.find();
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: AppGradiant.gradientX_1,
       ),
       child: SafeArea(
@@ -136,14 +132,14 @@ class _HomeProfilePageState extends State<HomeProfilePage>
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: 80), // เว้นพื้นที่ด้านบนของ Profile Image
+                    const SizedBox(height: 80), // เว้นพื้นที่ด้านบนของ Profile Image
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Color.fromARGB(255, 26, 25, 25)
+                            ? const Color.fromARGB(255, 26, 25, 25)
                             : Colors.white,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),
                         ),
@@ -160,7 +156,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                         child: Column(
                           children: [
                             if (!isLoggedIn) ...[
-                              Text(
+                              const Text(
                                 "ยังไม่ได้ลงชื่อเข้าใช้",
                                 style: TextStyle(
                                   fontSize: 20,
@@ -168,19 +164,19 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                   color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: () => Get.toNamed('/login'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blueAccent,
-                                  fixedSize: Size(270, 40),
+                                  fixedSize: const Size(270, 40),
                                 ),
                                 child: Text(
                                   'ไปยังหน้าล็อกอิน',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                   height:
                                       450), // เผื่อพื้นที่ป้องกัน bottom overflow
                             ] else ...[
@@ -217,7 +213,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                   );
                                 }
                               }),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Obx(() {
                                 // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
                                 if (profileController.profileData.isEmpty ||
@@ -283,12 +279,12 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                       route: "/delete-account"),
                                 ],
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: _logout,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFD9D9D9),
-                                  fixedSize: Size(350, 40),
+                                  fixedSize: const Size(350, 40),
                                 ),
                                 child: Text(
                                   'ออกจากระบบ',
@@ -296,7 +292,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                 ),
                               ),
                             ],
-                            SizedBox(
+                            const SizedBox(
                                 height:
                                     130), // เผื่อพื้นที่ป้องกัน bottom overflow
                           ],
@@ -328,7 +324,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: profileImage.isEmpty
-                              ? Color.fromARGB(255, 218, 165, 165)
+                              ? const Color.fromARGB(255, 218, 165, 165)
                               : Colors.transparent,
                           boxShadow: [
                             BoxShadow(
@@ -343,7 +339,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                               AppImageType.network, // ระบุประเภทเป็น Network
                           imageAddress: imageUrl, // URL ของภาพโปรไฟล์
                           aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                               Radius.circular(50)), // รูปทรงวงกลม
                         ),
                       ),
@@ -352,7 +348,7 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                         bottom: 0,
                         right: 0,
                         child: IconButton(
-                          icon: Icon(Icons.camera_alt),
+                          icon: const Icon(Icons.camera_alt),
                           onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
                           color: Colors.white,
                         ),

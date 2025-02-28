@@ -10,29 +10,27 @@ class PhoneLoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneController =
-        TextEditingController(text: phoneNumber);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.5, //  ตั้งให้สูง 50% ของจอ
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
       child: Column(
         children: [
           // 🔹 แถวบน: ปุ่มย้อนกลับ + หัวข้อ
           Row(
             children: [
               IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () => Get.back(), // ปิด Bottom Sheet
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 'สมัครสมาชิก',
                 style: TextStyle(fontSize: 20),
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.xl),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -40,12 +38,12 @@ class PhoneLoginForm extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ),
-           SizedBox(height: AppSpacing.md),
+           const SizedBox(height: AppSpacing.md),
           //  ฟิลด์ป้อนเบอร์โทร
-          CustomPhoneTextField(
+          const CustomPhoneTextField(
             
           ),
-          SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -54,7 +52,7 @@ class PhoneLoginForm extends StatelessWidget {
             ),
           ),
 
-          Spacer(), //  ดันปุ่มไปอยู่ล่างสุด
+          const Spacer(), //  ดันปุ่มไปอยู่ล่างสุด
           // 🔹 ปุ่มยืนยัน (อยู่ล่างเสมอ)
           Padding(
             padding:

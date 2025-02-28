@@ -19,7 +19,6 @@ class _LoginViewState extends State<LoginView>
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Stack(
@@ -28,7 +27,7 @@ class _LoginViewState extends State<LoginView>
           AspectRatio(
   aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
   child: Container(
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: AppColors.light, // ใส่สีพื้นหลัง
     ),
     child: Align(
@@ -54,9 +53,9 @@ class _LoginViewState extends State<LoginView>
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Theme.of(context).brightness == Brightness.dark
-                    ? Color(0xFF1A1919) // ดาร์คโหมด
+                    ? const Color(0xFF1A1919) // ดาร์คโหมด
                     : Colors.white, // ไลท์โหมด
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
@@ -75,15 +74,15 @@ class _LoginViewState extends State<LoginView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// 🔹 **ข้อความต้อนรับ**
-                      SizedBox(height: AppSpacing.sm),
-                      Text(
+                      const SizedBox(height: AppSpacing.sm),
+                      const Text(
                         'ยินดีต้อนรับเข้าสู่ระบบ',
                         style: TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 16, 147, 237)),
+                            color: Color.fromARGB(255, 16, 147, 237)),
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
 
                       /// 🔹 **ฟอร์มล็อกอิน**
                       Column(
@@ -94,7 +93,7 @@ class _LoginViewState extends State<LoginView>
                             onChanged: (value) =>
                                 authController.user.email.value = value,
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **ฟิลด์รหัสผ่าน**
                           CustomTextFieldpassword(
@@ -113,7 +112,7 @@ class _LoginViewState extends State<LoginView>
                               },
                             ),
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **"จำรหัสผ่าน" & "ลืมรหัสผ่าน"**
                           RememberPasswordWidget(
@@ -126,7 +125,7 @@ class _LoginViewState extends State<LoginView>
                             onForgotPassword: () =>
                                 Get.toNamed('/forgot-password'),
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **ปุ่มเข้าสู่ระบบ**
                           CustomButton(
@@ -134,18 +133,18 @@ class _LoginViewState extends State<LoginView>
                             onPressed: () => authController
                                 .loginwithemail(_rememberPassword),
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **เส้นคั่น "หรือ"**
-                          Ordesign(text: 'หรือ'),
-                          SizedBox(height: AppSpacing.md),
+                          const Ordesign(text: 'หรือ'),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **ปุ่มเข้าสู่ระบบด้วย Google**
                           SocialLoginButtons(
                             onGooglePressed: () =>
                                 print("เข้าสู่ระบบด้วย Google"),
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.md),
 
                           /// 🔹 **ปุ่มสมัครบัญชีใหม่**
                           CreateAccountButton(
@@ -167,7 +166,7 @@ class _LoginViewState extends State<LoginView>
             top: 16,
             right: 16,
             child: IconButton(
-              icon: Icon(Icons.brightness_6),
+              icon: const Icon(Icons.brightness_6),
               onPressed: () => Get.find<ThemeController>().toggleTheme(),
             ),
           ),

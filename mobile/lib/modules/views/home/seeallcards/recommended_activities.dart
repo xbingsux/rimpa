@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 
 import '../../../../components/dropdown/app-dropdown.component.dart';
 import '../../../../components/cards/app-card.component.dart';
 import '../../../../components/imageloader/app-image.component.dart';
-import '../home_reward.dart';
-import '../homedetail/home_detail.dart';
 
 class RecommendedActivities extends StatefulWidget {
+  const RecommendedActivities({super.key});
+
   @override
   _RecommendedActivitiesState createState() => _RecommendedActivitiesState();
 }

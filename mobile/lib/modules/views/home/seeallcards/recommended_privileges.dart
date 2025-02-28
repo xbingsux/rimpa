@@ -7,12 +7,12 @@ import '../../../../components/dropdown/app-dropdown.component.dart';
 import '../../../../components/cards/app-card.component.dart';
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
-import '../home_reward.dart';
-import '../homedetail/home_detail.dart';
 import '../../../controllers/listreward/listreward.controller.dart'; // Add this import
 import '../../../models/listreward.model.dart'; // Add this import
 
 class RecommendedPrivilegesPage extends StatefulWidget {
+  const RecommendedPrivilegesPage({super.key});
+
   @override
   _RecommendedPrivilegesPageState createState() =>
       _RecommendedPrivilegesPageState();
@@ -28,7 +28,7 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
       } else {
@@ -37,7 +37,7 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
 
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     });
@@ -63,20 +63,20 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.grey),
+                icon: const Icon(Icons.arrow_back, color: Colors.grey),
                 onPressed: () {
                   Get.back();
                 },
               ),
             ),
-            Align(
+            const Align(
               alignment: Alignment.center,
               child: Text(
                 "สิทธิพิเศษ",
                 style: TextStyle(color: Color(0xFF1E54FD), fontSize: 18),
               ),
             ),
-            Align(
+            const Align(
               alignment: Alignment.centerRight,
               child: Icon(Icons.notifications_none, color: Colors.grey),
             ),
@@ -85,7 +85,7 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
       ),
       body: Obx(() {
         if (listRewardController.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else {
           List<ListReward> sortedRewards =
               listRewardController.rewards.toList();
@@ -111,11 +111,11 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
                     choices: ["ใหม่สุด", "เก่าสุด"],
                     active: _sortOrder,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8,
@@ -136,13 +136,13 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
                                 imageAddress:
                                     '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 4.0),
                                 child: Text(
                                   reward.rewardName,
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                   textAlign: TextAlign.center,
                                 ),
                               ),

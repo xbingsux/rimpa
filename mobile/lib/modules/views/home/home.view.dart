@@ -7,10 +7,10 @@ import 'home_event.dart';
 import 'home_qr.dart';
 import 'home_reward.dart';
 import 'home_profile.dart';
-import '../../controllers/getusercontroller/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
       } else {
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
 
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     });
@@ -66,11 +66,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = [
-      HomeMainPage(),
+      const HomeMainPage(),
       HomeEventPage(),
       HomeQRPage(),
-      HomeRewardPage(),
-      HomeProfilePage(),
+      const HomeRewardPage(),
+      const HomeProfilePage(),
     ];
 
     return Scaffold(
@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> {
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           selectedLabelStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          unselectedLabelStyle: TextStyle(color: Colors.grey),
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          unselectedLabelStyle: const TextStyle(color: Colors.grey),
           iconSize: 24, // ปรับขนาดของไอคอนให้พอดี
           selectedFontSize: 10, // ลดขนาดตัวอักษร
           unselectedFontSize: 10, // ลดขนาดตัวอักษร
@@ -135,12 +135,12 @@ class _HomePageState extends State<HomePage> {
                         AppGradiant.gradientX_1.createShader(bounds),
                     child: Text(
                       label,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   )
                 : Text(
                     label,
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
           ),
         ],
@@ -155,12 +155,12 @@ class _HomePageState extends State<HomePage> {
         width: 50,
         height: 50,
         child: Container(
-          padding: EdgeInsets.only(top: 0),
+          padding: const EdgeInsets.only(top: 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             gradient: AppGradiant.gradientX_1,
           ),
-          child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 30),
+          child: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 30),
         ),
       ),
       label: "",

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart'; // เพิ่มการใช้งาน shimmer package
 
 // ฟังก์ชันสำหรับแสดง Shimmer Effect

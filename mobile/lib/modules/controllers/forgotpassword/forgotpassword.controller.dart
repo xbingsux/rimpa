@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:rimpa/widgets/loaddingforgotpassword/loadding_senemail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/api_urls.dart'; // นำเข้าที่เก็บ API URL
-import 'package:flutter/material.dart';
 
 class ForgotPasswordController extends GetxController {
   var isLoading = false.obs;
