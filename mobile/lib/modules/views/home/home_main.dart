@@ -161,25 +161,26 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       },
                       itemBuilder: (context, index) {
                         var banner = listBannerController.banners[index];
+                        print("Banners: ${listBannerController.banners}");
                         return GestureDetector(
                           onTap: () {
                             Get.to(() => BannerDetailPage(
                                 banner: banner)); // Corrected line
                           },
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            child: AppImageComponent(
-                              aspectRatio: 16 / 9,
-                              fit: BoxFit.cover,
-                              imageType: AppImageType.network,
-                              imageAddress:
-                                  '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}',
-                            ),
-                          ),
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              child: AppImageComponent(
+                                aspectRatio: 16 / 9,
+                                fit: BoxFit.cover,
+                                imageType: AppImageType.network,
+                                imageAddress:
+                                    '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}',
+                              )),
                         );
                       },
                     ),
                   ),
+
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -197,6 +198,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       );
                     }),
                   ),
+
                   SizedBox(height: 16),
                   // Activities Section
                   Row(

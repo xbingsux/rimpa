@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppApi {
-  static const String urlApi = 'http://localhost:3001'; // Rename to urlApi
+  static const String urlApi = 'http://192.168.1.2:3001'; // Rename to urlApi
 }
 
 class AppColors {
