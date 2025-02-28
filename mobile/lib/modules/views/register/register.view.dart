@@ -86,15 +86,19 @@ class CreateAccountView extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 16),
-                            CustomDatePicker(
-                              labelText: 'วันเกิด',
-                              selectedDate:
-                                  registerController.profile.birthDate.value,
-                              onChanged: (DateTime value) {
-                                registerController.profile.birthDate.value =
-                                    value;
-                              },
-                            ),
+                            Obx(() {
+                              return CustomDatePicker(
+                                labelText: 'วันเกิด',
+                                selectedDate: registerController
+                                    .profile
+                                    .birthDate
+                                    .value, // ใช้ค่าใหม่จาก controller
+                                onChanged: (DateTime value) {
+                                  registerController.profile.birthDate.value =
+                                      value; // อัปเดตค่าใหม่
+                                },
+                              );
+                            }),
                             SizedBox(height: 16),
                             Obx(() {
                               return CustomDropdown(
