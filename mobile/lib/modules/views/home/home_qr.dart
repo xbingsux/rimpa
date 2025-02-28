@@ -28,7 +28,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
 
     // ดึง idProfile จาก ProfileController
     String? idProfile = profileController.profileData['id']?.toString();
-
     // ตรวจสอบว่า idProfile และ scannedResult ไม่เป็น null ก่อนเรียกฟังก์ชัน scanQRCode
     if (idProfile != null && scannedResult != null) {
       eventController.scanQRCode(idProfile, scannedResult!);

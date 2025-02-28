@@ -5,7 +5,7 @@ import '../../modules/models/listbanner.model.dart';
 class ApiListBanner {
   static Future<List<ListBanner>?> fetchBanners() async {
     final response = await http
-        .post(Uri.parse('${AppApi.urlApi}/list-banner')); // Use AppApi.urlApi
+        .post(Uri.parse('${AppApi.urlApi}/event/list-banner')); // Use AppApi.urlApi
 
     if (response.statusCode == 200) {
       var jsonString = response.body;
