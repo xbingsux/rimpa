@@ -34,11 +34,11 @@ class _HomePageState extends State<HomePage> {
         _currentPage = 0;
       }
 
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
+      // _pageController.animateToPage(
+      //   _currentPage,
+      //   duration: Duration(milliseconds: 300),
+      //   curve: Curves.easeIn,
+      // );
     });
   }
 
