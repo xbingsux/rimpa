@@ -302,6 +302,19 @@ const profileMe = async (id) => {
   return profile;
 }
 
+const deleteUser = async (id) => {
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+      active: true
+    },
+    data: {
+      active: false
+    }
+  })
+  return user;
+}
+
 module.exports = {
   authenticateEmail,
   register,
@@ -310,5 +323,6 @@ module.exports = {
   user,
   sendForgotPassword,
   resetPassword,
-  profileMe
+  profileMe,
+  deleteUser
 };
