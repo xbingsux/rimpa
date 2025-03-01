@@ -2,10 +2,10 @@ import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
-  var imgUrl = 'http://192.168.1.2:3001'.obs;
-  var baseUrl = 'http://192.168.1.2:3001/auth'.obs;
-  var eventsUrl = 'http://192.168.1.2:3001/event'.obs;
-  var rewardUrl = 'http://192.168.1.2:3001/reward'.obs;
+  var imgUrl = 'https://api-rimpa.nightbears.co'.obs;
+  var baseUrl = 'https://api-rimpa.nightbears.co/auth'.obs;
+  var eventsUrl = 'https://api-rimpa.nightbears.co/event'.obs;
+  var rewardUrl = 'https://api-rimpa.nightbears.co/reward'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;
@@ -41,11 +41,10 @@ class ApiUrls extends GetxController {
     return '${imgUrl.value}/$imagePath';
   }
 
-  // ฟังก์ชันที่ใช้ในการอัปเดต 
+  // ฟังก์ชันที่ใช้ในการอัปเดต
   void updateBaseUrl(String newUrl) {
     baseUrl.value = newUrl;
-    imgUrl.value =
-        newUrl.replaceAll('/auth', '/upload'); // อัปเดต imgUrl ตาม baseUrl
+    imgUrl.value = newUrl.replaceAll('/auth', '/upload'); // อัปเดต imgUrl ตาม baseUrl
     updateAllUrls(); // อัปเดตค่าทั้งหมดอัตโนมัติ
   }
 

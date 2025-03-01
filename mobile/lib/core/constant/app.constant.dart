@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppApi {
-  static const String urlApi = 'http://192.168.1.2:3001'; // Rename to urlApi
+  static const String urlApi = 'https://api-rimpa.nightbears.co'; // Rename to urlApi
 }
 
 class AppColors {
@@ -14,6 +14,7 @@ class AppColors {
   /// สีเน้นส่วนสำคัญ Bright Blue
   static const Color accent = Color(0xFF1E54FD);
   static const Color accent1 = Color(0xFFEBF5FD);
+
   /// สีเน้นส่วนสำคัญ Sky Blue
   static const Color accent2 = Color(0xFF0ACCF5);
 
@@ -189,12 +190,6 @@ class AppShadow {
 }
 
 class AppGradiant {
-  static const LinearGradient gradientY_1 = LinearGradient(
-      colors: [AppColors.accent, AppColors.accent2],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter);
-  static const LinearGradient gradientX_1 = LinearGradient(
-      colors: [AppColors.accent, AppColors.accent2],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight);
+  static const LinearGradient gradientY_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+  static const LinearGradient gradientX_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.centerLeft, end: Alignment.centerRight);
 }

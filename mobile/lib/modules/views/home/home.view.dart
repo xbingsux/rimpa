@@ -1,17 +1,13 @@
-import 'dart:math' as Math;
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'home_main.dart';
 import 'home_event.dart';
 import 'home_qr.dart';
 import 'home_reward.dart';
 import 'home_profile.dart';
-import '../../../core/constant/icon_navgition_constant.dart';
-import '../../controllers/getusercontroller/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -81,97 +77,71 @@ class _HomePageState extends State<HomePage> {
         child: _pages[_selectedIndex], // เนื้อหาหลัก
       ),
       bottomNavigationBar: Container(
-        height: 98, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: Colors.white,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          selectedLabelStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          unselectedLabelStyle: TextStyle(color: Colors.grey),
-          iconSize: 24, // ปรับขนาดของไอคอนให้พอดี
-          selectedFontSize: 10, // ลดขนาดตัวอักษร
-          unselectedFontSize: 10, // ลดขนาดตัวอักษร
-          items: [
-            _buildNavItem("หน้าหลัก", 0),
-            _buildNavItem("กิจกรรม", 1),
-            _buildQRItem(2),
-            _buildNavItem("รีวอร์ด", 3),
-            _buildNavItem("โปรไฟล์", 4),
-          ],
+        // height: 98, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
+        child: Container(
+          color: Colors.amber,
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            unselectedItemColor: Colors.grey,
+            selectedItemColor: AppColors.primary,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+            unselectedLabelStyle: TextStyle(fontSize: 12, color: Colors.grey),
+            iconSize: 24, // ปรับขนาดของไอคอนให้พอดี
+            selectedFontSize: 10, // ลดขนาดตัวอักษร
+            unselectedFontSize: 10, // ลดขนาดตัวอักษร
+            items: [
+              _buildNavItem(icon: Iconsax.home, label: "หน้าหลัก", index: 0),
+              _buildNavItem(icon: Iconsax.calendar_1, label: "กิจกรรม", index: 1),
+              _buildQRItem(2),
+              _buildNavItem(icon: Iconsax.award, label: "รีวอร์ด", index: 3),
+              _buildNavItem(icon: Iconsax.user, label: "โปรไฟล์", index: 4),
+            ],
+          ),
         ),
       ),
-      resizeToAvoidBottomInset: false, // ปิดการปรับขนาดเมื่อ keyboard ปรากฏ
+      resizeToAvoidBottomInset: true, // ปิดการปรับขนาดเมื่อ keyboard ปรากฏ
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(String label, int index) {
+  BottomNavigationBarItem _buildNavItem({required String label, required int index, required IconData icon}) {
     bool isActive = _selectedIndex == index;
-
-    CustomPainter painter;
-    if (label == "หน้าหลัก") {
-      painter = HomeIconPainter(isActive: isActive); // ส่ง isActive
-    } else if (label == "กิจกรรม") {
-      painter = ActivityIconPainter(isActive: isActive);
-    } else if (label == "รีวอร์ด") {
-      painter = RewardIconPainter(isActive: isActive);
-    } else if (label == "โปรไฟล์") {
-      painter = ProfileIconPainter(isActive: isActive);
-    } else {
-      painter = EmtyPainter(); // ให้มันไม่ทำการวาดอะไรเลยในกรณีนี้
-    }
-
     return BottomNavigationBarItem(
       icon: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 0),
+            padding: const EdgeInsets.only(bottom: 5),
             child: isActive
                 ? ShaderMask(
-                    shaderCallback: (bounds) => AppGradiant.gradientY_1
-                        .createShader(bounds), // ใช้ gradientX_1
+                    shaderCallback: (bounds) => AppGradiant.gradientY_1.createShader(bounds), // ใช้ gradientX_1
                     child: CustomPaint(
                       size: Size(24, 24),
-                      painter: painter, // ใช้ painter ที่กำหนดไว้
+                      child: Icon(
+                        icon,
+                        size: 24,
+                        color: Colors.white,
+                      ), // ใช้ Icon แทน CustomPaint
                     ),
                   )
-                : CustomPaint(
-                    size: Size(24, 24),
-                    painter: painter, // ใช้ painter ที่กำหนดไว้
-                  ),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: isActive
-                ? ShaderMask(
-                    shaderCallback: (bounds) => AppGradiant.gradientY_1
-                        .createShader(bounds), // ใช้ gradientX_1
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 182, 182, 182)),
-                    ),
-                  )
-                : Text(
-                    label,
-                    style: TextStyle(
-                        color: Colors.grey), // สีเทาสำหรับข้อความเมื่อไม่เลือก
+                : Icon(
+                    icon,
+                    size: 24,
+                    color: Colors.grey, // Default color for inactive state
                   ),
           ),
         ],
       ),
-      label: "",
+      label: label,
     );
   }
 }
 
 BottomNavigationBarItem _buildQRItem(int index) {
+  // bool isActive = (index == 2);
   return BottomNavigationBarItem(
     icon: SizedBox(
       width: 50,
@@ -184,10 +154,18 @@ BottomNavigationBarItem _buildQRItem(int index) {
         ),
         child: Align(
           alignment: Alignment.center, // ทำให้ไอคอนวาดเองอยู่ตรงกลาง
+          // child: CustomPaint(
+          //   size: Size(30, 30), // ขนาดของ CustomPaint
+          //   painter: QrIconPainter(isActive: index == 2), // ใช้ CustomPainter ที่วาดไอคอน
+          // ),
+
           child: CustomPaint(
-            size: Size(30, 30), // ขนาดของ CustomPaint
-            painter: QrIconPainter(
-                isActive: index == 2), // ใช้ CustomPainter ที่วาดไอคอน
+            size: Size(24, 24),
+            child: Icon(
+              Iconsax.scan,
+              size: 24,
+              color: Colors.white,
+            ), // ใช้ Icon แทน CustomPaint
           ),
         ),
       ),

@@ -5,10 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/api_urls.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './modules/controllers/middleware/auth_middleware.dart';
-import 'package:intl/intl.dart';  // เพิ่มการ import intl
-import 'package:intl/date_symbol_data_local.dart'; // เพิ่มการ import สำหรับการจัดการวันที่
 
 void main() {
   // เรียกใช้ initializeDateFormatting ก่อน
@@ -25,11 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     return Obx(() => GetMaterialApp(
-          title: 'Login rimpa 66',
+          title: 'Rimpa',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode:
-              themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx
+          themeMode: themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx
           initialRoute: AppPages.initial,
           debugShowCheckedModeBanner: false,
           getPages: AppPages.routes,
