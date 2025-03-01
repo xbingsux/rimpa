@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/core/theme/theme_controller.dart';
+import 'package:rimpa/components/imageloader/app-image.component.dart';
 import '../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
@@ -17,161 +17,320 @@ class _LoginViewState extends State<LoginView>
   bool _obscureText = true;
 
   @override
-  Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          /// **โลโก้ด้านบน**
-          AspectRatio(
-  aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
-  child: Container(
-    decoration: const BoxDecoration(
-      color: AppColors.light, // ใส่สีพื้นหลัง
-    ),
-    child: Align(
-      alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
-      child: SizedBox(
-        width: 220, // กำหนดขนาดรูป
-        height: 120,
-        child: Image.asset(
-          'assets/logoapp/logoiconic.png', // รูปภาพของยูววว์~ 💕
-          fit: BoxFit.contain,
-        ),
-      ),
-    ),
-  ),
-),
-
-
-          /// 🔹 **Bottom Sheet ที่ยืดหยุ่นและเลื่อนได้**
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: screenHeight * 0.7,
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: Scaffold(
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            SizedBox(
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1A1919) // ดาร์คโหมด
-                    : Colors.white, // ไลท์โหมด
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    spreadRadius: 2,
+              height: MediaQuery.of(context).size.height,
+            ),
+            Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.33,
+              color: AppColors.background_main,
+              child: Center(
+                child: SizedBox(
+                  width: 300,
+                  height: 175,
+                  child: Center(
+                    child: AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/logoapp/logoiconic.png', fit: BoxFit.contain, borderRadius: BorderRadius.circular(0),)
                   )
-                ],
+                ),
               ),
-              child: SingleChildScrollView(
+            ),
+            Positioned(
+              left: 0,
+              top: 0,
+              child: GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: const BoxDecoration(),
+                  child: const Center(
+                    child: Icon(Icons.arrow_back, color: AppColors.accent, size: AppTextSize.xxl,),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.7,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.md), topRight: Radius.circular(AppRadius.md)),
+                  color: AppColors.white
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(vertical:  AppSpacing.lg, horizontal: AppSpacing.md),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// 🔹 **ข้อความต้อนรับ**
-                      const SizedBox(height: AppSpacing.sm),
-                      const Text(
-                        'ยินดีต้อนรับเข้าสู่ระบบ',
-                        style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 16, 147, 237)),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        child: Text("ยินดีต้อนรับเข้าสู่ระบบ", style: TextStyle(fontSize: AppTextSize.xxl, fontWeight: FontWeight.bold, color: AppTextColors.accent2)),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-
-                      /// 🔹 **ฟอร์มล็อกอิน**
-                      Column(
-                        children: [
-                          CustomTextField(
-                            labelText: 'อีเมล',
-                            obscureText: false,
-                            onChanged: (value) =>
-                                authController.user.email.value = value,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **ฟิลด์รหัสผ่าน**
-                          CustomTextFieldpassword(
-                            labelText: 'รหัสผ่าน',
-                            obscureText: _obscureText,
-                            onChanged: (value) =>
-                                authController.user.password.value = value,
-                            suffixIcon: IconButton(
-                              icon: Icon(_obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        child: TextField(
+                          onChanged: (value) => authController.user.email.value = value,
+                          style: const TextStyle(color: AppTextColors.secondary, fontSize: AppTextSize.md),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                            hintText: 'อีเมล',
+                            hintStyle: const TextStyle(color: AppTextColors.secondary, fontSize: AppTextSize.md),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.secondary, width: 1)
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.primary, width: 1)
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.background_main, width: 1)
+                            )
                           ),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **"จำรหัสผ่าน" & "ลืมรหัสผ่าน"**
-                          RememberPasswordWidget(
-                            rememberPassword: _rememberPassword,
-                            onRememberChanged: (value) {
-                              setState(() {
-                                _rememberPassword = value;
-                              });
-                            },
-                            onForgotPassword: () =>
-                                Get.toNamed('/forgot-password'),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        child: TextField(
+                          onChanged: (value) => authController.user.email.value = value,
+                          obscureText: true,
+                          style: const TextStyle(color: AppTextColors.secondary, fontSize: AppTextSize.md),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                            hintText: 'รหัสผ่าน',
+                            hintStyle: const TextStyle(color: AppTextColors.secondary, fontSize: AppTextSize.md),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.secondary, width: 1)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.primary, width: 1)
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
+                              borderSide: const BorderSide(color: AppColors.background_main, width: 1)
+                            )
                           ),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **ปุ่มเข้าสู่ระบบ**
-                          CustomButton(
-                            text: 'เข้าสู่ระบบ',
-                            onPressed: () => authController
-                                .loginwithemail(_rememberPassword),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **เส้นคั่น "หรือ"**
-                          const Ordesign(text: 'หรือ'),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **ปุ่มเข้าสู่ระบบด้วย Google**
-                          SocialLoginButtons(
-                            onGooglePressed: () =>
-                                print("เข้าสู่ระบบด้วย Google"),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-
-                          /// 🔹 **ปุ่มสมัครบัญชีใหม่**
-                          CreateAccountButton(
-                            onPressed: () => Get.toNamed('/select-create'),
-                          ),
-                          SizedBox(
-                              height: screenHeight * 0.02), // ปรับระยะห่างล่าง
-                        ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  value: _rememberPassword, 
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _rememberPassword = value ?? false;
+                                    });
+                                  },
+                                  activeColor: AppColors.accent, // สีตอนถูกเลือก
+                                  checkColor: AppColors.white,   // สีของเครื่องหมายถูก
+                                  side: const BorderSide(width: 2, color: AppColors.secondary),
+                                ),
+                                const SizedBox(width: 2,),
+                                const Text('จำรหัสผ่าน', style: TextStyle(fontSize: AppTextSize.md, color: AppTextColors.secondary),)
+                              ],
+                            ),
+                            Stack(
+                              children: [
+                                const Text(
+                                  'ลืมรหัสผ่าน?',
+                                  style: TextStyle(
+                                    fontSize: AppTextSize.md,
+                                    color: AppTextColors.secondary,
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+                                  child: Container(
+                                    height: 1,
+                                    color: AppTextColors.secondary,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        )
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ),
-
-          /// 🔹 **ปุ่มเปลี่ยนธีม**
-          Positioned(
-            top: 16,
-            right: 16,
-            child: IconButton(
-              icon: const Icon(Icons.brightness_6),
-              onPressed: () => Get.find<ThemeController>().toggleTheme(),
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
-    );
+    ),
+  );
+
+    // return Scaffold(
+    //   body: Stack(
+    //     children: [
+    //       /// **โลโก้ด้านบน**
+    // AspectRatio(
+    //   aspectRatio: 4 / 3, // ใช้อัตราส่วนจากอันที่สอง
+    //   child: Container(
+    //     decoration: const BoxDecoration(
+    //       color: AppColors.light, // ใส่สีพื้นหลัง
+    //     ),
+    //     child: Align(
+    //       alignment: Alignment.center, // จัดให้อยู่ตรงกลาง
+    //       child: SizedBox(
+    //         width: 200, // กำหนดขนาดรูป
+    //         height: 200,
+    //         child: Image.asset(
+    //           'assets/logoapp/logoiconic.png', // รูปภาพของยูววว์~ 💕
+    //           fit: BoxFit.contain,
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // ),
+
+    //       /// 🔹 **Bottom Sheet ที่ยืดหยุ่นและเลื่อนได้**
+    //       Align(
+    //         alignment: Alignment.bottomCenter,
+    //         child: Container(
+    //           height: screenHeight * 0.67,
+    //           width: double.infinity,
+    //           decoration: BoxDecoration(
+    //             color: Theme.of(context).brightness == Brightness.dark
+    //                 ? const Color(0xFF1A1919) // ดาร์คโหมด
+    //                 : Colors.white, // ไลท์โหมด
+    //             borderRadius: const BorderRadius.only(
+    //               topLeft: Radius.circular(20),
+    //               topRight: Radius.circular(20),
+    //             ),
+    //             boxShadow: [
+    //               BoxShadow(
+    //                 color: Colors.black.withOpacity(0.1),
+    //                 blurRadius: 10,
+    //                 spreadRadius: 2,
+    //               )
+    //             ],
+    //           ),
+    //           child: SingleChildScrollView(
+    //             child: Padding(
+    //               padding: const EdgeInsets.all(16.0),
+    //               child: Column(
+    //                 crossAxisAlignment: CrossAxisAlignment.start,
+    //                 children: [
+    //                   /// 🔹 **ข้อความต้อนรับ**
+    //                   const SizedBox(height: AppSpacing.sm),
+    //                   const Text(
+    //                     'ยินดีต้อนรับเข้าสู่ระบบ',
+    //                     style: TextStyle(
+    //                         fontSize: 24.0,
+    //                         fontWeight: FontWeight.bold,
+    //                         color: Color.fromARGB(255, 16, 147, 237)),
+    //                   ),
+    //                   const SizedBox(height: AppSpacing.md),
+
+    //                   /// 🔹 **ฟอร์มล็อกอิน**
+    //                   Column(
+    //                     children: [
+    //                       CustomTextField(
+    //                         labelText: 'อีเมล',
+    //                         obscureText: false,
+    //                         onChanged: (value) =>
+    //                             authController.user.email.value = value,
+    //                       ),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **ฟิลด์รหัสผ่าน**
+    //                       CustomTextFieldpassword(
+    //                         labelText: 'รหัสผ่าน',
+    //                         obscureText: _obscureText,
+    //                         onChanged: (value) =>
+    //                             authController.user.password.value = value,
+    //                         suffixIcon: IconButton(
+    //                           icon: Icon(_obscureText
+    //                               ? Icons.visibility_off
+    //                               : Icons.visibility),
+    //                           onPressed: () {
+    //                             setState(() {
+    //                               _obscureText = !_obscureText;
+    //                             });
+    //                           },
+    //                         ),
+    //                       ),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **"จำรหัสผ่าน" & "ลืมรหัสผ่าน"**
+    //                       RememberPasswordWidget(
+    //                         rememberPassword: _rememberPassword,
+    //                         onRememberChanged: (value) {
+    //                           setState(() {
+    //                             _rememberPassword = value;
+    //                           });
+    //                         },
+    //                         onForgotPassword: () =>
+    //                             Get.toNamed('/forgot-password'),
+    //                       ),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **ปุ่มเข้าสู่ระบบ**
+    //                       CustomButton(
+    //                         text: 'เข้าสู่ระบบ',
+    //                         onPressed: () => authController
+    //                             .loginwithemail(_rememberPassword),
+    //                       ),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **เส้นคั่น "หรือ"**
+    //                       const Ordesign(text: 'หรือ'),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **ปุ่มเข้าสู่ระบบด้วย Google**
+    //                       SocialLoginButtons(
+    //                         onGooglePressed: () =>
+    //                             print("เข้าสู่ระบบด้วย Google"),
+    //                       ),
+    //                       const SizedBox(height: AppSpacing.md),
+
+    //                       /// 🔹 **ปุ่มสมัครบัญชีใหม่**
+    //                       CreateAccountButton(
+    //                         onPressed: () => Get.toNamed('/select-create'),
+    //                       ),
+    //                       SizedBox(
+    //                           height: screenHeight * 0.02), // ปรับระยะห่างล่าง
+    //                     ],
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+
+    //       /// 🔹 **ปุ่มเปลี่ยนธีม**
+    //       // Positioned(
+    //       //   top: 16,
+    //       //   right: 16,
+    //       //   child: IconButton(
+    //       //     icon: const Icon(Icons.brightness_6),
+    //       //     onPressed: () => Get.find<ThemeController>().toggleTheme(),
+    //       //   ),
+    //       // ),
+    //     ],
+    //   ),
+    // );
   }
 }
