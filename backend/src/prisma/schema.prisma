@@ -108,7 +108,7 @@ model Event {
   id             Int              @id @default(autoincrement()) // Primary Key
   event_name     String?
   title          String
-  description    String
+  description    String           @db.LongText
   max_attendees  Int              @default(0)
   startDate      DateTime
   endDate        DateTime
@@ -155,7 +155,7 @@ model EventLike {
 model SubEvent {
   id          Int          @id @default(autoincrement()) // Primary Key
   title       String?
-  description String?
+  description String?      @db.LongText
   startDate   DateTime?
   endDate     DateTime?
   map         String?
@@ -218,7 +218,7 @@ model CheckIn {
 model Banner {
   id             Int              @id @default(autoincrement()) // Primary Key
   title          String
-  description    String
+  description    String           @db.LongText
   path           String
   startDate      DateTime
   endDate        DateTime
@@ -228,7 +228,7 @@ model Banner {
 model Reward {
   id           Int         @id @default(autoincrement()) // Primary Key
   reward_name  String
-  description  String
+  description  String      @db.LongText
   img          String?
   startDate    DateTime?
   endDate      DateTime?
