@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppApi {
-  static const String urlApi = 'http://192.168.1.2:3001'; // Rename to urlApi
+  static const String urlApi = 'https://api-rimpa.nightbears.co'; // Rename to urlApi
 }
 
 class AppColors {
@@ -190,12 +190,6 @@ class AppShadow {
 }
 
 class AppGradiant {
-  static const LinearGradient gradientY_1 = LinearGradient(
-      colors: [AppColors.accent, AppColors.accent2],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter);
-  static const LinearGradient gradientX_1 = LinearGradient(
-      colors: [AppColors.accent, AppColors.accent2],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight);
+  static const LinearGradient gradientY_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+  static const LinearGradient gradientX_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.centerLeft, end: Alignment.centerRight);
 }
