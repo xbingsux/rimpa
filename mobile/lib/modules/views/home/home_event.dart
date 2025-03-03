@@ -113,7 +113,7 @@ class _HomeEventPageState extends State<HomeEventPage> {
                       var event = sortedEvents[index];
                       return GestureDetector(
                         onTap: () {
-                          Get.to(() => HomeDetailPage(event: event));
+                          Get.to(() => HomeDetailPage(event: event,));
                         },
                         child: AppCardComponent(
                           child: Column(

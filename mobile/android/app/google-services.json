@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "38464663708",
+    "project_id": "rimpa-mobile",
+    "storage_bucket": "rimpa-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38464663708:android:66ddbaff64d15a7c123d59",
+        "android_client_info": {
+          "package_name": "co.newdice.rimpa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtfY-MSi3VeicSGtRwoPgAZxnfjDHvJJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

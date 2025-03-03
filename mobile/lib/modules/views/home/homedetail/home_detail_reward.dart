@@ -1,28 +1,38 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
+import 'package:rimpa/core/services/api_urls.dart';
 
+import '../../../controllers/profile/profile_controller.dart';
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
+import '../../../controllers/reward/list_reward_controller.dart';
 import '../../../models/listreward.model.dart'; // Add this import
-import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart'; // Add this import
 
 class HomeDetailReward extends StatelessWidget {
-  final ListReward reward; // Add this line
-
-  const HomeDetailReward(
-      {super.key, required this.reward}); // Update constructor
+  final ApiUrls apiUrls = Get.find();
+  final ListReward reward;
+  final RewardController controller = Get.find();
+  final ProfileController profileController =
+      Get.put(ProfileController()); // ProfileController
+  final rewardController = Get.find<RewardController>();
+  HomeDetailReward({super.key, required this.reward}); // เอา const ออก
 
   @override
   Widget build(BuildContext context) {
-    // Extract reward details
+    // ย้าย rewardcost มาไว้ใน build() แทน
+
+    String? idProfile = profileController.profileData['id']?.toString();
+    var rewardcost = controller.rewardDetail.value;
+    rewardcost["cost"] = reward.cost; // เพิ่มค่า cost ลงใน rewardcost
+    // ดึงข้อมูลรางวัล
     String title = reward.rewardName;
     String description = reward.description;
-    String startDate = _formatDate(reward.startDate); // Add this line
-    String endDate = _formatDate(reward.endDate); // Add this line
-    String imageUrl =
-        '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}'; // Add this line
+    String startDate = _formatDate(reward.startDate);
+    String endDate = _formatDate(reward.endDate);
+    String imageUrl = '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}';
 
     return SafeArea(
       child: Scaffold(
@@ -317,12 +327,15 @@ class HomeDetailReward extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomDialog(context: context);
-                        },
-                      );
+                      // ตรวจสอบค่า idProfile และ cost ก่อนเรียกใช้งาน
+                      if (idProfile != null && reward.cost != null) {
+                        Decimal cost =
+                            Decimal.tryParse(reward.cost) ?? Decimal.zero;
+                        rewardController.redeemReward(
+                            idProfile, reward.id.toString(), cost);
+                      } else {
+                        print("Error: idProfile หรือ cost เป็น null");
+                      }
                     },
                     child: Container(
                       width: double.infinity,

@@ -176,12 +176,15 @@ class UserDetail extends StatelessWidget {
 
                   return CustomDatePicker(
                     labelText: 'วันเกิด',
-                    selectedDate: birthDate,
+                    selectedDate: birthDate, // ค่า birthDate ที่เก็บไว้
                     onChanged: (DateTime value) {
+                      // เมื่อเลือกวันที่ใหม่, อัปเดตค่าของ birth_date ใน profileController
                       profileController.profileData["birth_date"] =
                           value.toIso8601String();
-                      birthDateController.text = DateFormat('yyyy-MM-dd')
-                          .format(value); // อัปเดต birthDateController.text
+
+                      // อัปเดตข้อความใน TextField (birthDateController.text) ตามรูปแบบวันที่ที่เลือก
+                      birthDateController.text =
+                          DateFormat('yyyy-MM-dd').format(value);
                     },
                   );
                 }

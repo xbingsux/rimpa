@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem('email')
     }
 
-    this.auth.login(this.login.email, this.login.password).subscribe((item) => { console.log(item); })
+    this.auth.login(this.login.email, this.login.password).subscribe((item) => {
+      // console.log(item); 
+    })
   }
 
   login: Login = new Login();

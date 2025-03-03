@@ -3,18 +3,16 @@ import 'package:get/get.dart';
 import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/modules/views/home/banners/banner_slider.dart';
 import '../../../core/constant/app.constant.dart';
 import '../../controllers/profile/profile_controller.dart';
-import '../../../widgets/popupdialog/popup_dialog.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../models/listevent.model.dart';
-// Add this import
-import 'seeallcards/home_event_allcard.dart';
-import 'homedetail/home_detail.dart';
-import 'homedetail/banner_detail.dart'; // Add this import
-import '../../controllers/listevent/listevent.controller.dart';
 import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
+import 'seeallcards/home_event_allcard.dart';
+import 'homedetail/home_detail.dart'; // Add this import
+import '../../controllers/listevent/listevent.controller.dart';
 
 class HomeMainPage extends StatefulWidget {
   const HomeMainPage({super.key});
@@ -36,9 +34,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
     super.initState();
 
     // เรียก popup แจ้งเตือน
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      PopupDialog.checkAndShowPopup(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   PopupDialog.checkAndShowPopup(context);
+    // });
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
@@ -46,6 +44,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
         _currentPage = 0;
       }
 
+      // _pageController.animateToPage(
+      //   _currentPage,
+      //   duration: Duration(milliseconds: 300),
+      //   curve: Curves.easeIn,
+      // );
     });
   }
 
@@ -59,13 +62,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
   @override
   Widget build(BuildContext context) {
     ApiUrls apiUrls = Get.find();
-    final profileController =
-        Get.put(ProfileController()); // เพิ่ม ProfileController
+    final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,13 +76,10 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 // รูปโปรไฟล์แทนไอคอน
                 Obx(() {
                   // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-                  String profileImage =
-                      profileController.profileData["profile_img"] ?? '';
+                  String profileImage = profileController.profileData["profile_img"] ?? '';
 
                   // สร้าง URL ของภาพจาก path ที่ต้องการ
-                  String imageUrl = profileImage.isEmpty
-                      ? 'assets/images/default_profile.jpg'
-                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+                  String imageUrl = profileImage.isEmpty ? 'assets/images/default_profile.jpg' : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
                   return Container(
                     width: 40, // ขนาดเดิม
@@ -97,21 +95,17 @@ class _HomeMainPageState extends State<HomeMainPage> {
                         height: 40,
                         fit: BoxFit.cover, // ปรับให้เต็มวงกลม
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(Icons.person_outline,
-                              color: Colors.grey, size: 24);
+                          return Icon(Icons.person_outline, color: Colors.grey, size: 24);
                         },
                       ),
                     ),
                   );
                 }),
-
                 SizedBox(width: 8),
 
                 // ชื่อโปรไฟล์
                 Obx(() {
-                  var profileName =
-                      profileController.profileData["profile_name"] ??
-                          "ยังไม่มีข้อมูล";
+                  var profileName = profileController.profileData["profile_name"] ?? "ยังไม่มีข้อมูล";
 
                   return Text(
                     profileName,
@@ -129,8 +123,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
         ),
       ),
       body: Obx(() {
-        if (listEventController.isLoading.value ||
-            listBannerController.isLoading.value) {
+        if (listEventController.isLoading.value || listBannerController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
           List<ListEvent> sortedEvents = listEventController.events.toList();
@@ -147,54 +140,22 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Banner slider
-                  SizedBox(
-                    height: 150,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: listBannerController.banners.length,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        var banner = listBannerController.banners[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(() => BannerDetailPage(
-                                banner: banner)); // Corrected line
-                          },
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            child: AppImageComponent(
-                              aspectRatio: 16 / 9,
-                              fit: BoxFit.cover,
-                              imageType: AppImageType.network,
-                              imageAddress:
-                                  '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 8),
+                  BannerSliderComponent(), // Corrected line
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(listBannerController.banners.length,
-                        (index) {
+                    children: List.generate(listBannerController.banners.length, (index) {
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 4),
                         width: _currentPage == index ? 12 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color:
-                              _currentPage == index ? Colors.blue : Colors.grey,
+                          color: _currentPage == index ? Colors.blue : Colors.grey,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       );
                     }),
                   ),
+
                   SizedBox(height: 16),
                   // Activities Section
                   Row(
@@ -202,8 +163,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     children: [
                       Text(
                         "กิจกรรมแนะนำ",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -249,13 +209,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
                                 children: [
                                   AppImageComponent(
                                     imageType: AppImageType.network,
-                                    imageAddress:
-                                        '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                                    imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                                   ),
                                   SizedBox(height: 8),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                     child: Text(
                                       event.title,
                                       style: TextStyle(fontSize: 12),
@@ -279,9 +237,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       children: List.generate(60, (index) {
                         return Expanded(
                           child: Container(
-                            color: index % 2 == 0
-                                ? Colors.transparent
-                                : Colors.grey,
+                            color: index % 2 == 0 ? Colors.transparent : Colors.grey,
                             height: 1,
                           ),
                         );
@@ -320,13 +276,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
                             children: [
                               AppImageComponent(
                                 imageType: AppImageType.network,
-                                imageAddress:
-                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                                imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                               ),
                               SizedBox(height: 8),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                 child: Text(
                                   event.title,
                                   style: TextStyle(fontSize: 12),
