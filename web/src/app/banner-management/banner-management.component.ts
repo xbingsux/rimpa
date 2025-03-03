@@ -99,10 +99,12 @@ export class BannerManagementComponent {
   delete_id: number | null = null;
   deleteBanner() {
     this.http.post(`${environment.API_URL}/delete-banner`, { id: this.delete_id }).subscribe(async (response: any) => {
-      console.log(response);
+      // console.log(response);
+      alert('ลบข้อมูลสำเร็จ')
       this.ngOnInit()
       this.delete_id = null;
     }, error => {
+      alert('ไม่สามารถลบข้อมูลได้')
       console.error('Error:', error);
     });
   }
