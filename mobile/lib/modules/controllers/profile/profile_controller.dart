@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:async';
 import '../../../core/services/api_urls.dart';
@@ -90,45 +91,44 @@ class ProfileController extends GetxController {
   }
 
   Future<void> deleteUser() async {
-  isLoading.value = true; // ตั้งค่าให้กำลังโหลด
-  try {
-    String? token = await _authMiddleware.getToken();
+    isLoading.value = true; // ตั้งค่าให้กำลังโหลด
+    try {
+      String? token = await _authMiddleware.getToken();
 
-    if (token == null) {
-      isLoading.value = false;
-      uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้: ไม่มี Token';
-      return;
+      if (token == null) {
+        isLoading.value = false;
+        uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้: ไม่มี Token';
+        return;
+      }
+
+      final response = await _getConnect.post(
+        apiUrlsController.deleterofileMe.value, // URL สำหรับลบผู้ใช้
+        {},
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        uploadStatus.value = 'ลบผู้ใช้สำเร็จ';
+        print("User deleted successfully");
+
+        // ล้างข้อมูลใน SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); // ล้างข้อมูลทั้งหมดใน SharedPreferences
+
+        // นำทางไปยังหน้า home
+        Get.offAllNamed(
+            '/home'); // ใช้ offAll เพื่อออกจากหน้าทั้งหมดและไปหน้าใหม่
+      } else {
+        uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้';
+        print("Failed to delete user: ${response.body}");
+      }
+    } catch (e) {
+      uploadStatus.value = 'เกิดข้อผิดพลาดในการลบผู้ใช้';
+      print("Error deleting user: $e");
+    } finally {
+      isLoading.value = false; // ปิดสถานะโหลดเมื่อเสร็จสิ้น
     }
-
-    final response = await _getConnect.post(
-      apiUrlsController.deleterofileMe.value, // URL สำหรับลบผู้ใช้
-      {},
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode == 200) {
-      uploadStatus.value = 'ลบผู้ใช้สำเร็จ';
-      print("User deleted successfully");
-
-      // ล้างข้อมูลใน SharedPreferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.clear();  // ล้างข้อมูลทั้งหมดใน SharedPreferences
-
-      // นำทางไปยังหน้า home
-      Get.offAllNamed('/home');  // ใช้ offAll เพื่อออกจากหน้าทั้งหมดและไปหน้าใหม่
-
-    } else {
-      uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้';
-      print("Failed to delete user: ${response.body}");
-    }
-  } catch (e) {
-    uploadStatus.value = 'เกิดข้อผิดพลาดในการลบผู้ใช้';
-    print("Error deleting user: $e");
-  } finally {
-    isLoading.value = false; // ปิดสถานะโหลดเมื่อเสร็จสิ้น
   }
-}
-
 
   /// ตัวแปร isLoading สำหรับแต่ละฟิลด์
   var profileNameLoading = false.obs;
@@ -210,7 +210,6 @@ class ProfileController extends GetxController {
         // Show dialog after successful update
         uploadStatus.value = 'อัปเดตข้อมูลสำเร็จ';
         fetchProfile(); // โหลดข้อมูลใหม่
-
         // Reset loading status for each field after the update
         profileNameLoading.value = false;
         firstNameLoading.value = false;
@@ -220,22 +219,37 @@ class ProfileController extends GetxController {
         birthDateLoading.value = false;
         genderLoading.value = false;
         Get.snackbar(
-          "อัปเดทข้อมูลสำเร็จ",
           "",
-          snackPosition: SnackPosition.TOP, // แสดงที่มุมบนของหน้าจอ
+          "",
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.white,
-          colorText:
-              const Color.fromARGB(255, 21, 189, 255), // เปลี่ยนสีข้อความ
-          duration: Duration(seconds: 3), // แสดง 3 วินาที
-          padding: EdgeInsets.symmetric(
-              horizontal: 16, vertical: 8), // ลด padding ให้น้อยลง
-          titleText: Text(
-            "อัปเดทข้อมูลสำเร็จ",
-            style: TextStyle(
-              fontSize: 14, // ขนาดตัวอักษรเล็กลง
+          colorText: const Color(0xFF15BDFF),
+          duration: const Duration(seconds: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          borderRadius: 12,
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              spreadRadius: 2,
             ),
+          ],
+          titleText: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 22),
+              const SizedBox(width: 10),
+              Text(
+                "อัปเดตข้อมูลสำเร็จ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[700],
+                ),
+              ),
+            ],
           ),
-          messageText: Container(), // เอาข้อความออกไปเพื่อให้แสดงแค่ title
+          messageText: const SizedBox(), // ไม่แสดงข้อความเพิ่มเติม
         );
 
         // Set shimmer animation back to true

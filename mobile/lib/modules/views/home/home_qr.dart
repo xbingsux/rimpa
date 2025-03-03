@@ -108,37 +108,37 @@ class _HomeQRPageState extends State<HomeQRPage> {
               textAlign: TextAlign.center,
             ),
           ),
-          Positioned(
-            bottom: 100,
-            left: 20,
-            right: 20,
-            child: Column(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _pickImage,
-                  icon: const Icon(Icons.image),
-                  label: const Text("เลือกจากแกลเลอรี่"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                if (scannedResult != null)
-                  Text(
-                    "ผลลัพธ์: $scannedResult",
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   bottom: 100,
+          //   left: 20,
+          //   right: 20,
+          //   child: Column(
+          //     children: [
+          //       ElevatedButton.icon(
+          //         onPressed: _pickImage,
+          //         icon: const Icon(Icons.image),
+          //         label: const Text("เลือกจากแกลเลอรี่"),
+          //         style: ElevatedButton.styleFrom(
+          //           backgroundColor: Colors.blueAccent,
+          //           padding: const EdgeInsets.symmetric(
+          //               horizontal: 20, vertical: 10),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //       ),
+          //       const SizedBox(height: 20),
+          //       if (scannedResult != null)
+          //         Text(
+          //           "ผลลัพธ์: $scannedResult",
+          //           style: const TextStyle(
+          //               fontSize: 16,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.white),
+          //         ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

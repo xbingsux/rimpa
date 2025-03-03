@@ -21,8 +21,7 @@ class HomeDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
-    String id_event = event.subEvents[0].id
-        .toString(); 
+    String id_event = event.subEvents[0].id.toString();
     String title = event.title;
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
@@ -30,6 +29,10 @@ class HomeDetailPage extends StatelessWidget {
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     String mapUrl = event.subEvents[0].map;
+    // ดึงค่าพอยท์จาก subEvents (ตัวแรกในกรณีนี้)
+    // ใช้ RxString สำหรับค่าพอยท์
+    RxString point =
+        event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
     final evencontroller = Get.find<EventController>();
     return SafeArea(
       child: Scaffold(
@@ -221,13 +224,12 @@ class HomeDetailPage extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-  // รับค่า id_event จาก event.subEvents[0].id
-  int subEventId = event.subEvents[0].id;
+                      // รับค่า id_event จาก event.subEvents[0].id
+                      int subEventId = event.subEvents[0].id;
 
-  // เรียกใช้งานฟังก์ชัน checkIn พร้อมส่ง sub_event_id และ context
-  evencontroller.checkIn(subEventId, context);
-},
-
+                      // เรียกใช้งานฟังก์ชัน checkIn พร้อมส่ง sub_event_id และ context
+                      evencontroller.checkIn(subEventId, context);
+                    },
                     child: Container(
                       width: double.infinity,
                       padding:
@@ -235,8 +237,8 @@ class HomeDetailPage extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(AppRadius.rounded),
-                          color:
-                              const Color(0xFFEBF5FD)), // Corrected color definition
+                          color: const Color(
+                              0xFFEBF5FD)), // Corrected color definition
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -249,15 +251,19 @@ class HomeDetailPage extends StatelessWidget {
                                     AppGradiant.gradientX_1, // Applied gradient
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.star, color: Colors.white),
+                              child:
+                                  const Icon(Icons.star, color: Colors.white),
                             ),
                             const SizedBox(width: 8), // Added missing comma
-                            const Text(
-                              '100 คะแนน',
-                              style: TextStyle(
+                            Obx(() {
+                              return Text(
+                                '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
+                                style: TextStyle(
                                   fontSize: AppTextSize.lg,
-                                  color: AppTextColors.accent2),
-                            ),
+                                  color: AppTextColors.accent2,
+                                ),
+                              );
+                            }),
                             Opacity(
                               // space
                               opacity: 0,
@@ -269,7 +275,8 @@ class HomeDetailPage extends StatelessWidget {
                                       .gradientX_1, // Applied gradient
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.star, color: Colors.white),
+                                child:
+                                    const Icon(Icons.star, color: Colors.white),
                               ),
                             ),
                           ],

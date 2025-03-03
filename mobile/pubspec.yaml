@@ -23,6 +23,8 @@ dependencies:
   url_launcher: ^6.0.20
   flutter_launcher_icons: ^0.14.3
   iconsax: ^0.0.8
+  flutter_holo_date_picker: ^1.0.3  # ตรวจสอบเวอร์ชันล่าสุดจาก pub.dev
+
 
 
 flutter_launcher_icons:

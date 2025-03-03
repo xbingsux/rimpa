@@ -9,7 +9,7 @@ class LoginController extends GetxController {
   final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
   Dio dio = Dio();
 
-  void loginwithemail(bool rememberPassword) async {
+void loginwithemail(bool rememberPassword) async {
   if (user.email.value.isNotEmpty && user.password.value.isNotEmpty) {
     try {
       final apiUrlsController = Get.find<ApiUrls>();
@@ -24,6 +24,7 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         var token = response.data['token'] ?? '';
         var role = response.data['role'] ?? '';
+        var active = response.data['active'] ?? false;
 
         // ตรวจสอบว่า role เป็น 'admin' หรือไม่
         if (role == 'admin') {
@@ -34,6 +35,12 @@ class LoginController extends GetxController {
         // ตรวจสอบว่า role เป็น 'user' หรือไม่
         if (role != 'user') {
           Get.snackbar('ข้อผิดพลาด', 'คุณไม่ใช่ผู้ใช้ระบบ');
+          return;
+        }
+
+        // เช็คว่า active เป็น true หรือไม่
+        if (!active) {
+          Get.snackbar('ข้อผิดพลาด', 'อีเมลนี้ยังไม่ได้ยืนยัน');
           return;
         }
 

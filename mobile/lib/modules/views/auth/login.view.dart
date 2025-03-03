@@ -55,7 +55,7 @@ class _LoginViewState extends State<LoginView>
                     right: 0,
                     top: 0,
                     child: GestureDetector(
-                      onTap: () => Get.offAll(const HomePage()),
+                      onTap: () => Get.offAll( HomePage()),
                       child: Container(
                         decoration: const BoxDecoration(),
                         padding: const EdgeInsets.all(AppSpacing.md),

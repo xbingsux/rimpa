@@ -48,7 +48,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
       } else {
         _currentPage = 0;
       }
-
     });
   }
 
@@ -62,11 +61,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
   @override
   Widget build(BuildContext context) {
     ApiUrls apiUrls = Get.find();
-    final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
+    final profileController =
+        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,10 +77,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 // รูปโปรไฟล์แทนไอคอน
                 Obx(() {
                   // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-                  String profileImage = profileController.profileData["profile_img"] ?? '';
+                  String profileImage =
+                      profileController.profileData["profile_img"] ?? '';
 
                   // สร้าง URL ของภาพจาก path ที่ต้องการ
-                  String imageUrl = profileImage.isEmpty ? 'assets/images/default_profile.jpg' : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+                  String imageUrl = profileImage.isEmpty
+                      ? 'assets/images/default_profile.jpg'
+                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
                   return Container(
                     width: 40, // ขนาดเดิม
@@ -95,7 +99,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
                         height: 40,
                         fit: BoxFit.cover, // ปรับให้เต็มวงกลม
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(Icons.person_outline, color: Colors.grey, size: 24);
+                          return Icon(Icons.person_outline,
+                              color: Colors.grey, size: 24);
                         },
                       ),
                     ),
@@ -105,7 +110,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
                 // ชื่อโปรไฟล์
                 Obx(() {
-                  var profileName = profileController.profileData["profile_name"] ?? "ยังไม่มีข้อมูล";
+                  var profileName =
+                      profileController.profileData["profile_name"] ??
+                          "ยังไม่มีข้อมูล";
 
                   return Text(
                     profileName,
@@ -123,7 +130,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
         ),
       ),
       body: Obx(() {
-        if (listEventController.isLoading.value || listBannerController.isLoading.value) {
+        if (listEventController.isLoading.value ||
+            listBannerController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
           List<ListEvent> sortedEvents = listEventController.events.toList();
@@ -141,20 +149,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 children: [
                   // Banner slider
                   BannerSliderComponent(), // Corrected line
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(listBannerController.banners.length, (index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentPage == index ? 12 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: _currentPage == index ? Colors.blue : Colors.grey,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      );
-                    }),
-                  ),
 
                   SizedBox(height: 16),
                   // Activities Section
@@ -163,7 +157,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     children: [
                       Text(
                         "กิจกรรมแนะนำ",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -209,11 +204,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
                                 children: [
                                   AppImageComponent(
                                     imageType: AppImageType.network,
-                                    imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                                    imageAddress:
+                                        '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                                   ),
                                   SizedBox(height: 8),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
                                     child: Text(
                                       event.title,
                                       style: TextStyle(fontSize: 12),
@@ -237,7 +234,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       children: List.generate(60, (index) {
                         return Expanded(
                           child: Container(
-                            color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                            color: index % 2 == 0
+                                ? Colors.transparent
+                                : Colors.grey,
                             height: 1,
                           ),
                         );
@@ -276,11 +275,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
                             children: [
                               AppImageComponent(
                                 imageType: AppImageType.network,
-                                imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                                imageAddress:
+                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                               ),
                               SizedBox(height: 8),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
                                 child: Text(
                                   event.title,
                                   style: TextStyle(fontSize: 12),
