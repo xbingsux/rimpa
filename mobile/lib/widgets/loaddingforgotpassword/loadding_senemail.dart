@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
+
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -18,7 +19,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void _startLoading() async {
     for (int i = 1; i <= 100; i++) {
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       setState(() {
         _progress = i / 100;
         _scale = 1.0 + (i / 100) * 0.1; // เพิ่มขนาดของรูปภาพขณะโหลด
@@ -35,7 +36,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Color(0xFF1E1E1E)
+          ? const Color(0xFF1E1E1E)
           : Colors.white,
       body: Stack(
         children: [
@@ -44,7 +45,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             alignment: Alignment.center,
             child: AnimatedScale(
               scale: _scale, // ขยายและหดตัวตามค่า _scale
-              duration: Duration(milliseconds: 200), // ระยะเวลาในการขยาย/หด
+              duration: const Duration(milliseconds: 200), // ระยะเวลาในการขยาย/หด
               child: Container(
                 width: screenWidth * 0.15,
                 height: screenWidth * 0.2 * 4 / 5,
@@ -73,7 +74,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             child: AnimatedContainer(
               width: screenWidth * 0.30,
               height: screenWidth * 0.30 * 3 / 4,
-              duration: Duration(milliseconds: 100), // ระยะเวลาในการอนิเมชัน
+              duration: const Duration(milliseconds: 100), // ระยะเวลาในการอนิเมชัน
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.blue.withOpacity(0.1),
@@ -102,7 +103,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // แถบ LinearProgressIndicator
                 Container(
@@ -114,15 +115,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   child: LinearProgressIndicator(
                     value: _progress,
                     backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // แสดงเปอร์เซ็นต์
                 Text(
                   '${(_progress * 100).toStringAsFixed(0)}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,

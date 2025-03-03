@@ -4,8 +4,6 @@ class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
   var imgUrl = 'https://api-rimpa.nightbears.co'.obs;
   var baseUrl = 'https://api-rimpa.nightbears.co/auth'.obs;
-  var eventsUrl = 'https://api-rimpa.nightbears.co/event'.obs;
-  var rewardUrl = 'https://api-rimpa.nightbears.co/reward'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;

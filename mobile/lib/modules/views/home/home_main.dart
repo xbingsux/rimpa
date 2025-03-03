@@ -9,12 +9,19 @@ import '../../controllers/profile/profile_controller.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../models/listevent.model.dart';
+// Add this import
+import 'seeallcards/home_event_allcard.dart';
+import 'homedetail/home_detail.dart';
+import 'homedetail/banner_detail.dart'; // Add this import
+import '../../controllers/listevent/listevent.controller.dart';
 import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
 import 'seeallcards/home_event_allcard.dart';
 import 'homedetail/home_detail.dart'; // Add this import
 import '../../controllers/listevent/listevent.controller.dart';
 
 class HomeMainPage extends StatefulWidget {
+  const HomeMainPage({super.key});
+
   @override
   _HomeMainPageState createState() => _HomeMainPageState();
 }
@@ -42,11 +49,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
         _currentPage = 0;
       }
 
-      // _pageController.animateToPage(
-      //   _currentPage,
-      //   duration: Duration(milliseconds: 300),
-      //   curve: Curves.easeIn,
-      // );
     });
   }
 

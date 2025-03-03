@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
 import '../../../controllers/resetpassword/resetpassword.controller.dart';
-import 'dart:convert'; // สำหรับ JSON decoding
+// สำหรับ JSON decoding
 
 class ChangePassword extends StatelessWidget {
   const ChangePassword({super.key});
@@ -12,7 +12,7 @@ class ChangePassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final authController = Get.put(LoginController());
+    Get.put(LoginController());
     final resetPasswordController = Get.put(ResetPasswordController());
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 

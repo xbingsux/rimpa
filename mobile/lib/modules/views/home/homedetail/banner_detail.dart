@@ -6,7 +6,6 @@ import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
 import '../../../models/listbanner.model.dart';
-import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
 class BannerDetailPage extends StatelessWidget {
   final ListBanner banner;
@@ -108,7 +107,7 @@ class BannerDetailPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: AppTextSize.xxl,
                                           color: AppTextColors.black,
                                           fontWeight: FontWeight.bold),
@@ -124,7 +123,7 @@ class BannerDetailPage extends StatelessWidget {
                                         const SizedBox(width: 5),
                                         Text(
                                           '$startDate - $endDate',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: AppTextSize.xs,
                                               color: AppTextColors.secondary),
                                         ),
@@ -146,7 +145,7 @@ class BannerDetailPage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'รายละเอียด',
                                   style: TextStyle(
                                       fontSize: AppTextSize.sm,
@@ -154,10 +153,10 @@ class BannerDetailPage extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(AppSpacing.xs),
+                                  padding: const EdgeInsets.all(AppSpacing.xs),
                                   child: Text(
                                     description,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: AppTextSize.sm,
                                       color: AppTextColors.secondary,
                                     ),
@@ -183,7 +182,6 @@ class BannerDetailPage extends StatelessWidget {
     // Updated parameter type
     DateTime dateTime = date; // Updated line
     var thaiDateFormat = DateFormat('d MMM', 'th_TH');
-    var thaiYearFormat = DateFormat('yyyy', 'th_TH');
     String formattedDate = thaiDateFormat.format(dateTime);
     String thaiYear =
         (dateTime.year + 543).toString(); // Convert to Buddhist year

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart'; 
 import '../../../core/constant/app.constant.dart';
-import '../formloginWithnumberphone/PhoneLoginForm.dart'; // ✅ นำเข้า PhoneLoginForm
+// ✅ นำเข้า PhoneLoginForm
 
 class LoginSelectionView extends StatelessWidget {
+  const LoginSelectionView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,14 +19,14 @@ class LoginSelectionView extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back, size: 20),
+                    icon: const Icon(Icons.arrow_back, size: 20),
                     onPressed: () => Get.back(),
                   ),
                 ],
               ),
             ),
 
-            SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xl),
 
             // โลโก้ตรงกลาง
             Align(
@@ -35,15 +37,15 @@ class LoginSelectionView extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xl),
 
             // หัวข้อ "เข้าสู่ระบบ" ตรงกลาง
-            Text(
+            const Text(
               'สร้างบัญชีครั้งแรก',
               style: TextStyle(fontSize: 24),
             ),
 
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
 
             // ปุ่มเลือกล็อกอิน
             Padding(
@@ -56,7 +58,7 @@ class LoginSelectionView extends StatelessWidget {
                       Get.toNamed('/create-account');
                     },
                   ),
-                  SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.lg),
 
                   //ปุ่มเข้าสู่ระบบด้วยเบอร์โทรศัพท์ (เรียก Bottom Sheet)
                   // CustomButton(
@@ -98,7 +100,7 @@ class LoginSelectionView extends StatelessWidget {
                   //     // TODO: ใส่โค้ด Facebook Login
                   //   },
                   // ),
-                  SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.xxl),
 
                   //ปุ่มสมัครสมาชิก
                   Haveaccountbutton(

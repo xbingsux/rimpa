@@ -5,7 +5,6 @@ import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'dart:async';
 
 import '../../../core/services/api_urls.dart';
-import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
 import '../../../core/constant/app.constant.dart';
@@ -19,6 +18,8 @@ import '../../controllers/listbanner/listbanner.controller.dart'; // Add this im
 import '../../controllers/listevent/listevent.controller.dart'; // Add this import
 
 class HomeRewardPage extends StatefulWidget {
+  const HomeRewardPage({super.key});
+
   @override
   _HomeRewardPageState createState() => _HomeRewardPageState();
 }
@@ -34,7 +35,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
       } else {
@@ -43,7 +45,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
 
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     });
@@ -70,7 +72,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
           children: [
             Container(
               // Corrected instantiation
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: AppGradiant.gradientX_1,
               ),
               child: Column(
@@ -83,7 +85,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       right: 16,
                       bottom: 16,
                     ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: AppGradiant.gradientX_1,
                     ),
                     child: Row(
@@ -118,7 +120,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                     height: 40,
                                     fit: BoxFit.cover, // ปรับให้เต็มวงกลม
                                     errorBuilder: (context, error, stackTrace) {
-                                      return Icon(Icons.person_outline,
+                                      return const Icon(Icons.person_outline,
                                           color: Colors.grey, size: 24);
                                     },
                                   ),
@@ -126,7 +128,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }),
 
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
 
                             // ชื่อโปรไฟล์
                             Obx(() {
@@ -148,14 +150,14 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                         ),
 
                         // ไอคอนแจ้งเตือน
-                        Icon(Icons.notifications_none, color: Colors.white),
+                        const Icon(Icons.notifications_none, color: Colors.white),
                       ],
                     ),
                   ),
 
                   Container(
                     height: MediaQuery.of(context).size.height * 0.07,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: AppGradiant.gradientX_1,
                     ),
                   ),
@@ -170,11 +172,11 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Removed card here
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           // Banner slider
                           Obx(() {
                             if (listBannerController.isLoading.value) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             } else {
                               return SizedBox(
                                 height: 150,
@@ -197,7 +199,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       },
                                       child: Container(
                                         margin:
-                                            EdgeInsets.symmetric(horizontal: 8),
+                                            const EdgeInsets.symmetric(horizontal: 8),
                                         child: AppImageComponent(
                                           aspectRatio: 16 / 9,
                                           fit: BoxFit.cover,
@@ -212,13 +214,13 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }
                           }),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(
                                 listBannerController.banners.length, (index) {
                               return Container(
-                                margin: EdgeInsets.symmetric(horizontal: 4),
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
                                 width: _currentPage == index ? 12 : 8,
                                 height: 8,
                                 decoration: BoxDecoration(
@@ -230,21 +232,21 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           // Activities Section
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "สิทธิพิเศษแนะนำ",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(RecommendedPrivilegesPage());
+                                  Get.to(const RecommendedPrivilegesPage());
                                 },
-                                child: Row(
+                                child: const Row(
                                   children: [
                                     Text(
                                       "ดูทั้งหมด",
@@ -267,10 +269,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Obx(() {
                             if (listRewardController.isLoading.value) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             } else {
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -285,7 +287,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       },
                                       child: Container(
                                         width: 150,
-                                        margin: EdgeInsets.only(right: 8),
+                                        margin: const EdgeInsets.only(right: 8),
                                         child: AppCardComponent(
                                           child: Column(
                                             children: [
@@ -294,7 +296,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 imageAddress:
                                                     '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // Use AppApi.urlApi
                                               ),
-                                              SizedBox(height: 8),
+                                              const SizedBox(height: 8),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -302,7 +304,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 child: Text(
                                                   reward.rewardName,
                                                   style:
-                                                      TextStyle(fontSize: 12),
+                                                      const TextStyle(fontSize: 12),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
@@ -316,20 +318,20 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }
                           }),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "สิ่งที่บันทึก",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(RecommendedPrivilegesPage());
+                                  Get.to(const RecommendedPrivilegesPage());
                                 },
-                                child: Row(
+                                child: const Row(
                                   children: [
                                     Text(
                                       "ดูทั้งหมด",
@@ -352,11 +354,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
-                         
+                          const SizedBox(height: 8),
                           Obx(() {
                             if (listEventController.isLoading.value) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             } else {
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -371,7 +372,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       },
                                       child: Container(
                                         width: 150,
-                                        margin: EdgeInsets.only(right: 8),
+                                        margin: const EdgeInsets.only(right: 8),
                                         child: AppCardComponent(
                                           child: Column(
                                             children: [
@@ -380,7 +381,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 imageAddress:
                                                     '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // Use AppApi.urlApi
                                               ),
-                                              SizedBox(height: 8),
+                                              const SizedBox(height: 8),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -388,7 +389,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 child: Text(
                                                   reward.rewardName,
                                                   style:
-                                                      TextStyle(fontSize: 12),
+                                                      const TextStyle(fontSize: 12),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
@@ -402,11 +403,11 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }
                           }),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "กิจกรรมแนะนำ",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
@@ -415,7 +416,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                 onTap: () {
                                   Get.to(HomeEventAllcard());
                                 },
-                                child: Row(
+                                child: const Row(
                                   children: [
                                     Text(
                                       "ดูทั้งหมด",
@@ -438,10 +439,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Obx(() {
                             if (listEventController.isLoading.value) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             } else {
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -455,7 +456,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                       },
                                       child: Container(
                                         width: 150,
-                                        margin: EdgeInsets.only(right: 8),
+                                        margin: const EdgeInsets.only(right: 8),
                                         child: AppCardComponent(
                                           child: Column(
                                             children: [
@@ -464,7 +465,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 imageAddress:
                                                     '${AppApi.urlApi}${event.subEvents[0].imagePath}', // Use AppApi
                                               ),
-                                              SizedBox(height: 8),
+                                              const SizedBox(height: 8),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -472,7 +473,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                                 child: Text(
                                                   event.title,
                                                   style:
-                                                      TextStyle(fontSize: 12),
+                                                      const TextStyle(fontSize: 12),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
@@ -486,7 +487,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               );
                             }
                           }),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           // Add dashed line
                         ],
                       ),
@@ -516,7 +517,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.25),
                         blurRadius: 4,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -531,18 +532,18 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                           Container(
                             width: 48,
                             height: 48,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient:
                                   AppGradiant.gradientX_1, // Applied gradient
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.star, color: Colors.white),
+                            child: const Icon(Icons.star, color: Colors.white),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "คะเเนน",
                                 style: TextStyle(
                                   fontSize: 10,
@@ -573,7 +574,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                                     foreground: Paint()
                                       ..shader =
                                           AppGradiant.gradientX_1.createShader(
-                                        Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                        const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
                                       ),
                                   ),
                                 );
@@ -594,7 +595,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               color: const Color.fromARGB(255, 209, 234, 255),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.av_timer_rounded,

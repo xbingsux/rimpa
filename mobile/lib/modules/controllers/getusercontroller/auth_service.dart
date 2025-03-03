@@ -4,8 +4,6 @@ import '../../controllers/profile/profile_controller.dart';
 
 class AuthService extends GetxService {
   RxBool isLoggedIn = false.obs; // ใช้ RxBool แทนการใช้ async
-  String? _token;
-  String? _email;
 
   Future<AuthService> init() async {
     return this;
@@ -23,8 +21,6 @@ class AuthService extends GetxService {
     await prefs.setBool('rememberPassword', rememberPassword);
     await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
 
-    _token = token;
-    _email = email;
     isLoggedIn.value = true;
   }
 
@@ -35,8 +31,6 @@ class AuthService extends GetxService {
     await prefs.remove('rememberPassword');
     await prefs.remove('loginTime');
 
-    _token = null;
-    _email = null;
     isLoggedIn.value = false;
   }
 

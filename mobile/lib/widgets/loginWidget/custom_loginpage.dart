@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../core/theme/app_theme.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import '../../core/theme/theme_controller.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl/intl.dart';
 
@@ -23,9 +20,9 @@ class CustomButton extends StatelessWidget {
       width: double.infinity, // ขนาดปุ่มเต็มจอ
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [
-              Color(0xFF1E54FD), // สีแรก
+              const Color(0xFF1E54FD), // สีแรก
               Color(0xFF0ACCF5), // สีที่สอง
             ],
             begin: Alignment.centerLeft,
@@ -36,7 +33,7 @@ class CustomButton extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white, // สีข้อความ
-            padding: EdgeInsets.symmetric(vertical: 18),
+            padding: const EdgeInsets.symmetric(vertical: 18),
             backgroundColor:
                 Colors.transparent, // ทำให้ปุ่มโปร่งใสเพื่อให้เห็น Gradient
             shadowColor: Colors.blue.withOpacity(0.4),
@@ -75,7 +72,7 @@ class CustomButtonResetpassword extends StatelessWidget {
       width: double.infinity, // ขนาดปุ่มเต็มจอ
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [
               Color(0xFF1E54FD), // สีแรก
               Color(0xFF0ACCF5), // สีที่สอง
@@ -88,7 +85,7 @@ class CustomButtonResetpassword extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white, // สีข้อความ
-            padding: EdgeInsets.symmetric(vertical: 18),
+            padding: const EdgeInsets.symmetric(vertical: 18),
             backgroundColor:
                 Colors.transparent, // ทำให้ปุ่มโปร่งใสเพื่อให้เห็น Gradient
             shadowColor: Colors.blue.withOpacity(0.4),
@@ -133,7 +130,7 @@ class CreateAccountButton extends StatelessWidget {
             WidgetSpan(
               child: GestureDetector(
                 onTap: onPressed,
-                child: Text(
+                child: const Text(
                   'สมัครสมาชิก',
                   style: TextStyle(
                     fontSize: 16,
@@ -172,7 +169,7 @@ class backlogin extends StatelessWidget {
             WidgetSpan(
               child: GestureDetector(
                 onTap: onPressed,
-                child: Text(
+                child: const Text(
                   'กลับไปหน้าล็อคอิน',
                   style: TextStyle(
                     fontSize: 16,
@@ -212,7 +209,7 @@ class Haveaccountbutton extends StatelessWidget {
             WidgetSpan(
               child: GestureDetector(
                 onTap: onPressed,
-                child: Text(
+                child: const Text(
                   'เข้าสู่ระบบ',
                   style: TextStyle(
                     fontSize: 16,
@@ -487,17 +484,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         ),
         if (_emailError != null) ...[
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             _emailError!,
-            style: TextStyle(color: Colors.red, fontSize: 12),
+            style: const TextStyle(color: Colors.red, fontSize: 12),
           ),
         ],
         if (_passwordGuide != null) ...[
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             _passwordGuide!,
-            style: TextStyle(color: Colors.grey, fontSize: 12),
+            style: const TextStyle(color: Colors.grey, fontSize: 12),
           ),
         ],
       ],
@@ -864,7 +861,7 @@ class RememberPasswordWidget extends StatelessWidget {
                 activeColor: Colors.blue,
                 checkColor: Colors.white,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "จำฉันไว้ไหม",
                 style: TextStyle(
@@ -915,7 +912,7 @@ class Ordesign extends StatelessWidget {
           child: GestureDetector(
             child: Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: AppTextSize.xs,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue, // สีข้อความ
@@ -984,10 +981,10 @@ class SocialLoginButtons extends StatelessWidget {
             //   color: Colors.white,
             //   size: 28,
             // ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
