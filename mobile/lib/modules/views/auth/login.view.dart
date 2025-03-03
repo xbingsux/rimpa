@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/modules/views/home/home.view.dart';
+import 'package:rimpa/modules/views/home/home_main.dart';
+import 'package:rimpa/modules/views/home/home_profile.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
 
@@ -52,7 +55,7 @@ class _LoginViewState extends State<LoginView>
                     right: 0,
                     top: 0,
                     child: GestureDetector(
-                      onTap: () => Get.back(),
+                      onTap: () => Get.offAll(const HomePage()),
                       child: Container(
                         decoration: const BoxDecoration(),
                         padding: const EdgeInsets.all(AppSpacing.md),
@@ -327,7 +330,7 @@ class _LoginViewState extends State<LoginView>
                                         'สมัครสมาชิก',
                                         style: TextStyle(
                                           fontSize: AppTextSize.md,
-                                          color: AppTextColors.accent,
+                                          color: AppTextColors.accent2,
                                         ),
                                       ),
                                       Positioned(
@@ -336,7 +339,7 @@ class _LoginViewState extends State<LoginView>
                                         bottom: 0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
                                         child: Container(
                                           height: 0.5,
-                                          color: AppTextColors.accent,
+                                          color: AppTextColors.accent2,
                                         ),
                                       ),
                                     ],
