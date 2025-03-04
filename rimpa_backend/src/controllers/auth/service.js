@@ -363,6 +363,29 @@ const updateProfile = async (id, updatedData) => {
   }
 };
 
+const resetPasswordMe = async (id, old_password,new_password) => {
+  
+  let user = await prisma.user.findFirst({
+    where: { id: id },
+  })
+
+  const isMatch = await bcrypt.compare(old_password, user.password);
+
+  if (!isMatch) throw new Error("Incorrect old password");  
+  
+  if (old_password === new_password) throw new Error("New password cannot be the same as the old password");
+  
+  const hashedPassword = await bcrypt.hash(new_password, 10);
+    
+  user = await prisma.user.update({
+    where: { id: id },
+    data: {
+      password: hashedPassword
+    }
+  })
+  return user;
+}
+
 module.exports = {
   authenticateEmail,
   register,
@@ -373,5 +396,6 @@ module.exports = {
   resetPassword,
   profileMe,
   deleteUser,
-  updateProfile
+  updateProfile,
+  resetPasswordMe
 };
