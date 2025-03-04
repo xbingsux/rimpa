@@ -24,7 +24,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   iconsax: ^0.0.8
   flutter_holo_date_picker: ^1.0.3  # ตรวจสอบเวอร์ชันล่าสุดจาก pub.dev
-
+  gap: ^3.0.0
 
 
 flutter_launcher_icons:

@@ -73,9 +73,7 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      body: SafeArea(
-        child: _pages[_selectedIndex], // เนื้อหาหลัก
-      ),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         // height: 98, // ลดความสูงของ BottomNavigationBar ให้ไม่เกินไป
         child: Container(
