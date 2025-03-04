@@ -8,30 +8,33 @@ const nodemailer = require("nodemailer");
 const prisma = new PrismaClient();
 
 const dashboard = async () => {
-    const event = await prisma.event.findMany({ where: { active: true } })
-    const attendees = await prisma.eventParticipant.findMany({})
-    const reward = await prisma.reward.findMany({ where: { active: true } })
-    const user = await prisma.user.findMany({ where: { active: true } })
+    const [totalEvents, totalAttendees, totalRewards, totalUsers] = await Promise.all([
+        prisma.event.count({ where: { active: true } }),
+        prisma.eventParticipant.count({where:{status:''}}),
+        prisma.reward.count({ where: { active: true } }),
+        prisma.user.count({ where: { active: true } })
+    ]);
 
     return [
         {
             title: 'Total Events',
-            count: event.length
+            count: totalEvents
         },
         {
             title: 'Total Attendees',
-            count: attendees.length,
+            count: totalAttendees,
         },
         {
             title: 'Total Reward',
-            count: reward.length,
+            count: totalRewards,
         },
         {
             title: 'Total User',
-            count: user.length
+            count: totalUsers
         }
-    ]
-}
+    ];
+};
+
 
 const upsertBanner = async (id, title, description, startDate, endDate, path) => {
     const banner = await prisma.banner.upsert({
@@ -335,13 +338,9 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
 }
 
 const deleteUser = async (id) => {
-    const user = await prisma.user.update({
+    const user = await prisma.user.delete({
         where: {
-            id: id,
-            active: true
-        },
-        data: {
-            active: false
+            id: id
         }
     })
     return user;

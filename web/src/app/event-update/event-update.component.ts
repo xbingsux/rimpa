@@ -140,8 +140,12 @@ export class EventUpdateComponent implements OnInit {
       event_img: imgs
     }).subscribe(async (response: any) => {
       // console.log(response);
-      if (response.status == 'success') this.router.navigate(['/admin/event'])
+      if (response.status == 'success') {
+        alert('บันทึกข้อมูลสำเร็จ')
+        this.router.navigate(['/admin/event'])
+      }
     }, error => {
+      alert('บันทึกข้อมูลไม่สำเร็จ')
       console.error('Error:', error);
     });
   }
@@ -171,8 +175,8 @@ class AddEvent {
   max_attendees: number = 0
   map = ''
   releaseDate = null
-  startDate = ''
-  endDate = ''
+  startDate = new Date(new Date().setHours(7, 0, 0, 0)).toISOString().slice(0, 16)
+  endDate = new Date(new Date().setHours(31, 0, 0, 0)).toISOString().slice(0, 16)
   point: number = 0
   list_img: Img[] = []
 }

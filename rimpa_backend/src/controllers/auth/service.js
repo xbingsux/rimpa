@@ -311,13 +311,9 @@ const profileMe = async (id) => {
 }
 
 const deleteUser = async (id) => {
-  const user = await prisma.user.update({
+  const user = await prisma.user.delete({
     where: {
-      id: id,
-      active: true
-    },
-    data: {
-      active: false
+      id: id
     }
   })
   return user;

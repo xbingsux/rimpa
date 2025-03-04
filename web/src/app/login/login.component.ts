@@ -25,16 +25,23 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  AuthLogin() {
+  async AuthLogin() {
     if (this.keep_me) {
       localStorage.setItem('email', this.login.email)
     } else {
       localStorage.removeItem('email')
     }
 
-    this.auth.login(this.login.email, this.login.password).subscribe((item) => {
-      // console.log(item); 
-    })
+    let login = await this.auth.login(this.login.email, this.login.password);
+    if (typeof login == 'string') {
+      alert(login)
+    } else if (typeof login == 'object') {
+      login.subscribe((item: any) => {
+        console.log('test');
+        console.log('login', item);
+      })
+
+    }
   }
 
   login: Login = new Login();

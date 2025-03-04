@@ -94,10 +94,10 @@ router.post("/scan", auth, async (req, res) => {
 
 
 router.post("/checkIn", auth, async (req, res) => {
-  const { sub_event_id } = req.body;
+  const { qrcode } = req.body;
 
   try {
-    const event = await Service.checkIn(req.user.userId, sub_event_id);
+    const event = await Service.checkIn(req.user.userId, qrcode);
     return res.status(200).json({ status: "success", event });
   } catch (error) {
     console.error(error);

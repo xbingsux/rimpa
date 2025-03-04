@@ -92,8 +92,12 @@ export class BannerUpdateComponent {
       path: imgPath || this.data.path
     }).subscribe(async (response: any) => {
       // console.log(response);
-      if (response.status == 'success') this.router.navigate(['/admin/banner'])
+      if (response.status == 'success') {
+        alert('บันทึกข้อมูลสำเร็จ')
+        this.router.navigate(['/admin/banner'])
+      }
     }, error => {
+      alert('บันทึกข้อมูลไม่สำเร็จ')
       console.error('Error:', error);
     });
   }
@@ -104,6 +108,6 @@ class Banner {
   title = ''
   description = ''
   path = ''
-  startDate = ''
-  endDate = ''
+  startDate = new Date(new Date().setHours(7, 0, 0, 0)).toISOString().slice(0, 10)
+  endDate = new Date(new Date().setHours(31, 0, 0, 0)).toISOString().slice(0, 10)
 }

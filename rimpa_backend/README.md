@@ -14,3 +14,5 @@ AUTH
     - register          register
     - verify-user       ยืนยัน Email
     - verify-token      
+
+npx prisma migrate dev --name init
