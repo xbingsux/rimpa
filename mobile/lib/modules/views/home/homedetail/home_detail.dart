@@ -21,6 +21,9 @@ class HomeDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  List<String> paths = event.subEvents
+    .expand((subEvent) => subEvent.img.map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/")))
+    .toList();
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
     String id_event = event.subEvents[0].id.toString();
@@ -28,12 +31,14 @@ class HomeDetailPage extends StatelessWidget {
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
     String endDate = _formatDate(event.endDate); // Update this line
+
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
+        print(imageUrl);
     String mapUrl = event.subEvents[0].map;
     // ดึงค่าพอยท์จาก subEvents (ตัวแรกในกรณีนี้)
     // ใช้ RxString สำหรับค่าพอยท์
-    RxString point =
+    RxDouble point =
         event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
     final evencontroller = Get.find<EventController>();
     double mediaHeight = MediaQuery.of(context).size.height;
@@ -51,7 +56,7 @@ class HomeDetailPage extends StatelessWidget {
                       children: [
                         AppCarousel(
                           imageSrc: AppImageType.network,
-                          images: [imageUrl],
+                          images: paths,
                           ratio: 1 / 1,
                           indicatorBottomSpace: 30,
                         ),
@@ -535,4 +540,10 @@ class HomeDetailPage extends StatelessWidget {
         (dateTime.year + 543).toString(); // Convert to Buddhist year
     return '$formattedDate $thaiYear';
   }
+
+  // Widget eventButton () {
+  //   final DateTime now = DateTime.now();
+
+  //   if ()
+  // }
 }

@@ -13,9 +13,9 @@ class NotifyView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: AppColors.light,
+          backgroundColor: AppColors.background_main,
           centerTitle: true,
-          title: const Text('การแจ้งเตือน', style: TextStyle(fontSize: AppTextSize.xl, color: AppTextColors.accent)),
+          title: const Text('การแจ้งเตือน', style: TextStyle(fontSize: AppTextSize.xl, color: AppTextColors.accent, fontWeight: FontWeight.bold)),
           leading: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -26,6 +26,7 @@ class NotifyView extends StatelessWidget {
               ),
             ),
           ),
+          toolbarHeight: MediaQuery.of(context).size.height * 0.075,
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppSpacing.sm),
