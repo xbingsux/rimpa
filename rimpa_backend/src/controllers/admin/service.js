@@ -8,9 +8,10 @@ const nodemailer = require("nodemailer");
 const prisma = new PrismaClient();
 
 const dashboard = async () => {
+        
     const [totalEvents, totalAttendees, totalRewards, totalUsers] = await Promise.all([
         prisma.event.count({ where: { active: true } }),
-        prisma.eventParticipant.count({where:{status:''}}),
+        prisma.eventParticipant.count({ where: { status: 'PAID' } }),
         prisma.reward.count({ where: { active: true } }),
         prisma.user.count({ where: { active: true } })
     ]);
@@ -33,6 +34,7 @@ const dashboard = async () => {
             count: totalUsers
         }
     ];
+
 };
 
 
