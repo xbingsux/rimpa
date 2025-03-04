@@ -36,12 +36,14 @@ class SubEvent {
   final String imagePath;
   final String map;
   final List<EventImage> img;
+  final String point;  // เพิ่มตัวแปร point
 
   SubEvent({
     required this.id,
     required this.imagePath,
     required this.map,
     required this.img,
+    required this.point,  // รับค่า point ใน constructor
   });
 
   factory SubEvent.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class SubEvent {
       imagePath: json['img'][0]['path'],
       map: json['map'],
       img: images,
+      point: json['point'].toString(),  // ดึงค่า point และแปลงเป็น String
     );
   }
 }

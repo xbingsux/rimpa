@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 // ปุ่มกดเข้าระบบ
 class CustomButton extends StatelessWidget {
@@ -242,24 +243,21 @@ class CustomDatePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
+        DateTime? pickedDate = await DatePicker.showSimpleDatePicker(
+          context,
           initialDate: selectedDate ?? DateTime.now(),
           firstDate: DateTime(1900),
           lastDate: DateTime.now(),
-          builder: (BuildContext context, Widget? child) {
-            return Theme(
-              data: ThemeData.light().copyWith(
-                primaryColor: Colors.blue, // ปรับสีปุ่มและพื้นหลัง
-                dialogBackgroundColor: Colors.white, // สีพื้นหลังของ dialog
-                buttonTheme:
-                    ButtonThemeData(textTheme: ButtonTextTheme.primary),
-                colorScheme: ColorScheme.light(primary: Colors.blue)
-                    .copyWith(background: Colors.white),
-              ),
-              child: child!,
-            );
-          },
+          dateFormat: "dd-MMMM-yyyy",
+          locale: DateTimePickerLocale.th, // ตั้งค่าภาษาไทย
+          looping: false,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          itemTextStyle:
+              const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          titleText: "กรุณาเลือกวันเกิด",
+          cancelText: "ยกเลิก",
+          confirmText: "ตกลง",
         );
         if (pickedDate != null) {
           onChanged(pickedDate);
@@ -267,37 +265,24 @@ class CustomDatePicker extends StatelessWidget {
       },
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: labelText, // ใช้ label ที่เป็นภาษาไทย
+          labelText: labelText,
           labelStyle: const TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-            fontWeight: FontWeight.w500, // เพิ่มความหนาให้ตัวอักษร
-          ),
+              fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25),
-            borderSide: const BorderSide(
-              color: Colors.blueAccent,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
           ),
           filled: true,
-          fillColor: Colors.white, // สีพื้นหลังเป็นสีขาว
+          fillColor: Colors.white,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              selectedDate == null
-                  ? 'กรุณาเลือกวันที่เกิด'
-                  : '${DateFormat('d MMMM yyyy').format(selectedDate!)}', // แสดงวันที่พร้อมเดือนไทย
-              style: const TextStyle(
-                fontSize: 16,
-                color: Color.fromARGB(255, 158, 158, 158),
-              ),
-            ),
-          ],
+        child: Text(
+          selectedDate == null
+              ? 'กรุณาเลือกวันที่เกิด'
+              : '${DateFormat('d MMMM yyyy', 'th').format(selectedDate!)}',
+          style: const TextStyle(
+              fontSize: 16, color: Color.fromARGB(255, 158, 158, 158)),
         ),
       ),
     );
@@ -757,7 +742,8 @@ class CustomPhoneRegisTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white, // พื้นหลังขาว
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       initialCountryCode: 'TH', // กำหนดประเทศเริ่มต้นเป็นประเทศไทย 🇹🇭
       showCountryFlag: true, // แสดงธงชาติ
@@ -779,13 +765,12 @@ class CustomPhoneRegisTextField extends StatelessWidget {
       ),
       onChanged: (phone) {
         // เมื่อมีการเปลี่ยนแปลงข้อมูล
-        onChanged(phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
+        onChanged(
+            phone.completeNumber); // ส่งค่าเบอร์โทรศัพท์ที่กรอกไปยังฟังก์ชัน
       },
     );
   }
 }
-
-
 
 // ช่องกรอกสร้างบัญชี
 class CreatTextField extends StatelessWidget {

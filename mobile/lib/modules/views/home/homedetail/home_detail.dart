@@ -31,6 +31,10 @@ class HomeDetailPage extends StatelessWidget {
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     String mapUrl = event.subEvents[0].map;
+    // ดึงค่าพอยท์จาก subEvents (ตัวแรกในกรณีนี้)
+    // ใช้ RxString สำหรับค่าพอยท์
+    RxString point =
+        event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
     final evencontroller = Get.find<EventController>();
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
@@ -471,12 +475,15 @@ class HomeDetailPage extends StatelessWidget {
                                   const Icon(Icons.star, color: Colors.white),
                             ),
                             const SizedBox(width: 8), // Added missing comma
-                            const Text(
-                              '100 คะแนน',
-                              style: TextStyle(
+                            Obx(() {
+                              return Text(
+                                '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
+                                style: TextStyle(
                                   fontSize: AppTextSize.lg,
-                                  color: AppTextColors.accent2),
-                            ),
+                                  color: AppTextColors.accent2,
+                                ),
+                              );
+                            }),
                             Opacity(
                               // space
                               opacity: 0,

@@ -10,8 +10,6 @@ import 'home_reward.dart';
 import 'home_profile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -28,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
       } else {
@@ -67,11 +65,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = [
-      const HomeMainPage(),
+      HomeMainPage(),
       HomeEventPage(),
       HomeQRPage(),
-      const HomeRewardPage(),
-      const HomeProfilePage(),
+      HomeRewardPage(),
+      HomeProfilePage(),
     ];
 
     return Scaffold(

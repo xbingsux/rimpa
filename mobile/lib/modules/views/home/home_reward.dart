@@ -35,7 +35,8 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
       } else {
@@ -353,8 +354,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
-                         
+                          const SizedBox(height: 8),
                           Obx(() {
                             if (listEventController.isLoading.value) {
                               return const Center(child: CircularProgressIndicator());

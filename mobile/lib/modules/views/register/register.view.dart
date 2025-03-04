@@ -85,15 +85,15 @@ class CreateAccountView extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 16),
-                            CustomDatePicker(
-                              labelText: 'วันเกิด',
-                              selectedDate:
-                                  registerController.profile.birthDate.value,
-                              onChanged: (DateTime value) {
-                                registerController.profile.birthDate.value =
-                                    value;
-                              },
-                            ),
+                            Obx(() => CustomDatePicker(
+                                  labelText: 'วันเกิด',
+                                  selectedDate: registerController.profile
+                                      .birthDate.value, // ใช้ Rx<DateTime?>
+                                  onChanged: (DateTime value) {
+                                    registerController.profile.birthDate.value =
+                                        value;
+                                  },
+                                )),
                             const SizedBox(height: 16),
                             Obx(() {
                               return CustomDropdown(

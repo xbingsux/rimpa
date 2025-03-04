@@ -6,15 +6,15 @@ import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/api_urls.dart';
 import './modules/controllers/middleware/auth_middleware.dart';
+// Add this import
 
-void main() {
-  // เรียกใช้ initializeDateFormatting ก่อน
-  initializeDateFormatting('th_TH', null).then((_) {
-    Get.put(AuthMiddleware());
-    Get.put(ApiUrls());
-    Get.put(ThemeController());
-    runApp(MyApp());
-  });
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('th_TH', null); // Correct call
+  Get.put(AuthMiddleware());
+  Get.put(ApiUrls());
+  Get.put(ThemeController());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
