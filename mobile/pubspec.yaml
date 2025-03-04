@@ -59,7 +59,10 @@ flutter:
   assets:
     - assets/logoapp/logoiconic.png
     - assets/icon/iconsendemail/
+<<<<<<< HEAD
     - assets/icon/login/
+=======
+>>>>>>> 3951964220bd9ee757f9ddde8cc9f5f37cb951d0
     - assets/icon/noti/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/core/services/api_urls.dart';
 import 'package:rimpa/modules/views/home/banners/banner_slider.dart';
 import 'package:rimpa/modules/views/notify/noti.dart';
 import '../../../core/constant/app.constant.dart';
+import 'package:rimpa/modules/views/notify/notify.view.dart';
+import '../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../controllers/profile/profile_controller.dart';
 import '../../../components/cards/app-card.component.dart';
 import '../../../components/imageloader/app-image.component.dart';
@@ -132,10 +135,17 @@ class _HomeMainPageState extends State<HomeMainPage> {
             ),
 
             // ไอคอนแจ้งเตือน
+            
             GestureDetector(
-              onTap: () => Get.to(NotificationScreen()),
-              child: Icon(Icons.notifications_none, color: Colors.grey)
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotifyView(),)),
+              child: Container(
+                decoration: const BoxDecoration(),
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                child: const Center(
+                  child: Icon(Icons.notifications_none, color: Colors.grey),
+                ),
               ),
+            )
           ],
         ),
       ),
