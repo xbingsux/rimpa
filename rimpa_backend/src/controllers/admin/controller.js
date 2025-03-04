@@ -13,7 +13,7 @@ router.get("/test", async (req, res) => {
   return res.status(200).json({ status: "success" });
 });
 
-router.post("/dashboard", auth, async (req, res) => {
+router.get("/dashboard", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
