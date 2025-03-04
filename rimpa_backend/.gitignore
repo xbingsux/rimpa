@@ -6,3 +6,5 @@ node_modules
 **/migrations
 
 src/uploads/
+docker-compose.yml
+Dockerfile

@@ -207,18 +207,11 @@ const scan = async (user_id, qrcode) => {
   
   
 
-const checkIn = async (user_id, sub_event_id) => {
-
-    let checkIn = await prisma.checkIn.findFirst({
-        where: { sub_event_id: sub_event_id, profile: { user_id: user_id } }
-    })
-
-    if (checkIn) throw new Error('You have already claimed the point.')
-
+const checkIn = async (user_id, qrcode) => {
     const currentDate = new Date();
-    let sub_event = await prisma.subEvent.findFirst({
+    const sub_event = await prisma.subEvent.findFirst({
         where: {
-            id: sub_event_id,
+            qrcode: qrcode,
             startDate: { lte: currentDate },
             endDate: { gte: currentDate },
             active: true
@@ -227,9 +220,15 @@ const checkIn = async (user_id, sub_event_id) => {
 
     if (!sub_event) throw new Error('No information available or out of the event period')
 
+    let checkIn = await prisma.checkIn.findFirst({
+        where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
+    })
+
+    if (checkIn) throw new Error('You have already claimed the point.')
+
     checkIn = await prisma.checkIn.create({
         data: {
-            sub_event_id: sub_event_id,
+            sub_event_id: sub_event.id,
             profile: { user_id: user_id },
         }
     });

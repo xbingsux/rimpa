@@ -11,18 +11,25 @@ export class AuthGuard implements CanActivate {
   api_url = environment.API_URL;
   constructor(private router: Router, private http: HttpClient) { }
 
-  login(email: string, password: string) {
-    let response = this.http.post(`${this.api_url}/auth/login`, { email, password })
-    response.subscribe((item: any) => {
-      if (item.role == 'admin') {
-        localStorage.setItem('token', item.token)
-        this.router.navigate(['admin/dashboard']);
-      }
-    })
-    // console.log('login', response);
+  async login(email: string, password: string) {
+    try {
+      const response: any = await this.http.post(`${this.api_url}/auth/login`, { email, password }).toPromise();
 
-    return response
+      if (response.role === 'admin') {
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['admin/dashboard']);
+      } else {
+        return 'คุณไม่มีสิทธิ์ในการเข้าถึงข้อมูล';
+      }
+
+      // console.log('login', response);
+      return response;
+    } catch (error) {
+      console.error('Login failed', error);
+      return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+    }
   }
+
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const isAuthenticated = !!localStorage.getItem('token');

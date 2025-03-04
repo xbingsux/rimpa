@@ -99,8 +99,12 @@ export class RewardUpdateComponent implements OnInit {
       cost: +this.data.cost
     }).subscribe((response: any) => {
       // console.log(response);
-      if (response.status == 'success') this.router.navigate(['/admin/reward']);
+      if (response.status == 'success') {
+        alert('บันทึกข้อมูลสำเร็จ')
+        this.router.navigate(['/admin/reward']);
+      }
     }, error => {
+      alert('บันทึกข้อมูลไม่สำเร็จ')
       console.error('Error:', error);
     });
   }
@@ -112,8 +116,8 @@ class Reward {
   reward_name = ''
   description = ''
   img = ''
-  startDate = ''
-  endDate = ''
+  startDate = new Date(new Date().setHours(7, 0, 0, 0)).toISOString().slice(0, 10)
+  endDate = new Date(new Date().setHours(31, 0, 0, 0)).toISOString().slice(0, 10)
   stock: number = 0
   cost: number = 0
   path = ''

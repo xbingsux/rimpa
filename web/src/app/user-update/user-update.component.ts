@@ -119,12 +119,14 @@ export class UserUpdateComponent implements OnInit {
         // console.log("✅ Register Success:", response);
         if (response.status === 'success') {
           this.router.navigate(['/admin/users']).then(() => {
+            alert('บันทึกข้อมูลสำเร็จ')
             window.location.reload();
           });
         }
 
       },
       (error) => {
+        alert('บันทึกข้อมูลไม่สำเร็จ')
         console.error("🚨 Register Error:", error);
       }
     );
