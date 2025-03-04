@@ -21,7 +21,9 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 create: {
                     map: map,
                     point: point,
-                    event_type: "Main"
+                    event_type: "Main",
+                    startDate:startDate,
+                    endDate: endDate,
                 }
             },
         },
@@ -41,6 +43,8 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     data: {
                         map: map,
                         point: point,
+                        startDate:startDate,
+                        endDate: endDate,
                     }
                 }
             },
