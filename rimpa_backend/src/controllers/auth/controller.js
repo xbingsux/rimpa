@@ -268,6 +268,25 @@ router.post("/reset-password", async (req, res) => {
   });
 });
 
+router.post("/reset-password-user",auth, async (req, res) => {
+  const { old_password, new_password } = req.body;
+
+  try {
+    const updatedUser = await Service.resetPasswordMe(req.user.userId, old_password,new_password);
+
+    if (!updatedUser) {
+      return res.status(500).send("Failed to reset password");
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    return res.status(500).send("Error updating password");
+  }
+});
+
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   console.log('email', email);
