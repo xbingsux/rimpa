@@ -48,8 +48,18 @@ router.get("/profile", auth, async (req, res) => {
   const { profile_id } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const profile = await Service.profileById(profile_id)
-    return res.status(200).json({ status: "success", profile });
+
+    const id = Number(profile_id);
+    if (!isNaN(id) && Number.isInteger(id) && profile_id.trim() != '') {
+      const profile = await Service.profileById(id)
+      if (profile) {
+        return res.status(200).json({ status: "success", profile });
+      } else {
+        return res.status(404).json({ status: "error", message: "Profile not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid profile_id" });
+    }
 
   } catch (error) {
     console.error(error);
@@ -125,8 +135,19 @@ router.get("/get-event", auth, async (req, res) => {
   const { id } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const event = await Service.getEvent(id);
-    return res.status(200).json({ status: "success", event });
+
+    const event_id = Number(id);
+    if (!isNaN(event_id) && Number.isInteger(event_id) && id.trim() != '') {
+      const event = await Service.getEvent(event_id);
+      if (event) {
+        return res.status(200).json({ status: "success", event });
+      } else {
+        return res.status(404).json({ status: "error", message: "Event not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid event_id" });
+    }
+
 
   } catch (error) {
     console.error(error);
@@ -175,8 +196,20 @@ router.get("/get-reward", auth, async (req, res) => {
   const { id } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const reward = await Service.rewardById(id)
-    return res.status(200).json({ status: "success", reward });
+
+    const reward_id = Number(id);
+    if (!isNaN(reward_id) && Number.isInteger(reward_id) && id.trim() != '') {
+      const reward = await Service.rewardById(reward_id)
+      if (reward) {
+        return res.status(200).json({ status: "success", reward });
+      } else {
+        return res.status(404).json({ status: "error", message: "Reward not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid reward_id" });
+    }
+
+
 
   } catch (error) {
     console.error(error);

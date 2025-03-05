@@ -26,7 +26,40 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-app.listen(port, async () => {
+const http = require("http");
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*", } });
+
+// ให้ Express เสิร์ฟไฟล์ Static
+app.use(express.static(__dirname + "/public"));
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+app.use('/socket.io', express.static(path.join(__dirname, 'node_modules/socket.io/client-dist')));
+
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("join room", (room) => {
+    socket.join(room);
+    console.log(`${socket.id} joined room: ${room}`);
+  });
+
+  socket.on(`room message ${process.env.SECRET_KEY}`, ({ room, message }) => {
+    console.log(`Message to room ${room}: ${message}`);
+    io.to(room).emit("room message", { senderId: socket.id, message });
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
+
+
+server.listen(port, async () => {
   console.log(`Listening on port ${port}`);
   await prisma.role.upsert({
     where: {
