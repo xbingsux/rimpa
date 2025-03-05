@@ -351,7 +351,7 @@ router.get("/profileMe", auth, async (req, res) => {
   }
 });
 
-router.put("/delete-user", auth, async (req, res) => {
+router.post("/delete-user", auth, async (req, res) => {
   try {
     const event = await Service.deleteUser(req.user.userId);
     return res.status(201).json({ status: "success", event });

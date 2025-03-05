@@ -134,6 +134,7 @@ router.get("/list-event", auth, async (req, res) => {
 router.get("/get-event", auth, async (req, res) => {
   const { id } = req.query;
   try {
+
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
     const event_id = Number(id);
@@ -236,7 +237,7 @@ router.get("/list-banner", auth, async (req, res) => {
   }
 });
 
-router.put("/delete-user", auth, async (req, res) => {
+router.post("/delete-user", auth, async (req, res) => {
   const { user_id } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
@@ -252,7 +253,7 @@ router.put("/delete-user", auth, async (req, res) => {
   }
 });
 
-router.put("/delete-event", auth, async (req, res) => {
+router.post("/delete-event", auth, async (req, res) => {
   const { id } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
@@ -268,7 +269,7 @@ router.put("/delete-event", auth, async (req, res) => {
   }
 });
 
-router.put("/delete-reward", auth, async (req, res) => {
+router.post("/delete-reward", auth, async (req, res) => {
   const { id } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
@@ -284,7 +285,7 @@ router.put("/delete-reward", auth, async (req, res) => {
   }
 });
 
-router.put("/delete-banner", auth, async (req, res) => {
+router.post("/delete-banner", auth, async (req, res) => {
   const { id } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
