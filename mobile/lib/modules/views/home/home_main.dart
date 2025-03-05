@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 import 'package:rimpa/modules/views/home/banners/banner_slider.dart';
-import 'package:rimpa/modules/views/home/event_recommend.dart';
+import 'package:rimpa/widgets/event/event_recommend.dart';
 import 'package:rimpa/widgets/event/all_events.dart';
 import 'package:rimpa/widgets/my_app_bar.dart';
 import '../../controllers/listevent/listevent.controller.dart';

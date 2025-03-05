@@ -68,7 +68,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           // ไอคอนแจ้งเตือน
 
-          NotificationButton(),
+          NotificationButton(
+            isDark: darkMode,
+          ),
         ],
       ),
     );

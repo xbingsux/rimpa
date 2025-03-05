@@ -5,22 +5,22 @@ import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
 import 'package:rimpa/modules/models/listevent.model.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
-import 'package:rimpa/widgets/button/sort_button.dart';
+// import 'package:rimpa/widgets/button/sort_button.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
-class AllEvents extends StatefulWidget {
+class AllReward extends StatefulWidget {
   final bool showTitle;
   final bool isScroll;
   final double? screenHigh;
-  const AllEvents({super.key, this.showTitle = true, this.isScroll = false, this.screenHigh});
+  const AllReward({super.key, this.showTitle = true, this.isScroll = false, this.screenHigh});
   // Add this line
 
   @override
-  State<AllEvents> createState() => _AllEventsState();
+  State<AllReward> createState() => _AllEventsState();
 }
 
-class _AllEventsState extends State<AllEvents> with SingleTickerProviderStateMixin {
+class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final listEventController = Get.put(ListEventController());
   bool isDesc = true;
@@ -59,14 +59,14 @@ class _AllEventsState extends State<AllEvents> with SingleTickerProviderStateMix
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                SortButton(
-                  isDesc: isDesc,
-                  onChanged: (value) {
-                    setState(() {
-                      isDesc = value;
-                    });
-                  },
-                ),
+                // SortButton(
+                //   isDesc: isDesc,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       isDesc = value;
+                //     });
+                //   },
+                // ),
               ],
             ),
             SizedBox(height: 8),

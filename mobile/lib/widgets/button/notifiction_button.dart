@@ -4,7 +4,8 @@ import 'package:rimpa/modules/views/notify/notify.view.dart';
 
 class NotificationButton extends StatelessWidget {
   final double size;
-  const NotificationButton({super.key, this.size = 40});
+  final bool isDark;
+  const NotificationButton({super.key, this.size = 40, this.isDark = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +22,34 @@ class NotificationButton extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(),
           padding: const EdgeInsets.all(AppSpacing.sm),
-          child: const Center(
-            child: Icon(Icons.notifications_none, color: Colors.grey),
+          child: Center(
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
+                redDotNotification(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+Widget redDotNotification({double size = 12, String? text}) {
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: Colors.red,
+    ),
+    child: const Center(
+      child: Text(
+        "N",
+        style: TextStyle(color: Colors.white, fontSize: 8),
+      ),
+    ),
+  );
 }
