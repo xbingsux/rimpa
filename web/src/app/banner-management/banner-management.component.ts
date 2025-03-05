@@ -19,7 +19,7 @@ export class BannerManagementComponent {
   tz = environment.timeZone;
   list: any[] = []
   ngOnInit(): void {
-    this.http.post(`${environment.API_URL}/list-banner`, {}).subscribe(async (response: any) => {
+    this.http.get(`${environment.API_URL}/list-banner`, {}).subscribe(async (response: any) => {
       // console.log(response.banner);
       this.list = response.banner
 

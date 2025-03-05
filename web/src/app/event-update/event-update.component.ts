@@ -1,5 +1,5 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,8 @@ export class EventUpdateComponent implements OnInit {
       // console.log(param.get('id'));
       if (param.get('id')) {
         this.data.id = Number(param.get('id'))
-        this.http.post(`${environment.API_URL}/get-event`, { id: this.data.id }).subscribe(async (item: any) => {
+        const params = new HttpParams().set('id', this.data.id);
+        this.http.get(`${environment.API_URL}/get-event`, { params }).subscribe(async (item: any) => {
           // console.log(item);
 
           let event = item.event;

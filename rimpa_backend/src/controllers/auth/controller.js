@@ -68,7 +68,7 @@ router.post("/logout", auth, async (req, res) => {
     usedTokens.add(req.token)
     return res.status(200).json({
       status: "success",
-      token: token,
+      token: req.token,
     });
   } catch (error) {
     console.error(error);
