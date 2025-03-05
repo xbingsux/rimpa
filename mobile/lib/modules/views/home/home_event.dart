@@ -65,11 +65,20 @@ class _HomeEventPageState extends State<HomeEventPage> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: AllEvents(
-          showTitle: false,
-        ),
+      body: 
+      LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+    double bodyHeight = constraints.maxHeight;
+    // double bodyWidth = constraints.maxWidth;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: AllEvents(
+              showTitle: false,
+              isScroll: true,
+              screenHigh: bodyHeight - (40),
+            ),
+          );
+        }
       ),
     );
   }

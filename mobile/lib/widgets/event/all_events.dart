@@ -11,8 +11,10 @@ import 'package:rimpa/widgets/button/sort_button.dart';
 import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
 class AllEvents extends StatefulWidget {
-  final showTitle;
-  AllEvents({super.key, this.showTitle = true});
+  final bool showTitle;
+  final bool isScroll ;
+  final double? screenHigh;
+  const AllEvents({super.key, this.showTitle = true,this.isScroll = false,this.screenHigh});
   // Add this line
 
   @override
@@ -69,48 +71,58 @@ class _AllEventsState extends State<AllEvents> with SingleTickerProviderStateMix
               ],
             ),
             SizedBox(height: 8),
-            GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 2 / 3,
-              ),
-              itemCount: sortedEvents.length,
-              itemBuilder: (context, index) {
-                var event = sortedEvents[index];
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => HomeDetailPage(event: event));
-                  },
-                  child: AppCardComponent(
-                    child: Column(
-                      children: [
-                        AppImageComponent(
-                          imageType: AppImageType.network,
-                          imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                        ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            event.title,
-                            style: TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+            if(widget.isScroll)
+            SizedBox(
+              height: widget.screenHigh,
+              child: SingleChildScrollView(
+                child:  dataList(sortedEvents),
+                ),
             ),
+            if(!(widget.isScroll))dataList(sortedEvents),
           ],
         );
       }
     });
+  }
+  Widget dataList(sortedEvents){
+    return GridView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    childAspectRatio: 2 / 3,
+                  ),
+                  itemCount: sortedEvents.length,
+                  itemBuilder: (context, index) {
+                    var event = sortedEvents[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(() => HomeDetailPage(event: event));
+                      },
+                      child: AppCardComponent(
+                        child: Column(
+                          children: [
+                            AppImageComponent(
+                              imageType: AppImageType.network,
+                              imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Text(
+                                event.title,
+                                style: TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
   }
 }
 

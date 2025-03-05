@@ -288,7 +288,9 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                                 ),
                                 child: Text(
                                   'ออกจากระบบ',
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                             ],

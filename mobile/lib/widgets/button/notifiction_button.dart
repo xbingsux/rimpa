@@ -11,7 +11,7 @@ class NotificationButton extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      color: Colors.amber,
+      // color: Colors.amber,
       child: GestureDetector(
         onTap: () => Navigator.push(
             context,
