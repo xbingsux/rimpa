@@ -237,7 +237,7 @@ router.post("/verify-token", (req, res) => {
   });
 });
 
-router.post("/reset-password", async (req, res) => {
+router.put("/reset-password", async (req, res) => {
   const { token, new_password } = req.body
   // ตรวจสอบว่า token มีค่าหรือไม่
   if (!token) {
@@ -262,23 +262,23 @@ router.post("/reset-password", async (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(new_password, 10);
   const user = await Service.resetPassword(decoded.userId, hashedPassword)
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     user: user,
   });
 });
 
-router.post("/reset-password-user",auth, async (req, res) => {
+router.put("/reset-password-user", auth, async (req, res) => {
   const { old_password, new_password } = req.body;
 
   try {
-    const updatedUser = await Service.resetPasswordMe(req.user.userId, old_password,new_password);
+    const updatedUser = await Service.resetPasswordMe(req.user.userId, old_password, new_password);
 
     if (!updatedUser) {
       return res.status(500).send("Failed to reset password");
     }
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: "success",
       message: "Password reset successfully",
     });
@@ -328,8 +328,8 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-router.post("/profileMe", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/profileMe", auth, async (req, res) => {
+  const { } = req.query;
   try {
 
     const profile = await Service.profileMe(req.user.userId)
@@ -351,10 +351,10 @@ router.post("/profileMe", auth, async (req, res) => {
   }
 });
 
-router.post("/delete-user", auth, async (req, res) => {
+router.put("/delete-user", auth, async (req, res) => {
   try {
     const event = await Service.deleteUser(req.user.userId);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -395,7 +395,7 @@ router.put("/updateProfileMe", auth, async (req, res) => {
     const updatedProfile = await Service.updateProfile(req.user.userId, updatedData);
 
     if (updatedProfile) {
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         message: "Profile updated successfully",
         profile: updatedProfile,

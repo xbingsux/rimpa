@@ -20,7 +20,7 @@ router.post("/update-event", auth, async (req, res) => {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
     const event = await Service.upsertEvent(event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img)
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -31,7 +31,7 @@ router.post("/update-event", auth, async (req, res) => {
   }
 });
 
-router.post("/list-event", async (req, res) => {
+router.get("/list-event", async (req, res) => {
   const { } = req.body;
   try {
 
@@ -47,8 +47,8 @@ router.post("/list-event", async (req, res) => {
   }
 });
 
-router.post("/get-event", async (req, res) => {
-  const { id } = req.body;
+router.get("/get-event", async (req, res) => {
+  const { id } = req.query;
   try {
 
     const event = await Service.getEvent(id);
@@ -91,7 +91,7 @@ router.post("/checkIn", auth, async (req, res) => {
 
   try {
     const event = await Service.checkIn(req.user.userId, qrcode);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -109,8 +109,8 @@ router.post("/checkIn", auth, async (req, res) => {
   }
 });
 
-router.post("/list-banner", async (req, res) => {
-  const { } = req.body;
+router.get("/list-banner", async (req, res) => {
+  const { } = req.query;
   try {
 
     const banner = await Service.listBanner()
@@ -125,8 +125,8 @@ router.post("/list-banner", async (req, res) => {
   }
 });
 
-router.post("/get-banner", async (req, res) => {
-  const { id } = req.body;
+router.get("/get-banner", async (req, res) => {
+  const { id } = req.query;
   try {
     const banner = await Service.bannerById(id)
     return res.status(200).json({ status: "success", banner });

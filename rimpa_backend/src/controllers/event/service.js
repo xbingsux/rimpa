@@ -2,8 +2,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
-
 require('dotenv').config();
+let port = process.env.PORT || 3001;
+
+const { io } = require("socket.io-client");
+const socket = io(`http://localhost:${port}`);
 
 const prisma = new PrismaClient();
 
@@ -22,7 +25,7 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     map: map,
                     point: point,
                     event_type: "Main",
-                    startDate:startDate,
+                    startDate: startDate,
                     endDate: endDate,
                 }
             },
@@ -43,7 +46,7 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     data: {
                         map: map,
                         point: point,
-                        startDate:startDate,
+                        startDate: startDate,
                         endDate: endDate,
                     }
                 }
@@ -239,12 +242,16 @@ const checkIn = async (user_id, qrcode) => {
         }
     })
 
-    const profile = prisma.profile.update({
+    const profile = await prisma.profile.update({
         where: { user_id: user_id },
         data: {
             points: { increment: sub_event.point }
         }
     })
+
+    if (profile) {
+        socket.emit(`room message ${process.env.SECRET_KEY}`, { room: profile.user().email, message: '' });
+    }
 
     return point;
 }
