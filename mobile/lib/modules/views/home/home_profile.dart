@@ -63,8 +63,6 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
-    await prefs.remove('email');
-    await prefs.remove('rememberPassword');
 
     // Clear profile data and other states
     Get.find<ProfileController>().resetProfile();

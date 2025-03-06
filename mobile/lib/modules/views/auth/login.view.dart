@@ -5,6 +5,7 @@ import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/modules/views/home/home.view.dart';
 import 'package:rimpa/modules/views/home/home_main.dart';
 import 'package:rimpa/modules/views/home/home_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
 
@@ -16,312 +17,515 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   final authController = Get.put(LoginController());
+  RxList<String> savedEmails =
+      <String>[].obs; // ใช้ Obx สำหรับการอัพเดตข้อมูลแบบเรียลไทม์
+  Rx<TextEditingController> emailController =
+      Rx<TextEditingController>(TextEditingController());
+  Rx<TextEditingController> passwordController =
+      Rx<TextEditingController>(TextEditingController());
   bool _rememberPassword = false;
   bool _obscureText = true;
+  @override
+  void initState() {
+    super.initState();
+    loadSavedEmailAndPassword(); // โหลดข้อมูลที่บันทึกไว้ตอนเริ่มต้น
+    emailController.value =
+        TextEditingController(text: authController.user.email.value);
+    passwordController.value =
+        TextEditingController(text: authController.user.password.value);
+  }
+
+  Future<void> loadSavedEmailAndPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.reload(); // โหลดค่าล่าสุด
+
+    // หาจำนวนบัญชีทั้งหมด
+    int accountCount = prefs.getInt('accountIndex') ?? 0;
+
+    print("📌 โหลดข้อมูลจาก SharedPreferences:");
+
+    // หากมีหลายบัญชี
+    List<Map<String, String>> savedAccounts = [];
+
+    for (int i = 0; i < accountCount; i++) {
+      bool rememberPassword = prefs.getBool('rememberPassword$i') ?? false;
+      String savedEmail = prefs.getString('email$i') ?? '';
+      String savedPassword = prefs.getString('password$i') ?? '';
+
+      print("🔹 บัญชีที่ ${i + 1}:");
+      print("🔹 Email: $savedEmail");
+      print("🔹 Password: $savedPassword");
+
+      // บันทึกข้อมูลบัญชี
+      savedAccounts.add({
+        'email': savedEmail,
+        'password': savedPassword,
+        'rememberPassword': rememberPassword.toString(),
+      });
+    }
+
+    // ถ้ามีข้อมูล ให้แสดง Dialog เลือกบัญชี
+    if (accountCount > 0) {
+      showEmailSelectionDialog(savedAccounts);
+    }
+  }
+
+  Future<void> showEmailSelectionDialog(
+      List<Map<String, String>> savedAccounts) async {
+    if (savedAccounts.isNotEmpty) {
+      print("🚨 Showing email selection dialog");
+
+      // แสดง Dialog เลือกอีเมลจากบัญชีที่บันทึก
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('เลือกอีเมล',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: savedAccounts.map((account) {
+                  String email = account['email']!;
+                  String password = account['password']!;
+
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                  'บัญชีที่ ${savedAccounts.indexOf(account) + 1}:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16)),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Text('อีเมล: ',
+                                  style: TextStyle(color: Colors.grey[600])),
+                              Text(email,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text('รหัสผ่าน: ',
+                                  style: TextStyle(color: Colors.grey[600])),
+                              Text(password,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () async {
+                                  // ลบข้อมูลจาก SharedPreferences
+                                  int index = savedAccounts.indexOf(account);
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.remove('email$index');
+                                  await prefs.remove('password$index');
+
+                                  // อัพเดทข้อมูลในตัวแปร
+                                  savedAccounts.remove(account);
+
+                                  // ลด accountCount
+                                  int accountCount =
+                                      prefs.getInt('accountIndex') ?? 0;
+                                  accountCount--;
+
+                                  // อัพเดท accountIndex
+                                  await prefs.setInt(
+                                      'accountIndex', accountCount);
+
+                                  print("🚨 Removed account: $email");
+
+                                  // ปิด Dialog
+                                  Navigator.pop(context);
+                                },
+                                child: Text('ล้างออก',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 14)),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // เมื่อผู้ใช้เลือกบัญชีนี้ให้กรอกข้อมูลลงในฟอร์ม
+                                  authController.user.email.value = email;
+                                  authController.user.password.value = password;
+
+                                  // อัปเดต TextEditingController
+                                  emailController.value.text = email;
+                                  passwordController.value.text = password;
+
+                                  // ปิด Dialog
+                                  Navigator.pop(context);
+                                },
+                                child: Text('เลือก',
+                                    style: TextStyle(
+                                        color: Colors.blue, fontSize: 14)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: mediaHeight * 0.331,
-                    color: AppColors.background_main,
-                    child: Center(
-                      child: SizedBox(
-                        width: 300,
-                        height: 175,
-                        child: Center(
-                          child: AppImageComponent(
-                            imageType: AppImageType.assets,
-                            imageAddress: 'assets/logoapp/logoiconic.png',
-                            fit: BoxFit.contain,
-                            borderRadius: BorderRadius.circular(0),
-                          ),
+        child: Scaffold(
+      backgroundColor: AppColors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: mediaHeight * 0.331,
+                  color: AppColors.background_main,
+                  child: Center(
+                    child: SizedBox(
+                      width: 300,
+                      height: 175,
+                      child: Center(
+                        child: AppImageComponent(
+                          imageType: AppImageType.assets,
+                          imageAddress: 'assets/logoapp/logoiconic.png',
+                          fit: BoxFit.contain,
+                          borderRadius: BorderRadius.circular(0),
                         ),
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: GestureDetector(
-                      onTap: () => Get.offAll( HomePage()),
-                      child: Container(
-                        decoration: const BoxDecoration(),
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        child: const Icon(
-                          Icons.close,
-                          color: AppColors.secondary,
-                          size: AppTextSize.xxl,
-                        ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: GestureDetector(
+                    onTap: () => Get.offAll(HomePage()),
+                    child: Container(
+                      decoration: const BoxDecoration(),
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: const Icon(
+                        Icons.close,
+                        color: AppColors.secondary,
+                        size: AppTextSize.xxl,
                       ),
                     ),
                   ),
-                ],
-              ),
-              Transform.translate(
-                offset: Offset(0, - mediaHeight * 0.03),
-                child: Container(
+                ),
+              ],
+            ),
+            Transform.translate(
+              offset: Offset(0, -mediaHeight * 0.03),
+              child: Container(
                   width: mediaWidth,
                   constraints: BoxConstraints(
                     minHeight: mediaHeight * 0.66,
                   ),
                   decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.lg), topRight: Radius.circular(AppRadius.lg)),
-                    color: AppColors.white
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(AppRadius.lg),
+                      topRight: Radius.circular(AppRadius.lg),
+                    ),
+                    color: AppColors.white,
                   ),
                   child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.lg, horizontal: AppSpacing.md),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding:
-                                  EdgeInsets.symmetric(vertical: AppSpacing.md),
-                              child: Text("ยินดีต้อนรับเข้าสู่ระบบ",
-                                  style: TextStyle(
-                                      fontSize: AppTextSize.xxl,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTextColors.accent2)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.md),
-                              child: TextField(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.lg, horizontal: AppSpacing.md),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: AppSpacing.md),
+                          child: Text("ยินดีต้อนรับเข้าสู่ระบบ",
+                              style: TextStyle(
+                                  fontSize: AppTextSize.xxl,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTextColors.accent2)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.md),
+                          child: GestureDetector(
+                            onTap: () {
+                              // เมื่อผู้ใช้คลิกที่ช่องกรอกอีเมล ให้แสดง Dialog สำหรับเลือกอีเมล
+                            },
+                            child: Obx(() {
+                              return TextField(
                                 onChanged: (value) =>
                                     authController.user.email.value = value,
+                                controller: TextEditingController(
+                                    text: authController
+                                        .user.email.value), // กำหนดค่าเริ่มต้น
                                 style: const TextStyle(
-                                    color: AppTextColors.secondary,
-                                    fontSize: AppTextSize.md),
+                                  color: AppTextColors.secondary,
+                                  fontSize: AppTextSize.md,
+                                ),
                                 decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: AppSpacing.lg),
-                                    hintText: 'อีเมล',
-                                    hintStyle: const TextStyle(
-                                        color: AppTextColors.secondary,
-                                        fontSize: AppTextSize.md),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.secondary, width: 1)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.primary, width: 1)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.background_main,
-                                            width: 1))),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.md),
-                              child: TextField(
-                                onChanged: (value) =>
-                                    authController.user.password.value = value,
-                                obscureText: true,
-                                style: const TextStyle(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.lg),
+                                  hintText: 'อีเมล',
+                                  hintStyle: const TextStyle(
                                     color: AppTextColors.secondary,
-                                    fontSize: AppTextSize.md),
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: AppSpacing.lg),
-                                    hintText: 'รหัสผ่าน',
-                                    hintStyle: const TextStyle(
-                                        color: AppTextColors.secondary,
-                                        fontSize: AppTextSize.md),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.secondary, width: 1)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.primary, width: 1)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.background_main,
-                                            width: 1))),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.md),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Checkbox(
-                                        value: _rememberPassword,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            _rememberPassword = value ?? false;
-                                          });
-                                        },
-                                        activeColor:
-                                            AppColors.accent, // สีตอนถูกเลือก
-                                        checkColor: AppColors
-                                            .white, // สีของเครื่องหมายถูก
-                                        side: const BorderSide(
-                                            width: 2, color: AppColors.secondary),
-                                      ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      const Text(
-                                        'จำรหัสผ่าน',
-                                        style: TextStyle(
-                                            fontSize: AppTextSize.md,
-                                            color: AppTextColors.secondary),
-                                      )
-                                    ],
+                                    fontSize: AppTextSize.md,
                                   ),
-                                  GestureDetector(
-                                    onTap: () => Get.toNamed('/forgot-password'),
-                                    child: Stack(
-                                      children: [
-                                        const Text(
-                                          'ลืมรหัสผ่าน?',
-                                          style: TextStyle(
-                                            fontSize: AppTextSize.md,
-                                            color: AppTextColors.secondary,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          left: 0,
-                                          right: 0,
-                                          bottom:
-                                              0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
-                                          child: Container(
-                                            height: 1,
-                                            color: AppTextColors.secondary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppRadius.md),
-                            child: GestureDetector(
-                              onTap: () => authController.loginwithemail(_rememberPassword),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                    gradient: AppGradiant.gradientX_1,
-                                    borderRadius:
-                                        BorderRadius.circular(AppRadius.rounded)),
-                                child: const Center(
-                                  child: Text(
-                                    "เข้าสู่ระบบ",
-                                    style: TextStyle(
-                                        fontSize: AppTextSize.md,
-                                        color: AppTextColors.white),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.secondary, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.primary, width: 1),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.background_main,
+                                        width: 1),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            }),
                           ),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppRadius.xs),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: 1,
-                                      color: AppColors.secondary,
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    flex: 1,
-                                    child: Center(
-                                        child: Text(
-                                      'หรือ',
-                                      style: TextStyle(
-                                          fontSize: AppTextSize.sm,
-                                          color: AppTextColors.secondary),
-                                    )),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: 1,
-                                      color: AppColors.secondary,
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Padding(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.md),
+                          child: Obx(() {
+                            return TextField(
+                              onChanged: (value) =>
+                                  authController.user.password.value = value,
+                              controller: TextEditingController(
+                                  text: authController
+                                      .user.password.value), // กำหนดค่าเริ่มต้น
+                              obscureText: true,
+                              style: const TextStyle(
+                                  color: AppTextColors.secondary,
+                                  fontSize: AppTextSize.md),
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.lg),
+                                hintText: 'รหัสผ่าน',
+                                hintStyle: const TextStyle(
+                                    color: AppTextColors.secondary,
+                                    fontSize: AppTextSize.md),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.secondary, width: 1)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.primary, width: 1)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppRadius.rounded),
+                                    borderSide: const BorderSide(
+                                        color: AppColors.background_main,
+                                        width: 1)),
+                              ),
+                            );
+                          }),
+                        ),
+                        Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: AppRadius.md),
+                                vertical: AppSpacing.md),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                      value: _rememberPassword,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _rememberPassword = value ?? false;
+                                        });
+                                      },
+                                      activeColor:
+                                          AppColors.accent, // สีตอนถูกเลือก
+                                      checkColor: AppColors
+                                          .white, // สีของเครื่องหมายถูก
+                                      side: const BorderSide(
+                                          width: 2, color: AppColors.secondary),
+                                    ),
+                                    const SizedBox(
+                                      width: 2,
+                                    ),
+                                    const Text(
+                                      'จำรหัสผ่าน',
+                                      style: TextStyle(
+                                          fontSize: AppTextSize.md,
+                                          color: AppTextColors.secondary),
+                                    )
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () => Get.toNamed('/forgot-password'),
+                                  child: Stack(
+                                    children: [
+                                      const Text(
+                                        'ลืมรหัสผ่าน?',
+                                        style: TextStyle(
+                                          fontSize: AppTextSize.md,
+                                          color: AppTextColors.secondary,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom:
+                                            0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+                                        child: Container(
+                                          height: 1,
+                                          color: AppTextColors.secondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppRadius.md),
+                          child: GestureDetector(
+                            onTap: () => authController
+                                .loginwithemail(_rememberPassword),
                             child: Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  border: Border.all(
-                                      width: 1, color: AppColors.accent),
+                                  gradient: AppGradiant.gradientX_1,
                                   borderRadius:
                                       BorderRadius.circular(AppRadius.rounded)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icon/login/google.png', width: 20,),
-                                  const SizedBox(width: 15,),
-                                  const Text(
-                                    "เข้าสู่ระบบด้วยอีเมล",
-                                    style: TextStyle(
-                                        fontSize: AppTextSize.md,
-                                        color: AppTextColors.primary),
-                                  ),
-                                ],
+                              child: const Center(
+                                child: Text(
+                                  "เข้าสู่ระบบ",
+                                  style: TextStyle(
+                                      fontSize: AppTextSize.md,
+                                      color: AppTextColors.white),
+                                ),
                               ),
                             ),
                           ),
-                          Padding(
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: AppRadius.xs),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    height: 1,
+                                    color: AppColors.secondary,
+                                  ),
+                                ),
+                                const Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                      child: Text(
+                                    'หรือ',
+                                    style: TextStyle(
+                                        fontSize: AppTextSize.sm,
+                                        color: AppTextColors.secondary),
+                                  )),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    height: 1,
+                                    color: AppColors.secondary,
+                                  ),
+                                )
+                              ],
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppRadius.md),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                border: Border.all(
+                                    width: 1, color: AppColors.accent),
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.rounded)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/icon/login/google.png',
+                                  width: 20,
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                const Text(
+                                  "เข้าสู่ระบบด้วยอีเมล",
+                                  style: TextStyle(
+                                      fontSize: AppTextSize.md,
+                                      color: AppTextColors.primary),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: AppRadius.xs),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                      'ยังไม่มีบัญชี ',
-                                      style: TextStyle(
-                                        fontSize: AppTextSize.md,
-                                        color: AppTextColors.secondary,
-                                      ),
-                                    ),
+                                  'ยังไม่มีบัญชี ',
+                                  style: TextStyle(
+                                    fontSize: AppTextSize.md,
+                                    color: AppTextColors.secondary,
+                                  ),
+                                ),
                                 GestureDetector(
                                   onTap: () => Get.toNamed('/select-create'),
                                   child: Stack(
@@ -336,7 +540,8 @@ class _LoginViewState extends State<LoginView>
                                       Positioned(
                                         left: 0,
                                         right: 0,
-                                        bottom: 0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+                                        bottom:
+                                            0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
                                         child: Container(
                                           height: 0.5,
                                           color: AppTextColors.accent2,
@@ -347,16 +552,15 @@ class _LoginViewState extends State<LoginView>
                                 )
                               ],
                             )),
-                        ],
-                      ),
-                  )
-                ),
-              ),
-            ],
-          ),
+                      ],
+                    ),
+                  )),
+            ),
+          ],
         ),
-      )
-    );
+      ),
+    ));
+
     // return SafeArea(
     //   child: Scaffold(
     //     body: SingleChildScrollView(
@@ -366,40 +570,40 @@ class _LoginViewState extends State<LoginView>
     //             width: double.infinity,
     //             height: MediaQuery.of(context).size.height,
     //           ),
-              // Container(
-              //   width: double.infinity,
-              //   height: MediaQuery.of(context).size.height * 0.33,
-              //   color: AppColors.background_main,
-              //   child: Center(
-              //     child: SizedBox(
-              //         width: 300,
-              //         height: 175,
-              //         child: Center(
-              //             child: AppImageComponent(
-              //           imageType: AppImageType.assets,
-              //           imageAddress: 'assets/logoapp/logoiconic.png',
-              //           fit: BoxFit.contain,
-              //           borderRadius: BorderRadius.circular(0),
-              //         ))),
-              //   ),
-              // ),
-              // Positioned(
-              //   left: 0,
-              //   top: 0,
-              //   child: GestureDetector(
-              //     child: Container(
-              //       padding: const EdgeInsets.all(AppSpacing.md),
-              //       decoration: const BoxDecoration(),
-              //       child: const Center(
-              //         child: Icon(
-              //           Icons.arrow_back,
-              //           color: AppColors.accent,
-              //           size: AppTextSize.xxl,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+    // Container(
+    //   width: double.infinity,
+    //   height: MediaQuery.of(context).size.height * 0.33,
+    //   color: AppColors.background_main,
+    //   child: Center(
+    //     child: SizedBox(
+    //         width: 300,
+    //         height: 175,
+    //         child: Center(
+    //             child: AppImageComponent(
+    //           imageType: AppImageType.assets,
+    //           imageAddress: 'assets/logoapp/logoiconic.png',
+    //           fit: BoxFit.contain,
+    //           borderRadius: BorderRadius.circular(0),
+    //         ))),
+    //   ),
+    // ),
+    // Positioned(
+    //   left: 0,
+    //   top: 0,
+    //   child: GestureDetector(
+    //     child: Container(
+    //       padding: const EdgeInsets.all(AppSpacing.md),
+    //       decoration: const BoxDecoration(),
+    //       child: const Center(
+    //         child: Icon(
+    //           Icons.arrow_back,
+    //           color: AppColors.accent,
+    //           size: AppTextSize.xxl,
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // ),
     //           Positioned(
     //             bottom: 0,
     //             child: Container(
@@ -410,225 +614,225 @@ class _LoginViewState extends State<LoginView>
     //                       topLeft: Radius.circular(AppRadius.md),
     //                       topRight: Radius.circular(AppRadius.md)),
     //                   color: AppColors.white),
-                  // child: Padding(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       vertical: AppSpacing.lg, horizontal: AppSpacing.md),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       const Padding(
-                  //         padding:
-                  //             EdgeInsets.symmetric(vertical: AppSpacing.md),
-                  //         child: Text("ยินดีต้อนรับเข้าสู่ระบบ",
-                  //             style: TextStyle(
-                  //                 fontSize: AppTextSize.xxl,
-                  //                 fontWeight: FontWeight.bold,
-                  //                 color: AppTextColors.accent2)),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             vertical: AppSpacing.md),
-                  //         child: TextField(
-                  //           onChanged: (value) =>
-                  //               authController.user.email.value = value,
-                  //           style: const TextStyle(
-                  //               color: AppTextColors.secondary,
-                  //               fontSize: AppTextSize.md),
-                  //           decoration: InputDecoration(
-                  //               contentPadding: const EdgeInsets.symmetric(
-                  //                   horizontal: AppSpacing.lg),
-                  //               hintText: 'อีเมล',
-                  //               hintStyle: const TextStyle(
-                  //                   color: AppTextColors.secondary,
-                  //                   fontSize: AppTextSize.md),
-                  //               enabledBorder: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.secondary, width: 1)),
-                  //               focusedBorder: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.primary, width: 1)),
-                  //               border: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.background_main,
-                  //                       width: 1))),
-                  //         ),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             vertical: AppSpacing.md),
-                  //         child: TextField(
-                  //           onChanged: (value) =>
-                  //               authController.user.email.value = value,
-                  //           obscureText: true,
-                  //           style: const TextStyle(
-                  //               color: AppTextColors.secondary,
-                  //               fontSize: AppTextSize.md),
-                  //           decoration: InputDecoration(
-                  //               contentPadding: const EdgeInsets.symmetric(
-                  //                   horizontal: AppSpacing.lg),
-                  //               hintText: 'รหัสผ่าน',
-                  //               hintStyle: const TextStyle(
-                  //                   color: AppTextColors.secondary,
-                  //                   fontSize: AppTextSize.md),
-                  //               enabledBorder: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.secondary, width: 1)),
-                  //               focusedBorder: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.primary, width: 1)),
-                  //               border: OutlineInputBorder(
-                  //                   borderRadius: BorderRadius.circular(
-                  //                       AppRadius.rounded),
-                  //                   borderSide: const BorderSide(
-                  //                       color: AppColors.background_main,
-                  //                       width: 1))),
-                  //         ),
-                  //       ),
-                  //       Padding(
-                  //           padding: const EdgeInsets.symmetric(
-                  //               vertical: AppSpacing.md),
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment: CrossAxisAlignment.center,
-                  //             children: [
-                  //               Row(
-                  //                 crossAxisAlignment: CrossAxisAlignment.center,
-                  //                 children: [
-                  //                   Checkbox(
-                  //                     value: _rememberPassword,
-                  //                     onChanged: (bool? value) {
-                  //                       setState(() {
-                  //                         _rememberPassword = value ?? false;
-                  //                       });
-                  //                     },
-                  //                     activeColor:
-                  //                         AppColors.accent, // สีตอนถูกเลือก
-                  //                     checkColor: AppColors
-                  //                         .white, // สีของเครื่องหมายถูก
-                  //                     side: const BorderSide(
-                  //                         width: 2, color: AppColors.secondary),
-                  //                   ),
-                  //                   const SizedBox(
-                  //                     width: 2,
-                  //                   ),
-                  //                   const Text(
-                  //                     'จำรหัสผ่าน',
-                  //                     style: TextStyle(
-                  //                         fontSize: AppTextSize.md,
-                  //                         color: AppTextColors.secondary),
-                  //                   )
-                  //                 ],
-                  //               ),
-                  //               Stack(
-                  //                 children: [
-                  //                   const Text(
-                  //                     'ลืมรหัสผ่าน?',
-                  //                     style: TextStyle(
-                  //                       fontSize: AppTextSize.md,
-                  //                       color: AppTextColors.secondary,
-                  //                     ),
-                  //                   ),
-                  //                   Positioned(
-                  //                     left: 0,
-                  //                     right: 0,
-                  //                     bottom:
-                  //                         0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
-                  //                     child: Container(
-                  //                       height: 1,
-                  //                       color: AppTextColors.secondary,
-                  //                     ),
-                  //                   ),
-                  //                 ],
-                  //               )
-                  //             ],
-                  //           )),
-                  //       Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             vertical: AppRadius.md),
-                  //         child: Container(
-                  //           width: double.infinity,
-                  //           padding: const EdgeInsets.all(12),
-                  //           decoration: BoxDecoration(
-                  //               gradient: AppGradiant.gradientX_1,
-                  //               borderRadius:
-                  //                   BorderRadius.circular(AppRadius.rounded)),
-                  //           child: const Center(
-                  //             child: Text(
-                  //               "เข้าสู่ระบบ",
-                  //               style: TextStyle(
-                  //                   fontSize: AppTextSize.md,
-                  //                   color: AppTextColors.white),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Padding(
-                  //           padding: const EdgeInsets.symmetric(
-                  //               vertical: AppRadius.xs),
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             children: [
-                  //               Expanded(
-                  //                 flex: 2,
-                  //                 child: Container(
-                  //                   height: 1,
-                  //                   color: AppColors.secondary,
-                  //                 ),
-                  //               ),
-                  //               const Expanded(
-                  //                 flex: 1,
-                  //                 child: Center(
-                  //                     child: Text(
-                  //                   'หรือ',
-                  //                   style: TextStyle(
-                  //                       fontSize: AppTextSize.sm,
-                  //                       color: AppTextColors.secondary),
-                  //                 )),
-                  //               ),
-                  //               Expanded(
-                  //                 flex: 2,
-                  //                 child: Container(
-                  //                   height: 1,
-                  //                   color: AppColors.secondary,
-                  //                 ),
-                  //               )
-                  //             ],
-                  //           )),
-                  //       Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             vertical: AppRadius.md),
-                  //         child: Container(
-                  //           width: double.infinity,
-                  //           padding: const EdgeInsets.all(12),
-                  //           decoration: BoxDecoration(
-                  //               color: AppColors.white,
-                  //               border: Border.all(
-                  //                   width: 1, color: AppColors.accent),
-                  //               borderRadius:
-                  //                   BorderRadius.circular(AppRadius.rounded)),
-                  //           child: const Center(
-                  //             child: Text(
-                  //               "เข้าสู่ระบบด้วยอีเมล",
-                  //               style: TextStyle(
-                  //                   fontSize: AppTextSize.md,
-                  //                   color: AppTextColors.primary),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
+    // child: Padding(
+    //   padding: const EdgeInsets.symmetric(
+    //       vertical: AppSpacing.lg, horizontal: AppSpacing.md),
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.start,
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       const Padding(
+    //         padding:
+    //             EdgeInsets.symmetric(vertical: AppSpacing.md),
+    //         child: Text("ยินดีต้อนรับเข้าสู่ระบบ",
+    //             style: TextStyle(
+    //                 fontSize: AppTextSize.xxl,
+    //                 fontWeight: FontWeight.bold,
+    //                 color: AppTextColors.accent2)),
+    //       ),
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(
+    //             vertical: AppSpacing.md),
+    //         child: TextField(
+    //           onChanged: (value) =>
+    //               authController.user.email.value = value,
+    //           style: const TextStyle(
+    //               color: AppTextColors.secondary,
+    //               fontSize: AppTextSize.md),
+    //           decoration: InputDecoration(
+    //               contentPadding: const EdgeInsets.symmetric(
+    //                   horizontal: AppSpacing.lg),
+    //               hintText: 'อีเมล',
+    //               hintStyle: const TextStyle(
+    //                   color: AppTextColors.secondary,
+    //                   fontSize: AppTextSize.md),
+    //               enabledBorder: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.secondary, width: 1)),
+    //               focusedBorder: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.primary, width: 1)),
+    //               border: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.background_main,
+    //                       width: 1))),
+    //         ),
+    //       ),
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(
+    //             vertical: AppSpacing.md),
+    //         child: TextField(
+    //           onChanged: (value) =>
+    //               authController.user.email.value = value,
+    //           obscureText: true,
+    //           style: const TextStyle(
+    //               color: AppTextColors.secondary,
+    //               fontSize: AppTextSize.md),
+    //           decoration: InputDecoration(
+    //               contentPadding: const EdgeInsets.symmetric(
+    //                   horizontal: AppSpacing.lg),
+    //               hintText: 'รหัสผ่าน',
+    //               hintStyle: const TextStyle(
+    //                   color: AppTextColors.secondary,
+    //                   fontSize: AppTextSize.md),
+    //               enabledBorder: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.secondary, width: 1)),
+    //               focusedBorder: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.primary, width: 1)),
+    //               border: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(
+    //                       AppRadius.rounded),
+    //                   borderSide: const BorderSide(
+    //                       color: AppColors.background_main,
+    //                       width: 1))),
+    //         ),
+    //       ),
+    //       Padding(
+    //           padding: const EdgeInsets.symmetric(
+    //               vertical: AppSpacing.md),
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             crossAxisAlignment: CrossAxisAlignment.center,
+    //             children: [
+    //               Row(
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 children: [
+    //                   Checkbox(
+    //                     value: _rememberPassword,
+    //                     onChanged: (bool? value) {
+    //                       setState(() {
+    //                         _rememberPassword = value ?? false;
+    //                       });
+    //                     },
+    //                     activeColor:
+    //                         AppColors.accent, // สีตอนถูกเลือก
+    //                     checkColor: AppColors
+    //                         .white, // สีของเครื่องหมายถูก
+    //                     side: const BorderSide(
+    //                         width: 2, color: AppColors.secondary),
+    //                   ),
+    //                   const SizedBox(
+    //                     width: 2,
+    //                   ),
+    //                   const Text(
+    //                     'จำรหัสผ่าน',
+    //                     style: TextStyle(
+    //                         fontSize: AppTextSize.md,
+    //                         color: AppTextColors.secondary),
+    //                   )
+    //                 ],
+    //               ),
+    //               Stack(
+    //                 children: [
+    //                   const Text(
+    //                     'ลืมรหัสผ่าน?',
+    //                     style: TextStyle(
+    //                       fontSize: AppTextSize.md,
+    //                       color: AppTextColors.secondary,
+    //                     ),
+    //                   ),
+    //                   Positioned(
+    //                     left: 0,
+    //                     right: 0,
+    //                     bottom:
+    //                         0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+    //                     child: Container(
+    //                       height: 1,
+    //                       color: AppTextColors.secondary,
+    //                     ),
+    //                   ),
+    //                 ],
+    //               )
+    //             ],
+    //           )),
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(
+    //             vertical: AppRadius.md),
+    //         child: Container(
+    //           width: double.infinity,
+    //           padding: const EdgeInsets.all(12),
+    //           decoration: BoxDecoration(
+    //               gradient: AppGradiant.gradientX_1,
+    //               borderRadius:
+    //                   BorderRadius.circular(AppRadius.rounded)),
+    //           child: const Center(
+    //             child: Text(
+    //               "เข้าสู่ระบบ",
+    //               style: TextStyle(
+    //                   fontSize: AppTextSize.md,
+    //                   color: AppTextColors.white),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //       Padding(
+    //           padding: const EdgeInsets.symmetric(
+    //               vertical: AppRadius.xs),
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               Expanded(
+    //                 flex: 2,
+    //                 child: Container(
+    //                   height: 1,
+    //                   color: AppColors.secondary,
+    //                 ),
+    //               ),
+    //               const Expanded(
+    //                 flex: 1,
+    //                 child: Center(
+    //                     child: Text(
+    //                   'หรือ',
+    //                   style: TextStyle(
+    //                       fontSize: AppTextSize.sm,
+    //                       color: AppTextColors.secondary),
+    //                 )),
+    //               ),
+    //               Expanded(
+    //                 flex: 2,
+    //                 child: Container(
+    //                   height: 1,
+    //                   color: AppColors.secondary,
+    //                 ),
+    //               )
+    //             ],
+    //           )),
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(
+    //             vertical: AppRadius.md),
+    //         child: Container(
+    //           width: double.infinity,
+    //           padding: const EdgeInsets.all(12),
+    //           decoration: BoxDecoration(
+    //               color: AppColors.white,
+    //               border: Border.all(
+    //                   width: 1, color: AppColors.accent),
+    //               borderRadius:
+    //                   BorderRadius.circular(AppRadius.rounded)),
+    //           child: const Center(
+    //             child: Text(
+    //               "เข้าสู่ระบบด้วยอีเมล",
+    //               style: TextStyle(
+    //                   fontSize: AppTextSize.md,
+    //                   color: AppTextColors.primary),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
     //               ),
     //             ),
     //           )

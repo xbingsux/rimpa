@@ -328,13 +328,15 @@ class HomeDetailReward extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      // ตรวจสอบค่า idProfile และ cost ก่อนเรียกใช้งาน
                       if (idProfile != null && reward.cost != null) {
                         Decimal cost =
                             Decimal.tryParse(reward.cost) ?? Decimal.zero;
+                        print(
+                            "Redeeming reward with idProfile: $idProfile, reward.id: ${reward.id}, cost: $cost");
                         rewardController.redeemReward(
                             idProfile, reward.id.toString(), cost);
                       } else {
+                        print("Invalid idProfile or cost");
                       }
                     },
                     child: Container(

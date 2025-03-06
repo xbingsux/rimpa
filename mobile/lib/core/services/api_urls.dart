@@ -35,7 +35,6 @@ class ApiUrls extends GetxController {
     imgUrl.listen((_) => updateAllUrls()); // ฟังการเปลี่ยนแปลงของ baseUrl
   }
 
-// ฟั่งชั่นนำแหน่งรูปภาพ
 // ฟังก์ชันที่ใช้ในการสร้าง URL รูปโปรไฟล์
   String getProfileImageUrl(String imagePath) {
     return '${imgUrl.value}/$imagePath';

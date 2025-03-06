@@ -8,7 +8,7 @@ import '../middleware/auth_middleware.dart';
 
 class ProfileController extends GetxController {
   var isLoading = false.obs;
-  var profileData = {}.obs;
+  var profileData = <String, dynamic>{}.obs; // เปลี่ยนจาก {} เป็น Rx แบบ Map
   var uploadStatus = ''.obs;
   Timer? timer;
   var isProfileFetched = false.obs; // เพิ่มตัวแปรเก็บสถานะการโหลดข้อมูล
@@ -25,27 +25,29 @@ class ProfileController extends GetxController {
 
   // ดึงข้อมูลโปรไฟล์
   Future<void> fetchProfile() async {
-    if (isProfileFetched.value) return; // ไม่โหลดข้อมูลหากข้อมูลถูกโหลดแล้ว
     isLoading.value = true;
     try {
       String? token = await _authMiddleware.getToken();
 
       if (token == null) {
         isLoading.value = false;
-        profileData.value = {};
+        profileData.value = {}; // รีเซ็ตข้อมูลเมื่อไม่มี Token
         uploadStatus.value = 'ไม่สามารถดึงข้อมูลได้: ไม่มี Token';
         return;
       }
 
-      final response = await _getConnect.post(
+      // เปลี่ยนจากการใช้ POST เป็น GET โดยไม่ส่งข้อมูลใน body
+      final response = await _getConnect.get(
         apiUrlsController.profileMe.value,
-        {},
         headers: {"Authorization": "Bearer $token"},
       );
 
       if (response.statusCode == 200) {
-        profileData.value = response.body["profile"];
-        uploadStatus.value = '';
+        // อัปเดต profileData ด้วยข้อมูลที่ได้จาก response
+        profileData.value =
+            response.body["profile"]; // อัปเดต Rx ของ profileData
+        uploadStatus.value = ''; // รีเซ็ตสถานะการอัปโหลด
+        isProfileFetched.value = true; // ตั้งสถานะว่าได้ดึงข้อมูลแล้ว
       } else {
         uploadStatus.value = 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้';
       }
@@ -209,7 +211,6 @@ class ProfileController extends GetxController {
       if (response.statusCode == 200) {
         // Show dialog after successful update
         uploadStatus.value = 'อัปเดตข้อมูลสำเร็จ';
-        fetchProfile(); // โหลดข้อมูลใหม่
         // Reset loading status for each field after the update
         profileNameLoading.value = false;
         firstNameLoading.value = false;
@@ -251,7 +252,7 @@ class ProfileController extends GetxController {
           ),
           messageText: const SizedBox(), // ไม่แสดงข้อความเพิ่มเติม
         );
-
+        fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่หลังจากการอัปเดต
         // Set shimmer animation back to true
         profileNameLoading.value = true;
         firstNameLoading.value = true;
