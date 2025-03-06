@@ -1,11 +1,14 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @Component({
   selector: 'app-date-picker',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf],
+  imports: [DatePipe, NgFor, NgIf, FormsModule, BsDatepickerModule, TimepickerModule],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss'
 })
@@ -13,6 +16,8 @@ export class DatePickerComponent implements OnInit {
   @Input() itemId = 'date-picker'
   @Input() date = new Date()
   @Output() dateChange: EventEmitter<Date> = new EventEmitter<Date>();
+  selectedDate: Date = new Date(); // กำหนดค่าเริ่มต้นของ DatePicker
+  selectedTime: Date = new Date(); // กำหนดค่าเริ่มต้นของ TimePicker
 
   parts = 'dd/MM/YYYY HH:mm'.split(/\W+/);
   tz: string = 'UTC';
