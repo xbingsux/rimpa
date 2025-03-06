@@ -3,9 +3,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 
-require('dotenv').config();
-
 const prisma = new PrismaClient();
+
+const socket = require('../../socket/service')
 
 const upsertEvent = async (event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img) => {
     let event = await prisma.event.upsert({
@@ -21,7 +21,9 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 create: {
                     map: map,
                     point: point,
-                    event_type: "Main"
+                    event_type: "Main",
+                    startDate: startDate,
+                    endDate: endDate,
                 }
             },
         },
@@ -41,6 +43,8 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     data: {
                         map: map,
                         point: point,
+                        startDate: startDate,
+                        endDate: endDate,
                     }
                 }
             },
@@ -215,10 +219,20 @@ const checkIn = async (user_id, qrcode) => {
             startDate: { lte: currentDate },
             endDate: { gte: currentDate },
             active: true
+        },
+        include: {
+            Event: true,
+            checkIn: true
         }
     })
 
     if (!sub_event) throw new Error('No information available or out of the event period')
+
+    if (
+        sub_event.Event.max_attendees != null &&
+        sub_event.Event.max_attendees > 0 &&
+        sub_event.checkIn.length >= sub_event.Event.max_attendees
+    ) throw new Error('The event has reached its limit.')
 
     let checkIn = await prisma.checkIn.findFirst({
         where: { sub_event_id: sub_event.id, profile: { user_id: user_id } }
@@ -228,26 +242,30 @@ const checkIn = async (user_id, qrcode) => {
 
     checkIn = await prisma.checkIn.create({
         data: {
-            sub_event_id: sub_event.id,
-            profile: { user_id: user_id },
+            sub_event: { connect: { id: sub_event.id } },
+            profile: { connect: { user_id: user_id } },
         }
     });
 
     const point = await prisma.point.create({
         data: {
             points: sub_event.point,
-            Profile: { user_id: user_id },
+            Profile: { connect: { user_id: user_id } },
             type: 'EARN',
             description: 'รับคะแนนจากกิจกรรม'
         }
     })
 
-    const profile = prisma.profile.update({
+    const profile = await prisma.profile.update({
         where: { user_id: user_id },
         data: {
-            points: { increment: sub_event.point }
+            points: { increment: sub_event.point },
         }
     })
+
+    if (profile) {
+        socket.serverMessageByUser(user_id, `🎉 ยินดีด้วย! คุณได้รับ ${sub_event.point} คะแนนสะสมแล้ว!`, `แต้มของคุณเพิ่มขึ้นเรื่อย ๆ! อย่าลืมสะสมให้ครบ \nเพื่อแลกรับสิทธิพิเศษ ของรางวัลสุดคุ้ม`)
+    }
 
     return point;
 }

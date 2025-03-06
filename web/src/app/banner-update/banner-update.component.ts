@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,8 @@ export class BannerUpdateComponent {
     this.route.paramMap.subscribe((param) => {
       // console.log(param.get('id'));
       if (param.get('id')) {
-        this.http.post(`${environment.API_URL}/event/get-banner`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
+        const params = new HttpParams().set('id', Number(param.get('id')));
+        this.http.get(`${environment.API_URL}/event/get-banner`, { params }).subscribe(async (response: any) => {
           // console.log(response);
           let item = response.banner;
           this.data.id = item.id;
@@ -31,7 +32,7 @@ export class BannerUpdateComponent {
           this.data.endDate = new Date(item.endDate).toISOString().slice(0, 10)
           this.data.path = item.path;
           let path = `${environment.API_URL}${item.path.replace('src', '')}`;
-          path = await this.api.checkImageExists(path) != 500 ? path : ''
+          path = await this.api.checkImageExists(path) != 500 && item.path.trim() != '' ? path : ''
           this.img_path = path;
         })
       }

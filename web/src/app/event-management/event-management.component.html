@@ -50,7 +50,7 @@
             </div>
             <div class="justify-center">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
-                    {{item.sub_event[0].EventParticipant.length}}/{{item.max_attendees}}
+                    {{item.sub_event[0].checkIn.length}} / {{item.max_attendees == 0 ?'ไม่จำกัด':item.max_attendees}}
                 </p>
             </div>
             <div class="grid-cols-[auto_auto_auto] gap-2 justify-center">

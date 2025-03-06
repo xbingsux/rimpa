@@ -23,8 +23,8 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpClient) {
 
   }
-  ngOnInit(): void {
-    this.http.post(`${environment.API_URL}/dashboard`, {}).subscribe(async (response: any) => {
+  ngOnInit(): void {    
+    this.http.get(`${environment.API_URL}/dashboard`, {}).subscribe(async (response: any) => {
       this.dashboard_total = response.dashboard
     }, error => {
       console.error('Error:', error);

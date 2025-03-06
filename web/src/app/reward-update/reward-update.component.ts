@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -20,7 +20,8 @@ export class RewardUpdateComponent implements OnInit {
     this.route.paramMap.subscribe((param) => {
       // console.log(param.get('id'));
       if (param.get('id')) {
-        this.http.post(`${environment.API_URL}/get-reward`, { id: Number(param.get('id')) }).subscribe(async (response: any) => {
+        const params = new HttpParams().set('id', Number(param.get('id')));
+        this.http.get(`${environment.API_URL}/get-reward`, { params }).subscribe(async (response: any) => {
           // console.log(response);
 
           let item = response.reward;
@@ -35,7 +36,7 @@ export class RewardUpdateComponent implements OnInit {
           this.data.cost = item.cost
           this.data.path = item.img
           let path = `${environment.API_URL}${item.img.replace('src', '')}`;
-          path = await this.api.checkImageExists(path) != 500 ? path : ''
+          path = await this.api.checkImageExists(path) != 500 && item.img.trim() != '' ? path : ''
           this.img_path = path;
         })
       }

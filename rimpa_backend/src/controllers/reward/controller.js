@@ -16,8 +16,8 @@ router.get("/test", async (req, res) => {
   return res.status(200).json({ status: "success" });
 });
 
-router.post("/list-reward", async (req, res) => {
-  const { } = req.body;
+router.get("/list-reward", async (req, res) => {
+  const { } = req.query;
   try {
 
     const reward = await Service.listReward()
@@ -32,11 +32,21 @@ router.post("/list-reward", async (req, res) => {
   }
 });
 
-router.post("/get-reward", async (req, res) => {
-  const { id } = req.body;
+router.get("/get-reward", async (req, res) => {
+  const { id } = req.query;
   try {
-    const reward = await Service.rewardById(id)
-    return res.status(200).json({ status: "success", reward });
+
+    const reward_id = Number(id);
+    if (!isNaN(reward_id) && Number.isInteger(reward_id) && id.trim() != '') {
+      const reward = await Service.rewardById(reward_id)
+      if (reward) {
+        return res.status(200).json({ status: "success", reward });
+      } else {
+        return res.status(404).json({ status: "error", message: "Reward not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid reward_id" });
+    }
 
   } catch (error) {
     console.error(error);
@@ -48,10 +58,10 @@ router.post("/get-reward", async (req, res) => {
 });
 
 router.post("/redeem-rewards", async (req, res) => {
-  const { idProfile,idReward } = req.body;
+  const { idProfile, idReward } = req.body;
   try {
-    const reward = await Service.redeemReward(idProfile,idReward)
-    return res.status(200).json({ status: "success", reward });
+    const reward = await Service.redeemReward(idProfile, idReward)
+    return res.status(201).json({ status: "success", reward });
 
   } catch (error) {
     console.error(error);

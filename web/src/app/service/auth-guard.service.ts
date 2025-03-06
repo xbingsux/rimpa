@@ -30,6 +30,18 @@ export class AuthGuard implements CanActivate {
     }
   }
 
+  async logout() {
+    try {
+      const response: any = await this.http.post(`${this.api_url}/auth/logout`, {}).toPromise();
+      localStorage.removeItem('token')
+      this.router.navigate(['login'])
+      return response;
+    } catch (error) {
+      console.error('Logout failed', error);
+      return 'ไม่สามารถล็อคเอาท์ได้';
+    }
+  }
+
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const isAuthenticated = !!localStorage.getItem('token');
