@@ -37,32 +37,32 @@ class _LoginViewState extends State<LoginView>
                     height: mediaHeight * 0.331,
                     color: AppColors.background_main,
                     child: Center(
-                      child: SizedBox(
-                        width: 300,
-                        height: 175,
-                        child: Center(
-                          child: AppImageComponent(
-                            imageType: AppImageType.assets,
-                            imageAddress: 'assets/logoapp/logoiconic.png',
-                            fit: BoxFit.contain,
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
+                      child: Center(
+                        child: Image.asset('assets/logoapp/logoiconic.png', width: 217, height: 132,),
+                        // child: AppImageComponent(
+                        //   imageType: AppImageType.assets,
+                        //   imageAddress: 'assets/logoapp/logoiconic.png',
+                        //   fit: BoxFit.contain,
+                        //   borderRadius: BorderRadius.circular(0),
+                        // ),
                       ),
                     ),
                   ),
                   Positioned(
-                    right: 0,
+                    left: 0,
                     top: 0,
-                    child: GestureDetector(
-                      onTap: () => Get.offAll( HomePage()),
-                      child: Container(
-                        decoration: const BoxDecoration(),
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        child: const Icon(
-                          Icons.close,
-                          color: AppColors.secondary,
-                          size: AppTextSize.xxl,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      child: GestureDetector(
+                        onTap: () => Get.offAll( HomePage()),
+                        child: Container(
+                          decoration: const BoxDecoration(),
+                          padding: const EdgeInsets.all(AppSpacing.xs),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromARGB(255, 109, 109, 109),
+                            size: AppTextSize.xxl,
+                          ),
                         ),
                       ),
                     ),
@@ -114,17 +114,17 @@ class _LoginViewState extends State<LoginView>
                                         fontSize: AppTextSize.md),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.secondary, width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.primary, width: 1)),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.background_main,
                                             width: 1))),
@@ -133,36 +133,55 @@ class _LoginViewState extends State<LoginView>
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: AppSpacing.md),
-                              child: TextField(
-                                onChanged: (value) =>
-                                    authController.user.password.value = value,
-                                obscureText: true,
-                                style: const TextStyle(
-                                    color: AppTextColors.secondary,
-                                    fontSize: AppTextSize.md),
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: AppSpacing.lg),
-                                    hintText: 'รหัสผ่าน',
-                                    hintStyle: const TextStyle(
+                              child: Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  TextField(
+                                    onChanged: (value) =>
+                                        authController.user.password.value = value,
+                                    obscureText: _obscureText,
+                                    style: const TextStyle(
                                         color: AppTextColors.secondary,
                                         fontSize: AppTextSize.md),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.secondary, width: 1)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.primary, width: 1)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
-                                        borderSide: const BorderSide(
-                                            color: AppColors.background_main,
-                                            width: 1))),
+                                    decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(
+                                            horizontal: AppSpacing.lg),
+                                        hintText: 'รหัสผ่าน',
+                                        hintStyle: const TextStyle(
+                                            color: AppTextColors.secondary,
+                                            fontSize: AppTextSize.md),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20),
+                                            borderSide: const BorderSide(
+                                                color: AppColors.secondary, width: 1)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20),
+                                            borderSide: const BorderSide(
+                                                color: AppColors.primary, width: 1)),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20),
+                                            borderSide: const BorderSide(
+                                                color: AppColors.background_main,
+                                                width: 1))),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => setState(() {
+                                      _obscureText = !_obscureText;
+                                    }),
+                                    child: Container(
+                                      decoration: const BoxDecoration(),
+                                      padding: const EdgeInsets.only(right: AppRadius.sm),
+                                      child: Icon(
+                                        _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, 
+                                        size: AppTextSize.xxl, 
+                                        color: AppTextColors.secondary,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                             Padding(
@@ -237,7 +256,7 @@ class _LoginViewState extends State<LoginView>
                                 decoration: BoxDecoration(
                                     gradient: AppGradiant.gradientX_1,
                                     borderRadius:
-                                        BorderRadius.circular(AppRadius.rounded)),
+                                        BorderRadius.circular(20)),
                                 child: const Center(
                                   child: Text(
                                     "เข้าสู่ระบบ",
@@ -249,66 +268,66 @@ class _LoginViewState extends State<LoginView>
                               ),
                             ),
                           ),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppRadius.xs),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: 1,
-                                      color: AppColors.secondary,
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    flex: 1,
-                                    child: Center(
-                                        child: Text(
-                                      'หรือ',
-                                      style: TextStyle(
-                                          fontSize: AppTextSize.sm,
-                                          color: AppTextColors.secondary),
-                                    )),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: 1,
-                                      color: AppColors.secondary,
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppRadius.md),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  border: Border.all(
-                                      width: 1, color: AppColors.accent),
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.rounded)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icon/login/google.png', width: 20,),
-                                  const SizedBox(width: 15,),
-                                  const Text(
-                                    "เข้าสู่ระบบด้วยอีเมล",
-                                    style: TextStyle(
-                                        fontSize: AppTextSize.md,
-                                        color: AppTextColors.primary),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: AppRadius.xs),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Expanded(
+                          //           flex: 2,
+                          //           child: Container(
+                          //             height: 1,
+                          //             color: AppColors.secondary,
+                          //           ),
+                          //         ),
+                          //         const Expanded(
+                          //           flex: 1,
+                          //           child: Center(
+                          //               child: Text(
+                          //             'หรือ',
+                          //             style: TextStyle(
+                          //                 fontSize: AppTextSize.sm,
+                          //                 color: AppTextColors.secondary),
+                          //           )),
+                          //         ),
+                          //         Expanded(
+                          //           flex: 2,
+                          //           child: Container(
+                          //             height: 1,
+                          //             color: AppColors.secondary,
+                          //           ),
+                          //         )
+                          //       ],
+                          //     )),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       vertical: AppRadius.md),
+                          //   child: Container(
+                          //     width: double.infinity,
+                          //     padding: const EdgeInsets.all(12),
+                          //     decoration: BoxDecoration(
+                          //         color: AppColors.white,
+                          //         border: Border.all(
+                          //             width: 1, color: AppColors.accent),
+                          //         borderRadius:
+                          //             BorderRadius.circular(AppRadius.rounded)),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         Image.asset('assets/icon/login/google.png', width: 20,),
+                          //         const SizedBox(width: 15,),
+                          //         const Text(
+                          //           "เข้าสู่ระบบด้วยอีเมล",
+                          //           style: TextStyle(
+                          //               fontSize: AppTextSize.md,
+                          //               color: AppTextColors.primary),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: AppRadius.xs),
@@ -323,7 +342,7 @@ class _LoginViewState extends State<LoginView>
                                       ),
                                     ),
                                 GestureDetector(
-                                  onTap: () => Get.toNamed('/select-create'),
+                                  onTap: () => Get.toNamed('/create-account'),
                                   child: Stack(
                                     children: [
                                       const Text(
@@ -344,9 +363,71 @@ class _LoginViewState extends State<LoginView>
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                                //   child: Container(
+                                //     width: 2,
+                                //     height: 20,
+                                //     color: AppColors.secondary,
+                                //   ),
+                                // ),
+                                // GestureDetector(
+                                //   onTap: () => Get.offAll(HomePage()),
+                                //   child: Stack(
+                                //     children: [
+                                //       const Text(
+                                //         'กลับหน้าหลัก',
+                                //         style: TextStyle(
+                                //           fontSize: AppTextSize.md,
+                                //           color: AppTextColors.secondary,
+                                //         ),
+                                //       ),
+                                //       Positioned(
+                                //         left: 0,
+                                //         right: 0,
+                                //         bottom: 0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+                                //         child: Container(
+                                //           height: 0.5,
+                                //           color: AppTextColors.secondary,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // )
                               ],
                             )),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       vertical: AppRadius.xs),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       GestureDetector(
+                          //         onTap: () => Get.offAll(HomePage()),
+                          //         child: Stack(
+                          //           children: [
+                          //             const Text(
+                          //               'กลับหน้าหลัก',
+                          //               style: TextStyle(
+                          //                 fontSize: AppTextSize.md,
+                          //                 color: AppTextColors.secondary,
+                          //               ),
+                          //             ),
+                          //             Positioned(
+                          //               left: 0,
+                          //               right: 0,
+                          //               bottom: 0, // ปรับค่าเป็นบวก 10 pixel เพื่อให้เส้นอยู่ต่ำกว่าข้อความ
+                          //               child: Container(
+                          //                 height: 0.5,
+                          //                 color: AppTextColors.secondary,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       )
+                          //     ],
+                          //   )),
                         ],
                       ),
                   )
