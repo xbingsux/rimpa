@@ -105,7 +105,7 @@ export class UserManagementComponent implements OnInit {
 
   delete_id: number | null = null;
   deleteUser() {
-    this.http.post(`${environment.API_URL}/delete-user`, { id: this.delete_id }).subscribe(async (response: any) => {
+    this.http.post(`${environment.API_URL}/delete-user`, { user_id: this.delete_id }).subscribe(async (response: any) => {
       // console.log(response);
       alert('ลบข้อมูลสำเร็จ')
       this.ngOnInit()

@@ -26,9 +26,10 @@ model Role {
 }
 
 model Profile {
-  id            Int       @id @default(autoincrement()) // Primary Key
-  user_id       Int       @unique // Foreign Key ไปยัง User
-  user          User      @relation(fields: [user_id], references: [id])
+  id      Int   @id @default(autoincrement()) // Primary Key
+  user_id Int?  @unique // Foreign Key ไปยัง User
+  user    User? @relation(fields: [user_id], references: [id])
+
   title         String? // คำนำหน้า เช่น นาย, นาง, นางสาว
   first_name    String? // ชื่อจริง
   last_name     String? // นามสกุล
@@ -52,6 +53,9 @@ model Profile {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   active           Boolean            @default(true) // Active status
+
+  noti_roomId String?    @unique
+  noti_room   noti_room? @relation(fields: [noti_roomId], references: [id])
 }
 
 enum Gender {
@@ -312,4 +316,23 @@ model TransactionLog {
   createdAt DateTime @default(now())
 
   @@id([id, profileId])
+}
+
+model noti_room {
+  id      String             @id @default(cuid())
+  type    String             @default("Server")
+  profile Profile?
+  noti    notification_log[]
+}
+
+model notification_log {
+  id          Int        @id @default(autoincrement())
+  title       String?
+  message     String
+  type        String?
+  read        Boolean    @default(false)
+  delete      Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  noti_room   noti_room? @relation(fields: [noti_roomId], references: [id])
+  noti_roomId String?
 }

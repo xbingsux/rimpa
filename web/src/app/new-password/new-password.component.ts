@@ -28,7 +28,7 @@ export class NewPasswordComponent implements OnInit {
   resetPassword() {
     if (this.newPassword != this.confirmPassword && this.newPassword == '') return
 
-    this.http.post(`${environment.API_URL}/auth/reset-password`, {
+    this.http.put(`${environment.API_URL}/auth/reset-password`, {
       token: this.token,
       new_password: this.newPassword
     }).subscribe((response: any) => {

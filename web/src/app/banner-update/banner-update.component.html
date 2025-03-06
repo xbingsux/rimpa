@@ -37,7 +37,7 @@
                     <label for="upload"
                         class="cursor-pointer select-none text-[42px] w-full aspect-[16/9] grid justify-center items-center grid-cols-1">
                         <img *ngIf="img_path" [src]="img_path" class="w-full aspect-[16/9] object-cover rounded-[12px]">
-                        <p *ngIf="!img_path" class="text-center">+</p>
+                        <p *ngIf="!img_path || img_path.trim() == ''" class="text-center">+</p>
                     </label>
                     <input type="file" accept="image/*" id="upload"
                         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

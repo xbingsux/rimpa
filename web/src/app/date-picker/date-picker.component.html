@@ -1,0 +1,53 @@
+<div class="relative flex min-h-[40px] min-w-[250px] w-full h-full px-4 border-[#D9D9D9] border-[1px] rounded-[12px] bg-white
+items-center cursor-default" tabindex="0" (keydown)="keydownElement($event)" (blur)="endElement()">
+    <input id="{{itemId}}" type="text" class="opacity-0 absolute -z-10 w-[10px]" (focus)="selectText(parts[0]);">
+    <div class="flex flex-1">
+        <!-- <div *ngFor="let part of parts" id="{{part}}" (click)="selectText(part)">
+            {{item['dd'].value}}
+        </div> -->
+        <div id="{{itemId}}-dd" (click)="selectText('dd')">
+            {{item['dd'].value}}
+        </div>
+        /
+        <div id="{{itemId}}-MM" (click)="selectText('MM')">
+            {{item['MM'].value}}
+        </div>
+        /
+        <div id="{{itemId}}-YYYY" (click)="selectText('YYYY')">
+            {{item['YYYY'].value}}
+        </div>
+        <div class="w-2"></div>
+        <div id="{{itemId}}-HH" (click)="selectText('HH')">
+            {{item['HH'].value}}
+        </div>
+        :
+        <div id="{{itemId}}-mm" (click)="selectText('mm')">
+            {{item['mm'].value}}
+        </div>
+    </div>
+    <div *ngIf="showDate" class="flex flex-1">
+        <div>
+            {{date | date : 'dd' : tz }}
+        </div>
+        /
+        <div>
+            {{date | date : 'MM' : tz }}
+        </div>
+        /
+        <div>
+            {{date | date : 'yyyy' : tz}}
+        </div>
+        <div class="w-2"></div>
+        <div>
+            {{date | date : 'HH' : tz }}
+        </div>
+        :
+        <div>
+            {{date | date : 'mm'}}
+        </div>
+    </div>
+    <div>
+        <img src="date-picker.svg" class="w-[32px]">
+    </div>
+    <!-- {{select?.id}} -->
+</div>

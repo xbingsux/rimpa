@@ -32,7 +32,7 @@ export class BannerUpdateComponent {
           this.data.endDate = new Date(item.endDate).toISOString().slice(0, 10)
           this.data.path = item.path;
           let path = `${environment.API_URL}${item.path.replace('src', '')}`;
-          path = await this.api.checkImageExists(path) != 500 ? path : ''
+          path = await this.api.checkImageExists(path) != 500 && item.path.trim() != '' ? path : ''
           this.img_path = path;
         })
       }

@@ -210,8 +210,6 @@ router.get("/get-reward", auth, async (req, res) => {
       return res.status(400).json({ status: "error", message: "Invalid reward_id" });
     }
 
-
-
   } catch (error) {
     console.error(error);
     console.log("error");
@@ -239,6 +237,8 @@ router.get("/list-banner", auth, async (req, res) => {
 
 router.post("/delete-user", auth, async (req, res) => {
   const { user_id } = req.body;
+  console.log('user_id', user_id);
+
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.deleteUser(user_id);
