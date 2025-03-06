@@ -55,7 +55,7 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
                 if (widget.showTitle)
                   Expanded(
                     child: Text(
-                      "กิจกรรมทั้งหมด",
+                      "รีวอร์ดทั้งหมด",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),

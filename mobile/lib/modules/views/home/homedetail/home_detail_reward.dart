@@ -33,7 +33,8 @@ class HomeDetailReward extends StatelessWidget {
     String startDate = _formatDate(reward.startDate);
     String endDate = _formatDate(reward.endDate);
     String imageUrl = '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}';
-
+    print(rewardcost);
+    print(idProfile);
     return SafeArea(
       child: Scaffold(
         body: Column(
