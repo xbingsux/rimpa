@@ -311,7 +311,7 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
-    fetchProfile();
+    fetchProfile(); // โหลดข้อมูลโปรไฟล์ทันทีเมื่อ controller เริ่มทำงาน
     super.onInit();
   }
 
@@ -355,9 +355,8 @@ class PointsController extends GetxController {
         return;
       }
 
-      final response = await _getConnect.post(
+      final response = await _getConnect.get(
         apiUrlsController.profileMe.value,
-        {},
         headers: {"Authorization": "Bearer $token"},
       );
 
