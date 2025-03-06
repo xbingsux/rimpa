@@ -1,7 +1,7 @@
 name: rimpa
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+version: 1.0.0+3
 
 environment:
   sdk: ^3.5.4
@@ -24,7 +24,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   iconsax: ^0.0.8
   flutter_holo_date_picker: ^1.0.3  # ตรวจสอบเวอร์ชันล่าสุดจาก pub.dev
-
+  gap: ^3.0.0
 
 
 flutter_launcher_icons:
@@ -60,6 +60,7 @@ flutter:
     - assets/logoapp/logoiconic.png
     - assets/icon/iconsendemail/
     - assets/icon/login/
+    - assets/icon/noti/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

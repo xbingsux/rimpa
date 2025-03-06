@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'dart:async';
-import 'package:rimpa/components/dropdown/app-dropdown.component.dart';
-import 'package:rimpa/core/services/api_urls.dart';
 import 'package:rimpa/modules/views/home/banners/banner_slider.dart';
-import '../../../core/constant/app.constant.dart';
-import '../../controllers/profile/profile_controller.dart';
-import '../../../components/cards/app-card.component.dart';
-import '../../../components/imageloader/app-image.component.dart';
-import '../../models/listevent.model.dart';
-// Add this import
-import 'seeallcards/home_event_allcard.dart';
-import 'homedetail/home_detail.dart';
-import 'homedetail/banner_detail.dart'; // Add this import
+import 'package:rimpa/widgets/event/event_recommend.dart';
+import 'package:rimpa/widgets/event/all_events.dart';
+import 'package:rimpa/widgets/my_app_bar.dart';
 import '../../controllers/listevent/listevent.controller.dart';
-import '../../controllers/listbanner/listbanner.controller.dart'; // Add this import
-import 'seeallcards/home_event_allcard.dart';
-import 'homedetail/home_detail.dart'; // Add this import
-import '../../controllers/listevent/listevent.controller.dart';
+import '../../controllers/listbanner/listbanner.controller.dart';
 
 class HomeMainPage extends StatefulWidget {
   const HomeMainPage({super.key});
@@ -32,7 +22,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
   Timer? _timer;
   final listEventController = Get.put(ListEventController());
   final listBannerController = Get.put(ListBannerController()); // Add this line
-  String _sortOrder = "ใหม่สุด"; // Add this line
 
   @override
   void initState() {
@@ -48,6 +37,12 @@ class _HomeMainPageState extends State<HomeMainPage> {
       } else {
         _currentPage = 0;
       }
+
+      // _pageController.animateToPage(
+      //   _currentPage,
+      //   duration: Duration(milliseconds: 300),
+      //   curve: Curves.easeIn,
+      // );
     });
   }
 
@@ -60,242 +55,41 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    ApiUrls apiUrls = Get.find();
-    final profileController =
-        Get.put(ProfileController()); // เพิ่ม ProfileController
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                // รูปโปรไฟล์แทนไอคอน
-                Obx(() {
-                  // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-                  String profileImage =
-                      profileController.profileData["profile_img"] ?? '';
-
-                  // สร้าง URL ของภาพจาก path ที่ต้องการ
-                  String imageUrl = profileImage.isEmpty
-                      ? 'assets/images/default_profile.jpg'
-                      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
-
-                  return Container(
-                    width: 40, // ขนาดเดิม
-                    height: 40, // ขนาดเดิม
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[300], // พื้นหลังเทาเหมือนเดิม
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        imageUrl,
-                        width: 40, // ให้รูปอยู่ในขนาด 40x40 px
-                        height: 40,
-                        fit: BoxFit.cover, // ปรับให้เต็มวงกลม
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(Icons.person_outline,
-                              color: Colors.grey, size: 24);
-                        },
-                      ),
-                    ),
-                  );
-                }),
-                SizedBox(width: 8),
-
-                // ชื่อโปรไฟล์
-                Obx(() {
-                  var profileName =
-                      profileController.profileData["profile_name"] ??
-                          "ยังไม่มีข้อมูล";
-
-                  return Text(
-                    profileName,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
-                        ),
-                  );
-                }),
-              ],
-            ),
-
-            // ไอคอนแจ้งเตือน
-            Icon(Icons.notifications_none, color: Colors.grey),
-          ],
-        ),
-      ),
+      appBar: MyAppBar(),
       body: Obx(() {
-        if (listEventController.isLoading.value ||
-            listBannerController.isLoading.value) {
+        if (listEventController.isLoading.value || listBannerController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         } else {
-          List<ListEvent> sortedEvents = listEventController.events.toList();
-          if (_sortOrder == "ใหม่สุด") {
-            sortedEvents.sort((a, b) => b.id.compareTo(a.id));
-          } else {
-            sortedEvents.sort((a, b) => a.id.compareTo(b.id));
-          }
-
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Banner slider
-                  BannerSliderComponent(), // Corrected line
-
-                  SizedBox(height: 16),
-                  // Activities Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "กิจกรรมแนะนำ",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(HomeEventAllcard());
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              "ดูทั้งหมด",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              " >",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: listEventController.events.map((event) {
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(() => HomeDetailPage(event: event));
-                          },
-                          child: Container(
-                            width: 150,
-                            margin: EdgeInsets.only(right: 8),
-                            child: AppCardComponent(
-                              child: Column(
-                                children: [
-                                  AppImageComponent(
-                                    imageType: AppImageType.network,
-                                    imageAddress:
-                                        '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                                  ),
-                                  SizedBox(height: 8),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4.0),
-                                    child: Text(
-                                      event.title,
-                                      style: TextStyle(fontSize: 12),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  // Add dashed line
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 16),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: List.generate(60, (index) {
-                        return Expanded(
-                          child: Container(
-                            color: index % 2 == 0
-                                ? Colors.transparent
-                                : Colors.grey,
-                            height: 1,
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  // Grid Section
-                  AppDropdown(
-                    onChanged: (value) {
-                      setState(() {
-                        _sortOrder = value;
-                      });
-                    },
-                    choices: ["ใหม่สุด", "เก่าสุด"],
-                    active: _sortOrder,
-                  ),
-                  SizedBox(height: 8),
-                  GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      childAspectRatio: 2 / 3,
-                    ),
-                    itemCount: sortedEvents.length,
-                    itemBuilder: (context, index) {
-                      var event = sortedEvents[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => HomeDetailPage(event: event));
-                        },
-                        child: AppCardComponent(
-                          child: Column(
-                            children: [
-                              AppImageComponent(
-                                imageType: AppImageType.network,
-                                imageAddress:
-                                    '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                              ),
-                              SizedBox(height: 8),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: Text(
-                                  event.title,
-                                  style: TextStyle(fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BannerSliderComponent(), // Corrected line
+                Gap(16),
+                EventRecommend(),
+                SizedBox(height: 16),
+                // Add dashed line
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: List.generate(60, (index) {
+                      return Expanded(
+                        child: Container(
+                          color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                          height: 1,
                         ),
                       );
-                    },
+                    }),
                   ),
-                ],
-              ),
+                ),
+                // Grid Section
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: AllEvents(),
+                )
+              ],
             ),
           );
         }

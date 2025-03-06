@@ -61,7 +61,7 @@ class ApiUrls extends GetxController {
     listsbanners.value = '${eventsUrl.value}/list-banner';
     listsevents.value = '${eventsUrl.value}/list-event';
     getEventDetails.value = '${eventsUrl.value}/get-event';
-    Scanevent.value = '${eventsUrl.value}/scan';
+    Scanevent.value = '${eventsUrl.value}/checkIn';
     getbanner.value = '${eventsUrl.value}/get-banner';
     checkinevent.value = '${eventsUrl.value}/checkIn';
     listsreward.value = '${rewardUrl.value}/list-reward';

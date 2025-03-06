@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/modules/views/home/home.view.dart';
@@ -17,7 +18,6 @@ class _LoginViewState extends State<LoginView>
   final authController = Get.put(LoginController());
   bool _rememberPassword = false;
   bool _obscureText = true;
-  
 
   @override
   Widget build(BuildContext context) {

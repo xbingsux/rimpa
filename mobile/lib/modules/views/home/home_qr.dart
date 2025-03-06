@@ -15,16 +15,13 @@ class HomeQRPage extends StatefulWidget {
 class _HomeQRPageState extends State<HomeQRPage> {
   String? scannedResult;
   ApiUrls apiUrls = Get.find();
-  final profileController =
-      Get.put(ProfileController()); // เพิ่ม ProfileController
-  late final EventController
-      eventController; // Define EventController as a late variable
+  final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
+  late final EventController eventController; // Define EventController as a late variable
 
   @override
   void initState() {
     super.initState();
-    eventController =
-        Get.put(EventController()); // Register EventController here
+    eventController = Get.put(EventController()); // Register EventController here
 
     // ดึง idProfile จาก ProfileController
     String? idProfile = profileController.profileData['id']?.toString();
@@ -36,7 +33,6 @@ class _HomeQRPageState extends State<HomeQRPage> {
 
   @override
   Widget build(BuildContext context) {
-    String? idProfile = profileController.profileData['id']?.toString();
     return Scaffold(
       backgroundColor: const Color.fromARGB(120, 0, 0, 0).withOpacity(0.7),
       body: Stack(
@@ -79,8 +75,7 @@ class _HomeQRPageState extends State<HomeQRPage> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back,
-                      color: Colors.white, size: 30),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
                   onPressed: () => Get.back(),
                 ),
                 const Text(

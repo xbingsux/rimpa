@@ -13,7 +13,6 @@ class EventController extends GetxController {
   final Dio dio = Dio();
   var errorMessage = ''.obs;
   final apiUrlsController = Get.find<ApiUrls>();
-
   // Fetch all events
   Future<void> fetchEventList() async {
     if (isLoading.value) return; // Prevent multiple calls
@@ -23,6 +22,7 @@ class EventController extends GetxController {
       if (response.statusCode == 200 && response.data['status'] == "success") {
         if (response.data['event'] != null) {
           event.value = response.data['event'];
+          print('hello, test');
         } else {
           errorMessage.value = "ไม่พบข้อมูลกิจกรรม";
         }

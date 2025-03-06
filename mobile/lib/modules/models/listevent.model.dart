@@ -36,7 +36,7 @@ class SubEvent {
   final String imagePath;
   final String map;
   final List<EventImage> img;
-  final String point;  // เพิ่มตัวแปร point
+  final double point;  // เพิ่มตัวแปร point
 
   SubEvent({
     required this.id,
@@ -56,7 +56,7 @@ class SubEvent {
       imagePath: json['img'][0]['path'],
       map: json['map'],
       img: images,
-      point: json['point'].toString(),  // ดึงค่า point และแปลงเป็น String
+      point: double.parse(json['point']),  // ดึงค่า point และแปลงเป็น String
     );
   }
 }
