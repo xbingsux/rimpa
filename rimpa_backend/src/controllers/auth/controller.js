@@ -68,7 +68,7 @@ router.post("/logout", auth, async (req, res) => {
     usedTokens.add(req.token)
     return res.status(200).json({
       status: "success",
-      token: token,
+      token: req.token,
     });
   } catch (error) {
     console.error(error);
@@ -237,7 +237,7 @@ router.post("/verify-token", (req, res) => {
   });
 });
 
-router.post("/reset-password", async (req, res) => {
+router.put("/reset-password", async (req, res) => {
   const { token, new_password } = req.body
   // ตรวจสอบว่า token มีค่าหรือไม่
   if (!token) {
@@ -262,7 +262,7 @@ router.post("/reset-password", async (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(new_password, 10);
   const user = await Service.resetPassword(decoded.userId, hashedPassword)
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     user: user,
   });
@@ -325,6 +325,25 @@ router.post("/reset-password-user", async (req, res) => {
 
 
 
+router.put("/reset-password-user", auth, async (req, res) => {
+  const { old_password, new_password } = req.body;
+
+  try {
+    const updatedUser = await Service.resetPasswordMe(req.user.userId, old_password, new_password);
+
+    if (!updatedUser) {
+      return res.status(500).send("Failed to reset password");
+    }
+
+    return res.status(201).json({
+      status: "success",
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    return res.status(500).send("Error updating password");
+  }
+});
+
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   console.log('email', email);
@@ -366,8 +385,8 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-router.post("/profileMe", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/profileMe", auth, async (req, res) => {
+  const { } = req.query;
   try {
 
     const profile = await Service.profileMe(req.user.userId)
@@ -443,7 +462,7 @@ router.put("/updateProfileMe", auth, async (req, res) => {
 router.post("/delete-user", auth, async (req, res) => {
   try {
     const event = await Service.deleteUser(req.user.userId);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -451,6 +470,56 @@ router.post("/delete-user", auth, async (req, res) => {
     return res
       .status(500)
       .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.put("/updateProfileMe", auth, async (req, res) => {
+  const { profile_name, first_name, last_name, phone, birth_date, gender, profile_img, email } = req.body;
+
+  let formattedBirthDate = null;
+  if (birth_date) {
+    const date = new Date(birth_date);
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid birth_date format. Expected format: YYYY-MM-DD.",
+      });
+    }
+    formattedBirthDate = date.toISOString().split('T')[0];
+  }
+
+  const updatedData = {
+    profile_name,
+    first_name,
+    last_name,
+    phone,
+    birth_date: formattedBirthDate,
+    gender,
+    profile_img,
+    email,
+  };
+
+  try {
+    const updatedProfile = await Service.updateProfile(req.user.userId, updatedData);
+
+    if (updatedProfile) {
+      return res.status(201).json({
+        status: "success",
+        message: "Profile updated successfully",
+        profile: updatedProfile,
+      });
+    } else {
+      return res.status(404).json({
+        status: "error",
+        message: "Profile not found",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: error.message || "Internal Server Error",
+    });
   }
 });
 

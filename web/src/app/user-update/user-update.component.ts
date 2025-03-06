@@ -2,7 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../api/api.service';
 
@@ -20,8 +20,12 @@ export class UserUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
       // console.log(param.get('id'));
-      if (param.get('id')) {
-        this.http.post(`${environment.API_URL}/profile`, { profile_id: Number(param.get('id')) }).subscribe(async (response: any) => {
+      const profile_id = param.get('id')
+      if (profile_id) {
+        const params = new HttpParams().set('profile_id', profile_id);
+        this.http.get(`${environment.API_URL}/profile`, { params }).subscribe(async (response: any) => {
+          // console.log(response);
+
           let item = response.profile;
           this.data.email = item.user.email;
           this.data.Role = item.user.role.role_name;

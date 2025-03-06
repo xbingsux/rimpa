@@ -13,7 +13,7 @@ router.get("/test", async (req, res) => {
   return res.status(200).json({ status: "success" });
 });
 
-router.post("/dashboard", auth, async (req, res) => {
+router.get("/dashboard", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
@@ -28,8 +28,8 @@ router.post("/dashboard", auth, async (req, res) => {
   }
 });
 
-router.post("/list-profile", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/list-profile", auth, async (req, res) => {
+  const { } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const profile = await Service.listProfile()
@@ -44,12 +44,22 @@ router.post("/list-profile", auth, async (req, res) => {
   }
 });
 
-router.post("/profile", auth, async (req, res) => {
-  const { profile_id } = req.body;
+router.get("/profile", auth, async (req, res) => {
+  const { profile_id } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const profile = await Service.profileById(profile_id)
-    return res.status(200).json({ status: "success", profile });
+
+    const id = Number(profile_id);
+    if (!isNaN(id) && Number.isInteger(id) && profile_id.trim() != '') {
+      const profile = await Service.profileById(id)
+      if (profile) {
+        return res.status(200).json({ status: "success", profile });
+      } else {
+        return res.status(404).json({ status: "error", message: "Profile not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid profile_id" });
+    }
 
   } catch (error) {
     console.error(error);
@@ -67,7 +77,7 @@ router.post("/update-banner", auth, async (req, res) => {
     const { id, title, description, startDate, endDate, path } = req.body;
 
     const banner = await Service.upsertBanner(id, title, description, startDate, endDate, path)
-    return res.status(200).json({ status: "success", banner });
+    return res.status(201).json({ status: "success", banner });
   } catch (error) {
     console.error(error);
     console.log("error");
@@ -81,9 +91,7 @@ router.post("/register", auth, async (req, res) => {
   const { email, role, profile, active } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    password = 'e6g3!Xh@aMwhyJx'
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = await Service.upsertUser(email, hashedPassword, role, profile, active);
+    const newUser = await Service.upsertUser(email, role, profile, active);
     if (newUser.created) {
       let token = jwt.sign({ userId: newUser.id, usedToken: 1 }, process.env.SECRET_KEY, {
         expiresIn: "1d",
@@ -107,8 +115,8 @@ router.post("/register", auth, async (req, res) => {
   }
 });
 
-router.post("/list-event", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/list-event", auth, async (req, res) => {
+  const { } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.listEvent()
@@ -123,12 +131,24 @@ router.post("/list-event", auth, async (req, res) => {
   }
 });
 
-router.post("/get-event", auth, async (req, res) => {
-  const { id } = req.body;
+router.get("/get-event", auth, async (req, res) => {
+  const { id } = req.query;
   try {
+
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const event = await Service.getEvent(id);
-    return res.status(200).json({ status: "success", event });
+
+    const event_id = Number(id);
+    if (!isNaN(event_id) && Number.isInteger(event_id) && id.trim() != '') {
+      const event = await Service.getEvent(event_id);
+      if (event) {
+        return res.status(200).json({ status: "success", event });
+      } else {
+        return res.status(404).json({ status: "error", message: "Event not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid event_id" });
+    }
+
 
   } catch (error) {
     console.error(error);
@@ -139,8 +159,8 @@ router.post("/get-event", auth, async (req, res) => {
   }
 });
 
-router.post("/list-reward", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/list-reward", auth, async (req, res) => {
+  const { } = req.query;
   try {
 
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
@@ -163,7 +183,7 @@ router.post("/update-reward", auth, async (req, res) => {
     const { id, reward_name, description, startDate, endDate, img, stock, cost } = req.body;
 
     const reward = await Service.upsertReward(id, reward_name, description, startDate, endDate, img, stock, cost)
-    return res.status(200).json({ status: "success", reward });
+    return res.status(201).json({ status: "success", reward });
   } catch (error) {
     console.error(error);
     console.log("error");
@@ -173,12 +193,24 @@ router.post("/update-reward", auth, async (req, res) => {
   }
 });
 
-router.post("/get-reward", auth, async (req, res) => {
-  const { id } = req.body;
+router.get("/get-reward", auth, async (req, res) => {
+  const { id } = req.query;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
-    const reward = await Service.rewardById(id)
-    return res.status(200).json({ status: "success", reward });
+
+    const reward_id = Number(id);
+    if (!isNaN(reward_id) && Number.isInteger(reward_id) && id.trim() != '') {
+      const reward = await Service.rewardById(reward_id)
+      if (reward) {
+        return res.status(200).json({ status: "success", reward });
+      } else {
+        return res.status(404).json({ status: "error", message: "Reward not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid reward_id" });
+    }
+
+
 
   } catch (error) {
     console.error(error);
@@ -189,10 +221,9 @@ router.post("/get-reward", auth, async (req, res) => {
   }
 });
 
-router.post("/list-banner", auth, async (req, res) => {
-  const { } = req.body;
+router.get("/list-banner", auth, async (req, res) => {
+  const { } = req.query;
   try {
-
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const banner = await Service.listBanner()
     return res.status(200).json({ status: "success", banner });
@@ -211,7 +242,7 @@ router.post("/delete-user", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.deleteUser(user_id);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -227,7 +258,7 @@ router.post("/delete-event", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.deleteEvent(id);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -243,7 +274,7 @@ router.post("/delete-reward", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.deleteReward(id);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -259,7 +290,7 @@ router.post("/delete-banner", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
     const event = await Service.deleteBanner(id);
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);

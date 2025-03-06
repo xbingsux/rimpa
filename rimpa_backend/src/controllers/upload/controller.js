@@ -57,7 +57,7 @@ router.post(
       const path = req.file.path.replace('src', '')
       await fileService.updateImgProfile(req.user.userId, path)
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: req.file,
         path: path,
@@ -85,7 +85,7 @@ router.post(
       // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxx', file)
       console.log(req.file);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: req.file,
         path: req.file.path.replace('src', ''),
@@ -113,7 +113,7 @@ router.post(
       // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxx', file)
       console.log(req.file);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: req.file,
         path: req.file.path.replace('src', ''),
@@ -141,7 +141,7 @@ router.post(
       // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxx', file)
       console.log(req.file);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: req.file,
         path: req.file.path.replace('src', ''),
@@ -171,7 +171,7 @@ router.post(
       // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxx', file)
       console.log(req.file);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: req.file,
         path: req.file.path.replace('src', ''),
@@ -212,7 +212,7 @@ router.delete(
       // Call the service to delete the image
       await fileService.deleteImageByProfileID(profileId, fileName, req);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         message: `File ${fileName} deleted successfully`,
       });
@@ -238,7 +238,7 @@ router.post(
   async (req, res) => {
     try {
       const file = await fileService.uploadFile(req); // เรียกใช้ฟังก์ชัน uploadFile
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         file: file,
       });
@@ -264,7 +264,7 @@ router.delete(
     try {
       const fileName = req.params.fileName;
       await fileService.deleteProfileImage(fileName, req);
-      return res.status(200).json({
+      return res.status(201).json({
         status: "success",
         message: `File ${fileName} deleted successfully`,
       });

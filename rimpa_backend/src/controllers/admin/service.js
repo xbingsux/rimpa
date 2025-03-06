@@ -8,9 +8,10 @@ const nodemailer = require("nodemailer");
 const prisma = new PrismaClient();
 
 const dashboard = async () => {
+
     const [totalEvents, totalAttendees, totalRewards, totalUsers] = await Promise.all([
         prisma.event.count({ where: { active: true } }),
-        prisma.eventParticipant.count({where:{status:''}}),
+        prisma.eventParticipant.count({ where: { status: 'PAID' } }),
         prisma.reward.count({ where: { active: true } }),
         prisma.user.count({ where: { active: true } })
     ]);
@@ -33,6 +34,7 @@ const dashboard = async () => {
             count: totalUsers
         }
     ];
+
 };
 
 
@@ -140,11 +142,8 @@ const sendVertifyUser = async (email, token) => {
 
 }
 
-const upsertUser = async (email, password, role, profile, active) => {
-
-    if (typeof active == 'boolean') {
-
-    }
+const upsertUser = async (email, role, profile, active) => {
+    const password = bcrypt.hashSync('Rh8EpbBE599AG6mwl35NtVR9Z3lB5855YIz2luKd4YXJzt0H19', 10);
 
     let created = 0
     let user = await prisma.user.findFirst({

@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '../../environments/environment'
 import { ApiService } from '../api/api.service';
+import { AuthGuard } from '../service/auth-guard.service';
 
 @Component({
   selector: 'app-admin',
@@ -68,11 +69,18 @@ export class AdminComponent implements OnInit {
     }
   ]
 
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, public api: ApiService) { }
+  constructor(
+    private router: Router, private route: ActivatedRoute,
+    private http: HttpClient, public api: ApiService,
+    private auth: AuthGuard
+  ) {
+
+  }
+
   active = 'background-color: #1c1c1c;color: #fff;'//1093ED
 
   ngOnInit() {
-    this.http.post(`${environment.API_URL}/auth/profileMe`, {}).subscribe(async (respone: any) => {
+    this.http.get(`${environment.API_URL}/auth/profileMe`, {}).subscribe(async (respone: any) => {
       // console.log(respone.profile);
       let profile = respone.profile
       this.username = profile.profile_name;
@@ -92,12 +100,13 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  logout() {
-    localStorage.removeItem('token')
-    this.router.navigate(['login'])
-  }
-
   isUrl(url: string, tags_url: string[]) {
     return tags_url.some((tag: string) => url.indexOf(tag) != -1)
+  }
+
+  logout() {
+    const logout = this.auth.logout()
+    console.log(logout);
+    location.reload()
   }
 }

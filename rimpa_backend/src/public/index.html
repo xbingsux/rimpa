@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Chat</title>
+</head>
+
+<body>
+    <p id="id"></p>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on("connect", () => {
+            document.getElementById('id').innerText = socket.id;
+        });
+
+        function joinRoom() {
+            const room = prompt("Enter room name:");
+            socket.emit("join room", room);
+        }
+
+        function sendRoomMessage() {
+            const room = prompt("Enter room name:");
+            const message = prompt("Enter your message:");
+            socket.emit("room message", { room, message });
+        }
+
+        // รับข้อความเฉพาะห้องที่เข้าร่วม
+        socket.on("room message", ({ senderId, message }) => {
+            console.log(senderId);
+
+            console.log(`Message from ${senderId} in room: ${message}`);
+        });
+    </script>
+
+    <button onclick="joinRoom()">Join Room</button>
+    <button onclick="sendRoomMessage()">Send Room Message</button>
+
+</body>
+
+</html>

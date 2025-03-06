@@ -20,7 +20,7 @@ router.post("/update-event", auth, async (req, res) => {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
     const event = await Service.upsertEvent(event_id, sub_event_id, title, description, max_attendees, map, releaseDate, startDate, endDate, point, event_img)
-    return res.status(200).json({ status: "success", event });
+    return res.status(201).json({ status: "success", event });
 
   } catch (error) {
     console.error(error);
@@ -47,12 +47,22 @@ router.post("/list-event",  async (req, res) => {
   }
 });
 
-router.post("/get-event", async (req, res) => {
-  const { id } = req.body;
+router.get("/get-event", async (req, res) => {
+  const { id } = req.query;
   try {
 
-    const event = await Service.getEvent(id);
-    return res.status(200).json({ status: "success", event });
+    const event_id = Number(id);
+    if (!isNaN(event_id) && Number.isInteger(event_id) && id.trim() != '') {
+      const event = await Service.getEvent(event_id);
+      if (event) {
+        return res.status(200).json({ status: "success", event });
+      } else {
+        return res.status(404).json({ status: "error", message: "Event not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid event_id" });
+    }
+
 
   } catch (error) {
     console.error(error);
@@ -114,8 +124,8 @@ router.post("/checkIn", auth, async (req, res) => {
   }
 });
 
-router.post("/list-banner", async (req, res) => {
-  const { } = req.body;
+router.get("/list-banner", async (req, res) => {
+  const { } = req.query;
   try {
 
     const banner = await Service.listBanner()
@@ -130,11 +140,21 @@ router.post("/list-banner", async (req, res) => {
   }
 });
 
-router.post("/get-banner", async (req, res) => {
-  const { id } = req.body;
+router.get("/get-banner", async (req, res) => {
+  const { id } = req.query;
   try {
-    const banner = await Service.bannerById(id)
-    return res.status(200).json({ status: "success", banner });
+    const banner_id = Number(id);
+    if (!isNaN(banner_id) && Number.isInteger(banner_id) && id.trim() != '') {
+      const banner = await Service.bannerById(banner_id)
+      if (banner) {
+        return res.status(200).json({ status: "success", banner });
+      } else {
+        return res.status(404).json({ status: "error", message: "Banner not found" });
+      }
+    } else {
+      return res.status(400).json({ status: "error", message: "Invalid banner_id" });
+    }
+
   } catch (error) {
     console.error(error);
     console.log("error");

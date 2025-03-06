@@ -27,7 +27,7 @@ export class EventManagementComponent implements OnInit {
   delete_id: number | null = null;
 
   ngOnInit(): void {
-    this.http.post(`${environment.API_URL}/list-event`, {}).subscribe(async (response: any) => {
+    this.http.get(`${environment.API_URL}/list-event`, {}).subscribe(async (response: any) => {
       // console.log(response.event);
       this.list = response.event;
       this.list_Filter()
