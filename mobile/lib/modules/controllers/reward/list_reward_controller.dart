@@ -82,7 +82,6 @@ Future<void> redeemReward(
       rewardDetail.value = response.data['reward'];
       errorMessage.value = "";
 
-      // แสดง Dialog พร้อมส่งค่า cost
       showDialog(
         context: Get.context!,
         builder: (BuildContext context) {

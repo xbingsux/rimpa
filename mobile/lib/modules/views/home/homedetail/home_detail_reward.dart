@@ -24,7 +24,7 @@ class HomeDetailReward extends StatelessWidget {
   Widget build(BuildContext context) {
     // ย้าย rewardcost มาไว้ใน build() แทน
 
-    String? idProfile = profileController.profileData['id']?.toString();
+    String? idProfile = profileController.profileData['user_id']?.toString();
     var rewardcost = controller.rewardDetail.value;
     rewardcost["cost"] = reward.cost; // เพิ่มค่า cost ลงใน rewardcost
     // ดึงข้อมูลรางวัล
@@ -335,7 +335,6 @@ class HomeDetailReward extends StatelessWidget {
                         rewardController.redeemReward(
                             idProfile, reward.id.toString(), cost);
                       } else {
-                        print("Error: idProfile หรือ cost เป็น null");
                       }
                     },
                     child: Container(
