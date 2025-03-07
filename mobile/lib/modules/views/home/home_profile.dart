@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
@@ -216,8 +218,8 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                               MenuCard(
                                 title: "บัญชีและความเป็นส่วนตัว",
                                 items: [
-                                  MenuItem(title: "บัญชีผู้ใช้งาน", icon: Icons.person, route: "/user-deteil"),
-                                  MenuItem(title: "เปลี่ยนรหัสผ่าน", icon: Icons.lock, route: "/chang-password"),
+                                  MenuItem(title: "บัญชีผู้ใช้งาน", icon: Iconsax.user, route: "/user-deteil"),
+                                  MenuItem(title: "เปลี่ยนรหัสผ่าน", icon: Iconsax.lock_1, route: "/chang-password"),
                                   // MenuItem(
                                   //   title: "การแจ้งเตือน",
                                   //   icon: Icons.notifications,
@@ -229,22 +231,29 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                               MenuCard(
                                 title: "อื่นๆ",
                                 items: [
-                                  MenuItem(title: "ช่วยเหลือ", icon: Icons.person, route: "/profile"),
-                                  MenuItem(title: "ลบบัญชีผู้ใช้", icon: Icons.person, route: "/delete-account"),
+                                  MenuItem(title: "ช่วยเหลือ", icon: Iconsax.headphone, route: "/faq"),
+                                  MenuItem(title: "นโยบายความเป็นส่วนตัว", icon: Iconsax.security_user, route: "/policy"),
+                                  MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account"),
                                 ],
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: _logout,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFD9D9D9),
+                                  backgroundColor: Colors.transparent,
                                   fixedSize: const Size(350, 40),
+                                  elevation: 0,
                                 ),
-                                child: Text(
-                                  'ออกจากระบบ',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                        color: Colors.black,
-                                      ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Iconsax.logout_1, color: AppColors.danger),
+                                    Gap(16),
+                                    Text(
+                                      'ออกจากระบบ',
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.danger, fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

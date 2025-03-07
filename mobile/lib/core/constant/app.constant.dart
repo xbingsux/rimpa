@@ -44,6 +44,9 @@ class AppColors {
 
   /// สีแดง danger #DC3545
   static const Color danger = Color(0xFFDC3545);
+
+  /// สีเทาอ่อน #1E1E1E
+  static const Color gray = Color(0xFF1E1E1E);
 }
 
 class AppTextColors {

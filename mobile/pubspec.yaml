@@ -61,6 +61,7 @@ flutter:
     - assets/icon/iconsendemail/
     - assets/icon/login/
     - assets/icon/noti/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
