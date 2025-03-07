@@ -9,8 +9,12 @@ class RegisterController extends GetxController {
   final UserModel user = UserModel();
   final ProfileModel profile = ProfileModel();
   Dio dio = Dio();
+  final RxBool obscurePass1 = true.obs;
+  final RxBool obscurePass2 = true.obs;
+  final RxString confirmpass = ''.obs;
 
 void register() async {
+
   if (user.email.isNotEmpty &&
       user.password.isNotEmpty &&
       profile.profileName.isNotEmpty &&

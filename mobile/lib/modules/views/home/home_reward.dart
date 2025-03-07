@@ -41,11 +41,11 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
         _currentPage = 0;
       }
 
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
+      // _pageController.animateToPage(
+      //   _currentPage,
+      //   duration: const Duration(milliseconds: 300),
+      //   curve: Curves.easeIn,
+      // );
     });
   }
 

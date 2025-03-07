@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import '../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/forgotpassword/forgotpassword.controller.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -36,17 +34,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     height: mediaHeight * 0.331,
                     color: AppColors.background_main,
                     child: Center(
-                      child: SizedBox(
-                        width: 300,
-                        height: 175,
-                        child: Center(
-                          child: AppImageComponent(
-                            imageType: AppImageType.assets,
-                            imageAddress: 'assets/logoapp/logoiconic.png',
-                            fit: BoxFit.contain,
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
+                      child: Center(
+                        child: Image.asset('assets/logoapp/logoiconic.png', width: 217, height: 132,),
                       ),
                     ),
                   ),
@@ -97,17 +86,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                                         fontSize: AppTextSize.md),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.secondary, width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.primary, width: 1)),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
-                                            AppRadius.rounded),
+                                            20),
                                         borderSide: const BorderSide(
                                             color: AppColors.background_main,
                                             width: 1))),
@@ -127,7 +116,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
                                       gradient: AppGradiant.gradientX_1,
-                                      borderRadius: BorderRadius.circular(AppRadius.rounded),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Center(
                                       child: forgotPasswordController.isLoading.value
