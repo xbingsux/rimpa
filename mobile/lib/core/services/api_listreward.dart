@@ -5,7 +5,7 @@ import '../../modules/models/listreward.model.dart';
 
 class ApiListReward {
   static Future<List<ListReward>?> fetchRewards() async {
-    final response = await http.post(
+    final response = await http.get(
         Uri.parse('${AppApi.urlApi}/reward/list-reward')); // Use AppApi.urlApi
 
     if (response.statusCode == 200) {

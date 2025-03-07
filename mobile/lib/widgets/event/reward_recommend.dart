@@ -2,109 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
-import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
+import 'package:rimpa/modules/controllers/listreward/listreward.controller.dart';
+import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
+
 import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 
 class RewardRecommend extends StatelessWidget {
   RewardRecommend({super.key});
-  final listEventController = Get.put(ListEventController());
+  final listRewardController = Get.put(ListRewardController());
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "รางวัลยอดนิยม",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(HomeEventAllcard());
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        "ดูทั้งหมด",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "รางวัลยอดนิยม",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(HomeEventAllcard());
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      "ดูทั้งหมด",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
                       ),
-                      Text(
-                        " >",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
+                    ),
+                    Text(
+                      " >",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Gap(8),
-          Container(
-            width: double.infinity,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Gap(16),
-                  ...listEventController.events.map((event) {
-                    return GestureDetector(
+        ),
+        Gap(8),
+        Container(
+          width: double.infinity,
+          child: Obx(() {
+            if (listRewardController.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Gap(16),
+                    ...listRewardController.rewards.map((reward) {
+                      return GestureDetector(
                         onTap: () {
-                          Get.to(() => HomeDetailPage(event: event));
+                          print("Going to reward: ${reward.rewardName}");
+                          Get.to(() => HomeDetailReward(reward: reward));
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: EventCard(
-                            title: event.title,
-                            imageUrl: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                            onTap: () {},
+                            title: reward.rewardName,
+                            imageUrl:
+                                '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
+                            onTap: () =>
+                                Get.to(() => HomeDetailReward(reward: reward)),
                           ),
-                        )
-                        // child: Container(
-                        //   width: 150,
-                        //   margin: EdgeInsets.only(right: 8),
-                        //   child: AppCardComponent(
-                        //     child: Column(
-                        //       children: [
-                        //         AppImageComponent(
-                        //           imageType: AppImageType.network,
-                        //           imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                        //         ),
-                        //         Gap(8),
-                        //         Padding(
-                        //           padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        //           child: Text(
-                        //             event.title,
-                        //             style: TextStyle(fontSize: 12),
-                        //             textAlign: TextAlign.center,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        );
-                  }).toList(),
-                  Gap(16),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+                        ),
+                      );
+                    }).toList(),
+                    Gap(16),
+                  ],
+                ),
+              );
+            }
+          }),
+        ),
+      ],
     );
   }
 }

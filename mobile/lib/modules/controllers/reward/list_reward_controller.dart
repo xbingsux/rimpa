@@ -62,11 +62,12 @@ class RewardController extends GetxController {
   }
 
 Future<void> redeemReward(
-    String idProfile, String idReward, Decimal cost) async {  // เอา points ออกจากพารามิเตอร์
+    String idProfile, String idReward, Decimal cost) async {
   if (isLoading.value) return;
   isLoading.value = true;
 
   try {
+    print("Calling redeemReward with idProfile: $idProfile, idReward: $idReward, cost: $cost");
     int profileId = int.parse(idProfile);
     int rewardId = int.parse(idReward);
 
@@ -79,10 +80,10 @@ Future<void> redeemReward(
     );
 
     if (response.statusCode == 200 && response.data['status'] == 'success') {
+      print("Redeem success, reward: ${response.data['reward']}");
       rewardDetail.value = response.data['reward'];
       errorMessage.value = "";
 
-      // แสดง Dialog พร้อมส่งค่า cost
       showDialog(
         context: Get.context!,
         builder: (BuildContext context) {
@@ -95,17 +96,21 @@ Future<void> redeemReward(
         Get.back(); // ปิด Dialog หลังจากเสร็จสิ้น
       });
     } else if (response.data['message'] == 'You have already redeemed this reward!') {
+      print("Reward already redeemed");
       errorMessage.value = "คุณเคยแลกรางวัลนี้ไปแล้ว";
       rewardDetail.value['isRedeemed'] = true;
     } else {
+      print("Error redeeming reward: ${response.data['message']}");
       errorMessage.value = "ไม่สามารถ redeem รางวัลได้";
     }
   } catch (e) {
+    print("Error in redeeming reward: $e");
     errorMessage.value = "เกิดข้อผิดพลาดในการ redeem รางวัล";
   } finally {
     isLoading.value = false;
   }
 }
+
 
 
 }

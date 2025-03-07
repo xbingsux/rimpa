@@ -16,7 +16,7 @@ class BannerEventController extends GetxController {
   Future<void> fetchBanners() async {
     isLoading.value = true;
     try {
-      var response = await dio.post(apiUrlsController.listsbanners.value);
+      var response = await dio.get(apiUrlsController.listsbanners.value);
       if (response.statusCode == 200 && response.data['status'] == "success") {
         banners.value = response.data['banner'];
       } else {

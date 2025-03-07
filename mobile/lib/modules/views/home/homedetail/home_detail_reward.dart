@@ -24,7 +24,7 @@ class HomeDetailReward extends StatelessWidget {
   Widget build(BuildContext context) {
     // ย้าย rewardcost มาไว้ใน build() แทน
 
-    String? idProfile = profileController.profileData['id']?.toString();
+    String? idProfile = profileController.profileData['user_id']?.toString();
     var rewardcost = controller.rewardDetail.value;
     rewardcost["cost"] = reward.cost; // เพิ่มค่า cost ลงใน rewardcost
     // ดึงข้อมูลรางวัล
@@ -33,7 +33,8 @@ class HomeDetailReward extends StatelessWidget {
     String startDate = _formatDate(reward.startDate);
     String endDate = _formatDate(reward.endDate);
     String imageUrl = '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}';
-
+    print(rewardcost);
+    print(idProfile);
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -327,14 +328,15 @@ class HomeDetailReward extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      // ตรวจสอบค่า idProfile และ cost ก่อนเรียกใช้งาน
                       if (idProfile != null && reward.cost != null) {
                         Decimal cost =
                             Decimal.tryParse(reward.cost) ?? Decimal.zero;
+                        print(
+                            "Redeeming reward with idProfile: $idProfile, reward.id: ${reward.id}, cost: $cost");
                         rewardController.redeemReward(
                             idProfile, reward.id.toString(), cost);
                       } else {
-                        print("Error: idProfile หรือ cost เป็น null");
+                        print("Invalid idProfile or cost");
                       }
                     },
                     child: Container(

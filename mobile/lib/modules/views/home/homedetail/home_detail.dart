@@ -21,9 +21,10 @@ class HomeDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  List<String> paths = event.subEvents
-    .expand((subEvent) => subEvent.img.map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/")))
-    .toList();
+    List<String> paths = event.subEvents
+        .expand((subEvent) => subEvent.img
+            .map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/")))
+        .toList();
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
     String id_event = event.subEvents[0].id.toString();
@@ -31,11 +32,10 @@ class HomeDetailPage extends StatelessWidget {
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
     String endDate = _formatDate(event.endDate); // Update this line
-
     String imageUrl =
         '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
-        print(imageUrl);
-    String mapUrl = event.subEvents[0].map;
+    print(imageUrl);
+    String mapUrl = event.subEvents[0].map.trim(); // ตัดช่องว่างออก
     // ดึงค่าพอยท์จาก subEvents (ตัวแรกในกรณีนี้)
     // ใช้ RxString สำหรับค่าพอยท์
     RxDouble point =
@@ -151,33 +151,42 @@ class HomeDetailPage extends StatelessWidget {
                                   Expanded(
                                     flex: 1,
                                     child: Center(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (mapUrl.isNotEmpty) {
-                                            _launchURL(
-                                                mapUrl); // Update this line
-                                          }
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(
-                                              AppSpacing.sm),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 0.5,
-                                              color: Colors.transparent,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                                AppRadius.rounded),
-                                            color: Colors.blue,
+                                        child: GestureDetector(
+                                      onTap: () {
+                                        if (mapUrl.isNotEmpty) {
+                                          _launchURL(context, mapUrl);
+                                        } else {
+                                          // แจ้งเตือนว่าหมุดแผนที่ไม่มี
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        padding:
+                                            const EdgeInsets.all(AppSpacing.sm),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 0.5,
+                                            color: Colors.transparent,
                                           ),
-                                          child: const Icon(
-                                            Icons.location_on_outlined,
-                                            size: AppTextSize.xxl,
-                                            color: Colors.white,
-                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                              AppRadius.rounded),
+                                          color: mapUrl.isNotEmpty
+                                              ? Colors.blue
+                                              : Colors
+                                                  .grey, // เปลี่ยนสีปุ่มถ้าไม่มีลิงก์
+                                        ),
+                                        child: const Icon(
+                                          Icons.location_on_outlined,
+                                          size: AppTextSize.xxl,
+                                          color: Colors.white,
                                         ),
                                       ),
-                                    ),
+                                    )),
                                   )
                                 ],
                               ),
@@ -226,244 +235,27 @@ class HomeDetailPage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: AppSpacing.md,
-                    left: AppSpacing.md,
-                    right: AppRadius.md,
-                    bottom: AppSpacing.lg,
-                  ),
-                  child: GestureDetector(
-                    onTap: () => print('action'),
-                    child: Container(
-                      width: double.infinity,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: AppRadius.xs),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppRadius.rounded),
-                        gradient: AppGradiant.gradientX_1,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'แลกรับสิทธิ์',
-                          style: TextStyle(
-                            fontSize: AppTextSize.lg,
-                            color: AppTextColors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Stack(
-                      children: [
-                        AppCarousel(
-                          imageSrc: AppImageType.network,
-                          images: [imageUrl],
-                          ratio: 4 / 3,
-                          indicatorBottomSpace: 0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.back();
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(AppSpacing.xs),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(
-                                          AppRadius.rounded),
-                                      color: Colors.transparent),
-                                  child: const Icon(
-                                    Icons.arrow_back,
-                                    size: AppTextSize.xl,
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          bottom: -1,
-                          left: 0,
-                          right: 0,
-                          child: AspectRatio(
-                            aspectRatio: 100 / 5,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(AppRadius.xl),
-                                  topRight: Radius.circular(AppRadius.xl),
-                                ),
-                                border: Border.all(
-                                    width: 0, color: Colors.transparent),
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0, color: Colors.transparent),
-                        color: AppColors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      title,
-                                      style: const TextStyle(
-                                          fontSize: AppTextSize.xxl,
-                                          color: AppTextColors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: AppSpacing.xs),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.calendar_month_outlined,
-                                          size: AppTextSize.sm,
-                                          color: AppColors.accent,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          '$startDate - $endDate',
-                                          style: const TextStyle(
-                                              fontSize: AppTextSize.xs,
-                                              color: AppTextColors.secondary),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (mapUrl.isNotEmpty) {
-                                      _launchURL(mapUrl); // Update this line
-                                    }
-                                  },
-                                  child: Container(
-                                    padding:
-                                        const EdgeInsets.all(AppSpacing.sm),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 0.5,
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius: BorderRadius.circular(
-                                          AppRadius.rounded),
-                                      color: Colors.blue,
-                                    ),
-                                    child: const Icon(
-                                      Icons.location_on_outlined,
-                                      size: AppTextSize.xxl,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            constraints: BoxConstraints(
-                              minHeight:
-                                  MediaQuery.of(context).size.height * 0.3,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.md),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'รายละเอียดกิจกรรม ',
-                                  style: TextStyle(
-                                      fontSize: AppTextSize.sm,
-                                      color: AppTextColors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(AppSpacing.xs),
-                                  child: Text(
-                                    description,
-                                    style: const TextStyle(
-                                      fontSize: AppTextSize.sm,
-                                      color: AppTextColors.secondary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 2,
-                  color: AppColors.secondary,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
                       top: AppSpacing.md,
                       left: AppSpacing.md,
                       right: AppRadius.md,
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      // รับค่า id_event จาก event.subEvents[0].id
-                      int subEventId = event.subEvents[0].id;
-
-                      // เรียกใช้งานฟังก์ชัน checkIn พร้อมส่ง sub_event_id และ context
-                      evencontroller.checkIn(subEventId, context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialog(context: context);
+                        },
+                      );
                     },
                     child: Container(
                       width: double.infinity,
                       padding:
                           const EdgeInsets.symmetric(vertical: AppRadius.xs),
                       decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppRadius.rounded),
-                          color: const Color(
-                              0xFFEBF5FD)), // Corrected color definition
+                        borderRadius: BorderRadius.circular(AppRadius.rounded),
+                        color: const Color(0xFFEBF5FD), // แก้ไขสีให้ถูกต้อง
+                      ),
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -471,15 +263,16 @@ class HomeDetailPage extends StatelessWidget {
                             Container(
                               width: 38,
                               height: 38,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 gradient:
-                                    AppGradiant.gradientX_1, // Applied gradient
+                                    AppGradiant.gradientX_1, // ใช้ Gradient
                                 shape: BoxShape.circle,
                               ),
                               child:
                                   const Icon(Icons.star, color: Colors.white),
                             ),
-                            const SizedBox(width: 8), // Added missing comma
+                            const SizedBox(
+                                width: 8), // เพิ่ม const เพื่อลด warning
                             Obx(() {
                               return Text(
                                 '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
@@ -490,14 +283,12 @@ class HomeDetailPage extends StatelessWidget {
                               );
                             }),
                             Opacity(
-                              // space
-                              opacity: 0,
+                              opacity: 0, // ทำให้เป็นช่องว่าง
                               child: Container(
                                 width: 38,
                                 height: 38,
-                                decoration: const BoxDecoration(
-                                  gradient: AppGradiant
-                                      .gradientX_1, // Applied gradient
+                                decoration: BoxDecoration(
+                                  gradient: AppGradiant.gradientX_1,
                                   shape: BoxShape.circle,
                                 ),
                                 child:
@@ -509,26 +300,34 @@ class HomeDetailPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _launchURL(String url) async {
-    Uri uri = Uri.parse(url); // Parse the URL
-    Uri googleMapsUri =
-        Uri.parse('google.navigation:q=$url'); // Google Maps URL scheme
+  void _launchURL(BuildContext context, String url) async {
+    if (url.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
+      );
+      return;
+    }
+
+    Uri uri = Uri.parse(url);
+    Uri googleMapsUri = Uri.parse('google.navigation:q=$url');
 
     if (await canLaunchUrl(googleMapsUri)) {
       await launchUrl(googleMapsUri);
     } else if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ไม่สามารถเปิดลิงก์แผนที่ได้')),
+      );
     }
   }
 

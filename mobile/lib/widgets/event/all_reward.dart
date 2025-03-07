@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
-import 'package:rimpa/modules/models/listevent.model.dart';
+import 'package:rimpa/modules/controllers/listreward/listreward.controller.dart';
+import 'package:rimpa/modules/models/listreward.model.dart'; // ใช้ ListReward แทน ListEvent
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
-// import 'package:rimpa/widgets/button/sort_button.dart';
+import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
@@ -14,7 +14,6 @@ class AllReward extends StatefulWidget {
   final bool isScroll;
   final double? screenHigh;
   const AllReward({super.key, this.showTitle = true, this.isScroll = false, this.screenHigh});
-  // Add this line
 
   @override
   State<AllReward> createState() => _AllEventsState();
@@ -22,8 +21,9 @@ class AllReward extends StatefulWidget {
 
 class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  final listEventController = Get.put(ListEventController());
+  final listRewardController = Get.put(ListRewardController());
   bool isDesc = true;
+  
   @override
   void initState() {
     super.initState();
@@ -39,15 +39,19 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (listEventController.isLoading.value) {
+      if (listRewardController.isLoading.value) {
         return loadingEvent(context: context);
       } else {
-        List<ListEvent> sortedEvents = listEventController.events.toList();
+        // รับข้อมูลรางวัลจาก listRewardController
+        List<ListReward> sortedRewards = listRewardController.rewards.toList();
+        
+        // การเรียงลำดับรางวัล
         if (isDesc) {
-          sortedEvents.sort((a, b) => b.id.compareTo(a.id));
+          sortedRewards.sort((a, b) => b.id.compareTo(a.id));
         } else {
-          sortedEvents.sort((a, b) => a.id.compareTo(b.id));
+          sortedRewards.sort((a, b) => a.id.compareTo(b.id));
         }
+
         return Column(
           children: [
             Row(
@@ -55,18 +59,10 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
                 if (widget.showTitle)
                   Expanded(
                     child: Text(
-                      "กิจกรรมทั้งหมด",
+                      "รีวอร์ดทั้งหมด",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                // SortButton(
-                //   isDesc: isDesc,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       isDesc = value;
-                //     });
-                //   },
-                // ),
               ],
             ),
             SizedBox(height: 8),
@@ -74,17 +70,17 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
               SizedBox(
                 height: widget.screenHigh,
                 child: SingleChildScrollView(
-                  child: dataList(sortedEvents),
+                  child: dataList(sortedRewards),
                 ),
               ),
-            if (!(widget.isScroll)) dataList(sortedEvents),
+            if (!(widget.isScroll)) dataList(sortedRewards),
           ],
         );
       }
     });
   }
 
-  Widget dataList(sortedEvents) {
+  Widget dataList(sortedRewards) {
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -95,14 +91,14 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
         childAspectRatio: 2 / 2.5,
       ),
       padding: EdgeInsets.zero,
-      itemCount: sortedEvents.length,
+      itemCount: sortedRewards.length,
       itemBuilder: (context, index) {
-        var event = sortedEvents[index];
+        var reward = sortedRewards[index];
         return EventCard(
-          title: event.title,
-          imageUrl: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+          title: reward.rewardName, // ใช้ชื่อรางวัล
+          imageUrl: '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // ใช้ image path ของรางวัล
           onTap: () {
-            Get.to(() => HomeDetailPage(event: event));
+            Get.to(() => HomeDetailReward(reward: reward)); // ไปที่หน้ารายละเอียดของรางวัล
           },
           maxLines: 2,
         );
