@@ -53,7 +53,6 @@ class LoginController extends GetxController {
         final profileController = Get.find<ProfileController>();
         await profileController.fetchProfile();
 
-        Get.snackbar('สำเร็จ', 'เข้าสู่ระบบเรียบร้อย');
         Get.offNamed('/home');
       } else {
         Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');

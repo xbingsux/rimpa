@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:rimpa/components/dropdown/app-dropdown-v2.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/register.controller.dart';
 
 class CreateAccountView extends StatelessWidget {
@@ -26,6 +25,7 @@ class CreateAccountView extends StatelessWidget {
                     fontSize: AppTextSize.xl, fontWeight: FontWeight.bold),
               )),
           leading: GestureDetector(
+            onTap: () => Get.back(),
             child: Container(
               decoration: const BoxDecoration(),
               padding: const EdgeInsets.all(AppSpacing.sm),

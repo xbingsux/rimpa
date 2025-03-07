@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/modules/views/home/home.view.dart';
-import 'package:rimpa/modules/views/home/home_main.dart';
-import 'package:rimpa/modules/views/home/home_profile.dart';
 import '../../controllers/auth.controller.dart';
 import '../../../core/constant/app.constant.dart';
 
