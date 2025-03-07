@@ -5,7 +5,7 @@ import '../../modules/models/listevent.model.dart';
 
 class ApiListEvent {
   static Future<List<ListEvent>> fetchEvents() async {
-    final response = await http.post(
+    final response = await http.get(
         Uri.parse('${AppApi.urlApi}/event/list-event')); // Use AppApi.urlApi
 
     if (response.statusCode == 200) {
