@@ -53,7 +53,7 @@
             </div>
             <div class="justify-center">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
-                    {{sum_quantity(item)}}/{{item.stock}}
+                    {{sum_quantity(item)}} / {{item.stock== 0 ?'ไม่จำกัด':item.stock}}
                 </p>
             </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">

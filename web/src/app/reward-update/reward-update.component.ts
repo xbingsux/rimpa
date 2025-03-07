@@ -36,7 +36,7 @@ export class RewardUpdateComponent implements OnInit {
           this.data.cost = item.cost
           this.data.path = item.img
           let path = `${environment.API_URL}${item.img.replace('src', '')}`;
-          path = await this.api.checkImageExists(path) != 500 ? path : ''
+          path = await this.api.checkImageExists(path) != 500 && item.img.trim() != '' ? path : ''
           this.img_path = path;
         })
       }

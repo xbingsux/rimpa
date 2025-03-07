@@ -112,9 +112,15 @@ router.post("/checkIn", auth, async (req, res) => {
   } catch (error) {
     console.error(error);
     console.log("error");
-    if (error.message === 'You have already claimed the point.' || error.message === 'No information available or out of the event period') {
+    if (error.message === 'You have already claimed the point.' ||
+      error.message === 'No information available or out of the event period'
+    ) {
       return res
         .status(500)
+        .json({ status: "error", message: error.message });
+    } else if (error.message === 'The event has reached its limit.') {
+      return res
+        .status(400)
         .json({ status: "error", message: error.message });
     } else {
       return res

@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
     console.log(`${socket.id} joined room: ${room}`);
   });
 
-  socket.on(`room message ${process.env.SECRET_KEY}`, ({ room, message }) => {
+  socket.on(`room message`, ({ room, message }) => {
     console.log(`Message to room ${room}: ${message}`);
     io.to(room).emit("room message", { senderId: socket.id, message });
   });

@@ -1,21 +1,34 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { ApiService } from '../api/api.service';
+import { DatePickerComponent } from "../date-picker/date-picker.component";
 
 @Component({
   selector: 'app-event-update',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor],
+  imports: [FormsModule, NgIf, NgFor, DatePickerComponent],
   templateUrl: './event-update.component.html',
   styleUrl: './event-update.component.scss'
 })
 export class EventUpdateComponent implements OnInit {
 
+  setStartDate(newDate: Date) {
+    this.data.startDate = newDate;
+    // console.log('Updated start date:', this.startDate);
+  }
+
+  setEndDate(newDate: Date) {
+    this.data.startDate = newDate;
+    // console.log('Updated start date:', this.startDate);
+  }
+
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public api: ApiService) { }
+  loading = true;
+  tz = environment.timeZone;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
@@ -33,8 +46,9 @@ export class EventUpdateComponent implements OnInit {
           this.data.description = event.description;
           this.data.max_attendees = event.max_attendees;
           this.data.map = event.SubEvent[0].map
-          this.data.startDate = new Date(event.startDate).toISOString().slice(0, 16)
-          this.data.endDate = new Date(event.endDate).toISOString().slice(0, 16)
+
+          this.data.startDate = new Date(event.startDate)
+          this.data.endDate = new Date(event.endDate)
           this.data.point = event.SubEvent[0].point;
 
           event.SubEvent[0].img.filter(async (item: any) => {
@@ -45,7 +59,11 @@ export class EventUpdateComponent implements OnInit {
             this.data.list_img.push(new Img({ id: item.id, path: item.path.replace('src', ''), realpath: path, name }))
             this.list_file = this.data.list_img;
           })
+
+          this.loading = false
         })
+      } else {
+        this.loading = false
       }
     })
   }
@@ -176,8 +194,8 @@ class AddEvent {
   max_attendees: number = 0
   map = ''
   releaseDate = null
-  startDate = new Date(new Date().setHours(7, 0, 0, 0)).toISOString().slice(0, 16)
-  endDate = new Date(new Date().setHours(31, 0, 0, 0)).toISOString().slice(0, 16)
+  startDate = new Date(new Date().setHours(0, 0, 0, 0))
+  endDate = new Date(new Date().setHours(24, 0, 0, 0))
   point: number = 0
   list_img: Img[] = []
 }
