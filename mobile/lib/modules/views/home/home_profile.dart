@@ -110,7 +110,6 @@ class _HomeProfilePageState extends State<HomeProfilePage>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-
   }
 
   @override
@@ -306,58 +305,59 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                 ),
               ),
               Positioned(
-                top: 10,
-                left: MediaQuery.of(context).size.width / 2 - 50,
-                child: Obx(() {
-  // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-  String profileImage = profileController.profileData["profile_img"] ?? '';
+                  top: 10,
+                  left: MediaQuery.of(context).size.width / 2 - 50,
+                  child: Obx(() {
+                    // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
+                    String profileImage =
+                        profileController.profileData["profile_img"] ?? '';
 
-  // สร้าง URL ของภาพจาก path ที่ต้องการ
-  String imageUrl = profileImage.isEmpty
-      ? 'assets/images/default_profile.jpg'
-      : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+                    // สร้าง URL ของภาพจาก path ที่ต้องการ
+                    String imageUrl = profileImage.isEmpty
+                        ? 'assets/images/default_profile.jpg'
+                        : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
-  return Stack(
-    children: [
-      // รูปโปรไฟล์
-      Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: profileImage.isEmpty
-              ? const Color.fromARGB(255, 218, 165, 165)
-              : Colors.transparent,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-        child: AppImageComponent(
-          imageType: AppImageType.network, // ระบุประเภทเป็น Network
-          imageAddress: imageUrl, // URL ของภาพโปรไฟล์
-          aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
-          borderRadius: const BorderRadius.all(Radius.circular(50)), // รูปทรงวงกลม
-        ),
-      ),
-      // ไอคอนเปลี่ยนรูป
-      Positioned(
-        bottom: 0,
-        right: 0,
-        child: IconButton(
-          icon: const Icon(Icons.camera_alt),
-          onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
-          color: Colors.white,
-        ),
-      ),
-    ],
-  );
-})
-
-              ),
+                    return Stack(
+                      children: [
+                        // รูปโปรไฟล์
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: profileImage.isEmpty
+                                ? const Color.fromARGB(255, 218, 165, 165)
+                                : Colors.transparent,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: AppImageComponent(
+                            imageType:
+                                AppImageType.network, // ระบุประเภทเป็น Network
+                            imageAddress: imageUrl, // URL ของภาพโปรไฟล์
+                            aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(50)), // รูปทรงวงกลม
+                          ),
+                        ),
+                        // ไอคอนเปลี่ยนรูป
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.camera_alt),
+                            onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    );
+                  })),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/widgets/loginWidget/custom_loginpage.dart';
 import '../../controllers/register.controller.dart';
+import '../../../core/constant/app.constant.dart';
 
 class CreateAccountView extends StatelessWidget {
   final registerController = Get.put(RegisterController());
@@ -9,6 +10,20 @@ class CreateAccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.blue),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text(
+          "สร้างบัญชีผู้ใช้",
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: false,
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -21,36 +36,26 @@ class CreateAccountView extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // ปุ่มย้อนกลับ
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 16.0),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back, size: 20),
-                              onPressed: () => Get.back(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      // หัวข้อ "ยืนยันบัญชี"
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'ยืนยันสร้างบัญชี',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ),
                       const SizedBox(height: 16),
-
                       // ฟอร์มกรอกข้อมูล
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Column(
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "ชื่อผู้ใช้",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'ชื่อผู้ใช้',
                               obscureText: false,
@@ -58,6 +63,20 @@ class CreateAccountView extends StatelessWidget {
                                   .profile.profileName.value = value,
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "ชื่อ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'ชื่อ',
                               obscureText: false,
@@ -65,6 +84,20 @@ class CreateAccountView extends StatelessWidget {
                                   .profile.firstName.value = value,
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "นามสกุล",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'นามสกุล',
                               obscureText: false,
@@ -72,6 +105,20 @@ class CreateAccountView extends StatelessWidget {
                                   .profile.lastName.value = value,
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "อีเมล",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'อีเมล',
                               obscureText: false,
@@ -79,12 +126,40 @@ class CreateAccountView extends StatelessWidget {
                                   registerController.user.email.value = value,
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "เบอร์โทรศัพท์",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomPhoneRegisTextField(
                               onChanged: (value) {
                                 registerController.profile.phone.value = value;
                               },
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "วันเกิด",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             Obx(() => CustomDatePicker(
                                   labelText: 'วันเกิด',
                                   selectedDate: registerController.profile
@@ -95,6 +170,20 @@ class CreateAccountView extends StatelessWidget {
                                   },
                                 )),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "เพศ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             Obx(() {
                               return CustomDropdown(
                                 labelText: 'เพศ',
@@ -112,6 +201,20 @@ class CreateAccountView extends StatelessWidget {
                               );
                             }),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "รหัสผ่าน",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'รหัสผ่าน',
                               obscureText: true,
@@ -119,6 +222,20 @@ class CreateAccountView extends StatelessWidget {
                                   .user.password.value = value,
                             ),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0), // เว้นระยะจากซ้าย 16
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "ยืนยันรหัสผ่าน",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             CustomTextField(
                               labelText: 'ยืนยันรหัสผ่าน',
                               obscureText: true,

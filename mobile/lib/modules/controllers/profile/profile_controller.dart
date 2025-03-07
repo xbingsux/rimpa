@@ -129,6 +129,7 @@ class ProfileController extends GetxController {
       print("Error deleting user: $e");
     } finally {
       isLoading.value = false; // ปิดสถานะโหลดเมื่อเสร็จสิ้น
+      fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
     }
   }
 
@@ -210,7 +211,15 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         // Show dialog after successful update
-        uploadStatus.value = 'อัปเดตข้อมูลสำเร็จ';
+        
+      } else {
+        uploadStatus.value = 'อัปเดตข้อมูลล้มเหลว: ${response.statusCode}';
+      }
+    } catch (e) {
+      uploadStatus.value = 'เกิดข้อผิดพลาดในการอัปเดตข้อมูล';
+      print("Error updating profile: $e");
+    } finally {
+      uploadStatus.value = 'อัปเดตข้อมูลสำเร็จ';
         // Reset loading status for each field after the update
         profileNameLoading.value = false;
         firstNameLoading.value = false;
@@ -261,14 +270,8 @@ class ProfileController extends GetxController {
         phoneLoading.value = true;
         birthDateLoading.value = true;
         genderLoading.value = true;
-      } else {
-        uploadStatus.value = 'อัปเดตข้อมูลล้มเหลว: ${response.statusCode}';
-      }
-    } catch (e) {
-      uploadStatus.value = 'เกิดข้อผิดพลาดในการอัปเดตข้อมูล';
-      print("Error updating profile: $e");
-    } finally {
       isLoading.value = false;
+      fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
     }
   }
 
@@ -306,8 +309,29 @@ class ProfileController extends GetxController {
       print("Error uploading image: $e");
       uploadStatus.value = 'Upload failed';
     } finally {
-      isLoading.value = false;
-    }
+  isLoading.value = false;
+  fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
+
+  // ใช้ Get.snackbar แสดงข้อความ
+  Get.snackbar(
+    "อัปเดตข้อมูลสำเร็จ", // ข้อความหัวข้อ
+    "อัปเดตข้อมูลโปรไฟล์สำเร็จ", // ข้อความเพิ่มเติม
+    snackPosition: SnackPosition.BOTTOM, // แสดงที่ด้านล่างของหน้าจอ
+    backgroundColor: Colors.white, // พื้นหลังของ snackbar
+    colorText: Colors.blue, // สีของข้อความ
+    duration: Duration(seconds: 2), // แสดงนาน 2 วินาที
+    borderRadius: 12, // มุมมน
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10), // ระยะห่างจากขอบ
+    boxShadows: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        blurRadius: 10,
+        spreadRadius: 2,
+      ),
+    ],
+  );
+}
+
   }
 
   @override

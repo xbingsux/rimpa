@@ -68,15 +68,14 @@ class AuthService extends GetxService {
     return false;
   }
 
-  
-Future<void> clearUserData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('email');
-  await prefs.remove('password');
-  await prefs.remove('rememberPassword');
-  await prefs.remove('savedEmails');
-  print("✅ ลบข้อมูลผู้ใช้เรียบร้อยแล้ว");
-}
+  Future<void> clearUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('email');
+    await prefs.remove('password');
+    await prefs.remove('rememberPassword');
+    await prefs.remove('savedEmails');
+    print("✅ ลบข้อมูลผู้ใช้เรียบร้อยแล้ว");
+  }
 
   Future<String> loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

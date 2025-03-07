@@ -165,7 +165,6 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                       //     );
                       //   }),
                       // ),
-
                       RewardRecommend(),
                       // EventFav(),
                       // EventRecommend(),

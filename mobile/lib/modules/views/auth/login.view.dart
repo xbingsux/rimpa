@@ -194,6 +194,10 @@ class _LoginViewState extends State<LoginView>
 
   @override
   Widget build(BuildContext context) {
+    emailController.value =
+        TextEditingController(text: authController.user.email.value);
+    passwordController.value =
+        TextEditingController(text: authController.user.password.value);
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -272,6 +276,7 @@ class _LoginViewState extends State<LoginView>
                                   fontWeight: FontWeight.bold,
                                   color: AppTextColors.accent2)),
                         ),
+                        // แก้ไขในส่วนของ email TextField
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md),
@@ -281,11 +286,10 @@ class _LoginViewState extends State<LoginView>
                             },
                             child: Obx(() {
                               return TextField(
-                                onChanged: (value) =>
-                                    authController.user.email.value = value,
-                                controller: TextEditingController(
-                                    text: authController
-                                        .user.email.value), // กำหนดค่าเริ่มต้น
+                                onChanged: (value) => authController.user.email
+                                    .value = value, // อัพเดตค่า email
+                                controller: emailController
+                                    .value, // ใช้ emailController ที่ได้ตั้งไว้
                                 style: const TextStyle(
                                   color: AppTextColors.secondary,
                                   fontSize: AppTextSize.md,
@@ -322,17 +326,18 @@ class _LoginViewState extends State<LoginView>
                             }),
                           ),
                         ),
+
+// แก้ไขในส่วนของ password TextField
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md),
                           child: Obx(() {
                             return TextField(
-                              onChanged: (value) =>
-                                  authController.user.password.value = value,
-                              controller: TextEditingController(
-                                  text: authController
-                                      .user.password.value), // กำหนดค่าเริ่มต้น
-                              obscureText: true,
+                              onChanged: (value) => authController.user.password
+                                  .value = value, // อัพเดตค่า password
+                              controller: passwordController
+                                  .value, // ใช้ passwordController ที่ได้ตั้งไว้
+                              obscureText: _obscureText,
                               style: const TextStyle(
                                   color: AppTextColors.secondary,
                                   fontSize: AppTextSize.md),
@@ -363,6 +368,7 @@ class _LoginViewState extends State<LoginView>
                             );
                           }),
                         ),
+
                         Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: AppSpacing.md),
@@ -373,20 +379,26 @@ class _LoginViewState extends State<LoginView>
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Checkbox(
-                                      value: _rememberPassword,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          _rememberPassword = value ?? false;
-                                        });
-                                      },
-                                      activeColor:
-                                          AppColors.accent, // สีตอนถูกเลือก
-                                      checkColor: AppColors
-                                          .white, // สีของเครื่องหมายถูก
-                                      side: const BorderSide(
-                                          width: 2, color: AppColors.secondary),
-                                    ),
+                                    Obx(() => Checkbox(
+                                          value: authController
+                                              .rememberPassword.value,
+                                          onChanged: (bool? value) async {
+                                            authController.rememberPassword
+                                                .value = value ?? false;
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            await prefs.setBool(
+                                                'rememberPassword',
+                                                authController
+                                                    .rememberPassword.value);
+                                          },
+                                          activeColor: AppColors.accent,
+                                          checkColor: AppColors.white,
+                                          side: const BorderSide(
+                                              width: 2,
+                                              color: AppColors.secondary),
+                                        )),
                                     const SizedBox(
                                       width: 2,
                                     ),
@@ -527,7 +539,7 @@ class _LoginViewState extends State<LoginView>
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => Get.toNamed('/select-create'),
+                                  onTap: () => Get.toNamed('/create-account'),
                                   child: Stack(
                                     children: [
                                       const Text(

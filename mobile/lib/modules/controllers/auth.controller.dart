@@ -8,6 +8,21 @@ import '../controllers/profile/profile_controller.dart';
 class LoginController extends GetxController {
   final UserModel user = UserModel(); // ใช้ UserModel แทนการสร้างตัวแปรเอง
   Dio dio = Dio();
+  RxBool rememberPassword = false.obs; // ใช้ RxBool เพื่ออัปเดต UI อัตโนมัติ
+   @override
+  void onInit() {
+    super.onInit();
+    loadRememberPassword(); // โหลดค่าจาก SharedPreferences
+  }
+    Future<void> loadRememberPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    rememberPassword.value = prefs.getBool('rememberPassword') ?? false;
+
+    if (rememberPassword.value) {
+      user.email.value = prefs.getString('email') ?? '';
+      user.password.value = prefs.getString('password') ?? '';
+    }
+  }
 Future<void> saveEmailAndPassword(
   String email, String password, bool remember) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -16,19 +31,12 @@ Future<void> saveEmailAndPassword(
   int accountIndex = prefs.getInt('accountIndex') ?? 0;
 
   // สร้าง Key สำหรับการเก็บข้อมูล (รวมทั้งอีเมลและรหัสผ่าน)
-  await prefs.setBool('rememberPassword$accountIndex', remember);
+  await prefs.setBool('rememberPassword$accountIndex', rememberPassword.value);
   await prefs.setString('email$accountIndex', email);
   await prefs.setString('password$accountIndex', password);
 
   // เพิ่ม accountIndex เพื่อใช้กับบัญชีถัดไป
   await prefs.setInt('accountIndex', accountIndex + 1);
-
-  // ✅ เพิ่ม Log เช็คค่า
-  print("✅ บันทึกข้อมูลสำเร็จ:");
-  print("📌 Remember Password: $remember");
-  print("📌 Email: $email");
-  print("📌 Password: $password");
-
   await prefs.reload(); // ✅ โหลดใหม่หลังบันทึก
 }
 

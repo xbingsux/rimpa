@@ -22,11 +22,13 @@ class ResetPasswordController extends GetxController {
   final Dio dio = Dio();
   final apiUrlsController = Get.find<ApiUrls>();
 
+  // ฟังก์ชันสำหรับรีเซ็ตรหัสผ่าน
   Future<void> resetPassword() async {
     isLoading.value = true;
     String? token = await _authMiddleware.getToken();
 
     try {
+      // ตรวจสอบข้อมูลรหัสผ่าน
       if (newPassword.value.isEmpty || confirmPassword.value.isEmpty) {
         showError("กรุณากรอกรหัสผ่านใหม่และยืนยันรหัสผ่าน");
         return;
@@ -47,9 +49,10 @@ class ResetPasswordController extends GetxController {
         return;
       }
 
-      var response = await dio.post(
+      // ส่งคำขอไปยัง backend
+      var response = await dio.put(
         apiUrlsController.resetPassword.value,
-        options: Options( // ✅ เพิ่ม Options() เพื่อใส่ headers
+        options: Options(
           headers: {
             "Authorization": "Bearer $token",
           },
@@ -60,13 +63,14 @@ class ResetPasswordController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
+      // ตรวจสอบผลลัพธ์จาก API
+      if (response.statusCode == 201) {
         var responseData = response.data;
         if (responseData['status'] == 'error') {
           showError(responseData['message']);
         } else {
           showSuccess("เปลี่ยนรหัสผ่านสำเร็จ");
-          clearFields(); // เพิ่มตรงนี้ให้เคลียร์ค่าที่กรอก
+          clearFields(); // เคลียร์ข้อมูลหลังจากการรีเซ็ตรหัสผ่านสำเร็จ
         }
       } else {
         showError("ไม่สามารถรีเซ็ตรหัสผ่านได้");
@@ -78,6 +82,7 @@ class ResetPasswordController extends GetxController {
     }
   }
 
+  // ฟังก์ชันสำหรับแสดงข้อความแสดงข้อผิดพลาด
   void showError(String msg) {
     message.value = msg;
     status.value = "error";
@@ -88,6 +93,7 @@ class ResetPasswordController extends GetxController {
     isLoading.value = false;
   }
 
+  // ฟังก์ชันสำหรับแสดงข้อความสำเร็จ
   void showSuccess(String msg) {
     message.value = msg;
     status.value = "success";
@@ -97,6 +103,7 @@ class ResetPasswordController extends GetxController {
         colorText: Colors.white);
   }
 
+  // ฟังก์ชันสำหรับเคลียร์ข้อมูลที่กรอก
   void clearFields() {
     oldPassword.value = '';
     newPassword.value = '';
