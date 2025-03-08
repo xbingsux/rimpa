@@ -13,7 +13,7 @@
                 (click)="submit()">
         </div>
     </div>
-    <div class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
+    <div *ngIf="!loading" class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
         <div class="h-[65px] text-[18px] px-4 grid items-center font-semibold bg-[#EBF5FD]">
             General Information
         </div>

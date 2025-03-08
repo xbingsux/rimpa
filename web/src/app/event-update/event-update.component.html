@@ -14,7 +14,7 @@
                 (click)="submit()">
         </div>
     </div>
-    <div class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
+    <div *ngIf="!loading" class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
         <div class="h-[65px] text-[18px] px-4 grid items-center font-semibold bg-[#EBF5FD]">
             General Information
         </div>
@@ -83,7 +83,7 @@
                 <div class="flex gap-4">
                     <div class="flex-1 flex flex-col gap-y-2">
                         <label for="start-date">Start Date</label>
-                        <app-date-picker *ngIf="!loading" [itemId]="'start-date'" [date]="this.data.startDate"
+                        <app-date-picker [itemId]="'start-date'" [date]="this.data.startDate"
                             (dateChange)="setStartDate($event)"></app-date-picker>
                         <!-- <input type="datetime-local" id="start-date" placeholder="20/01/2025"
                             [(ngModel)]="data.startDate"
@@ -92,7 +92,7 @@
                     </div>
                     <div class="flex-1 flex flex-col gap-y-2">
                         <label for="end-date">End Date</label>
-                        <app-date-picker *ngIf="!loading" [itemId]="'end-date'" [date]="this.data.endDate"
+                        <app-date-picker [itemId]="'end-date'" [date]="this.data.endDate"
                             (dateChange)="setEndDate($event)"></app-date-picker>
                         <!-- <input type="datetime-local" id="end-date" placeholder="20/01/2025" [(ngModel)]="data.endDate"
                             class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]"> -->

@@ -1,8 +1,8 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerDirective, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @Component({
@@ -13,6 +13,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
   styleUrl: './date-picker.component.scss'
 })
 export class DatePickerComponent implements OnInit {
+  @ViewChild('bsDatepicker', { static: false }) datepicker!: BsDatepickerDirective;
   @Input() itemId = 'date-picker'
   @Input() date = new Date()
   @Output() dateChange: EventEmitter<Date> = new EventEmitter<Date>();
@@ -25,6 +26,11 @@ export class DatePickerComponent implements OnInit {
   time_gap = ((this.tz_num + this.date.getTimezoneOffset()) / -60) * 60 * 60 * 1000
 
   showDate = false
+  bsConfig = {
+    isAnimated: true,
+    adaptivePosition: true,
+    showWeekNumbers: false
+  };
 
   updateDate() {
     this.dateChange.emit(this.date); // ส่งค่าออกไปยัง Parent Component
@@ -150,6 +156,8 @@ export class DatePickerComponent implements OnInit {
   key: string = ''
 
   selectText(id: string | HTMLElement): void {
+    console.log(this.date);
+
     let element = null
     if (typeof id == 'string') {
       // console.log(id);
@@ -249,5 +257,13 @@ export class DatePickerComponent implements OnInit {
       select.innerText = item.value
     }
     this.updateDate()
+  }
+
+  openDatepicker() {
+    this.datepicker.show(); // เปิด Datepicker
+  }
+
+  test() {
+    alert('s')
   }
 }
