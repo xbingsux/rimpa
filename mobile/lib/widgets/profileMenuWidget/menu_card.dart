@@ -48,7 +48,7 @@ class _MenuCardState extends State<MenuCard> {
         border: Border.all(color: AppColors.secondary, width: 1), // เพิ่มเส้นขอบสีดำขนาด 3
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 16.0, bottom: 16, left: 16, right: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

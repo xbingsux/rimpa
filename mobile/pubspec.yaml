@@ -27,6 +27,7 @@ dependencies:
   gap: ^3.0.0
   google_fonts: ^6.2.1
   form_field_validator: ^1.1.0
+  timeago: ^3.7.0
 
 
 flutter_launcher_icons:

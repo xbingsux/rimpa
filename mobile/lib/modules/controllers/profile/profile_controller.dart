@@ -35,17 +35,14 @@ class ProfileController extends GetxController {
         uploadStatus.value = 'ไม่สามารถดึงข้อมูลได้: ไม่มี Token';
         return;
       }
-
       // เปลี่ยนจากการใช้ POST เป็น GET โดยไม่ส่งข้อมูลใน body
       final response = await _getConnect.get(
         apiUrlsController.profileMe.value,
         headers: {"Authorization": "Bearer $token"},
       );
-
       if (response.statusCode == 200) {
         // อัปเดต profileData ด้วยข้อมูลที่ได้จาก response
-        profileData.value =
-            response.body["profile"]; // อัปเดต Rx ของ profileData
+        profileData.value = response.body["profile"]; // อัปเดต Rx ของ profileData
         uploadStatus.value = ''; // รีเซ็ตสถานะการอัปโหลด
         isProfileFetched.value = true; // ตั้งสถานะว่าได้ดึงข้อมูลแล้ว
       } else {
@@ -118,8 +115,7 @@ class ProfileController extends GetxController {
         await prefs.clear(); // ล้างข้อมูลทั้งหมดใน SharedPreferences
 
         // นำทางไปยังหน้า home
-        Get.offAllNamed(
-            '/home'); // ใช้ offAll เพื่อออกจากหน้าทั้งหมดและไปหน้าใหม่
+        Get.offAllNamed('/home'); // ใช้ offAll เพื่อออกจากหน้าทั้งหมดและไปหน้าใหม่
       } else {
         uploadStatus.value = 'ไม่สามารถลบผู้ใช้ได้';
         print("Failed to delete user: ${response.body}");
@@ -160,27 +156,22 @@ class ProfileController extends GetxController {
     Map<String, dynamic> changes = {};
 
     // เปรียบเทียบข้อมูลที่กรอกกับข้อมูลเดิม และส่งเฉพาะที่มีการเปลี่ยนแปลง
-    if (updatedData['profile_name'] != null &&
-        updatedData['profile_name'] != profileData['profile_name']) {
+    if (updatedData['profile_name'] != null && updatedData['profile_name'] != profileData['profile_name']) {
       changes['profile_name'] = updatedData['profile_name'];
     }
-    if (updatedData['first_name'] != null &&
-        updatedData['first_name'] != profileData['first_name']) {
+    if (updatedData['first_name'] != null && updatedData['first_name'] != profileData['first_name']) {
       changes['first_name'] = updatedData['first_name'];
     }
-    if (updatedData['last_name'] != null &&
-        updatedData['last_name'] != profileData['last_name']) {
+    if (updatedData['last_name'] != null && updatedData['last_name'] != profileData['last_name']) {
       changes['last_name'] = updatedData['last_name'];
     }
-    if (updatedData['phone'] != null &&
-        updatedData['phone'] != profileData['phone']) {
+    if (updatedData['phone'] != null && updatedData['phone'] != profileData['phone']) {
       changes['phone'] = updatedData['phone'];
     }
     if (updatedData['gender'] != null) {
       changes['gender'] = updatedData['gender'];
     }
-    if (updatedData['birth_date'] != null &&
-        updatedData['birth_date'] != profileData['birth_date']) {
+    if (updatedData['birth_date'] != null && updatedData['birth_date'] != profileData['birth_date']) {
       changes['birth_date'] = updatedData['birth_date'];
     }
     if (updatedData['email'] != null) {
@@ -211,7 +202,6 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         // Show dialog after successful update
-        
       } else {
         uploadStatus.value = 'อัปเดตข้อมูลล้มเหลว: ${response.statusCode}';
       }
@@ -220,56 +210,56 @@ class ProfileController extends GetxController {
       print("Error updating profile: $e");
     } finally {
       uploadStatus.value = 'อัปเดตข้อมูลสำเร็จ';
-        // Reset loading status for each field after the update
-        profileNameLoading.value = false;
-        firstNameLoading.value = false;
-        lastNameLoading.value = false;
-        emailLoading.value = false;
-        phoneLoading.value = false;
-        birthDateLoading.value = false;
-        genderLoading.value = false;
-        Get.snackbar(
-          "",
-          "",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.white,
-          colorText: const Color(0xFF15BDFF),
-          duration: const Duration(seconds: 3),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          borderRadius: 12,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 2,
+      // Reset loading status for each field after the update
+      profileNameLoading.value = false;
+      firstNameLoading.value = false;
+      lastNameLoading.value = false;
+      emailLoading.value = false;
+      phoneLoading.value = false;
+      birthDateLoading.value = false;
+      genderLoading.value = false;
+      Get.snackbar(
+        "",
+        "",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.white,
+        colorText: const Color(0xFF15BDFF),
+        duration: const Duration(seconds: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        borderRadius: 12,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+        titleText: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green, size: 22),
+            const SizedBox(width: 10),
+            Text(
+              "อัปเดตข้อมูลสำเร็จ",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[700],
+              ),
             ),
           ],
-          titleText: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 22),
-              const SizedBox(width: 10),
-              Text(
-                "อัปเดตข้อมูลสำเร็จ",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[700],
-                ),
-              ),
-            ],
-          ),
-          messageText: const SizedBox(), // ไม่แสดงข้อความเพิ่มเติม
-        );
-        fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่หลังจากการอัปเดต
-        // Set shimmer animation back to true
-        profileNameLoading.value = true;
-        firstNameLoading.value = true;
-        lastNameLoading.value = true;
-        emailLoading.value = true;
-        phoneLoading.value = true;
-        birthDateLoading.value = true;
-        genderLoading.value = true;
+        ),
+        messageText: const SizedBox(), // ไม่แสดงข้อความเพิ่มเติม
+      );
+      fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่หลังจากการอัปเดต
+      // Set shimmer animation back to true
+      profileNameLoading.value = true;
+      firstNameLoading.value = true;
+      lastNameLoading.value = true;
+      emailLoading.value = true;
+      phoneLoading.value = true;
+      birthDateLoading.value = true;
+      genderLoading.value = true;
       isLoading.value = false;
       fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
     }
@@ -288,10 +278,7 @@ class ProfileController extends GetxController {
         return;
       }
 
-      FormData formData = FormData({
-        'file':
-            MultipartFile(imageFile, filename: imageFile.path.split('/').last)
-      });
+      FormData formData = FormData({'file': MultipartFile(imageFile, filename: imageFile.path.split('/').last)});
 
       final response = await _getConnect.post(
         apiUrlsController.uploadprofileuser.value,
@@ -309,29 +296,28 @@ class ProfileController extends GetxController {
       print("Error uploading image: $e");
       uploadStatus.value = 'Upload failed';
     } finally {
-  isLoading.value = false;
-  fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
+      isLoading.value = false;
+      fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
 
-  // ใช้ Get.snackbar แสดงข้อความ
-  Get.snackbar(
-    "อัปเดตข้อมูลสำเร็จ", // ข้อความหัวข้อ
-    "อัปเดตข้อมูลโปรไฟล์สำเร็จ", // ข้อความเพิ่มเติม
-    snackPosition: SnackPosition.BOTTOM, // แสดงที่ด้านล่างของหน้าจอ
-    backgroundColor: Colors.white, // พื้นหลังของ snackbar
-    colorText: Colors.blue, // สีของข้อความ
-    duration: Duration(seconds: 2), // แสดงนาน 2 วินาที
-    borderRadius: 12, // มุมมน
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10), // ระยะห่างจากขอบ
-    boxShadows: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.1),
-        blurRadius: 10,
-        spreadRadius: 2,
-      ),
-    ],
-  );
-}
-
+      // ใช้ Get.snackbar แสดงข้อความ
+      Get.snackbar(
+        "อัปเดตข้อมูลสำเร็จ", // ข้อความหัวข้อ
+        "อัปเดตข้อมูลโปรไฟล์สำเร็จ", // ข้อความเพิ่มเติม
+        snackPosition: SnackPosition.BOTTOM, // แสดงที่ด้านล่างของหน้าจอ
+        backgroundColor: Colors.white, // พื้นหลังของ snackbar
+        colorText: Colors.blue, // สีของข้อความ
+        duration: Duration(seconds: 2), // แสดงนาน 2 วินาที
+        borderRadius: 12, // มุมมน
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10), // ระยะห่างจากขอบ
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+      );
+    }
   }
 
   @override

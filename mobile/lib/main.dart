@@ -16,6 +16,7 @@ void main() async {
   Get.put(ApiUrls());
   Get.put(ThemeController());
   await SharedPrefService().init();
+
   runApp(const MyApp());
 }
 

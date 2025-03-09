@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
 import 'package:rimpa/modules/views/profile/deleteaccount/delete_confirm_account.dart';
 import 'package:rimpa/widgets/button/botton.dart';
-import '../../../controllers/auth.controller.dart';
+// import '../../../controllers/auth.controller.dart';
 import '../../../../core/constant/app.constant.dart';
 
 class DeleteAccount extends StatefulWidget {
@@ -21,7 +20,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
   @override
   Widget build(BuildContext context) {
     // ตรวจสอบโหมดธีมที่ใช้งาน
-    final authController = Get.put(LoginController());
+    // final authController = Get.put(LoginController());
     final profileController = Get.find<ProfileController>(); // ดึง ProfileController มาใช้
 
     return Scaffold(
@@ -59,7 +58,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                       "โปรดทราบ! เมื่อคุณลบบัญชี",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 18,
-                            color: AppColors.primary,
+                            color: AppColors.danger,
                             // color: Colors.red,
                             fontWeight: FontWeight.w800,
                           ),
@@ -73,13 +72,13 @@ class _DeleteAccountState extends State<DeleteAccount> {
                         MyText("คุณจะไม่สามารถกู้คืนบัญชีนี้ได้ เมื่อลบบัญชีแล้ว คุณจะไม่สามารถลงชื่อเข้าใช้บัญชีเดิมได้อีก หากต้องการใช้บริการใหม่ จะต้องสมัครบัญชีใหม่เท่านั้น",
                             context),
                         MyText(
-                            "การเข้าถึงบริการต่าง ๆ จะถูกยกเลิกฃ คุณจะไม่สามารถใช้ฟีเจอร์ที่ต้องใช้บัญชีของคุณ เช่น การบันทึกข้อมูล การซิงค์ข้อมูลระหว่างอุปกรณ์ หรือสิทธิ์การเข้าถึงเนื้อหาพิเศษได้อีกต่อไป",
+                            "การเข้าถึงบริการต่าง ๆ จะถูกยกเลิก คุณจะไม่สามารถใช้ฟีเจอร์ที่ต้องใช้บัญชีของคุณ เช่น การบันทึกข้อมูล การซิงค์ข้อมูลระหว่างอุปกรณ์ หรือสิทธิ์การเข้าถึงเนื้อหาพิเศษได้อีกต่อไป",
                             context),
                       ]),
                     ),
                     Gap(10),
                     MyCheckBox(
-                      text: "ฉันอ่านและเข้าใจถึงการลบบัญชีจะทำให้ข้อมูลทั้งหมดข้อคุณหายไปและไม่สามารถกู้คืนได้",
+                      text: "ฉันอ่านและเข้าใจถึงการลบบัญชีจะทำให้ข้อมูลทั้งหมดของคุณหายไปและไม่สามารถกู้คืนได้",
                       check: checkbox1,
                       onChanged: (value) {
                         setState(() {
@@ -124,6 +123,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                       child: RimpaButton(
                         text: 'ยกเลิก',
                         radius: 32,
+                        disble: false,
                         onTap: () => Get.back(),
                       ),
                     ),

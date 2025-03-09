@@ -13,19 +13,21 @@ class AppDropdownV2Component extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         showDialog(
-          context: context, 
+          context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.xs)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xs)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: choices.map((choice) {
                   return ListTile(
-                    title: Text(choice,
-                        style: TextStyle(
-                          fontSize: AppTextSize.md,
-                        )),
+                    title: Text(
+                      choice,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: AppTextSize.md,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
                     onTap: () {
                       onchanged(choice);
                       Navigator.pop(context); // ปิด Popup หลังจากเลือกค่า
@@ -38,7 +40,13 @@ class AppDropdownV2Component extends StatelessWidget {
         );
       },
       child: Container(
-        child: Text((selected == null || selected!.isEmpty) ? defaultText : selected!, style: TextStyle(fontSize: AppTextSize.md, color: AppTextColors.secondary),),
+        child: Text(
+          (selected == null || selected!.isEmpty) ? defaultText : selected!,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: AppTextSize.md,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
       ),
     );
   }

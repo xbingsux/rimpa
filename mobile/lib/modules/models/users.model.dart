@@ -24,7 +24,7 @@ class ProfileModel {
   var phone = ''.obs;
   var profileImg = ''.obs;
   var profileName = ''.obs;
-  var gender = ''.obs; // Gender
+  var gender = 'ไม่ระบุ'.obs; // Gender
   var points = 0.0.obs;
   var idCard = ''.obs; // เลขบัตรประชาชน
   var createdAt = DateTime.now().obs;

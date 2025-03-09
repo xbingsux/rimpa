@@ -6,7 +6,6 @@ import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/widgets/button/botton.dart';
 import 'package:rimpa/widgets/textFeild/text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
 import '../../../controllers/resetpassword/resetpassword.controller.dart';
 // สำหรับ JSON decoding
@@ -23,15 +22,10 @@ class ChangePassword extends StatelessWidget {
     Rx<TextEditingController> confirmPasswordController = Rx<TextEditingController>(TextEditingController());
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final formKey = GlobalKey<FormState>();
-    TextStyle style = Theme.of(context).textTheme.bodyMedium!.copyWith(
-          fontSize: AppTextSize.md,
-          fontWeight: FontWeight.w600,
-          color: AppTextColors.secondary,
-        );
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: isDarkMode ? Colors.black.withOpacity(0.8) : Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -51,8 +45,8 @@ class ChangePassword extends StatelessWidget {
       ),
       body: Obx(() {
         final isLoading = resetPasswordController.isLoading.value;
-        final message = resetPasswordController.message.value;
-        final status = resetPasswordController.status.value;
+        // final message = resetPasswordController.message.value;
+        // final status = resetPasswordController.status.value;
 
         return Container(
           color: isDarkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
@@ -78,11 +72,6 @@ class ChangePassword extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "รหัสผ่านปัจจุบัน",
-                        style: style,
-                      ),
-                      const Gap(4),
                       RimpaTextFormField(
                         hintText: 'รหัสผ่านปัจจุบัน',
                         isPassword: true,
@@ -94,11 +83,6 @@ class ChangePassword extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Text(
-                        "รหัสผ่านใหม่",
-                        style: style,
-                      ),
-                      const Gap(4),
                       RimpaTextFormField(
                         hintText: 'รหัสผ่านใหม่',
                         isPassword: true,
@@ -110,11 +94,6 @@ class ChangePassword extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Text(
-                        "ยืนยันรหัสผ่านใหม่",
-                        style: style,
-                      ),
-                      const Gap(4),
                       RimpaTextFormField(
                         hintText: 'ยืนยันรหัสผ่านใหม่',
                         isPassword: true,

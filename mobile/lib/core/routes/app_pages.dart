@@ -16,12 +16,19 @@ class AppPages {
     GetPage(
       name: '/login',
       page: () => LoginView(),
-      transition: Transition.fade, // เลือก transition ที่ต้องการ
-      transitionDuration: Duration(milliseconds: 500), // ใช้ transitionDuration แทน duration
+      transition: Transition.noTransition,
+      // transition: Transition.fade, // เลือก transition ที่ต้องการ
+      // transitionDuration: Duration(milliseconds: 500), // ใช้ transitionDuration แทน duration
+    ),
+    GetPage(
+      name: '/forgot-password',
+      page: () => ForgotPasswordView(),
+      transition: Transition.fade,
     ),
     GetPage(
       name: '/create-account',
       page: () => CreateAccountView(),
+      transition: Transition.fade,
     ),
     GetPage(
       name: '/home',
@@ -32,10 +39,7 @@ class AppPages {
       name: '/select-create',
       page: () => LoginSelectionView(),
     ),
-    GetPage(
-      name: '/forgot-password',
-      page: () => ForgotPasswordView(),
-    ),
+
     // Profile routes detail
     GetPage(
       name: '/user-deteil',

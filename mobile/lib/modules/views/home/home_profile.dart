@@ -174,7 +174,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () => Get.toNamed('/login'),
+                        onPressed: () => Get.offAllNamed('/login'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
                           fixedSize: const Size(270, 40),
@@ -299,13 +299,14 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Stack(
+            alignment: Alignment.bottomRight,
             children: [
               // รูปโปรไฟล์
               Container(
                 height: 100,
                 width: 100,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.amber,
+                  shape: BoxShape.circle,
                   // color: profileImage.isEmpty ? const Color.fromARGB(255, 218, 165, 165) : Colors.transparent,
                   boxShadow: [
                     BoxShadow(
@@ -323,13 +324,21 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                 ),
               ),
               // ไอคอนเปลี่ยนรูป
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.camera_alt),
-                  onPressed: _pickImage, // เรียกฟังก์ชันเลือกภาพ
-                  color: Colors.white,
+              InkWell(
+                onTap: _pickImage,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                  ),
+                  child: Icon(
+                    Iconsax.edit,
+                    size: 14,
+                  ),
                 ),
               ),
             ],

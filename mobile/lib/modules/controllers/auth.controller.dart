@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import '../models/users.model.dart';
 import '../../core/services/api_urls.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/profile/profile_controller.dart';
 
 class LoginController extends GetxController {
@@ -22,7 +21,7 @@ class LoginController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        var token = response.data['token'] ?? '';
+        // var token = response.data['token'] ?? '';
         var role = response.data['role'] ?? '';
 
         // ตรวจสอบว่า role เป็น 'admin' หรือไม่
@@ -38,17 +37,19 @@ class LoginController extends GetxController {
         }
 
         AuthService().saveAuth(response.data['token'], email);
-
+        if (!Get.isRegistered<ProfileController>()) {
+          Get.put(ProfileController());
+        }
         // เรียกฟังก์ชัน fetchProfile() เพื่ออัปเดตข้อมูลโปรไฟล์
         final profileController = Get.find<ProfileController>();
         await profileController.fetchProfile();
 
-        Get.offNamed('/home');
+        Get.offAllNamed('/home');
       } else {
         Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');
       }
     } catch (e) {
-      Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน');
+      Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน ${e}');
       print("Error: $e");
     }
   }
