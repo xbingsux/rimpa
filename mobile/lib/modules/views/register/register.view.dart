@@ -16,7 +16,7 @@ class CreateAccountView extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFFFCFBFC),
+          backgroundColor: AppColors.whisperGray,
           title: Transform.translate(
               offset: const Offset(0, -2.1),
               child: const Text(

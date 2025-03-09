@@ -13,12 +13,10 @@ class AuthService extends GetxService {
     return isLoggedIn.value; // เช็คสถานะล็อกอินแบบ Sync
   }
 
-  Future<void> saveAuth(
-      String token, String email, bool rememberPassword) async {
+  Future<void> saveAuth(String token, String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    await prefs.setString('email', email);
-    await prefs.setBool('rememberPassword', rememberPassword);
+    // await prefs.setString('email', email);
     await prefs.setInt('loginTime', DateTime.now().millisecondsSinceEpoch);
 
     isLoggedIn.value = true;

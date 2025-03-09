@@ -10,6 +10,7 @@ class AppColors {
 
   /// สีเทารอง ตัดกับสีหลัก
   static const Color secondary = Color(0xFFD9D9D9);
+  static const Color whisperGray = Color(0xFFFCFBFC);
 
   /// สีเน้นส่วนสำคัญ Bright Blue
   static const Color accent = Color(0xFF1E54FD);
@@ -193,6 +194,19 @@ class AppShadow {
 }
 
 class AppGradiant {
-  static const LinearGradient gradientY_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.topCenter, end: Alignment.bottomCenter);
-  static const LinearGradient gradientX_1 = LinearGradient(colors: [AppColors.accent, AppColors.accent2], begin: Alignment.centerLeft, end: Alignment.centerRight);
+  static const LinearGradient gradientY_1 = LinearGradient(
+    colors: [AppColors.accent, AppColors.accent2],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  static const LinearGradient gradientX_1 = LinearGradient(
+    colors: [AppColors.accent, AppColors.accent2],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+  static const LinearGradient redGradientX_1 = LinearGradient(
+    colors: [Colors.red, Colors.pink],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
 }

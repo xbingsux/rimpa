@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Correct import
 import 'package:get/get.dart';
+import 'package:rimpa/core/constant/shared_pref.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
@@ -14,6 +15,7 @@ void main() async {
   Get.put(AuthMiddleware());
   Get.put(ApiUrls());
   Get.put(ThemeController());
+  await SharedPrefService().init();
   runApp(const MyApp());
 }
 

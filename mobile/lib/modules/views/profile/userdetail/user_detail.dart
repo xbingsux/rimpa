@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import '../../../../widgets/shimmerloadwidget/shimmer.widget.dart';
 import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
@@ -13,8 +14,7 @@ class UserDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     // ดึง Controller
     Get.put(LoginController());
-    final profileController =
-        Get.put(ProfileController()); // เพิ่ม ProfileController
+    final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 // ใช้ Map เพื่อแปลงค่าจาก DB -> UI และ UI -> DB
     Map<String, String> genderMapping = {
@@ -39,12 +39,13 @@ class UserDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: isDarkMode
-            ? Colors.black.withOpacity(0.8)
-            : Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: isDarkMode ? Colors.black.withOpacity(0.8) : Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.blue),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppTextColors.secondary,
+          ),
           onPressed: () => Get.back(),
         ),
         title: const Text(
@@ -54,9 +55,7 @@ class UserDetail extends StatelessWidget {
         centerTitle: false,
       ),
       body: Container(
-        color: isDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
+        color: isDarkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
         child: SingleChildScrollView(
           // ใช้ SingleChildScrollView เพื่อให้เนื้อหาทั้งหมดเลื่อนลงได้
           padding: const EdgeInsets.all(16.0),
@@ -73,8 +72,7 @@ class UserDetail extends StatelessWidget {
                   return shimmerLoading();
                 } else {
                   // ให้แสดงค่าจาก profileNameController แทนที่ค่าที่ดึงมา
-                  profileNameController.text =
-                      profileController.profileData["profile_name"] ?? '';
+                  profileNameController.text = profileController.profileData["profile_name"] ?? '';
                   return Customtextprofile(
                     labelText: profileNameController.text,
                     obscureText: false,
@@ -92,8 +90,7 @@ class UserDetail extends StatelessWidget {
                 if (profileController.profileData["first_name"] == null) {
                   return shimmerLoading();
                 } else {
-                  firstNameController.text =
-                      profileController.profileData["first_name"] ?? '';
+                  firstNameController.text = profileController.profileData["first_name"] ?? '';
                   return Customtextprofile(
                     labelText: firstNameController.text,
                     obscureText: false,
@@ -111,8 +108,7 @@ class UserDetail extends StatelessWidget {
                 if (profileController.profileData["last_name"] == null) {
                   return shimmerLoading();
                 } else {
-                  lastNameController.text =
-                      profileController.profileData["last_name"] ?? '';
+                  lastNameController.text = profileController.profileData["last_name"] ?? '';
                   return Customtextprofile(
                     labelText: lastNameController.text,
                     obscureText: false,
@@ -130,8 +126,7 @@ class UserDetail extends StatelessWidget {
                 if (profileController.profileData["user"]["email"] == null) {
                   return shimmerLoading();
                 } else {
-                  emailController.text =
-                      profileController.profileData["user"]["email"] ?? '';
+                  emailController.text = profileController.profileData["user"]["email"] ?? '';
                   return Customtextprofile(
                     labelText: emailController.text,
                     obscureText: false,
@@ -149,8 +144,7 @@ class UserDetail extends StatelessWidget {
                 if (profileController.profileData["phone"] == null) {
                   return shimmerLoading();
                 } else {
-                  phoneController.text =
-                      profileController.profileData["phone"] ?? '';
+                  phoneController.text = profileController.profileData["phone"] ?? '';
                   return CustomPhoneTextFieldProfile(
                     phoneNumber: phoneController.text,
                     controller: phoneController,
@@ -168,23 +162,17 @@ class UserDetail extends StatelessWidget {
                   return shimmerLoading(); // กรณีที่ยังไม่มีข้อมูลวันเกิด
                 } else {
                   // ตรวจสอบวันเกิดจาก profileController และใช้ค่าที่ได้
-                  DateTime birthDate =
-                      profileController.profileData["birth_date"] != null
-                          ? DateTime.parse(
-                              profileController.profileData["birth_date"])
-                          : DateTime.now();
+                  DateTime birthDate = profileController.profileData["birth_date"] != null ? DateTime.parse(profileController.profileData["birth_date"]) : DateTime.now();
 
                   return CustomDatePicker(
                     labelText: 'วันเกิด',
                     selectedDate: birthDate, // ค่า birthDate ที่เก็บไว้
                     onChanged: (DateTime value) {
                       // เมื่อเลือกวันที่ใหม่, อัปเดตค่าของ birth_date ใน profileController
-                      profileController.profileData["birth_date"] =
-                          value.toIso8601String();
+                      profileController.profileData["birth_date"] = value.toIso8601String();
 
                       // อัปเดตข้อความใน TextField (birthDateController.text) ตามรูปแบบวันที่ที่เลือก
-                      birthDateController.text =
-                          DateFormat('yyyy-MM-dd').format(value);
+                      birthDateController.text = DateFormat('yyyy-MM-dd').format(value);
                     },
                   );
                 }
@@ -200,12 +188,10 @@ class UserDetail extends StatelessWidget {
                   return shimmerLoading();
                 } else {
                   // ดึงค่าจาก Database (เป็น ENUM)
-                  String currentGender =
-                      profileController.profileData["gender"] ?? 'Other';
+                  String currentGender = profileController.profileData["gender"] ?? 'Other';
 
                   // แปลงค่า ENUM เป็นภาษาไทยสำหรับแสดงผล
-                  String displayGender =
-                      genderMapping[currentGender] ?? 'ไม่ระบุ';
+                  String displayGender = genderMapping[currentGender] ?? 'ไม่ระบุ';
 
                   // อัปเดต GenderController ให้ตรงกับ UI
                   genderController.text = displayGender;
@@ -220,8 +206,7 @@ class UserDetail extends StatelessWidget {
                         onChanged: (value) {
                           if (value != null) {
                             // แปลงค่ากลับเป็น ENUM ที่ฐานข้อมูลรองรับ
-                            String newGender =
-                                reverseGenderMapping[value] ?? 'Other';
+                            String newGender = reverseGenderMapping[value] ?? 'Other';
 
                             // อัปเดต GenderController และ ProfileController
                             genderController.text = value;
@@ -240,8 +225,7 @@ class UserDetail extends StatelessWidget {
               CustomButton(
                   text: 'บันทึกข้อมูลใหม่',
                   onPressed: () {
-                    String selectedGender =
-                        reverseGenderMapping[genderController.text] ?? 'Other';
+                    String selectedGender = reverseGenderMapping[genderController.text] ?? 'Other';
                     Map<String, dynamic> updatedData = {
                       'profile_name': profileNameController.text,
                       'first_name': firstNameController.text,
@@ -251,12 +235,8 @@ class UserDetail extends StatelessWidget {
                       'birth_date': birthDateController.text,
                       'gender': selectedGender,
                     };
-                    print(
-                        "Updated Data to send: $updatedData"); // ตรวจสอบข้อมูลที่ส่งไป
-                    profileController
-                        .updateProfile(updatedData)
-                        .then((response) {})
-                        .catchError((error) {});
+                    print("Updated Data to send: $updatedData"); // ตรวจสอบข้อมูลที่ส่งไป
+                    profileController.updateProfile(updatedData).then((response) {}).catchError((error) {});
                   }),
             ],
           ),

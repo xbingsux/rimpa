@@ -1,7 +1,7 @@
 name: rimpa
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ^3.5.4
@@ -25,6 +25,8 @@ dependencies:
   iconsax: ^0.0.8
   flutter_holo_date_picker: ^1.0.3  # ตรวจสอบเวอร์ชันล่าสุดจาก pub.dev
   gap: ^3.0.0
+  google_fonts: ^6.2.1
+  form_field_validator: ^1.1.0
 
 
 flutter_launcher_icons:

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/widgets/button/botton.dart';
+import 'package:rimpa/widgets/textFeild/text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../widgets/loginWidget/custom_loginpage.dart';
 import '../../../controllers/auth.controller.dart';
@@ -11,23 +16,37 @@ class ChangePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     Get.put(LoginController());
     final resetPasswordController = Get.put(ResetPasswordController());
+    Rx<TextEditingController> passwordController = Rx<TextEditingController>(TextEditingController());
+    Rx<TextEditingController> newPasswordController = Rx<TextEditingController>(TextEditingController());
+    Rx<TextEditingController> confirmPasswordController = Rx<TextEditingController>(TextEditingController());
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final formKey = GlobalKey<FormState>();
+    TextStyle style = Theme.of(context).textTheme.bodyMedium!.copyWith(
+          fontSize: AppTextSize.md,
+          fontWeight: FontWeight.w600,
+          color: AppTextColors.secondary,
+        );
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: isDarkMode
-            ? Colors.black.withOpacity(0.8)
-            : Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: isDarkMode ? Colors.black.withOpacity(0.8) : Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.blue),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppTextColors.secondary,
+          ),
           onPressed: () => Get.back(),
         ),
-        title: const Text("เปลี่ยนรหัสผ่าน",
-            style: TextStyle(color: Colors.black)),
+        title: Text(
+          "เปลี่ยนรหัสผ่าน",
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: AppTextSize.xl,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
         centerTitle: false,
       ),
       body: Obx(() {
@@ -36,146 +55,84 @@ class ChangePassword extends StatelessWidget {
         final status = resetPasswordController.status.value;
 
         return Container(
-          color: isDarkMode
-              ? Theme.of(context).scaffoldBackgroundColor
-              : Colors.white,
+          color: isDarkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("โปรดป้อนรหัสผ่านปัจจุบันและรหัสผ่านใหม่",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 30),
-                const Text("รหัสผ่านเก่า",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                Obx(() {
-                  return Stack(
-                    children: [
-                      CustomResetpasswordfiule(
-                        labelText: 'กรอกรหัสผ่านเก่า',
-                        obscureText:
-                            !resetPasswordController.isOldPasswordVisible.value,
-                        onChanged: (value) {
-                          resetPasswordController.oldPassword.value = value;
-                        },
-                      ),
-                      Positioned(
-                        right: 10,
-                        top: 0,
-                        bottom: 0,
-                        child: IconButton(
-                          icon: Icon(
-                            resetPasswordController.isOldPasswordVisible.value
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            resetPasswordController.isOldPasswordVisible.value =
-                                !resetPasswordController
-                                    .isOldPasswordVisible.value;
-                          },
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "โปรดป้อนรหัสผ่านปัจจุบันและรหัสผ่านใหม่",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: AppTextSize.lg,
+                          fontWeight: FontWeight.w600,
+                          color: AppTextColors.secondary,
                         ),
-                      ),
-                    ],
-                  );
-                }),
-                const SizedBox(height: 18),
-                const Text("รหัสผ่านใหม่",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                Obx(() {
-                  return Stack(
-                    children: [
-                      CustomResetpasswordfiule(
-                        labelText: 'กรอกรหัสผ่านใหม่',
-                        obscureText:
-                            !resetPasswordController.isNewPasswordVisible.value,
-                        onChanged: (value) {
-                          resetPasswordController.newPassword.value = value;
-                        },
-                      ),
-                      Positioned(
-                        right: 10,
-                        top: 0,
-                        bottom: 0,
-                        child: IconButton(
-                          icon: Icon(
-                            resetPasswordController.isNewPasswordVisible.value
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            resetPasswordController.isNewPasswordVisible.value =
-                                !resetPasswordController
-                                    .isNewPasswordVisible.value;
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-                const SizedBox(height: 18),
-                const Text("ยืนยันรหัสผ่านใหม่",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                Obx(() {
-                  return Stack(
-                    children: [
-                      CustomResetpasswordfiule(
-                        labelText: 'ยืนยันรหัสผ่านใหม่',
-                        obscureText: !resetPasswordController
-                            .isConfirmPasswordVisible.value,
-                        onChanged: (value) {
-                          resetPasswordController.confirmPassword.value = value;
-                        },
-                      ),
-                      Positioned(
-                        right: 10,
-                        top: 0,
-                        bottom: 0,
-                        child: IconButton(
-                          icon: Icon(
-                            resetPasswordController
-                                    .isConfirmPasswordVisible.value
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            resetPasswordController
-                                    .isConfirmPasswordVisible.value =
-                                !resetPasswordController
-                                    .isConfirmPasswordVisible.value;
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-                const Spacer(),
-                if (message.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Text(
-                      message,
-                      style: TextStyle(
-                        color: status == "success" ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
-                CustomButtonResetpassword(
-                  text: isLoading ? 'กำลังบันทึก...' : 'บันทึกรหัสผ่านใหม่',
-                  onPressed: isLoading
-                      ? null
+                ),
+                Gap(32),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "รหัสผ่านปัจจุบัน",
+                        style: style,
+                      ),
+                      const Gap(4),
+                      RimpaTextFormField(
+                        hintText: 'รหัสผ่านปัจจุบัน',
+                        isPassword: true,
+                        controller: passwordController.value,
+                        onChanged: (value) => resetPasswordController.oldPassword.value = value,
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(errorText: "กรุณาป้อนรหัสผ่านปัจจุบัน"),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        "รหัสผ่านใหม่",
+                        style: style,
+                      ),
+                      const Gap(4),
+                      RimpaTextFormField(
+                        hintText: 'รหัสผ่านใหม่',
+                        isPassword: true,
+                        controller: newPasswordController.value,
+                        onChanged: (value) => resetPasswordController.newPassword.value = value,
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(errorText: "กรุณาป้อนรหัสผ่านปัจจุบัน"),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        "ยืนยันรหัสผ่านใหม่",
+                        style: style,
+                      ),
+                      const Gap(4),
+                      RimpaTextFormField(
+                        hintText: 'ยืนยันรหัสผ่านใหม่',
+                        isPassword: true,
+                        controller: confirmPasswordController.value,
+                        validator: (val) {
+                          return MatchValidator(errorText: 'รหัสผ่านไม่ตรงกัน').validateMatch(val!, passwordController.value.text);
+                        },
+                      ),
+                      Gap(8),
+                    ],
+                  ),
+                ),
+                GradiantButton(
+                  text: isLoading ? 'กำลังรีเซ็ต...' : 'รีเซ็ต',
+                  onTap: isLoading
+                      ? () {}
                       : () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
                           String? token = prefs.getString('token');
                           if (token == null) {
                             Get.snackbar('ข้อผิดพลาด', 'ไม่พบ Token');
@@ -185,8 +142,7 @@ class ChangePassword extends StatelessWidget {
                           await resetPasswordController.resetPassword();
 
                           // ถ้าเปลี่ยนรหัสผ่านสำเร็จ ให้รีเซ็ตช่องกรอกข้อมูล
-                          if (resetPasswordController.status.value ==
-                              "success") {
+                          if (resetPasswordController.status.value == "success") {
                             resetPasswordController.clearFields();
                           }
                         },

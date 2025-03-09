@@ -7,7 +7,10 @@ class Policy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("นโยบายความเป็นส่วนตัว")),
+      appBar: AppBar(
+        title: const Text("นโยบายความเป็นส่วนตัว"),
+        iconTheme: const IconThemeData(color: AppTextColors.secondary),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(18.0),
         children: const [

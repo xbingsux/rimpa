@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/modules/controllers/reward/list_reward_controller.dart';
 import 'package:rimpa/widgets/card/reward_score.dart';
@@ -29,10 +30,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   @override
   void initState() {
     super.initState();
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.transparent, // ทำให้ Status Bar โปร่งใส
-    //   statusBarIconBrightness: Brightness.light, // ตั้งค่าไอคอนของ Status Bar ให้เหมาะกับพื้นหลัง
-    // ));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.light,
+    ));
 
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {

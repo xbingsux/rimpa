@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import '../../core/constant/app.constant.dart';
 import 'package:get/get.dart';
 
@@ -39,26 +40,28 @@ class _MenuCardState extends State<MenuCard> {
     // ตรวจสอบธีมที่ใช้งาน
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Theme.of(context).cardColor, // ใช้สีการ์ดจากธีม
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppTextColors.white, // ใช้สีเดียวกับ Card
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.secondary, width: 1), // เพิ่มเส้นขอบสีดำขนาด 3
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// หัวข้อ Card
             Text(
               widget.title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: AppTextSize.sm, // กำหนดขนาดฟอนต์
                     fontWeight: FontWeight.w100,
-                    color: isDarkMode
-                        ? Colors.white
-                        : Colors.black, // เปลี่ยนสีข้อความตามธีม
+                    color: AppTextColors.secondary, // เปลี่ยนสีข้อความตามธีม
                   ),
             ),
+            Gap(10),
 
             /// รายการเมนู
             Column(
@@ -67,55 +70,51 @@ class _MenuCardState extends State<MenuCard> {
                 if (item.isToggle) {
                   // เมนูแบบ Toggle
                   return ListTile(
-                    leading: Icon(item.icon, color: Colors.grey), // สีเทา
+                    leading: Icon(item.icon, color: Colors.grey, size: 18), // สีเทา
                     title: Text(
                       item.title,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: AppTextSize.sm,
                             fontWeight: FontWeight.w700, // กำหนดขนาดฟอนต์
-                            color: isDarkMode
-                                ? Colors.white
-                                : Colors.black, // เปลี่ยนสีข้อความตามธีม
+                            color: isDarkMode ? Colors.white : Colors.black, // เปลี่ยนสีข้อความตามธีม
                           ),
                     ),
                     trailing: Transform.scale(
                       scale: 0.8, // ลดขนาดของ Switch
                       child: Switch(
-                        value:
-                            toggleState[item.title] ?? false, // ใช้สถานะจาก Map
+                        value: toggleState[item.title] ?? false, // ใช้สถานะจาก Map
                         onChanged: (value) {
                           setState(() {
-                            toggleState[item.title] =
-                                value; // เปลี่ยนสถานะ Toggle
+                            toggleState[item.title] = value; // เปลี่ยนสถานะ Toggle
                           });
                         },
                         activeColor: Colors.blue, // สีฟ้าสำหรับสถานะเปิด
-                        inactiveThumbColor:
-                            Colors.grey, // สีของปุ่มเมื่อตัวเลือกปิด
+                        inactiveThumbColor: Colors.grey, // สีของปุ่มเมื่อตัวเลือกปิด
                       ),
                     ),
                     onTap: () {
                       // ใช้ Get.toNamed กับ item.route
-                      Get.toNamed(item
-                          .route); // นำทางไปยังหน้าตาม route ที่กำหนดใน MenuItem
+                      Get.toNamed(item.route); // นำทางไปยังหน้าตาม route ที่กำหนดใน MenuItem
                     },
                   );
                 } else {
                   // เมนูปกติที่มีปุ่มกด
                   return ListTile(
+                    minTileHeight: 40,
                     leading: Icon(item.icon, color: Colors.grey), // สีเทา
                     title: Text(
                       item.title,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: AppTextSize.sm,
-                            fontWeight: FontWeight
-                                .w700, // กำหนดขนาดฟอนต์ // กำหนดขนาดฟอนต์
-                            color: isDarkMode
-                                ? Colors.white
-                                : Colors.black, // เปลี่ยนสีข้อความตามธีม
+                            fontSize: AppTextSize.md,
+                            fontWeight: FontWeight.w600, // กำหนดขนาดฟอนต์ // กำหนดขนาดฟอนต์
+                            color: Colors.black, // เปลี่ยนสีข้อความตามธีม
                           ),
                     ),
-                    trailing: Icon(Icons.arrow_forward_ios, size: 12),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: AppTextColors.secondary,
+                    ),
                     onTap: () {
                       Navigator.pushNamed(context, item.route);
                     },

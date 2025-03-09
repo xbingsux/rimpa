@@ -26,6 +26,7 @@ class AppPages {
     GetPage(
       name: '/home',
       page: () => HomePage(),
+      transition: Transition.fadeIn,
     ),
     GetPage(
       name: '/select-create',

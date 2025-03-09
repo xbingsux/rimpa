@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
-import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 
 class EventRecommend extends StatelessWidget {
@@ -26,7 +25,7 @@ class EventRecommend extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.to(HomeEventAllcard());
+                    Get.offNamedUntil('/home', (route) => false, parameters: {'pages': '1'});
                   },
                   child: Row(
                     children: [
@@ -70,7 +69,9 @@ class EventRecommend extends StatelessWidget {
                           child: EventCard(
                             title: event.title,
                             imageUrl: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                            onTap: () {},
+                            onTap: () {
+                              Get.to(() => HomeDetailPage(event: event));
+                            },
                           ),
                         )
                         // child: Container(

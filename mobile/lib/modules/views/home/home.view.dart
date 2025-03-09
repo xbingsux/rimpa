@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   Timer? _timer;
-  int _selectedIndex = 0;
+  int _selectedIndex = int.tryParse(Get.parameters['pages'] ?? '0') ?? 0;
   bool isLoggedIn = false; // ตัวแปรสำหรับการตรวจสอบสถานะการล็อกอิน
   String email = ''; // ตัวแปรสำหรับเก็บข้อมูลอีเมลของผู้ใช้
 
