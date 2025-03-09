@@ -262,8 +262,4 @@ export class DatePickerComponent implements OnInit {
   openDatepicker() {
     this.datepicker.show(); // เปิด Datepicker
   }
-
-  test() {
-    alert('s')
-  }
 }
