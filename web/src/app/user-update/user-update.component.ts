@@ -17,6 +17,7 @@ export class UserUpdateComponent implements OnInit {
 
   constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute, public api: ApiService) { }
 
+  loading = true;
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
       // console.log(param.get('id'));
@@ -41,7 +42,10 @@ export class UserUpdateComponent implements OnInit {
           let path = `${environment.API_URL}${item.profile_img.replace('src', '')}`;
           path = await this.api.checkImageExists(path) != 500 ? path : ''
           this.img_path = path;
+          this.loading = false
         })
+      } else {
+        this.loading = false
       }
     });
   }
