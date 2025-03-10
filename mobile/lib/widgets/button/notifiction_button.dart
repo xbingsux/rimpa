@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/modules/controllers/notification/socketNotification.controller.dart';
 import 'package:rimpa/modules/views/notify/notify.view.dart';
 
 class NotificationButton extends StatelessWidget {
   final double size;
   final bool isDark;
-  const NotificationButton({super.key, this.size = 40, this.isDark = false});
+  NotificationButton({super.key, this.size = 40, this.isDark = false});
+  final SocketNotificationController socketController = Get.put(SocketNotificationController());
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +17,14 @@ class NotificationButton extends StatelessWidget {
       height: size,
       // color: Colors.amber,
       child: GestureDetector(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NotifyView(),
-            )),
+        onTap: () {
+          socketController.clearNotification();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotifyView(),
+              ));
+        },
         child: Container(
           decoration: const BoxDecoration(),
           padding: const EdgeInsets.all(AppSpacing.sm),
@@ -27,7 +33,7 @@ class NotificationButton extends StatelessWidget {
               alignment: Alignment.topRight,
               children: [
                 Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
-                redDotNotification(),
+                if (socketController.hasNewNotification.value) redDotNotification(),
               ],
             ),
           ),

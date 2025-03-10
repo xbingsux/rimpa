@@ -16,6 +16,13 @@ class NotifyView extends StatefulWidget {
 
 class _NotifyViewState extends State<NotifyView> {
   final NotificationController controller = Get.put(NotificationController()); // ผูก Controller
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchNotifications();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +31,14 @@ class _NotifyViewState extends State<NotifyView> {
         appBar: AppBar(
           backgroundColor: AppColors.background_main,
           centerTitle: true,
-          title: const Text('การแจ้งเตือน', style: TextStyle(fontSize: AppTextSize.xl, color: AppTextColors.accent, fontWeight: FontWeight.bold)),
+          title: Text(
+            'การแจ้งเตือน',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: AppTextSize.xl,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.accent,
+                ),
+          ),
           leading: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -107,12 +121,19 @@ class _NotifyViewState extends State<NotifyView> {
             (index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: NotifierBoxComponent(
-                  icons: Icons.notifications_none,
-                  topics: noti[index].title,
-                  content: noti[index].message,
-                  createdAt: noti[index].createdAt,
-                  read: noti[index].read,
+                child: GestureDetector(
+                  onTap: noti[index].read
+                      ? null
+                      : () {
+                          controller.readNoti(noti[index].id);
+                        },
+                  child: NotifierBoxComponent(
+                    icons: Icons.notifications_none,
+                    topics: noti[index].title,
+                    content: noti[index].message,
+                    createdAt: noti[index].createdAt,
+                    read: noti[index].read,
+                  ),
                 ),
               );
             },

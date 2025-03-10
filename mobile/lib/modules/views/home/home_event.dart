@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/widgets/button/notifiction_button.dart';
 import 'package:rimpa/widgets/event/all_events.dart';
 import '../../controllers/listevent/listevent.controller.dart';
@@ -55,7 +56,11 @@ class _HomeEventPageState extends State<HomeEventPage> {
               alignment: Alignment.center,
               child: Text(
                 "กิจกรรม",
-                style: TextStyle(color: Color(0xFF1E54FD), fontSize: 18),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: AppTextSize.xl,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.accent,
+                    ),
               ),
             ),
             Align(
@@ -65,21 +70,18 @@ class _HomeEventPageState extends State<HomeEventPage> {
           ],
         ),
       ),
-      body: 
-      LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-    double bodyHeight = constraints.maxHeight;
-    // double bodyWidth = constraints.maxWidth;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: AllEvents(
-              showTitle: false,
-              isScroll: true,
-              screenHigh: bodyHeight - (40),
-            ),
-          );
-        }
-      ),
+      body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+        double bodyHeight = constraints.maxHeight;
+        // double bodyWidth = constraints.maxWidth;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: AllEvents(
+            showTitle: false,
+            isScroll: true,
+            screenHigh: bodyHeight - (40),
+          ),
+        );
+      }),
     );
   }
 }
