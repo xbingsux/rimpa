@@ -22,7 +22,7 @@ export class EventUpdateComponent implements OnInit {
   }
 
   setEndDate(newDate: Date) {
-    this.data.startDate = newDate;
+    this.data.endDate = newDate;
     // console.log('Updated start date:', this.startDate);
   }
 
@@ -143,7 +143,7 @@ export class EventUpdateComponent implements OnInit {
     // console.log(imgs);
 
     // console.log(this.data.list_img);
-
+    // alert(this.data.startDate)
 
     this.http.post(`${environment.API_URL}/event/update-event`, {
       event_id: this.data.id,

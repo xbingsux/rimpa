@@ -262,4 +262,10 @@ export class DatePickerComponent implements OnInit {
   openDatepicker() {
     this.datepicker.show(); // เปิด Datepicker
   }
+
+  setDate(date: Date) {
+    this.date.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+    this.setItem()
+    this.updateDate()
+  }
 }
