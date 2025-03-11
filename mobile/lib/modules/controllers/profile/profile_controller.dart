@@ -37,9 +37,8 @@ class ProfileController extends GetxController {
         return;
       }
 
-      final response = await _getConnect.post(
+      final response = await _getConnect.get(
         apiUrlsController.profileMe.value,
-        {},
         headers: {"Authorization": "Bearer $token"},
       );
 

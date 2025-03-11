@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/components/notifier/notifybox.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/modules/controllers/notify/notify.controller.dart';
 
 class NotifyView extends StatelessWidget {
   const NotifyView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final NotifyController notifyController = Get.put(NotifyController());
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -28,15 +31,15 @@ class NotifyView extends StatelessWidget {
           ),
           toolbarHeight: MediaQuery.of(context).size.height * 0.075,
         ),
-        body: Padding(
+        body: Obx(() => Padding(
           padding: const EdgeInsets.all(AppSpacing.sm),
-          child: showNoti([]),
-        ),
+          child: showNoti(notifyController.notifications),
+        ),)
       )
     );
   }
 
-  Widget showNoti(List<Map<String, dynamic>> noti) {
+  Widget showNoti(List noti) {
     if (noti.isEmpty) {
       return SizedBox(
         width: double.infinity,
