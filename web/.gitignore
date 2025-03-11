@@ -43,3 +43,4 @@ Thumbs.db
 
 docker-compose.yml
 Dockerfile
+src/environments
