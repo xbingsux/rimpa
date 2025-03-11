@@ -37,7 +37,7 @@ model Profile {
   phone         String? // เบอร์โทรศัพท์ (ไม่จำเป็นต้องใส่)
   profile_img   String? // รูปโปรไฟล์ (URL หรือ path ของรูปภาพ)
   profile_name  String?
-  gender        Gender?
+  gender        Gender?   @default(Other)
   points        Decimal   @default(0) // คะแนนสะสมของผู้ใช้
 
   id_card          String?            @unique // เลขบัตรประชาชน (ต้องไม่ซ้ำกัน)

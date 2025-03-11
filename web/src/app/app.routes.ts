@@ -16,10 +16,12 @@ import { RewardUpdateComponent } from './reward-update/reward-update.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
 
+    { path: 'privacy-policy', component: PrivacyPolicyComponent },
     { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'new-password', component: NewPasswordComponent },

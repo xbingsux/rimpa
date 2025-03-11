@@ -11,9 +11,15 @@
         </div>
         <div class="grid">
             <label for="password">Password</label>
-            <input type="password" id="password" [(ngModel)]="login.password" placeholder="Password"
-                autocomplete="new-password"
-                class="border-[1px] rounded-[16px] h-[48px] w-[575px] px-[16px] text-[20px]">
+            <div class="relative">
+                <input #password type="password" id="password" [(ngModel)]="login.password" placeholder="Password"
+                    autocomplete="new-password"
+                    class="border-[1px] rounded-[16px] h-[48px] w-[575px] px-[16px] text-[20px]">
+                <img src="eye.svg" class="w-[20px] absolute right-[0] top-[50%] -translate-x-[50%] -translate-y-[50%]"
+                    (click)="password.type = password.type == 'password' ? 'text' : 'password'">
+            </div>
+
+
         </div>
 
         <div class="flex px-4">

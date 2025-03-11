@@ -18,9 +18,9 @@
                 class="text-white bg-[#1093ED] rounded-[12px] px-[32px] cursor-pointer" value="Add Event">
         </div>
     </div>
-    <div>
+    <div class="grid grid-cols-1">
         <div
-            class="container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_1fr_200px_200px_150px_140px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
+            class="my-container w-full h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_1fr_200px_200px_150px_140px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
             <div><input type="checkbox"></div>
             <div>Event</div>
             <div class="justify-center">Start Date</div>
@@ -28,7 +28,7 @@
             <div class="justify-center">Participants</div>
             <div class="justify-center">Action</div>
         </div>
-        <div *ngFor="let item of data;let i = index" class=" container h-[56px] grid
+        <div *ngFor="let item of data;let i = index" class="my-container h-[56px] grid
             grid-cols-[80px_1fr_200px_200px_150px_140px] gap-4 hover:bg-[#EBF5FD] border-x-[1px] border-b-[1px]
             text-[16px] font-normal">
 
@@ -95,12 +95,13 @@
             class="absolute z-10 grid gap-6 justify-center items-center select-none py-[32px] px-[64px] shadow-[0_4px_4px_#00000040] rounded-[16px] bg-white">
             <div class="flex justify-center">
                 <div class="grid justify-center items-center w-[40px] aspect-square bg-[#FFE5E5] rounded-[16px]">
-                    <img src="delete.svg" alt="">
+                    <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVTSURBVHgB7ZzLchtFFIb/ke04xCZxCIFN/ASwT4U9BXsovKYo9hR+AV4gBXs/Abc9FHtS7OEJ4lVSDrZ8SRxbmfQ/3e20xyNpdM5paaTKV9UeXSxNz69zTt9OT4EpUgKFOyy5shqOLCvh7aXavw9ceeU/hrPw/Mx9wUtMkQKZCaLccOU6vBgW56RIJzwWXrhsZBGoJso15KUSy53wOTJgKlAQZt2VNUzBOmvQkijSiaVVmVzEjIWpUwnlKnEIA9QXU3oX2sDVIDtrKNSBu8BTKBALFKzmXXir6TLHrhwWvjWcGJFApbeWO+ie1QyD1rQniU0TCxRc6j3MPtZMCvtUdLkXk3xooossvTvdxHzTL7zbtaK1QKWPN+tYDI7atnK9Nv8ULGdRxCHrZcvGZaxApe8Nz7tbNXGzbNHLHylQaK02sLjcLse0xENjUOjn3EXepnzTlQeu3HLlHt5Y6m44/ufK43DMBZv+p8P6ScsjPsignEOcT1z5zJUttHddivS3K7+GoyW8Rl5rv+nNRgsKcec2bPnKlW14q9FAsR668gts2Wuaaxom0Aewsx5azI/QC1PHWqhGV7sikGF/h+5Di/kWedmBF6oPPRyzHaUvXBLIcIxFa/kN9lYzDFrTl+GogcORJ6kV1Zt5zgLOmziW56Qea/UXUt6BjlmIY33utTLxrIsHpRdH0ylkzPkLsxEnhW72KXQx6WJAm1rQDeiwaMItYB22oeN6fFAJFIKzZvWBfZzcrdUksC4PIOdadLNoQdqlGe0vRv515WtXvgiPtfwEHZVH9dInQmg9WtdivPjGlT9deQTfZGv7NZuhblIqN7OwIAvrOcDlPkwfNh0/Td2W6Wa9UicOhxFdCMzDiLMFEmg8S/yzAjkaE54Wn0POaqUS5GhaimmxBTkqC/oI3XavCDuw0npWArWauG/gHuYHqaWvUBzpAuDHmB9uQYgmBs3TSofU2pek7kXEv8oMEP+YGoEsaRK7ExaqEegAdsTp2cg2bAXahRAu+3CyWhKHxCcdQjp/3ZX4NliGHEsLiuQSRrrw+IoudgYZjzA/SCfzK4GkGaE8qcWIOzeapetzjUDkZ9hBsXdC0S7fpGgsfVCUfiz2PmSwC/87bLiPN8Jw7PQPbOAMpVSkvWhBogzQcGKLX/sxLn8PH1u0kvwesQVxrb5X+NVEaaAmD6GHHcW0BduETYumqVuVX10NVA2SM+kO2qkPTtT/EOrxPfSDYVrPfcjZL3zGfiUQXe1DyLGMRVZ8B13mB9foB9VQI7iZZh8W/XwH3YF10YhzGpPO06VnrZst0tLzftxelQ5W+YK0NUOokEUKioaYBqMRZ5DuPbsQKLjZEXRY5enM8twn6ZNew5saKyKzEMnqnHFT3gWXBDKyIhLjwDQC9044l8UPcmW3YlOOIkXj0MMqidMqu7UOBWFTbjWrwNjzpP7isCxXLkffgS1dTwP+v2mr1KhMezbbOXYTslO5FY5txWKrxJmDP5BnHuq4mCSRnGRwtSa4OsslmTisiIJxtnI3HK0GxMMYuRVh5KJhyDy7C/niYtehKE9HbdUcuaoRPvgMi8v+uH2sY5d9wv6FeZhanZR+m/2rrdbFQkqsyUb9jnDYdt/q2029Y5BsC2dy4wbmL3AzID8rJpzWeXtjgTFobk3B+BVvaNJlpn9ripRkV3QXb26yXyjvWGUWR0pvTRbbqQyqUs1IHEutJsX6BksUh7uGZiGUqTCRbC1R2F7Fsoq8nIZyYilMZBo3eYs7iazEogiMK9lESZl6XybMNTEfgMIxPylm2tZzlc6T4yAUCnOeW5SU10q6QEk1w0+9AAAAAElFTkSuQmCC">
                 </div>
             </div>
             <div class="text-center">
                 <p class="text-[16px] font-medium">คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้</p>
-                <p class="text-[14px] text-[#999]">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+                <p class="text-[16px]">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
             </div>
             <div class="flex gap-2 justify-center items-center">
                 <button class="text-white bg-red-600 text-[12px] rounded-[8px] px-4 py-1" (click)="deleteEvent()">
@@ -116,6 +117,9 @@
         <!-- qrcode -->
         <div *ngIf="qrcode != ''" class="absolute z-10 grid justify-center w-[343px] min-h-[400px] bg-white p-[48px]
             rounded-[16px] text-center">
+            <p class="absolute text-[24px] cursor-pointer text-[#999] font-bold right-5 top-2" (click)="qrcode = '';">
+                x
+            </p>
             <div class="grid grid-cols-1 justify-center">
                 <p class="text-[#1093ED] font-bold text-[24px]">Scan QR Code</p>
                 <p class="text-[#999] text-[14px] font-medium whitespace-pre-wrap break-words">

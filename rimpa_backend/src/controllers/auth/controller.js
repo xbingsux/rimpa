@@ -504,4 +504,48 @@ router.put("/updateProfileMe", auth, async (req, res) => {
   }
 });
 
+router.get("/get-noti", auth, async (req, res) => {
+  try {
+    const noti = await Service.getNoti(req.user.userId);
+    return res.status(200).json({ status: "success", noti });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.put("/read-noti", auth, async (req, res) => {
+  const { id } = req.body;
+  try {
+    const noti = await Service.readNoti(req.user.userId, id);
+    return res.status(201).json({ status: "success", noti });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.put("/read-all-noti", auth, async (req, res) => {
+  const { } = req.body;
+  try {
+    const noti = await Service.readAllNoti(req.user.userId);
+    return res.status(201).json({ status: "success", noti });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

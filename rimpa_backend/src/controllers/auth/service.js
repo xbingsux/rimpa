@@ -369,6 +369,57 @@ const updateProfile = async (id, updatedData) => {
     throw new Error("Error updating profile");
   }
 };
+
+const resetPasswordMe = async (id, old_password, new_password) => {
+
+  let user = await prisma.user.findFirst({
+    where: { id: id },
+  })
+
+  const isMatch = await bcrypt.compare(old_password, user.password);
+
+  if (!isMatch) throw new Error("Incorrect old password");
+
+  if (old_password === new_password) throw new Error("New password cannot be the same as the old password");
+
+  const hashedPassword = await bcrypt.hash(new_password, 10);
+
+  user = await prisma.user.update({
+    where: { id: id },
+    data: {
+      password: hashedPassword
+    }
+  })
+  return user;
+}
+
+const getNoti = async (userId) => {
+  const noti = await prisma.notification_log.findMany({
+    where: { noti_room: { profile: { user_id: userId } } }
+  })
+  return noti
+}
+
+const readNoti = async (userId, id) => {
+  const noti = await prisma.notification_log.update({
+    where: { noti_room: { profile: { user_id: userId } }, id: id },
+    data: {
+      read: true
+    }
+  })
+  return noti
+}
+
+const readAllNoti = async (userId) => {
+  const noti = await prisma.notification_log.update({
+    where: { noti_room: { profile: { user_id: userId } } },
+    data: {
+      read: true
+    }
+  })
+  return noti
+}
+
 module.exports = {
   updateProfile,
   findUserById,
@@ -381,5 +432,9 @@ module.exports = {
   resetPassword,
   profileMe,
   deleteUser,
-  updateProfile
+  updateProfile,
+  resetPasswordMe,
+  getNoti,
+  readNoti,
+  readAllNoti
 };
