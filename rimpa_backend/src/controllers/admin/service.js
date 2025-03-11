@@ -201,7 +201,9 @@ const listProfile = async () => {
             profile: true,
             createdAt: true,
             active: true,
-        },
+        }, orderBy: {
+            createdAt: 'desc'
+        }
     });
 
     return profile;
@@ -235,6 +237,8 @@ const profileById = async (id) => {
 }
 
 const listEvent = async () => {
+    const currentDate = new Date();
+
     let events = await prisma.event.findMany({
         where: { active: true },
         select: {
@@ -269,7 +273,8 @@ const listEvent = async () => {
         max_attendees: item.max_attendees,
         sub_event: item.SubEvent,
         likes: item._count.EventLike,
-        views: item._count.EventView
+        views: item._count.EventView,
+        status: (currentDate < item.startDate ? 'Pending' : currentDate <= item.endDate ? 'Active' : 'Expired')
     }));
 };
 

@@ -393,11 +393,12 @@ const resetPasswordMe = async (id, old_password, new_password) => {
   return user;
 }
 
-const getNoti = async (userId) => {
+const getNoti = async (userId, type) => {
   const noti = await prisma.notification_log.findMany({
     where: { noti_room: { profile: { user_id: userId } } }
   })
-  return noti
+
+  return noti.map(item => !type || item.type == type)
 }
 
 const readNoti = async (userId, id) => {
@@ -420,6 +421,14 @@ const readAllNoti = async (userId) => {
   return noti
 }
 
+const pointHistory = async (userId) => {
+  const point = await prisma.checkIn.findMany({
+    where: { profile: { user_id: userId } }
+  })
+  return point
+}
+
+
 module.exports = {
   updateProfile,
   findUserById,
@@ -436,5 +445,6 @@ module.exports = {
   resetPasswordMe,
   getNoti,
   readNoti,
-  readAllNoti
+  readAllNoti,
+  pointHistory
 };

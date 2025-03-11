@@ -15,6 +15,16 @@ import { ApiService } from '../api/api.service';
 })
 export class EventUpdateComponent implements OnInit {
 
+  setStartDate(newDate: Date) {
+    this.data.startDate = newDate;
+    // console.log('Updated start date:', this.startDate);
+  }
+
+  setEndDate(newDate: Date) {
+    this.data.endDate = newDate;
+    // console.log('Updated start date:', this.startDate);
+  }
+
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public api: ApiService) { }
 
   ngOnInit(): void {
@@ -124,7 +134,7 @@ export class EventUpdateComponent implements OnInit {
     // console.log(imgs);
 
     // console.log(this.data.list_img);
-
+    // alert(this.data.startDate)
 
     this.http.post(`${environment.API_URL}/event/update-event`, {
       event_id: this.data.id,

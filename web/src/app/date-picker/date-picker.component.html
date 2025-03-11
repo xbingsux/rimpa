@@ -3,7 +3,7 @@ items-center cursor-default" tabindex="0" (keydown)="keydownElement($event)" (bl
 
     <input type="text" #bsDatepicker="bsDatepicker" bsDatepicker [(ngModel)]="date" id="{{itemId}}"
         [bsConfig]="bsConfig" class="absolute -z-10 w-full p-2 border border-gray-300 rounded-md shadow-sm"
-        (focus)="selectText(parts[0]);" (ngModelChange)="setItem()">
+        (focus)="selectText(parts[0]);" (ngModelChange)="setDate($event)">
     <!-- <div class="d-flex align-items-center gap-2">
 
         <input type="text" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" [(ngModel)]="selectedDate"

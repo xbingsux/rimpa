@@ -505,8 +505,9 @@ router.put("/updateProfileMe", auth, async (req, res) => {
 });
 
 router.get("/get-noti", auth, async (req, res) => {
+  const { type } = req.query
   try {
-    const noti = await Service.getNoti(req.user.userId);
+    const noti = await Service.getNoti(req.user.userId, type);
     return res.status(200).json({ status: "success", noti });
 
   } catch (error) {
@@ -538,6 +539,20 @@ router.put("/read-all-noti", auth, async (req, res) => {
   try {
     const noti = await Service.readAllNoti(req.user.userId);
     return res.status(201).json({ status: "success", noti });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.get("/point-history", auth, async (req, res) => {
+  try {
+    const history = await Service.pointHistory(req.user.userId);
+    return res.status(200).json({ status: "success", history });
 
   } catch (error) {
     console.error(error);
