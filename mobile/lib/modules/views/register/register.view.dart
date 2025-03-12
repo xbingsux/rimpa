@@ -349,7 +349,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                               'last_name': lastName.value.text,
                               'email': email.value.text,
                               'phone': phone.value.text,
-                              'birth_date': birthDate.value,
+                              'birth_date': DateFormat('yyyy-MM-dd').format(DateTime.parse(birthDate.value)),
                               'gender': gender.value,
                             };
                             profileController.updateProfile(updatedData).then((response) {}).catchError((error) {});
