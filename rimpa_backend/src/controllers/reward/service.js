@@ -118,7 +118,7 @@ const redeemReward = async (idProfile, idReward) => {
                     points: (reward.cost * qty),
                     Profile: { connect: { id: idProfile } },
                     type: 'REDEEM',
-                    description: sub_event.title
+                    description: reward.reward_name
                 }
             })
         });
