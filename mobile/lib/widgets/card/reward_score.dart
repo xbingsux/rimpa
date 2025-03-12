@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
+import 'package:rimpa/modules/views/history/history.view.dart';
 
 class RewardScore extends StatelessWidget {
   const RewardScore({super.key});
@@ -89,23 +90,26 @@ class RewardScore extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Container(
-                  width: 120, // ป้องกัน Overflow
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 209, 234, 255),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.av_timer_rounded, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text(
-                        "ประวัติ",
-                        style: TextStyle(fontSize: 16, color: Colors.blue),
-                      ),
-                    ],
+                child: GestureDetector(
+                  onTap: () => Get.to(() => const HistoryView()),
+                  child: Container(
+                    width: 120, // ป้องกัน Overflow
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 209, 234, 255),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.av_timer_rounded, color: Colors.blue),
+                        SizedBox(width: 8),
+                        Text(
+                          "ประวัติ",
+                          style: TextStyle(fontSize: 16, color: Colors.blue),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

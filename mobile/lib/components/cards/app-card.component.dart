@@ -9,6 +9,7 @@ class AppCardComponent extends StatelessWidget {
   final Border border;
   final BorderRadius borderRadius;
   final Color backgroundColor;
+  final BoxShadow boxShadow;
   final Widget child;
   const AppCardComponent(
       {super.key,
@@ -16,9 +17,15 @@ class AppCardComponent extends StatelessWidget {
       this.incardPadding = const EdgeInsets.all(AppSpacing.sm),
       this.outcardPadding = const EdgeInsets.all(0),
       this.border = const Border.fromBorderSide(
-          BorderSide(width: 0.1, )),
-      this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)),
+          BorderSide(width: 1, color: AppColors.secondary)),
+      this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.sm)),
       this.backgroundColor = AppColors.white,
+      this.boxShadow = const BoxShadow(
+        color: Colors.transparent, // สีเงาที่ใช้
+        offset: Offset(0, 0), // การขยับเงา (ขยับไปทางขวาและลง)
+        blurRadius: 0, // ความเบลอของเงา
+        spreadRadius: 0, // การขยายของเงา
+      ),
       required this.child});
 
   @override
@@ -32,7 +39,9 @@ class AppCardComponent extends StatelessWidget {
           decoration: BoxDecoration(
               color: Theme.of(context).cardColor, // ใช้สีจาก Theme
               borderRadius: borderRadius,
-              border: border),
+              border: border,
+              boxShadow: [boxShadow]
+          ),
           child: child,
         ),
       ),
