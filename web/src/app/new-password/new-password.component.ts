@@ -25,17 +25,22 @@ export class NewPasswordComponent implements OnInit {
     })
   }
 
+  active = false;
   resetPassword() {
-    if (this.newPassword != this.confirmPassword && this.newPassword == '') return
+    this.active = true
 
-    this.http.put(`${environment.API_URL}/auth/reset-password`, {
-      token: this.token,
-      new_password: this.newPassword
-    }).subscribe((response: any) => {
-      if (response.status == 'success') {
-        this.router.navigate(['/login'])
-      }
-    })
+    if (this.newPassword == this.confirmPassword && this.newPassword.trim() != '') {
+      this.http.put(`${environment.API_URL}/auth/reset-password`, {
+        token: this.token,
+        new_password: this.newPassword
+      }).subscribe((response: any) => {
+        if (response.status == 'success') {
+          this.router.navigate(['/login'])
+        }
+      })
+    } else {
+      this.active = false
+      alert('กรุณากรอกรหัสผ่าน')
+    }
   }
-
 }

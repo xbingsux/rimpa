@@ -389,7 +389,8 @@ const resetPasswordMe = async (id, old_password, new_password) => {
 
 const getNoti = async (userId, type) => {
   const noti = await prisma.notification_log.findMany({
-    where: { noti_room: { profile: { user_id: userId } } }
+    where: { noti_room: { profile: { user_id: userId } } },
+    orderBy: { createdAt: 'desc' }
   })
 
   return noti.map(item => !type || item.type == type)
