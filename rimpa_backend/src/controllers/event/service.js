@@ -245,7 +245,7 @@ const checkIn = async (user_id, qrcode) => {
             points: sub_event.point,
             Profile: { connect: { user_id: user_id } },
             type: 'EARN',
-            description: 'รับคะแนนจากกิจกรรม'
+            description: sub_event.title
         }
     })
 

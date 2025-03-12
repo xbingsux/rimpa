@@ -416,11 +416,18 @@ const readAllNoti = async (userId) => {
   return noti
 }
 
-const pointHistory = async (userId) => {
-  const point = await prisma.checkIn.findMany({
-    where: { profile: { user_id: userId } }
+const pointHistory = async (userId, type) => {
+  const point = await prisma.point.findMany({
+    where: {
+      Profile: { user_id: userId },
+    }
   })
-  return point
+
+  return point.map((item) => {
+    if (!item.type || type.trim() == '' || type == item.type) {
+      return item;
+    }
+  })
 }
 
 

@@ -461,8 +461,9 @@ router.put("/read-all-noti", auth, async (req, res) => {
 });
 
 router.get("/point-history", auth, async (req, res) => {
+  const { type } = req.query
   try {
-    const history = await Service.pointHistory(req.user.userId);
+    const history = await Service.pointHistory(req.user.userId, type);
     return res.status(200).json({ status: "success", history });
 
   } catch (error) {

@@ -250,15 +250,18 @@ model Reward {
 }
 
 model RedeemReward {
-  id        Int      @id @default(autoincrement()) // Primary Key
-  quantity  Int      @default(1)
-  base_fee  Decimal? // ค่าจัดส่งพื้นฐาน
-  Reward    Reward   @relation(fields: [rewardId], references: [id])
-  rewardId  Int
-  Address   Address? @relation(fields: [addressId], references: [id])
-  addressId Int?
-  Profile   Profile? @relation(fields: [profileId], references: [id])
-  profileId Int?
+  id          Int         @id @default(autoincrement()) // Primary Key
+  quantity    Int         @default(1)
+  base_fee    Decimal? // ค่าจัดส่งพื้นฐาน
+  Reward      Reward      @relation(fields: [rewardId], references: [id])
+  rewardId    Int
+  Address     Address?    @relation(fields: [addressId], references: [id])
+  addressId   Int?
+  Profile     Profile?    @relation(fields: [profileId], references: [id])
+  profileId   Int?
+  
+  usedCoints  Decimal
+  paymentType PaymentType @default(Point) //กำหนดประเภทการจ่ายเงิน CASH and POINTS
 
   delivery DeliveryType  @default(Pickup)
   status   PaymentStatus @default(PENDING)

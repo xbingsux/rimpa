@@ -38,6 +38,7 @@ const rewardById = async (id) => {
 const redeemReward = async (idProfile, idReward) => {
     try {
         // ดึงข้อมูลโปรไฟล์
+        const qty = 1;
         const profile = await prisma.profile.findUnique({
             where: { id: idProfile },
             select: { points: true },
@@ -86,7 +87,7 @@ const redeemReward = async (idProfile, idReward) => {
 
         // ตรวจสอบว่ามีคะแนนพอหรือไม่
         const cost = Number(reward.cost);
-        if (profile.points < cost) {
+        if (profile.points < (cost * qty)) {
             throw new Error("Insufficient points");
         }
 
@@ -103,13 +104,23 @@ const redeemReward = async (idProfile, idReward) => {
                 data: {
                     profileId: idProfile,
                     rewardId: idReward,
-                    quantity: 1,
+                    quantity: qty,
                     base_fee: 0,
                     addressId: null,
                     delivery: "Pickup",
                     status: "PAID",
+                    usedCoints: (reward.cost * qty)
                 },
             });
+
+            const point = await prisma.point.create({
+                data: {
+                    points: (reward.cost * qty),
+                    Profile: { connect: { id: idProfile } },
+                    type: 'REDEEM',
+                    description: sub_event.title
+                }
+            })
         });
         return { status: "success", message: "Reward redeemed successfully" };
     } catch (error) {
