@@ -37,8 +37,6 @@ const rewardById = async (id) => {
 
 const redeemReward = async (idProfile, idReward) => {
     try {
-
-
         // ดึงข้อมูลโปรไฟล์
         const profile = await prisma.profile.findUnique({
             where: { id: idProfile },
@@ -56,19 +54,19 @@ const redeemReward = async (idProfile, idReward) => {
             throw new Error("Reward not found");
         }
 
-      // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
-      if (reward.max_per_user !== null && reward.max_per_user > 0) {
-        const userRedeemedCount = await prisma.redeemReward.count({
-            where: {
-                profileId: idProfile,
-                rewardId: idReward,
-            },
-        });
+        // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
+        if (reward.max_per_user !== null && reward.max_per_user > 0) {
+            const userRedeemedCount = await prisma.redeemReward.count({
+                where: {
+                    profileId: idProfile,
+                    rewardId: idReward,
+                },
+            });
 
-        if (userRedeemedCount >= reward.max_per_user) {
-            throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+            if (userRedeemedCount >= reward.max_per_user) {
+                throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+            }
         }
-    }
 
 
         // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้

@@ -103,6 +103,12 @@ export class UserUpdateComponent implements OnInit {
   }
 
   async submit() {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    let e = emailPattern.test(this.data.email);
+    if (!e) {
+      alert('กรุณาระบุ email ให้ถูกต้อง')
+      return
+    }
     const imgPath = await this.upload_img();
     // console.log("🚀 Image Path:", imgPath);
 

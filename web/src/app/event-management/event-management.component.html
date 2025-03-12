@@ -20,18 +20,17 @@
     </div>
     <div class="grid grid-cols-1">
         <div
-            class="my-container w-full h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_1fr_200px_200px_150px_140px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
+            class="my-container w-full h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_1fr_80px_200px_140px_140px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
             <div><input type="checkbox"></div>
             <div>Event</div>
-            <div class="justify-center">Start Date</div>
-            <div class="justify-center">End Date</div>
+            <div class="justify-center">Point</div>
             <div class="justify-center">Participants</div>
+            <div class="justify-center">Status</div>
             <div class="justify-center">Action</div>
         </div>
         <div *ngFor="let item of data;let i = index" class="my-container h-[56px] grid
-            grid-cols-[80px_1fr_200px_200px_150px_140px] gap-4 hover:bg-[#EBF5FD] border-x-[1px] border-b-[1px]
+        grid-cols-[80px_1fr_80px_200px_140px_140px] gap-4 hover:bg-[#EBF5FD] border-x-[1px] border-b-[1px]
             text-[16px] font-normal">
-
             <div><input type="checkbox"></div>
             <div class="font-semibold text-start">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
@@ -40,18 +39,39 @@
             </div>
             <div class="justify-center">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
-                    {{item.startDate | date : 'dd-MM-YYYY HH:mm' : tz}}
-                </p>
-            </div>
-            <div class="justify-center">
-                <p class="w-full truncate overflow-hidden whitespace-nowrap">
-                    {{item.endDate | date : 'dd-MM-YYYY HH:mm' : tz}}
+                    {{item.sub_event[0].point}}
                 </p>
             </div>
             <div class="justify-center">
                 <p class="w-full truncate overflow-hidden whitespace-nowrap">
                     {{item.sub_event[0].checkIn.length}} / {{item.max_attendees == 0 ?'ไม่จำกัด':item.max_attendees}}
                 </p>
+            </div>
+            <div class="relative justify-center">
+                <p class="w-full rounded-[16px] px-4 py-1 truncate overflow-hidden whitespace-nowrap cursor-default"
+                    (mouseover)="test.style.display ='block'" (mouseleave)="test.style.display ='none'"
+                    [style]="item.status=='Pending' ? 'color:#FCC426;background-color:#FEF3D4':item.status=='Active' ?'color: #53CA99;background-color: #D2FFEC;':'color: #fff;background-color:#999'">
+                    {{item.status}}
+                </p>
+                <div #test
+                    class="absolute top-[56px] left-[50%] -translate-x-[50%] z-10 bg-white shadow-[0_0_4px_#00000040] rounded-[10px]"
+                    style="display: none;">
+                    <div class="min-w-[250px] grid grid-cols-[auto_auto_1fr] gap-1 py-2 px-4">
+                        <div class="h-full w-[4px] rounded-[4px]"
+                            [style]="item.status=='Pending' ? 'background-color:#FEF3D4':item.status=='Active' ?'background-color: #5DC3A4;':'background-color:#999'">
+                        </div>
+                        <p>Start Date </p>
+                        <p class="text-center">
+                            {{item.startDate | date : 'dd-MM-YYYY HH:mm' : tz}}
+                        </p>
+                        <div class="h-full rounded-[4px] bg-[#e5e7eb]">
+                        </div>
+                        <p>End Date </p>
+                        <p class="text-center">
+                            {{item.endDate | date : 'dd-MM-YYYY HH:mm' : tz}}
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="grid-cols-[auto_auto_auto] gap-2 justify-center">
                 <div (click)="qrcode = item.sub_event[0].qrcode;event_name = item.title"
@@ -141,6 +161,5 @@
         </div>
         <div class="absolute z-0 top-0 left-0 w-full h-full" (click)="qrcode = '';">
         </div>
-
     </div>
 </div>

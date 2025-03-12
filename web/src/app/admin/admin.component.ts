@@ -1,6 +1,6 @@
 import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '../../environments/environment'
 import { ApiService } from '../api/api.service';
@@ -68,6 +68,34 @@ export class AdminComponent implements OnInit {
       ]
     }
   ]
+
+  working = false;
+  barActive = true
+  butt = 'right:37px'
+
+  animation(bar: HTMLElement) {
+    this.working = true;
+    if (this.barActive) {
+      bar.classList.add('expand')
+      bar.classList.remove('minimize')
+    } else {
+      bar.classList.add('minimize')
+      bar.classList.remove('expand')
+    }
+    this.butt = 'right:37px'
+    setTimeout(() => {
+      if (!this.barActive) {
+        this.butt = 'right:37px'
+      } else {
+        this.butt = 'left:50%;transform:translate(-50%,0)'
+      }
+      this.working = false;
+    }, 700)
+
+    setTimeout(() => {
+      this.barActive = !this.barActive
+    }, this.barActive ? 200 : 350)
+  }
 
   constructor(
     private router: Router, private route: ActivatedRoute,
