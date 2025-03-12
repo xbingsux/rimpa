@@ -43,7 +43,7 @@ class AppPages {
     // Profile routes detail
     GetPage(
       name: '/user-deteil',
-      page: () => UserDetail(),
+      page: () => CreateAccountView(isCreate: false,),
     ),
     GetPage(
       name: '/chang-password',

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rimpa/components/dropdown/app-dropdown-v2.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
 import 'package:rimpa/widgets/textFeild/text_form_field.dart';
 import '../../controllers/register.controller.dart';
 
@@ -19,17 +20,44 @@ class CreateAccountView extends StatefulWidget {
 }
 
 class _CreateAccountViewState extends State<CreateAccountView> {
+  Map<String, String> genderMapping = {
+    'Male': 'ชาย',
+    'Female': 'หญิง',
+    'Other': 'ไม่ระบุ',
+  };
+
+  Map<String, String> reverseGenderMapping = {
+    'ชาย': 'Male',
+    'หญิง': 'Female',
+    'ไม่ระบุ': 'Other',
+  };
+
   final registerController = Get.put(RegisterController());
+  final ProfileController profileController = Get.put(ProfileController());
   Rx<TextEditingController> profileName = Rx<TextEditingController>(TextEditingController());
   Rx<TextEditingController> firstName = Rx<TextEditingController>(TextEditingController());
   Rx<TextEditingController> lastName = Rx<TextEditingController>(TextEditingController());
   Rx<TextEditingController> phone = Rx<TextEditingController>(TextEditingController());
   Rx<TextEditingController> email = Rx<TextEditingController>(TextEditingController());
+  Rx<String> birthDate = ''.obs;
+  Rx<String> gender = ''.obs;
   Rx<TextEditingController> password = Rx<TextEditingController>(TextEditingController());
   Rx<TextEditingController> confirmpass = Rx<TextEditingController>(TextEditingController());
   final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    birthDate.value = profileController.profileData['birth_date'];
+    gender.value = profileController.profileData['gender'];
+
+    if (!widget.isCreate) {
+      profileName.value = TextEditingController(text: profileController.profileData['profile_name']);
+      firstName.value = TextEditingController(text: profileController.profileData['first_name']);
+      lastName.value = TextEditingController(text: profileController.profileData['last_name']);
+      phone.value = TextEditingController(text: profileController.profileData['phone']);
+      email.value = TextEditingController(text: profileController.profileData['user']['email']);
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -69,21 +97,33 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                   RimpaTextFormField(
                     hintText: 'ชื่อผู้ใช้',
                     controller: profileName.value,
-                    onChanged: (value) => registerController.profile.profileName.value = value,
+                    onChanged: (value) {
+                      if (widget.isCreate) {
+                        registerController.profile.profileName.value = value;
+                      }
+                    },
                     validator: RequiredValidator(errorText: ''),
                     showTitle: true,
                   ),
                   RimpaTextFormField(
                     hintText: 'ชื่อ',
                     controller: firstName.value,
-                    onChanged: (value) => registerController.profile.firstName.value = value,
+                    onChanged: (value) {
+                      if (widget.isCreate) {
+                        registerController.profile.firstName.value = value;
+                      }
+                    },
                     validator: RequiredValidator(errorText: ''),
                     showTitle: true,
                   ),
                   RimpaTextFormField(
                     hintText: 'นามสกุล',
                     controller: lastName.value,
-                    onChanged: (value) => registerController.profile.lastName.value = value,
+                    onChanged: (value) {
+                      if(widget.isCreate) {
+                        registerController.profile.lastName.value = value;
+                      }
+                    },
                     validator: RequiredValidator(errorText: ''),
                     showTitle: true,
                   ),
@@ -91,7 +131,11 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                   RimpaTextFormField(
                     hintText: 'อีเมล',
                     controller: email.value,
-                    onChanged: (value) => registerController.user.email.value = value,
+                    onChanged: (value) {
+                      if(widget.isCreate) {
+                        registerController.user.email.value = value;
+                      }
+                    },
                     validator: MultiValidator(
                       [
                         RequiredValidator(errorText: ''),
@@ -103,7 +147,11 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                   RimpaTextFormField(
                     hintText: 'หมายเลขโทรศัพท์',
                     controller: phone.value,
-                    onChanged: (value) => registerController.profile.phone.value = value,
+                    onChanged: (value) {
+                      if (widget.isCreate) {
+                        registerController.profile.phone.value = value;
+                      }
+                    },
                     validator: MultiValidator([
                       RequiredValidator(errorText: ''),
                       PatternValidator(r'^(0[689]{1})+([0-9]{8})$', errorText: 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง'),
@@ -127,7 +175,9 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                         onTap: () async {
                           DateTime? pickedDate = await DatePicker.showSimpleDatePicker(
                             context,
-                            initialDate: registerController.profile.birthDate.value,
+                            initialDate: widget.isCreate ?
+                              registerController.profile.birthDate.value :
+                              profileController.profileData['birth_date'] is DateTime ? profileController.profileData['birth_date'] : DateTime.parse(profileController.profileData['birth_date']),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                             dateFormat: "dd-MMMM-yyyy",
@@ -145,7 +195,11 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                             confirmText: "ตกลง",
                           );
                           if (pickedDate != null) {
-                            registerController.profile.birthDate.value = pickedDate;
+                            if (widget.isCreate) {
+                              registerController.profile.birthDate.value = pickedDate;
+                            } else {
+                              birthDate.value = pickedDate.toIso8601String();
+                            }
                           }
                         },
                         child: InputDecorator(
@@ -161,8 +215,9 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: AppColors.background_main, width: 1)),
                           ),
                           child: Obx(() => Text(
-                                // ✅ ครอบ Text ด้วย Obx() เพื่อให้มันอัปเดตอัตโนมัติ
-                                DateFormat('d MMMM yyyy', 'th').format(registerController.profile.birthDate.value),
+                                widget.isCreate?
+                                  DateFormat('d MMMM yyyy', 'th').format(registerController.profile.birthDate.value) :
+                                  DateFormat('d MMMM yyyy', 'th').format(DateTime.parse(birthDate.value)),
                                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                       fontSize: AppTextSize.md,
                                       fontWeight: FontWeight.w600,
@@ -210,10 +265,16 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                           ),
                           child: Obx(
                             () => AppDropdownV2Component(
-                                defaultText: 'ไม่ระบุ',
+                                defaultText: widget.isCreate ? 'ไม่ระบุ' : genderMapping[gender.value].toString(),
                                 choices: const ['ชาย', 'หญิง', 'ไม่ระบุ'],
-                                selected: registerController.profile.gender.value,
-                                onchanged: (value) => registerController.profile.gender.value = value),
+                                selected: widget.isCreate ? registerController.profile.gender.value : genderMapping[gender.value].toString(),
+                                onchanged: (value) {
+                                  if (widget.isCreate) {
+                                    registerController.profile.gender.value = value;
+                                  } else {
+                                    gender.value = reverseGenderMapping[value].toString();
+                                  }
+                                }),
                           ),
                         ),
                       ],
@@ -279,7 +340,20 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       onTap: () {
                         formKey.currentState!.save();
                         if (formKey.currentState!.validate()) {
-                          registerController.register();
+                          if (widget.isCreate) {
+                            registerController.register();
+                          } else {
+                            Map<String, dynamic> updatedData = {
+                              'profile_name': profileName.value.text,
+                              'first_name': firstName.value.text,
+                              'last_name': lastName.value.text,
+                              'email': email.value.text,
+                              'phone': phone.value.text,
+                              'birth_date': birthDate.value,
+                              'gender': gender.value,
+                            };
+                            profileController.updateProfile(updatedData).then((response) {}).catchError((error) {});
+                          }
                         }
                       },
                       child: Container(
