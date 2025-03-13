@@ -57,18 +57,16 @@ router.get("/get-reward", async (req, res) => {
   }
 });
 
-router.post("/redeem-rewards", async (req, res) => {
-  const { idProfile, idReward } = req.body;
+router.post("/redeem-rewards", auth, async (req, res) => {
+  const { reward_id } = req.body;
   try {
-    const reward = await Service.redeemReward(idProfile, idReward)
-    return res.status(201).json({ status: "success", reward });
+    const reward = await Service.redeemReward(req.user.userId, reward_id)
+    return res.status(201).json({ status: "Reward redeemed successfully", reward });
 
   } catch (error) {
-    console.error(error);
-    console.log("error");
     return res
       .status(500)
-      .json({ status: "error", message: "Internal Server Error" });
+      .json({ status: "error", message: error.message });
   }
 });
 

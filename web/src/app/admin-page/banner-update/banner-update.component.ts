@@ -1,46 +1,40 @@
 import { NgIf } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../api/api.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { ApiService } from '../../api/api.service';
 
 @Component({
-  selector: 'app-reward-update',
+  selector: 'app-banner-update',
   standalone: true,
   imports: [NgIf, FormsModule],
-  templateUrl: './reward-update.component.html',
-  styleUrl: './reward-update.component.scss'
+  templateUrl: './banner-update.component.html',
+  styleUrl: './banner-update.component.scss'
 })
-export class RewardUpdateComponent implements OnInit {
+export class BannerUpdateComponent {
 
   constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute, public api: ApiService) { }
-  
+
   loading = true;
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
       // console.log(param.get('id'));
       if (param.get('id')) {
         const params = new HttpParams().set('id', Number(param.get('id')));
-        this.http.get(`${environment.API_URL}/get-reward`, { params }).subscribe(async (response: any) => {
+        this.http.get(`${environment.API_URL}/event/get-banner`, { params }).subscribe(async (response: any) => {
           // console.log(response);
-
-          let item = response.reward;
-          this.data.id = item.id
-
-          this.data.reward_name = item.reward_name
+          let item = response.banner;
+          this.data.id = item.id;
+          this.data.title = item.title;
           this.data.description = item.description
-
           this.data.startDate = new Date(item.startDate).toISOString().slice(0, 10)
           this.data.endDate = new Date(item.endDate).toISOString().slice(0, 10)
-          this.data.stock = item.stock
-          this.data.cost = item.cost
-          this.data.path = item.img
-          let path = `${environment.API_URL}${item.img.replace('src', '')}`;
-          path = await this.api.checkImageExists(path) != 500 && item.img.trim() != '' ? path : ''
+          this.data.path = item.path;
+          let path = `${environment.API_URL}${item.path.replace('src', '')}`;
+          path = await this.api.checkImageExists(path) != 500 && item.path.trim() != '' ? path : ''
           this.img_path = path;
-
           this.loading = false
         })
       } else {
@@ -49,13 +43,13 @@ export class RewardUpdateComponent implements OnInit {
     });
   }
 
-  img_path: string | null = null//base64
-  img_file: File | null = null;
+  data: Banner = new Banner()
+  img_path = ''//base64
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.img_file = file
+      this.img_file = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.img_path = reader.result as string;
@@ -64,14 +58,14 @@ export class RewardUpdateComponent implements OnInit {
     }
   }
 
-  data: Reward = new Reward()
+  img_file: File | null = null;
 
   upload_img(): Promise<string | null> {
     return new Promise((resolve, reject) => {
       let formData = new FormData();
       if (this.img_file) {
         formData.append('file', this.img_file);
-        this.http.post(`${environment.API_URL}/upload/reward`, formData).subscribe(
+        this.http.post(`${environment.API_URL}/upload/banner`, formData).subscribe(
           (item: any) => {
             if (item.path) {
               resolve(item.path);
@@ -90,25 +84,22 @@ export class RewardUpdateComponent implements OnInit {
     });
   }
 
-
   async submit() {
     const imgPath = await this.upload_img();
     // console.log("🚀 Image Path:", imgPath);
 
-    this.http.post(`${environment.API_URL}/update-reward`, {
+    this.http.post(`${environment.API_URL}/update-banner`, {
       id: this.data.id,
-      reward_name: this.data.reward_name,
+      title: this.data.title,
       description: this.data.description,
       startDate: new Date(this.data.startDate),
       endDate: new Date(this.data.endDate),
-      img: imgPath || this.data.path,
-      stock: +this.data.stock,
-      cost: +this.data.cost
-    }).subscribe((response: any) => {
+      path: imgPath || this.data.path
+    }).subscribe(async (response: any) => {
       // console.log(response);
       if (response.status == 'success') {
         alert('บันทึกข้อมูลสำเร็จ')
-        this.router.navigate(['/admin/reward']);
+        this.router.navigate(['/admin/banner'])
       }
     }, error => {
       alert('บันทึกข้อมูลไม่สำเร็จ')
@@ -117,15 +108,11 @@ export class RewardUpdateComponent implements OnInit {
   }
 
 }
-
-class Reward {
+class Banner {
   id = 0
-  reward_name = ''
+  title = ''
   description = ''
-  img = ''
+  path = ''
   startDate = new Date(new Date().setHours(7, 0, 0, 0)).toISOString().slice(0, 10)
   endDate = new Date(new Date().setHours(31, 0, 0, 0)).toISOString().slice(0, 10)
-  stock: number = 0
-  cost: number = 0
-  path = ''
 }

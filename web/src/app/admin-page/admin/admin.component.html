@@ -3,7 +3,7 @@
   <div class="w-[94px] xl:hidden">
 
   </div>
-  <div class="absolute xl:relative z-10 h-full min-h-[800px]">
+  <div class="select-none absolute xl:relative z-10 h-full min-h-[800px]">
     <div #bar
       class="overflow-hidden pt-[130px] sticky top-0 h-screen min-h-[600px] bg-[#2B2B2B] border-r-[#16223B33] rounded-tr-[8px] rounded-br-[8px]">
       <!-- 2B2B2B -->
@@ -17,12 +17,12 @@
       <div class="grid gap-3 py-6 px-[25px]" [style]="barActive ? 'grid-template-columns:50px;':''">
         <div *ngFor="let item of menu" class="flex justify-center items-center rounded-[16px] cursor-pointer text-[#999] transition-[background-color_0.3s]
          text-start text-[1rem] h-[50px] px-[15px] hover:bg-[#1c1c1c]" (click)="api.goToLink(item.path)"
-          [style]="barActive ? 'aspect-ratio: 1/1;':''" [style]="isUrl(path,item.tags) ?active:''">
+          [style]="barActive ? 'aspect-ratio: 1/1;':''" [style]="isUrl(path,item.path,item.tags) ?active:''">
           <div class="w-full grid grid-cols-[20px_1fr] items-center gap-2"
             [style]="!working && barActive ? 'grid-template-columns:auto;justify-content: center;':''">
             <div>
               <img src="{{item.icon}}" class="w-[20px] aspect-square"
-                [style]="isUrl(path,item.tags) ? 'filter: brightness(0) saturate(100%) invert(100%);' : ''">
+                [style]="isUrl(path,item.path,item.tags) ? 'filter: brightness(0) saturate(100%) invert(100%);' : ''">
             </div>
             <div [style]="barActive ? 'display: none;':''">
               <p class="w-full whitespace-nowrap">{{item.title}}</p>

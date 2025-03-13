@@ -219,6 +219,23 @@ router.get("/get-reward", auth, async (req, res) => {
   }
 });
 
+router.get("/reward-history", auth, async (req, res) => {
+  const { } = req.query;
+  try {
+    if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
+
+    const history = await Service.rewardHistory()
+    return res.status(200).json({ status: "success", history });
+
+  } catch (error) {
+    console.error(error);
+    console.log("error");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 router.get("/list-banner", auth, async (req, res) => {
   const { } = req.query;
   try {

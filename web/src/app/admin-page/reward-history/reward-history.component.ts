@@ -1,36 +1,38 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../api/api.service';
+import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-banner-management',
+  selector: 'app-reward-history',
   standalone: true,
   imports: [DatePipe, NgFor, NgIf, FormsModule],
-  templateUrl: './banner-management.component.html',
-  styleUrl: './banner-management.component.scss'
+  templateUrl: './reward-history.component.html',
+  styleUrl: './reward-history.component.scss'
 })
-export class BannerManagementComponent {
+export class RewardHistoryComponent {
 
   constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
+
   ngOnInit(): void {
-    this.http.get(`${environment.API_URL}/list-banner`, {}).subscribe(async (response: any) => {
-      // console.log(response.banner);
-      this.list = response.banner
+    this.http.get(`${environment.API_URL}/reward-history`, {}).subscribe(async (response: any) => {
+      console.log(response.history);
+      this.list = response.history
 
       this.list.map(async (item: any) => {
-        let url = item.path
+        let url = item.Profile.profile_img
         if (url) {
           const status = await this.api.checkImageExists(`${environment.API_URL}${url.replace('src', '')}`)
-          if (status === 500 || status === 404) item.path = null;
+          if (status === 500 || status === 404) item.Profile.profile_img = null;
         }
         return item;
       })
+
       this.list_Filter()
     }, error => {
       console.error('Error:', error);
@@ -56,7 +58,18 @@ export class BannerManagementComponent {
     let start = this.page_no * this.max_item;
     let end = start + this.max_item;
     this.data = this.list.filter((item) => {
-      if ((this.search == '' || item.title.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1)) {
+
+      let date = new Date(item.createdAt)
+      let dateToString = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+
+      if ((
+        this.search == '' ||
+        item.Profile.profile_name.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1 ||
+        item.Profile.contact_email.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1 ||
+        item.Reward.reward_name.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1 ||
+        item.usedCoints.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1 ||
+        dateToString.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1
+      )) {
         n++
         return item;
       }
@@ -96,16 +109,4 @@ export class BannerManagementComponent {
     this.list_Filter()
   }
 
-  delete_id: number | null = null;
-  deleteBanner() {
-    this.http.post(`${environment.API_URL}/delete-banner`, { id: this.delete_id }).subscribe(async (response: any) => {
-      // console.log(response);
-      alert('ลบข้อมูลสำเร็จ')
-      this.ngOnInit()
-      this.delete_id = null;
-    }, error => {
-      alert('ไม่สามารถลบข้อมูลได้')
-      console.error('Error:', error);
-    });
-  }
 }

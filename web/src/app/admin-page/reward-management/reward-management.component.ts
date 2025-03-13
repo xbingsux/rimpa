@@ -1,57 +1,57 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ApiService } from '../api/api.service';
+import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
-import { QRCodeModule } from 'angularx-qrcode';
-import html2canvasLib from 'html2canvas';
 
 @Component({
-  selector: 'app-event-management',
+  selector: 'app-reward-management',
   standalone: true,
-  imports: [NgFor, DatePipe, NgIf, FormsModule, QRCodeModule],
-  templateUrl: './event-management.component.html',
-  styleUrl: './event-management.component.scss'
+  imports: [NgFor, DatePipe, NgIf, FormsModule],
+  templateUrl: './reward-management.component.html',
+  styleUrl: './reward-management.component.scss'
 })
-export class EventManagementComponent implements OnInit {
+export class RewardManagementComponent {
 
   @Input() routeScreen = false
 
   constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
-  qrcode = ''
-  event_name = ''
-  delete_id: number | null = null;
 
   ngOnInit(): void {
-    this.http.get(`${environment.API_URL}/list-event`, {}).subscribe(async (response: any) => {
-      console.log(response.event);
-      this.list = response.event;
+    this.http.get(`${environment.API_URL}/list-reward`, {}).subscribe(async (response: any) => {
+      // console.log(response.reward);
+      this.list = response.reward
+
+      this.list.map(async (item: any) => {
+        let url = item.img
+        if (url) {
+          const status = await this.api.checkImageExists(`${environment.API_URL}${url.replace('src', '')}`)
+          if (status === 500 || status === 404) item.img = null;
+        }
+        return item;
+      })
+
       this.list_Filter()
     }, error => {
       console.error('Error:', error);
     });
   }
 
-  // The text/data that the QR code will encode
-  qrText: string = '';
+  getImg(url: string) {
+    let path = `${environment.API_URL}${url.replace('src', '')}`
+    return path
+  }
 
-  @ViewChild('qrContainer') qrContainer!: ElementRef;
-
-  async downloadQRCode(): Promise<void> {
-    try {
-      const canvas = await html2canvasLib(this.qrContainer.nativeElement);
-      const imageData = canvas.toDataURL('image/png');
-      const downloadLink = document.createElement('a');
-      downloadLink.href = imageData;
-      downloadLink.download = `${this.event_name}.png`;
-      downloadLink.click();
-    } catch (error: any) {
-      console.error('Error capturing QR Code:', error);
-    }
+  sum_quantity(item: any) {
+    let sum = 0;
+    item.RedeemReward.forEach((item: any) => {
+      if (item.quantity) sum += item.quantity
+    })
+    return sum;
   }
 
   //Search Func
@@ -67,7 +67,7 @@ export class EventManagementComponent implements OnInit {
     let start = this.page_no * this.max_item;
     let end = start + this.max_item;
     this.data = this.list.filter((item) => {
-      if ((this.search == '' || item.title.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1)) {
+      if ((this.search == '' || item.reward_name.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1)) {
         n++
         return item;
       }
@@ -107,8 +107,9 @@ export class EventManagementComponent implements OnInit {
     this.list_Filter()
   }
 
-  deleteEvent() {
-    this.http.post(`${environment.API_URL}/delete-event`, { id: this.delete_id }).subscribe(async (response: any) => {
+  delete_id: number | null = null;
+  deleteReward() {
+    this.http.post(`${environment.API_URL}/delete-reward`, { id: this.delete_id }).subscribe(async (response: any) => {
       // console.log(response);
       alert('ลบข้อมูลสำเร็จ')
       this.ngOnInit()
@@ -120,4 +121,3 @@ export class EventManagementComponent implements OnInit {
   }
 
 }
-

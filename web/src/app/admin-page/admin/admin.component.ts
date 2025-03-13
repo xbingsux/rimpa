@@ -2,9 +2,9 @@ import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { environment } from '../../environments/environment'
-import { ApiService } from '../api/api.service';
-import { AuthGuard } from '../service/auth-guard.service';
+import { environment } from '../../../environments/environment'
+import { ApiService } from '../../api/api.service';
+import { AuthGuard } from '../../service/auth-guard.service';
 
 @Component({
   selector: 'app-admin',
@@ -36,7 +36,6 @@ export class AdminComponent implements OnInit {
       path: `/${this.title}/event`,
       icon: 'calendar.svg',
       tags: [
-        `/${this.title}/event`,
         `/${this.title}/event-update`
       ]
     },
@@ -45,7 +44,6 @@ export class AdminComponent implements OnInit {
       path: `/${this.title}/banner`,
       icon: 'notification.svg',
       tags: [
-        `/${this.title}/banner`,
         `/${this.title}/banner-update`
       ]
     },
@@ -54,7 +52,6 @@ export class AdminComponent implements OnInit {
       path: `/${this.title}/reward`,
       icon: 'cup.svg',
       tags: [
-        `/${this.title}/reward`,
         `/${this.title}/reward-update`
       ]
     },
@@ -63,8 +60,21 @@ export class AdminComponent implements OnInit {
       path: `/${this.title}/users`,
       icon: 'users.svg',
       tags: [
-        `/${this.title}/users`,
         `/${this.title}/user-update`
+      ]
+    },
+    {
+      title: 'History',
+      path: `/${this.title}/reward-history`,
+      icon: 'time.svg',
+      tags: [
+      ]
+    },
+    {
+      title: 'Scanner',
+      path: `/${this.title}/reward-scan`,
+      icon: 'scan.svg',
+      tags: [
       ]
     }
   ]
@@ -128,8 +138,9 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  isUrl(url: string, tags_url: string[]) {
-    return tags_url.some((tag: string) => url.indexOf(tag) != -1)
+  isUrl(url: string, path: string, tags_url: string[]) {
+
+    return url == path || tags_url.some((tag: string) => url.indexOf(tag) != -1)
   }
 
   logout() {

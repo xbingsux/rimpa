@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ApiService } from '../api/api.service'
+import { ApiService } from '../../api/api.service'
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-user-management',

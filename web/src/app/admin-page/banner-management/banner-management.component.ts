@@ -1,40 +1,36 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ApiService } from '../api/api.service';
+import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-reward-management',
+  selector: 'app-banner-management',
   standalone: true,
-  imports: [NgFor, DatePipe, NgIf, FormsModule],
-  templateUrl: './reward-management.component.html',
-  styleUrl: './reward-management.component.scss'
+  imports: [DatePipe, NgFor, NgIf, FormsModule],
+  templateUrl: './banner-management.component.html',
+  styleUrl: './banner-management.component.scss'
 })
-export class RewardManagementComponent {
-
-  @Input() routeScreen = false
+export class BannerManagementComponent {
 
   constructor(private router: Router, private http: HttpClient, public api: ApiService) { }
   tz = environment.timeZone;
   list: any[] = []
-
   ngOnInit(): void {
-    this.http.get(`${environment.API_URL}/list-reward`, {}).subscribe(async (response: any) => {
-      // console.log(response.reward);
-      this.list = response.reward
+    this.http.get(`${environment.API_URL}/list-banner`, {}).subscribe(async (response: any) => {
+      // console.log(response.banner);
+      this.list = response.banner
 
       this.list.map(async (item: any) => {
-        let url = item.img
+        let url = item.path
         if (url) {
           const status = await this.api.checkImageExists(`${environment.API_URL}${url.replace('src', '')}`)
-          if (status === 500 || status === 404) item.img = null;
+          if (status === 500 || status === 404) item.path = null;
         }
         return item;
       })
-
       this.list_Filter()
     }, error => {
       console.error('Error:', error);
@@ -46,13 +42,6 @@ export class RewardManagementComponent {
     return path
   }
 
-  sum_quantity(item: any) {
-    let sum = 0;
-    item.RedeemReward.forEach((item: any) => {
-      if (item.quantity) sum += item.quantity
-    })
-    return sum;
-  }
 
   //Search Func
   search = ''
@@ -67,7 +56,7 @@ export class RewardManagementComponent {
     let start = this.page_no * this.max_item;
     let end = start + this.max_item;
     this.data = this.list.filter((item) => {
-      if ((this.search == '' || item.reward_name.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1)) {
+      if ((this.search == '' || item.title.toLocaleLowerCase().indexOf(this.search.toLocaleLowerCase()) != -1)) {
         n++
         return item;
       }
@@ -108,8 +97,8 @@ export class RewardManagementComponent {
   }
 
   delete_id: number | null = null;
-  deleteReward() {
-    this.http.post(`${environment.API_URL}/delete-reward`, { id: this.delete_id }).subscribe(async (response: any) => {
+  deleteBanner() {
+    this.http.post(`${environment.API_URL}/delete-banner`, { id: this.delete_id }).subscribe(async (response: any) => {
       // console.log(response);
       alert('ลบข้อมูลสำเร็จ')
       this.ngOnInit()
@@ -119,5 +108,4 @@ export class RewardManagementComponent {
       console.error('Error:', error);
     });
   }
-
 }

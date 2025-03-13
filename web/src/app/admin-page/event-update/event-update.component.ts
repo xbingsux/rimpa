@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../environments/environment';
-import { ApiService } from '../api/api.service';
-import { DatePickerComponent } from "../date-picker/date-picker.component";
+import { environment } from '../../../environments/environment';
+import { ApiService } from '../../api/api.service';
+import { DatePickerComponent } from "../../date-picker/date-picker.component";
 
 @Component({
   selector: 'app-event-update',

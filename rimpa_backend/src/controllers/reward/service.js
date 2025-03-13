@@ -35,40 +35,45 @@ const rewardById = async (id) => {
     return reward
 }
 
-const redeemReward = async (idProfile, idReward) => {
-    try {
-        // ดึงข้อมูลโปรไฟล์
-        const qty = 1;
-        const profile = await prisma.profile.findUnique({
-            where: { id: idProfile },
-            select: { points: true },
+const redeemReward = async (userId, reward_id) => {
+
+    // ดึงข้อมูลโปรไฟล์
+    const qty = 1;
+    const profile = await prisma.profile.findUnique({
+        where: { user_id: userId },
+        select: { points: true, id: true },
+    });
+
+    if (!profile) {
+        throw new Error("Profile not found");
+    }
+
+    // ดึงข้อมูลรางวัล
+    const reward = await rewardById(reward_id);
+
+    if (!reward) {
+        throw new Error("Reward not found");
+    }
+
+    // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
+    if (reward.max_per_user !== null && reward.max_per_user > 0) {
+        const redeemed = await prisma.redeemReward.findMany({
+            where: { rewardId: reward_id },
         });
 
-        if (!profile) {
-            throw new Error("Profile not found");
-        }
+        let userRedeemedCount = 0
+        let redeemedCount = 0;
 
-        // ดึงข้อมูลรางวัล
-        const reward = await rewardById(idReward);
-
-        if (!reward) {
-            throw new Error("Reward not found");
-        }
-
-        // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
-        if (reward.max_per_user !== null && reward.max_per_user > 0) {
-            const userRedeemedCount = await prisma.redeemReward.count({
-                where: {
-                    profileId: idProfile,
-                    rewardId: idReward,
-                },
-            });
-
-            if (userRedeemedCount >= reward.max_per_user) {
-                throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+        redeemed.map((item) => {
+            if (item.profileId == profile.id) {
+                userRedeemedCount += item.quantity
             }
-        }
+            redeemedCount += item.quantity
+        })
 
+        if (userRedeemedCount >= reward.max_per_user) {
+            throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+        }
 
         // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
         const now = new Date();
@@ -77,10 +82,6 @@ const redeemReward = async (idProfile, idReward) => {
         }
 
         // ตรวจสอบว่าสินค้าถูกแลกไปแล้วกี่ครั้ง
-        const redeemedCount = await prisma.redeemReward.count({
-            where: { rewardId: idReward },
-        });
-
         if (redeemedCount >= reward.stock) {
             throw new Error("Reward is out of stock");
         }
@@ -92,43 +93,47 @@ const redeemReward = async (idProfile, idReward) => {
         }
 
         // ทำธุรกรรมแบบป้องกัน race condition
-        await prisma.$transaction(async (tx) => {
+        const redeem = await prisma.$transaction(async (tx) => {
+            const usePoint = (reward.cost * qty);
             // ลดคะแนน
             await tx.profile.update({
-                where: { id: idProfile },
+                where: { id: profile.id },
                 data: { points: { decrement: reward.cost } },
             });
 
             // บันทึกการแลกรางวัล
-            await tx.redeemReward.create({
+            const redeem = await tx.redeemReward.create({
                 data: {
-                    profileId: idProfile,
-                    rewardId: idReward,
+                    profileId: profile.id,
+                    rewardId: reward_id,
                     quantity: qty,
                     base_fee: 0,
                     addressId: null,
                     delivery: "Pickup",
                     status: "PAID",
-                    usedCoints: (reward.cost * qty)
+                    usedCoints: usePoint
                 },
             });
 
-            const point = await prisma.point.create({
+            const point = await tx.point.create({
                 data: {
-                    points: (reward.cost * qty),
-                    Profile: { connect: { id: idProfile } },
+                    points: usePoint,
+                    Profile: { connect: { id: profile.id } },
                     type: 'REDEEM',
                     description: reward.reward_name
                 }
             })
-        });
-        return { status: "success", message: "Reward redeemed successfully" };
-    } catch (error) {
-        console.error(error);
-        return { status: "error", message: error.message };
-    }
-};
 
+            return redeem;
+
+        }).catch((e) => {
+            throw new Error("Transaction could not be completed.");
+        })
+
+        return redeem;
+    }
+
+};
 
 module.exports = {
     listReward,

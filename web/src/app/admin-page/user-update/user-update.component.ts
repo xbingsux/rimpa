@@ -1,10 +1,10 @@
 import { NgIf } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../api/api.service';
+import { ApiService } from '../../api/api.service';
 
 @Component({
   selector: 'app-user-update',

@@ -341,6 +341,17 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
     return banner;
 }
 
+const rewardHistory = async () => {
+    const history = await prisma.redeemReward.findMany({
+        include: {
+            Profile: true,
+            Reward: true
+        }
+    });
+
+    return history;
+};
+
 const deleteUser = async (id) => {
     const user = await prisma.user.delete({
         where: {
@@ -397,6 +408,7 @@ module.exports = {
     upsertReward,
     rewardById,
     deleteReward,
+    rewardHistory,
     //banner
     listBanner,
     upsertBanner,
