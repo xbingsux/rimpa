@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart'; // เพิ่มสำหรับเปิดแอปอีเมล
 import 'package:flutter/material.dart';
 import '../models/users.model.dart';
@@ -28,7 +29,14 @@ class RegisterController extends GetxController {
                 ? 'Male'
                 : 'Female';
         // แปลงวันที่ให้เป็นรูปแบบ ISO-8601 พร้อมเวลาและเขตเวลา
-        String formattedDate = profile.birthDate.value.toUtc().toIso8601String();
+        // String formattedDate = profile.birthDate.value.toUtc().toIso8601String();
+        // String formattedDate = DateFormat('yyyy-MM-dd').format(profile.birthDate.value);
+        // DateTime dateTime = DateTime.parse(formattedDate); // แปลง String กลับเป็น DateTime
+        // String isoString = dateTime.toIso8601String(); // ทำให้เป็น ISO 8601
+
+        String formattedDate = DateFormat('yyyy-MM-dd').format(profile.birthDate.value);
+        DateTime dateTime = DateTime.parse("$formattedDate 00:00:00"); // อย่าใส่ Z ยังเป็น local time
+        String isoString = dateTime.toIso8601String() + "Z"; // เติม Z เอง
         Map<String, dynamic> registerData = {
           'email': user.email.value,
           'password': user.password.value,
@@ -37,7 +45,7 @@ class RegisterController extends GetxController {
             'first_name': profile.firstName.value,
             'last_name': profile.lastName.value,
             'phone': profile.phone.value,
-            'birth_date': formattedDate, // ใช้วันที่ที่แปลงแล้ว
+            'birth_date': isoString, // ใช้วันที่ที่แปลงแล้ว
             'gender': genderValue, // ส่งค่า gender ที่เลือก
           },
         };
@@ -66,6 +74,7 @@ class RegisterController extends GetxController {
         }
       } catch (e) {
         Get.snackbar("Error", "An error occurred. Please try again.");
+        print(e);
       }
     } else {
       Get.snackbar("Error", "Please fill all fields");

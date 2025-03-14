@@ -30,13 +30,14 @@ class HistoryController extends GetxController {
       isPointLoading.value = true;
 
       final response = await getConnect.get(
-        "${AppApi.urlApi}/auth/get-noti",
+        "${AppApi.urlApi}/auth/point-history",
         headers: {"Authorization": "Bearer $token"},
       );
 
       if (response.statusCode == 200) {
         var data = response.body;
         if (data != null && data['status'] == 'success') {
+          print(data);
           // print(List.from(data['noti']));
           //   List.from(data['noti']).map((item){
           //     print(item);
