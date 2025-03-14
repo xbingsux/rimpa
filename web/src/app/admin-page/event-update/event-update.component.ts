@@ -124,7 +124,9 @@ export class EventUpdateComponent implements OnInit {
     });
   }
 
+  submitting = false;
   async submit() {
+    this.submitting = true;
     // console.log(this.data.list_img);
     // this.data.list_img 
     const imgs = await Promise.all(
@@ -160,11 +162,14 @@ export class EventUpdateComponent implements OnInit {
     }).subscribe(async (response: any) => {
       // console.log(response);
       if (response.status == 'success') {
-        alert('บันทึกข้อมูลสำเร็จ')
+        this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
+        // alert('บันทึกข้อมูลสำเร็จ')
         this.router.navigate(['/admin/event'])
       }
     }, error => {
-      alert('บันทึกข้อมูลไม่สำเร็จ')
+      this.submitting = false;
+      this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
+      // alert('บันทึกข้อมูลไม่สำเร็จ')
       console.error('Error:', error);
     });
   }

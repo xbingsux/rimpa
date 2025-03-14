@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../../api/api.service';
+import { AlertType } from '../../model/alert';
 
 @Component({
   selector: 'app-reward-scan',
@@ -9,4 +11,11 @@ import { Component } from '@angular/core';
 })
 export class RewardScanComponent {
 
+  constructor(
+    // private router: Router, private route: ActivatedRoute, 
+    public api: ApiService
+  ) { }
+  test() {
+    this.api.listAlert.push(new AlertType('success', ``))
+  }
 }

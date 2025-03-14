@@ -1,0 +1,37 @@
+.reading {
+    animation-name: alert-popup;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-in-out;
+    /* ให้การเปลี่ยนแปลงดูนุ่มนวล */
+}
+
+@keyframes alert-popup {
+    from {
+        opacity: 0;
+        transform: translateY(50%);
+        /* เพิ่มการขยายเพื่อให้ดู smooth */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.read {
+    animation-name: animation-read;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+    /* ให้การเปลี่ยนแปลงดูนุ่มนวล */
+}
+
+@keyframes animation-read {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

@@ -102,7 +102,9 @@ export class UserUpdateComponent implements OnInit {
     });
   }
 
+  submitting = false;
   async submit() {
+    this.submitting = true;
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     let e = emailPattern.test(this.data.email);
     if (!e) {
@@ -133,14 +135,17 @@ export class UserUpdateComponent implements OnInit {
         // console.log("✅ Register Success:", response);
         if (response.status === 'success') {
           this.router.navigate(['/admin/users']).then(() => {
-            alert('บันทึกข้อมูลสำเร็จ')
+            // alert('บันทึกข้อมูลสำเร็จ')
+            this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
             window.location.reload();
           });
         }
 
       },
       (error) => {
-        alert('บันทึกข้อมูลไม่สำเร็จ')
+        this.submitting = false;
+        // alert('บันทึกข้อมูลไม่สำเร็จ')
+        this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
         console.error("🚨 Register Error:", error);
       }
     );

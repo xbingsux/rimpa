@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { AlertType } from '../model/alert'
 
 @Injectable({
   providedIn: 'root'
@@ -50,4 +51,9 @@ export class ApiService {
 
   }
 
+  listAlert: AlertType[] = []
+
+  addAlert(type: string, message: string) {
+    this.listAlert.push(new AlertType(type, message))
+  }
 }

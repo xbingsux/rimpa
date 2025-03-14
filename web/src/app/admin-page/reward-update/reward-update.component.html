@@ -10,7 +10,7 @@
         </div>
         <div class="h-[40px] flex gap-2 justify-end">
             <input type="button" class="text-white bg-[#1093ED] rounded-[12px] px-[32px] cursor-pointer" value="Save"
-                (click)="submit()">
+                (click)="!submitting && submit()">
         </div>
     </div>
     <div *ngIf="!loading" class="rounded-[12px] border-[1px] overflow-hidden shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">

@@ -90,8 +90,9 @@ export class RewardUpdateComponent implements OnInit {
     });
   }
 
-
+  submitting = false;
   async submit() {
+    this.submitting = false;
     const imgPath = await this.upload_img();
     // console.log("🚀 Image Path:", imgPath);
 
@@ -107,11 +108,14 @@ export class RewardUpdateComponent implements OnInit {
     }).subscribe((response: any) => {
       // console.log(response);
       if (response.status == 'success') {
-        alert('บันทึกข้อมูลสำเร็จ')
+        this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
+        // alert('บันทึกข้อมูลสำเร็จ')
         this.router.navigate(['/admin/reward']);
       }
     }, error => {
-      alert('บันทึกข้อมูลไม่สำเร็จ')
+      this.submitting = false;
+      // alert('บันทึกข้อมูลไม่สำเร็จ')
+      this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
       console.error('Error:', error);
     });
   }

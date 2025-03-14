@@ -84,7 +84,9 @@ export class BannerUpdateComponent {
     });
   }
 
+  submitting = false;
   async submit() {
+    this.submitting = true;
     const imgPath = await this.upload_img();
     // console.log("🚀 Image Path:", imgPath);
 
@@ -98,11 +100,14 @@ export class BannerUpdateComponent {
     }).subscribe(async (response: any) => {
       // console.log(response);
       if (response.status == 'success') {
-        alert('บันทึกข้อมูลสำเร็จ')
+        this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
+        // alert('บันทึกข้อมูลสำเร็จ')
         this.router.navigate(['/admin/banner'])
       }
     }, error => {
-      alert('บันทึกข้อมูลไม่สำเร็จ')
+      this.submitting = false;
+      this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
+      // alert('บันทึกข้อมูลไม่สำเร็จ')
       console.error('Error:', error);
     });
   }
