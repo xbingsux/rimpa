@@ -29,6 +29,8 @@ dependencies:
   form_field_validator: ^1.1.0
   web_socket_channel: ^3.0.2
   socket_io_client: ^3.0.2
+  flutter_easyloading: ^3.0.5
+  syncfusion_flutter_barcodes: ^28.2.11
 
 flutter_launcher_icons:
   android: "launcher_icon"

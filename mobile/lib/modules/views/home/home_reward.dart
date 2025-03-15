@@ -67,7 +67,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
           children: [
             Container(
               decoration: const BoxDecoration(
-                gradient: AppGradiant.gradientX_1,
+                gradient: AppGradiant.gradientY_1,
               ),
               child: MyAppBar(
                 backgroundColor: Colors.transparent,
@@ -83,9 +83,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                     children: [
                       Container(
                         height: 45,
-                        decoration: const BoxDecoration(
-                          gradient: AppGradiant.gradientX_1,
-                        ),
+                        decoration: const BoxDecoration(color: AppColors.accent2
+                            // gradient: AppGradiant.gradientX_1,
+                            ),
                       ),
                       Container(
                         height: 45,

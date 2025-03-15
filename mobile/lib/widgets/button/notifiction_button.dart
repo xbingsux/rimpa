@@ -8,7 +8,7 @@ class NotificationButton extends StatelessWidget {
   final double size;
   final bool isDark;
   NotificationButton({super.key, this.size = 40, this.isDark = false});
-  final SocketNotificationController socketController = Get.put(SocketNotificationController());
+  // final SocketNotificationController socketController = Get.put(SocketNotificationController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class NotificationButton extends StatelessWidget {
       // color: Colors.amber,
       child: GestureDetector(
         onTap: () {
-          socketController.clearNotification();
+          // socketController.clearNotification();
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -33,7 +33,7 @@ class NotificationButton extends StatelessWidget {
               alignment: Alignment.topRight,
               children: [
                 Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
-                if (socketController.hasNewNotification.value) redDotNotification(),
+                // if (socketController.hasNewNotification.value) redDotNotification(),
               ],
             ),
           ),

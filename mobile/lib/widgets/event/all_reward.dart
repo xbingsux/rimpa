@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/listreward/listreward.controller.dart';
 import 'package:rimpa/modules/models/listreward.model.dart'; // ใช้ ListReward แทน ListEvent
-import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
@@ -23,7 +22,7 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
   late AnimationController _controller;
   final listRewardController = Get.put(ListRewardController());
   bool isDesc = true;
-  
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +43,7 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
       } else {
         // รับข้อมูลรางวัลจาก listRewardController
         List<ListReward> sortedRewards = listRewardController.rewards.toList();
-        
+
         // การเรียงลำดับรางวัล
         if (isDesc) {
           sortedRewards.sort((a, b) => b.id.compareTo(a.id));

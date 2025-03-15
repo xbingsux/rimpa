@@ -5,17 +5,15 @@ import '../../modules/models/listbanner.model.dart';
 
 class ApiListBanner {
   static Future<List<ListBanner>?> fetchBanners() async {
-    final response = await http.get(
-        Uri.parse('${AppApi.urlApi}/event/list-banner')); // Use AppApi.urlApi
+    final response = await http.get(Uri.parse('${AppApi.urlApi}/event/list-banner')); // Use AppApi.urlApi
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      print("API Response: $jsonString"); // Log the entire response
+      // print("API Response: $jsonString"); // Log the entire response
       var jsonResponse = json.decode(jsonString);
 
-      if (jsonResponse['status'] == "success" &&
-          jsonResponse['banner'] != null) {
+      if (jsonResponse['status'] == "success" && jsonResponse['banner'] != null) {
         var bannerList = jsonResponse['banner'] as List;
-        print("Banner List: $bannerList"); // Log the parsed banner list
+        // print("Banner List: $bannerList"); // Log the parsed banner list
         return bannerList.map((data) => ListBanner.fromJson(data)).toList();
       } else {
         print("No banners found or incorrect response format.");

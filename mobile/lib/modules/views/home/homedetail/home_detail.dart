@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
 import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
+import 'package:rimpa/modules/views/home/home_qr.dart';
+import 'package:rimpa/widgets/button/back_button.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
 
 import '../../../../components/imageloader/app-image.component.dart';
@@ -21,10 +24,7 @@ class HomeDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> paths = event.subEvents
-        .expand((subEvent) => subEvent.img
-            .map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/")))
-        .toList();
+    List<String> paths = event.subEvents.expand((subEvent) => subEvent.img.map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/"))).toList();
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
     String id_event = event.subEvents[0].id.toString();
@@ -32,14 +32,12 @@ class HomeDetailPage extends StatelessWidget {
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
     String endDate = _formatDate(event.endDate); // Update this line
-    String imageUrl =
-        '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
+    String imageUrl = '${AppApi.urlApi}${event.subEvents[0].imagePath.replaceAll("\\", "/")}';
     print(imageUrl);
     String mapUrl = event.subEvents[0].map.trim(); // ตัดช่องว่างออก
     // ดึงค่าพอยท์จาก subEvents (ตัวแรกในกรณีนี้)
     // ใช้ RxString สำหรับค่าพอยท์
-    RxDouble point =
-        event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
+    RxDouble point = event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
     final evencontroller = Get.find<EventController>();
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
@@ -65,26 +63,7 @@ class HomeDetailPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.back();
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(AppSpacing.xs),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: AppColors.white),
-                                    borderRadius: BorderRadius.circular(
-                                        AppRadius.rounded),
-                                    color: Colors.transparent,
-                                  ),
-                                  child: const Icon(
-                                    Icons.arrow_back,
-                                    size: AppTextSize.xl,
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                              ),
+                              MyBackButton(),
                             ],
                           ),
                         ),
@@ -117,15 +96,11 @@ class HomeDetailPage extends StatelessWidget {
                                   Expanded(
                                     flex: 4,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           title,
-                                          style: const TextStyle(
-                                              fontSize: AppTextSize.xxl,
-                                              color: AppTextColors.black,
-                                              fontWeight: FontWeight.bold),
+                                          style: const TextStyle(fontSize: AppTextSize.xxl, color: AppTextColors.black, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(height: AppSpacing.xs),
                                         Row(
@@ -138,10 +113,7 @@ class HomeDetailPage extends StatelessWidget {
                                             const SizedBox(width: 5),
                                             Text(
                                               '$startDate - $endDate',
-                                              style: const TextStyle(
-                                                  fontSize: AppTextSize.xs,
-                                                  color:
-                                                      AppTextColors.secondary),
+                                              style: const TextStyle(fontSize: AppTextSize.xs, color: AppTextColors.secondary),
                                             ),
                                           ],
                                         ),
@@ -157,28 +129,20 @@ class HomeDetailPage extends StatelessWidget {
                                           _launchURL(context, mapUrl);
                                         } else {
                                           // แจ้งเตือนว่าหมุดแผนที่ไม่มี
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
                                           );
                                         }
                                       },
                                       child: Container(
-                                        padding:
-                                            const EdgeInsets.all(AppSpacing.sm),
+                                        padding: const EdgeInsets.all(AppSpacing.sm),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 0.5,
                                             color: Colors.transparent,
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                              AppRadius.rounded),
-                                          color: mapUrl.isNotEmpty
-                                              ? Colors.blue
-                                              : Colors
-                                                  .grey, // เปลี่ยนสีปุ่มถ้าไม่มีลิงก์
+                                          borderRadius: BorderRadius.circular(AppRadius.rounded),
+                                          color: mapUrl.isNotEmpty ? Colors.blue : Colors.grey, // เปลี่ยนสีปุ่มถ้าไม่มีลิงก์
                                         ),
                                         child: const Icon(
                                           Icons.location_on_outlined,
@@ -191,21 +155,16 @@ class HomeDetailPage extends StatelessWidget {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppSpacing.md),
+                                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'รายละเอียดกิจกรรม ',
-                                      style: TextStyle(
-                                          fontSize: AppTextSize.sm,
-                                          color: AppTextColors.black,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: AppTextSize.sm, color: AppTextColors.black, fontWeight: FontWeight.bold),
                                     ),
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.all(AppSpacing.xs),
+                                      padding: const EdgeInsets.all(AppSpacing.xs),
                                       child: Text(
                                         description,
                                         style: const TextStyle(
@@ -234,24 +193,15 @@ class HomeDetailPage extends StatelessWidget {
                   color: AppColors.secondary,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: AppSpacing.md,
-                      left: AppSpacing.md,
-                      right: AppRadius.md,
-                      bottom: AppSpacing.lg),
+                  padding: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.md, right: AppRadius.md, bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomDialog(context: context);
-                        },
-                      );
+                      // HomeQRPage()
+                      Get.to(() => HomeQRPage(), preventDuplicates: true);
                     },
                     child: Container(
                       width: double.infinity,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: AppRadius.xs),
+                      padding: const EdgeInsets.symmetric(vertical: AppRadius.xs),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadius.rounded),
                         color: const Color(0xFFEBF5FD), // แก้ไขสีให้ถูกต้อง
@@ -264,15 +214,12 @@ class HomeDetailPage extends StatelessWidget {
                               width: 38,
                               height: 38,
                               decoration: BoxDecoration(
-                                gradient:
-                                    AppGradiant.gradientX_1, // ใช้ Gradient
+                                gradient: AppGradiant.gradientX_1, // ใช้ Gradient
                                 shape: BoxShape.circle,
                               ),
-                              child:
-                                  const Icon(Icons.star, color: Colors.white),
+                              child: const Icon(Icons.star, color: Colors.white),
                             ),
-                            const SizedBox(
-                                width: 8), // เพิ่ม const เพื่อลด warning
+                            const SizedBox(width: 8), // เพิ่ม const เพื่อลด warning
                             Obx(() {
                               return Text(
                                 '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
@@ -282,19 +229,7 @@ class HomeDetailPage extends StatelessWidget {
                                 ),
                               );
                             }),
-                            Opacity(
-                              opacity: 0, // ทำให้เป็นช่องว่าง
-                              child: Container(
-                                width: 38,
-                                height: 38,
-                                decoration: BoxDecoration(
-                                  gradient: AppGradiant.gradientX_1,
-                                  shape: BoxShape.circle,
-                                ),
-                                child:
-                                    const Icon(Icons.star, color: Colors.white),
-                              ),
-                            ),
+                            Gap(38),
                           ],
                         ),
                       ),
@@ -335,8 +270,7 @@ class HomeDetailPage extends StatelessWidget {
     DateTime dateTime = DateTime.parse(date);
     var thaiDateFormat = DateFormat('d MMM', 'th_TH');
     String formattedDate = thaiDateFormat.format(dateTime);
-    String thaiYear =
-        (dateTime.year + 543).toString(); // Convert to Buddhist year
+    String thaiYear = (dateTime.year + 543).toString(); // Convert to Buddhist year
     return '$formattedDate $thaiYear';
   }
 

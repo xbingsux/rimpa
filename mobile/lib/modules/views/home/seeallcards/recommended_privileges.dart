@@ -14,8 +14,7 @@ class RecommendedPrivilegesPage extends StatefulWidget {
   const RecommendedPrivilegesPage({super.key});
 
   @override
-  _RecommendedPrivilegesPageState createState() =>
-      _RecommendedPrivilegesPageState();
+  _RecommendedPrivilegesPageState createState() => _RecommendedPrivilegesPageState();
 }
 
 class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
@@ -54,8 +53,7 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Stack(
@@ -87,8 +85,7 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
         if (listRewardController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<ListReward> sortedRewards =
-              listRewardController.rewards.toList();
+          List<ListReward> sortedRewards = listRewardController.rewards.toList();
           if (_sortOrder == "ใหม่สุด") {
             sortedRewards.sort((a, b) => b.id.compareTo(a.id));
           } else {
@@ -133,13 +130,11 @@ class _RecommendedPrivilegesPageState extends State<RecommendedPrivilegesPage> {
                             children: [
                               AppImageComponent(
                                 imageType: AppImageType.network,
-                                imageAddress:
-                                    '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
+                                imageAddress: '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
                               ),
                               const SizedBox(height: 8),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                 child: Text(
                                   reward.rewardName,
                                   style: const TextStyle(fontSize: 12),

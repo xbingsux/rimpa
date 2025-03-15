@@ -6,10 +6,12 @@ class AuthService extends GetxService {
   RxBool isLoggedIn = false.obs; // ใช้ RxBool แทนการใช้ async
 
   Future<AuthService> init() async {
+    checkLoginStatus();
     return this;
   }
 
   bool isLoggedInSync() {
+    checkLoginStatus();
     return isLoggedIn.value; // เช็คสถานะล็อกอินแบบ Sync
   }
 

@@ -23,6 +23,7 @@ class EventCard extends StatelessWidget {
             child: Container(
               // color: Colors.amber,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   AppImageComponent(
                     imageType: AppImageType.network,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Correct import
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/shared_pref.dart';
+import 'package:rimpa/widgets/loading/app_loading.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
@@ -18,6 +20,21 @@ void main() async {
   await SharedPrefService().init();
 
   runApp(const MyApp());
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.circle
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..indicatorSize = 50.0
+    ..backgroundColor = Colors.transparent
+    ..boxShadow = []
+    ..indicatorWidget = const AppLoading()
+    ..maskType = EasyLoadingMaskType.clear
+    ..indicatorColor = const Color(0xFF8866F6)
+    ..textColor = const Color(0xFF009ACD)
+    ..userInteractions = false
+    ..dismissOnTap = false;
 }
 
 class MyApp extends StatelessWidget {

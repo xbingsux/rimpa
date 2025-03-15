@@ -4,6 +4,7 @@ import 'package:intl/intl.dart'; // สำหรับการจัดกา�
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/events/list_banner_controller_.dart';
+import 'package:rimpa/widgets/button/botton.dart';
 
 class BannersDetailPage extends StatelessWidget {
   final int bannerId;
@@ -38,8 +39,7 @@ class BannersDetailPage extends StatelessWidget {
                     aspectRatio: 4 / 3,
                     borderRadius: BorderRadius.all(Radius.circular(0)),
                     imageType: AppImageType.network,
-                    imageAddress:
-                        '${controller.apiUrlsController.imgUrl.value}${banner["path"]}',
+                    imageAddress: '${controller.apiUrlsController.imgUrl.value}${banner["path"]}',
                   );
                 }),
 
@@ -56,11 +56,7 @@ class BannersDetailPage extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.xs),
                           decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 1, color: AppColors.white),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.rounded),
-                              color: Colors.transparent),
+                              border: Border.all(width: 1, color: AppColors.white), borderRadius: BorderRadius.circular(AppRadius.rounded), color: Colors.transparent),
                           child: const Icon(
                             Icons.arrow_back,
                             size: AppTextSize.xl,
@@ -102,8 +98,7 @@ class BannersDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -125,8 +120,7 @@ class BannersDetailPage extends StatelessWidget {
                             Obx(() {
                               var banner = controller.bannerDetail.value;
                               // แปลงวันที่จาก API เป็นรูปแบบไทย
-                              var startDate =
-                                  DateTime.parse(banner["startDate"]);
+                              var startDate = DateTime.parse(banner["startDate"]);
                               var endDate = DateTime.parse(banner["endDate"]);
                               var formatter = DateFormat('d MMM yyyy');
                               return Row(
@@ -160,8 +154,7 @@ class BannersDetailPage extends StatelessWidget {
                                 width: 0.5,
                                 color: Colors.transparent,
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.rounded),
+                              borderRadius: BorderRadius.circular(AppRadius.rounded),
                               color: Colors.blue,
                             ),
                             child: const Icon(
@@ -175,8 +168,7 @@ class BannersDetailPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md, vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
                     child: Obx(() {
                       var banner = controller.bannerDetail.value;
                       return Text(
@@ -193,26 +185,17 @@ class BannersDetailPage extends StatelessWidget {
                         color: AppColors.secondary,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                            top: AppSpacing.md,
-                            left: AppSpacing.md,
-                            right: AppRadius.md,
-                            bottom: AppSpacing.lg),
+                        padding: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.md, right: AppRadius.md, bottom: AppSpacing.lg),
                         child: GestureDetector(
+                          onTap: () {},
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppRadius.xs),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.rounded),
-                                gradient: AppGradiant.gradientX_1),
+                            padding: const EdgeInsets.symmetric(vertical: AppRadius.xs),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.rounded), gradient: AppGradiant.gradientX_1),
                             child: const Center(
                                 child: Text(
                               'แลกรับสิทธิ์',
-                              style: TextStyle(
-                                  fontSize: AppTextSize.lg,
-                                  color: AppTextColors.white),
+                              style: TextStyle(fontSize: AppTextSize.lg, color: AppTextColors.white),
                             )),
                           ),
                         ),
@@ -225,6 +208,44 @@ class BannersDetailPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> showErrorDialog(BuildContext context, {String title = "เกิดข้อผิดพลาด", String detail = "เกิดข้อผิดพลาดไม่ทราบสาเหตุ"}) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันกดข้างนอกเพื่อปิด
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.white,
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 20,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          content: Text(
+            detail,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 16,
+                ),
+          ),
+          actions: [
+            Center(
+              child: RimpaButton(
+                text: 'รับทราบ',
+                radius: 32,
+                disble: false,
+                onTap: () => Navigator.pop(
+                  context,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

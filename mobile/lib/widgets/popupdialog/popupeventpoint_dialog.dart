@@ -3,15 +3,15 @@ import '../../core/constant/app.constant.dart';
 
 class CustomDialog extends StatefulWidget {
   final BuildContext context;
-
-  CustomDialog({required this.context});
+  final String point;
+  final String total;
+  const CustomDialog({super.key, required this.context, required this.point, required this.total});
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
 }
 
-class _CustomDialogState extends State<CustomDialog>
-    with SingleTickerProviderStateMixin {
+class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -24,10 +24,7 @@ class _CustomDialogState extends State<CustomDialog>
     )..forward(); // เริ่มอนิเมชั่นทันทีที่ Dialog เปิด
 
     _scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-          parent: _controller,
-          curve:
-              Curves.elasticOut), // ใช้ curve "elasticOut" เพื่อให้ดูเด้งขึ้น
+      CurvedAnimation(parent: _controller, curve: Curves.elasticOut), // ใช้ curve "elasticOut" เพื่อให้ดูเด้งขึ้น
     );
   }
 
@@ -56,7 +53,7 @@ class _CustomDialogState extends State<CustomDialog>
                   padding: EdgeInsets.all(20),
                   width: 300,
                   decoration: BoxDecoration(
-                     color: Theme.of(context).cardColor, // ใช้สีจาก cardColor ของ theme
+                    color: Theme.of(context).cardColor, // ใช้สีจาก cardColor ของ theme
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -97,7 +94,7 @@ class _CustomDialogState extends State<CustomDialog>
                           border: Border.all(color: Colors.blue), // ขอบสีฟ้า
                         ),
                         child: Text(
-                          "100 คะแนน",
+                          "${widget.point} คะแนน",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -107,7 +104,7 @@ class _CustomDialogState extends State<CustomDialog>
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "ยอดสะสมของคุณเหลือ 150 คะแนน",
+                        "ยอดสะสมของคุณเหลือ ${widget.total} คะแนน",
                         style: TextStyle(
                           fontSize: 16,
                           color: const Color.fromARGB(255, 119, 119, 119), // สีดำ
@@ -129,7 +126,7 @@ class _CustomDialogState extends State<CustomDialog>
               ),
             ),
             Positioned(
-              bottom: -40,
+              bottom: -60,
               left: 0,
               right: 0,
               child: Center(
@@ -137,10 +134,18 @@ class _CustomDialogState extends State<CustomDialog>
                   onTap: () {
                     Navigator.of(context).pop();
                   },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 20,
-                    child: Icon(Icons.close, color: Colors.white),
+                  child: Center(
+                    child: Container(
+                      width: 40, // กำหนดขนาดวงกลม
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2), // ขอบสีขาว หนา 3
+                      ),
+                      child: Center(
+                        child: Icon(Icons.close, color: Colors.white, size: 28), // ไอคอน X สีขาว
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -156,15 +161,9 @@ class TicketClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height), Radius.circular(20)));
-    path.addArc(Rect.fromCircle(center: Offset(0, size.height / 2), radius: 30),
-        -1.5708, 3.1416);
-    path.addArc(
-        Rect.fromCircle(
-            center: Offset(size.width, size.height / 2), radius: 30),
-        1.5708,
-        3.1416);
+    path.addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width, size.height), Radius.circular(20)));
+    path.addArc(Rect.fromCircle(center: Offset(0, size.height / 2), radius: 30), -1.5708, 3.1416);
+    path.addArc(Rect.fromCircle(center: Offset(size.width, size.height / 2), radius: 30), 1.5708, 3.1416);
     path.fillType = PathFillType.evenOdd;
     return path;
   }
@@ -180,8 +179,7 @@ class AnimatedPulseCircle extends StatefulWidget {
   _AnimatedPulseCircleState createState() => _AnimatedPulseCircleState();
 }
 
-class _AnimatedPulseCircleState extends State<AnimatedPulseCircle>
-    with SingleTickerProviderStateMixin {
+class _AnimatedPulseCircleState extends State<AnimatedPulseCircle> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -218,13 +216,11 @@ class _AnimatedPulseCircleState extends State<AnimatedPulseCircle>
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient:
-                    AppGradiant.gradientY_1, // ใช้ gradient จาก AppGradient
+                gradient: AppGradiant.gradientY_1, // ใช้ gradient จาก AppGradient
               ),
               child: CircleAvatar(
                 radius: 45, // ขนาดของวงกลม
-                backgroundColor: Colors
-                    .transparent, // ทำให้พื้นหลังโปร่งใสเพื่อให้ใช้ Gradient
+                backgroundColor: Colors.transparent, // ทำให้พื้นหลังโปร่งใสเพื่อให้ใช้ Gradient
                 child: Icon(
                   Icons.check,
                   color: Colors.white,
@@ -242,8 +238,7 @@ class DottedLinePainter extends CustomPainter {
   final double dashSpace;
   final Color color;
 
-  DottedLinePainter(
-      {this.dashWidth = 6.0, this.dashSpace = 4.0, this.color = Colors.grey});
+  DottedLinePainter({this.dashWidth = 6.0, this.dashSpace = 4.0, this.color = Colors.grey});
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -12,14 +12,11 @@ import 'package:decimal/decimal.dart';
 
 class RewardDetail extends StatelessWidget {
   final int bannerId;
-  RxString errorMessage =
-      ''.obs; // ใช้ RxString เพื่อให้สามารถอัพเดตค่าผ่าน GetX
+  RxString errorMessage = ''.obs; // ใช้ RxString เพื่อให้สามารถอัพเดตค่าผ่าน GetX
   final RewardController controller = Get.find();
   final rewardController = Get.find<RewardController>();
-  final profileController =
-      Get.put(ProfileController()); // เพิ่ม ProfileController
-  final pointsController =
-      Get.put(PointsController()); // เพิ่ม ProfileController
+  final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
+  final pointsController = Get.put(PointsController()); // เพิ่ม ProfileController
   var isLoading = false.obs;
   var isButtonDisabled = false.obs; // กำหนดปุ่มให้ไม่สามารถกดได้
   ApiUrls apiUrls = Get.find();
@@ -30,12 +27,9 @@ class RewardDetail extends StatelessWidget {
     if (controller.rewardDetail.value.isEmpty) {
       controller.fetchRewardDetail(bannerId);
     }
-    String? idProfile = profileController.profileData['id']
-        ?.toString(); // ดึง id ของโปรไฟล์จากข้อมูลที่ได้
+    String? idProfile = profileController.profileData['id']?.toString(); // ดึง id ของโปรไฟล์จากข้อมูลที่ได้
     // พิมพ์ค่า idProfile ออกมาใน console
-    var points = Decimal.tryParse(
-            pointsController.pointsData['points']?.toString() ?? '0') ??
-        Decimal.zero;
+    var points = Decimal.tryParse(pointsController.pointsData['points']?.toString() ?? '0') ?? Decimal.zero;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -54,18 +48,15 @@ class RewardDetail extends StatelessWidget {
                     return const Center(child: Text("ไม่พบข้อมูลแบนเนอร์"));
                   }
 
-                  var banner = controller.rewardDetail
-                      .value; // ใช้ controller.rewardDetail.value แทน banner
-                  var cost = Decimal.tryParse('${banner["cost"] ?? 0}') ??
-                      Decimal.zero;
+                  var banner = controller.rewardDetail.value; // ใช้ controller.rewardDetail.value แทน banner
+                  var cost = Decimal.tryParse('${banner["cost"] ?? 0}') ?? Decimal.zero;
 
                   // ปริ้นค่าของ points และ cost
                   return AppImageComponent(
                     aspectRatio: 4 / 3, // ใช้ ratio เดียวกัน
                     borderRadius: BorderRadius.all(Radius.circular(0)),
                     imageType: AppImageType.network,
-                    imageAddress:
-                        '${controller.apiUrlsController.imgUrl.value}${banner["img"]}',
+                    imageAddress: '${controller.apiUrlsController.imgUrl.value}${banner["img"]}',
                   );
                 }),
 
@@ -82,11 +73,7 @@ class RewardDetail extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.xs),
                           decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 1, color: AppColors.white),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.rounded),
-                              color: Colors.transparent),
+                              border: Border.all(width: 1, color: AppColors.white), borderRadius: BorderRadius.circular(AppRadius.rounded), color: Colors.transparent),
                           child: const Icon(
                             Icons.arrow_back,
                             size: AppTextSize.xl,
@@ -132,64 +119,46 @@ class RewardDetail extends StatelessWidget {
                   Obx(() {
                     var banner = controller.rewardDetail.value;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md, vertical: AppSpacing.md),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
                       child: Text(
-                        banner["reward_name"] ??
-                            "ไม่มีข้อมูล", // กรณีไม่มีข้อมูลใน reward_name
-                        style: TextStyle(
-                            fontSize: AppTextSize.xxl,
-                            color: AppTextColors.black,
-                            fontWeight: FontWeight.bold),
+                        banner["reward_name"] ?? "ไม่มีข้อมูล", // กรณีไม่มีข้อมูลใน reward_name
+                        style: TextStyle(fontSize: AppTextSize.xxl, color: AppTextColors.black, fontWeight: FontWeight.bold),
                       ),
                     );
                   }),
 
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     child: AspectRatio(
                       aspectRatio: 345 / 80,
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(AppRadius.xs),
-                            color: AppColors.accent1),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.xs), color: AppColors.accent1),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
                               flex: 3,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text('ใช้คะแนนสะสม',
-                                          style: TextStyle(
-                                              fontSize: AppTextSize.xs,
-                                              color: AppTextColors.dark)),
+                                      const Text('ใช้คะแนนสะสม', style: TextStyle(fontSize: AppTextSize.xs, color: AppTextColors.dark)),
                                       const SizedBox(
                                         height: 5,
                                       ),
                                       Obx(() {
-                                        var banner =
-                                            controller.rewardDetail.value;
+                                        var banner = controller.rewardDetail.value;
                                         return Row(
                                           children: [
                                             Container(
-                                              padding: const EdgeInsets.all(
-                                                  AppSpacing.xs),
+                                              padding: const EdgeInsets.all(AppSpacing.xs),
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        AppRadius.rounded),
-                                                gradient:
-                                                    AppGradiant.gradientY_1,
+                                                borderRadius: BorderRadius.circular(AppRadius.rounded),
+                                                gradient: AppGradiant.gradientY_1,
                                               ),
                                               child: const Icon(
                                                 Icons.star,
@@ -202,14 +171,11 @@ class RewardDetail extends StatelessWidget {
                                             ),
                                             ShaderMask(
                                               shaderCallback: (bounds) {
-                                                return AppGradiant.gradientY_1
-                                                    .createShader(bounds);
+                                                return AppGradiant.gradientY_1.createShader(bounds);
                                               },
                                               child: Text(
                                                 '${banner["cost"] ?? 0}', // ใช้ข้อมูลจาก cost
-                                                style: TextStyle(
-                                                    fontSize: AppTextSize.md,
-                                                    color: AppTextColors.white),
+                                                style: TextStyle(fontSize: AppTextSize.md, color: AppTextColors.white),
                                               ),
                                             ),
                                           ],
@@ -222,21 +188,14 @@ class RewardDetail extends StatelessWidget {
                             ),
                             Expanded(
                               flex: 1,
-                              child: Center(
-                                  child: Container(
-                                      width: 2,
-                                      color:
-                                          AppColors.accent.withOpacity(0.25))),
+                              child: Center(child: Container(width: 2, color: AppColors.accent.withOpacity(0.25))),
                             ),
                             Expanded(
                               flex: 7,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('ระยะเวลาในการแลกรับสิทธิ์',
-                                      style: TextStyle(
-                                          fontSize: AppTextSize.xs,
-                                          color: AppTextColors.dark)),
+                                  const Text('ระยะเวลาในการแลกรับสิทธิ์', style: TextStyle(fontSize: AppTextSize.xs, color: AppTextColors.dark)),
                                   const SizedBox(
                                     height: 5,
                                   ),
@@ -245,33 +204,20 @@ class RewardDetail extends StatelessWidget {
                                     var banner = controller.rewardDetail.value;
 
                                     // แปลงวันที่จาก String ในฐานข้อมูลเป็นวันที่ในภาษาไทย
-                                    String startDate =
-                                        banner["startDate"] ?? "ไม่ระบุ";
-                                    String endDate =
-                                        banner["endDate"] ?? "ไม่ระบุ";
+                                    String startDate = banner["startDate"] ?? "ไม่ระบุ";
+                                    String endDate = banner["endDate"] ?? "ไม่ระบุ";
 
                                     // ตรวจสอบว่า startDate และ endDate เป็นค่าว่างหรือไม่
-                                    String formattedStartDate = startDate !=
-                                            "ไม่ระบุ"
-                                        ? DateFormat('d MMM yyyy', 'th_TH')
-                                            .format(DateTime.parse(startDate))
-                                        : "ไม่ระบุ";
-                                    String formattedEndDate =
-                                        endDate != "ไม่ระบุ"
-                                            ? DateFormat('d MMM yyyy', 'th_TH')
-                                                .format(DateTime.parse(endDate))
-                                            : "ไม่ระบุ";
+                                    String formattedStartDate = startDate != "ไม่ระบุ" ? DateFormat('d MMM yyyy', 'th_TH').format(DateTime.parse(startDate)) : "ไม่ระบุ";
+                                    String formattedEndDate = endDate != "ไม่ระบุ" ? DateFormat('d MMM yyyy', 'th_TH').format(DateTime.parse(endDate)) : "ไม่ระบุ";
 
                                     return Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(
-                                              AppSpacing.xs),
+                                          padding: const EdgeInsets.all(AppSpacing.xs),
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                AppRadius.rounded),
+                                            borderRadius: BorderRadius.circular(AppRadius.rounded),
                                             color: Colors.transparent,
                                           ),
                                           child: const Icon(
@@ -303,8 +249,7 @@ class RewardDetail extends StatelessWidget {
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height * 0.3,
                     ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md, vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
                     child: Obx(() {
                       var banner = controller.rewardDetail.value;
                       return Column(
@@ -312,16 +257,12 @@ class RewardDetail extends StatelessWidget {
                         children: [
                           const Text(
                             'เงื่อนไขการรับสิทธิ์',
-                            style: TextStyle(
-                                fontSize: AppTextSize.sm,
-                                color: AppTextColors.black,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: AppTextSize.sm, color: AppTextColors.black, fontWeight: FontWeight.bold),
                           ),
                           Padding(
                             padding: EdgeInsets.all(AppSpacing.xs),
                             child: Text(
-                              banner["description"] ??
-                                  "ไม่มีข้อมูล", // ใช้ข้อมูลจาก description
+                              banner["description"] ?? "ไม่มีข้อมูล", // ใช้ข้อมูลจาก description
                               style: TextStyle(
                                 fontSize: AppTextSize.sm,
                                 color: AppTextColors.secondary,
@@ -337,12 +278,10 @@ class RewardDetail extends StatelessWidget {
                       // แสดงข้อความข้อผิดพลาด (ถ้ามี)
                       if (errorMessage.value.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: AppSpacing.sm),
+                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                           child: Text(
                             errorMessage.value,
-                            style: TextStyle(
-                                color: Colors.red, fontSize: AppTextSize.md),
+                            style: TextStyle(color: Colors.red, fontSize: AppTextSize.md),
                           ),
                         ),
                       // ส่วนของปุ่มแลกรางวัล
@@ -356,41 +295,28 @@ class RewardDetail extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () {
                               if (isLoading.value) return; // ป้องกันการกดซ้ำ
-                              bool isRedeemed = rewardController
-                                      .rewardDetail.value['isRedeemed'] ??
-                                  false;
+                              bool isRedeemed = rewardController.rewardDetail.value['isRedeemed'] ?? false;
 
                               if (!isRedeemed) {
-                                String? idProfile = profileController
-                                    .profileData.value['id']
-                                    ?.toString();
+                                String? idProfile = profileController.profileData.value['id']?.toString();
                                 if (idProfile != null) {
-                                  String idReward = controller
-                                          .rewardDetail.value["id"]
-                                          ?.toString() ??
-                                      "defaultRewardId";
+                                  String idReward = controller.rewardDetail.value["id"]?.toString() ?? "defaultRewardId";
 
-                                  var points = Decimal.tryParse(
-                                          pointsController
-                                                  .pointsData['points']
-                                                  ?.toString() ??
-                                              '0') ??
-                                      Decimal.zero;
-                                  var cost = Decimal.tryParse(
-                                          '${controller.rewardDetail["cost"] ?? 0}') ??
-                                      Decimal.zero;
+                                  var points = Decimal.tryParse(pointsController.pointsData['points']?.toString() ?? '0') ?? Decimal.zero;
+                                  var cost = Decimal.tryParse('${controller.rewardDetail["cost"] ?? 0}') ?? Decimal.zero;
 
                                   isLoading.value = true; // เริ่มโหลด
                                   rewardController
                                       .redeemReward(
-                                          idProfile, idReward, points,)
+                                    idProfile,
+                                    idReward,
+                                    points,
+                                  )
                                       .then((_) {
-                                    isLoading.value =
-                                        false; // หยุดโหลดเมื่อเสร็จ
+                                    isLoading.value = false; // หยุดโหลดเมื่อเสร็จ
                                   }).catchError((error) {
                                     isLoading.value = false;
-                                    errorMessage.value =
-                                        'เกิดข้อผิดพลาดในการแลกรางวัล';
+                                    errorMessage.value = 'เกิดข้อผิดพลาดในการแลกรางวัล';
                                   });
                                 } else {
                                   print("ไม่สามารถดึง ID โปรไฟล์ได้");
@@ -398,34 +324,23 @@ class RewardDetail extends StatelessWidget {
                               }
                             },
                             child: Obx(() {
-                              bool isRedeemed = rewardController
-                                      .rewardDetail.value['isRedeemed'] ??
-                                  false;
+                              bool isRedeemed = rewardController.rewardDetail.value['isRedeemed'] ?? false;
                               return Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppRadius.xs),
+                                padding: const EdgeInsets.symmetric(vertical: AppRadius.xs),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.rounded),
-                                  gradient: isRedeemed
-                                      ? LinearGradient(
-                                          colors: [Colors.grey, Colors.grey])
-                                      : AppGradiant.gradientX_1,
+                                  borderRadius: BorderRadius.circular(AppRadius.rounded),
+                                  gradient: isRedeemed ? LinearGradient(colors: [Colors.grey, Colors.grey]) : AppGradiant.gradientX_1,
                                 ),
                                 child: Center(
                                   child: isRedeemed
                                       ? const Text(
                                           'คุณเคยแลกรางวัลนี้ไปแล้ว',
-                                          style: TextStyle(
-                                              fontSize: AppTextSize.lg,
-                                              color: AppTextColors.white),
+                                          style: TextStyle(fontSize: AppTextSize.lg, color: AppTextColors.white),
                                         )
                                       : const Text(
                                           'แลกรางวัล',
-                                          style: TextStyle(
-                                              fontSize: AppTextSize.lg,
-                                              color: AppTextColors.white),
+                                          style: TextStyle(fontSize: AppTextSize.lg, color: AppTextColors.white),
                                         ),
                                 ),
                               );

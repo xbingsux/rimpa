@@ -199,6 +199,11 @@ class AppGradiant {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+  static const LinearGradient gradientY_2 = LinearGradient(
+    colors: [AppColors.accent, AppColors.accent, AppColors.accent2],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
   static const LinearGradient gradientX_1 = LinearGradient(
     colors: [AppColors.accent, AppColors.accent2],
     begin: Alignment.centerLeft,
