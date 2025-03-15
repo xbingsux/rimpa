@@ -1,12 +1,10 @@
-<router-outlet />
-
-<div class="z-50 top-[72px] right-[48px] fixed grid gap-2">
+<div class="select-none z-50 top-[100px] right-[48px] fixed grid gap-2">
     <ng-container *ngFor="let item of this.api.listAlert;let i = index">
         <div *ngIf="test(i)" class="reading min-w-[200px] h-[56px] text-white
         rounded-[12px] flex justify-center items-center gap-2 px-3" [ngClass]="{ 
                 'read': item.status === 'read' , 
                 'bg-[#1DC18E]': item.type =='success',
-                'bg-[#CC3333]': item.type =='unsuccessful'
+                'bg-[#CC3333]': item.type =='unsuccessful' || item.type.trim() == ''
             }">
             <div>
                 <img [src]="item.type =='success' ? 'correct.svg' : item.type =='unsuccessful' ? 'warn.svg':'warn.svg'"
@@ -20,3 +18,5 @@
         </div>
     </ng-container>
 </div>
+
+<router-outlet />

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './reward-management.component.html',
   styleUrl: './reward-management.component.scss'
 })
-export class RewardManagementComponent {
+export class RewardManagementComponent implements OnInit {
 
   @Input() routeScreen = false
 

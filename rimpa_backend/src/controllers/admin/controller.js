@@ -4,7 +4,9 @@ const Service = require("./service");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const https = require("https");
-const { auth } = require("../../middleware/authorization");
+const { auth, usedTokens } = require("../../middleware/authorization");
+
+require('dotenv').config();
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -315,6 +317,37 @@ router.post("/delete-banner", auth, async (req, res) => {
     return res
       .status(500)
       .json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
+router.post("/redeem-rewards", auth, async (req, res) => {
+  const { token } = req.body;
+  try {
+    if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
+
+    if (!token) {
+      return res.status(401).send("No token");
+    }
+
+    // ตรวจสอบและถอดรหัส token
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    if (!decoded || !decoded.userId) {
+      return res.status(200).json({ status: 401, message: 'Invalid token or missing user ID' });
+    }
+
+    if (usedTokens.has(token)) {
+      return res.status(200).json({ status: 403, message: 'Token already used' });
+    }
+
+    const reward = await Service.redeemReward(decoded.userId, decoded.reward_id)
+    usedTokens.add(token)
+    return res.status(201).json({ status: "Reward redeemed successfully", reward });
+
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ status: "error", message: error.message });
   }
 });
 

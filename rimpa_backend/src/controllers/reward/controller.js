@@ -6,6 +6,7 @@ const router = express.Router();
 const https = require("https");
 const { auth } = require("../../middleware/authorization");
 const nodemailer = require("nodemailer");
+const { token } = require("morgan");
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -57,16 +58,32 @@ router.get("/get-reward", async (req, res) => {
   }
 });
 
-router.post("/redeem-rewards", auth, async (req, res) => {
+router.post("/redeem-qrcode", auth, async (req, res) => {
   const { reward_id } = req.body;
+
   try {
-    const reward = await Service.redeemReward(req.user.userId, reward_id)
-    return res.status(201).json({ status: "Reward redeemed successfully", reward });
+    if (typeof reward_id == 'number') throw new Error('reward_id is not number')
+
+    const reward = await Service.rewardById(reward_id)
+    if (reward) {
+      jwt.sign({ userId: req.user.userId, reward_id: reward.id }, process.env.SECRET_KEY, { expiresIn: '30m' })
+      return res.status(200).json({ status: "success", token });
+    } else {
+      return res.status(404).json({ status: "error", message: "Reward not found" });
+    }
 
   } catch (error) {
-    return res
-      .status(500)
-      .json({ status: "error", message: error.message });
+    console.error(error);
+    // console.log("error");
+    if (error.message == 'reward_id is not number') {
+      return res
+        .status(500)
+        .json({ status: "error", message: error.message });
+    } else {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Internal Server Error" });
+    }
   }
 });
 

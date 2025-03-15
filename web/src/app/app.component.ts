@@ -16,10 +16,6 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, public api: ApiService) { }
 
   ngOnInit() {
-    // Success
-    // Unsuccessful
-
-    this.api.listAlert
   }
 
   alerting = false;

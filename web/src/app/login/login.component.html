@@ -1,3 +1,16 @@
+<div *ngIf="alert_message != ''"
+    class="reading select-none z-50 top-[100px] fixed w-screen h-[56px] text-white flex justify-center">
+    <div class="flex justify-center items-center gap-2 px-3 bg-[#CC3333] rounded-[12px]">
+        <div>
+            <img src="warn.svg" class="w-[24px] aspect-square">
+        </div>
+        <p class="flex-1">
+            {{
+            alert_message
+            }}
+        </p>
+    </div>
+</div>
 <div tabindex="0" (keydown.enter)="AuthLogin()"
     class="bg-gradient-to-b from-[#e3eeff] to-[#f3f3f3] fixed h-screen w-screen">
     <div class="bg-[#fff] absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] 
