@@ -62,7 +62,7 @@ router.post("/redeem-qrcode", auth, async (req, res) => {
   const { reward_id } = req.body;
 
   try {
-    if (typeof reward_id == 'number') throw new Error('reward_id is not number')
+    if (typeof reward_id != 'number') throw new Error('reward_id is not number')
 
     const reward = await Service.rewardById(reward_id)
     if (reward) {
