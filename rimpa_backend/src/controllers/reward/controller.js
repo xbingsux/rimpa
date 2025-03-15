@@ -66,8 +66,8 @@ router.post("/redeem-qrcode", auth, async (req, res) => {
 
     const reward = await Service.rewardById(reward_id)
     if (reward) {
-      jwt.sign({ userId: req.user.userId, reward_id: reward.id }, process.env.SECRET_KEY, { expiresIn: '30m' })
-      return res.status(200).json({ status: "success", token });
+      const redeem_token = jwt.sign({ userId: req.user.userId, reward_id: reward.id }, process.env.SECRET_KEY, { expiresIn: '30m' })
+      return res.status(200).json({ status: "success", token: redeem_token });
     } else {
       return res.status(404).json({ status: "error", message: "Reward not found" });
     }

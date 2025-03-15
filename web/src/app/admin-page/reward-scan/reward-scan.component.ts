@@ -70,11 +70,13 @@ export class RewardScanComponent implements OnInit {
       }, error => {
         event.blur()
         console.error('Error:', error);
+        alert('สแกนไม่สำเร็จ')
       });
     }
   }
 
 }
+
 class RewardOrder {
   date: Date
   reward_name: string
