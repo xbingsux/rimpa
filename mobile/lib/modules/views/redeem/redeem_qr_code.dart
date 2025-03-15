@@ -142,13 +142,15 @@ class _ReddemQRcodeState extends State<ReddemQRcode> {
                         // ),
                         Center(
                           child: SizedBox(
-                              height: 65,
-                              width: 355,
-                              child: SfBarcodeGenerator(
-                                value: "Hello",
-                                symbology: Code128A(),
-                              )),
+                            height: 200,
+                            width: 200,
+                            child: SfBarcodeGenerator(
+                              value: "123456789asdqwertasdsadsadasdasd",
+                              symbology: QRCode(errorCorrectionLevel: ErrorCorrectionLevel.low),
+                            ),
+                          ),
                         ),
+
                         Gap(60),
                         CustomPaint(
                           size: Size(double.infinity, 1),
