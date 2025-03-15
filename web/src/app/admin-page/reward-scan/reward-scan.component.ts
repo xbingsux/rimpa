@@ -29,8 +29,6 @@ export class RewardScanComponent implements OnInit {
           const status = await this.api.checkImageExists(url)
           if (status === 500 || status === 404) {
             item.Reward.img = null;
-          } else {
-            item.Reward.img = url
           }
         }
         return item;
@@ -40,8 +38,9 @@ export class RewardScanComponent implements OnInit {
     });
   }
 
-  test() {
-    this.api.addAlert('success', '')
+  getImg(url: string) {
+    let path = `${environment.API_URL}${url.replace('src', '')}`
+    return path
   }
 
   scanning = false

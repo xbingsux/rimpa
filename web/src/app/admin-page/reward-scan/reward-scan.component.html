@@ -16,7 +16,7 @@
                 <div *ngFor="let item of list"
                     class="h-[112px] bg-white grid grid-cols-[auto_1fr_auto] px-4 gap-7 items-center rounded-[12px] border-[#D9D9D9] border-[1px] border-t-0">
                     <div class="bg-[#D9D9D9] h-[80px] aspect-[4/3] rounded-[16px] grid justify-center overflow-hidden">
-                        <img *ngIf="item.Reward.img" [src]="item.Reward.img" class="h-full object-cover">
+                        <img *ngIf="item.Reward.img" [src]="getImg(item.Reward.img)" class="h-full object-cover">
                         <img *ngIf="!item.Reward.img" src="image.svg" class="w-[60px]">
                     </div>
                     <div class="grid grid-rows-[20px] gap-3 w-full">
