@@ -69,6 +69,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
 
     // Clear profile data and other states
     Get.find<ProfileController>().resetProfile();
+    Get.find<AuthService>().isLoggedIn.value = false;
 
     setState(() {
       isLoggedIn = false;

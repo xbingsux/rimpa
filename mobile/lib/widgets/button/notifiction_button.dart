@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'package:rimpa/modules/controllers/notification/socketNotification.controller.dart';
 import 'package:rimpa/modules/views/notify/notify.view.dart';
 
@@ -12,33 +13,38 @@ class NotificationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      // color: Colors.amber,
-      child: GestureDetector(
-        onTap: () {
-          socketController.clearNotification();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotifyView(),
-              ));
-        },
-        child: Container(
-          decoration: const BoxDecoration(),
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          child: Center(
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
-                if (socketController.hasNewNotification.value) redDotNotification(),
-              ],
+    final AuthService authService = Get.find<AuthService>();
+    print("islogin : ${authService.isLoggedIn}");
+    return Obx(() => authService.isLoggedIn.value ?
+      Container(
+        width: size,
+        height: size,
+        // color: Colors.amber,
+        child: GestureDetector(
+          onTap: () {
+            socketController.clearNotification();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotifyView(),
+                ));
+          },
+          child: Container(
+            decoration: const BoxDecoration(),
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            child: Center(
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
+                  if (socketController.hasNewNotification.value) redDotNotification(),
+                ],
+              ),
             ),
           ),
         ),
-      ),
+      ) :
+      Container()
     );
   }
 }

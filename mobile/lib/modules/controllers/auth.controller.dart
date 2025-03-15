@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   void loginwithemail({required String email, required String password}) async {
     try {
       final apiUrlsController = Get.find<ApiUrls>();
+      final AuthService authService = Get.find<AuthService>();
       final response = await dio.post(
         apiUrlsController.login.value,
         data: {
@@ -36,7 +37,7 @@ class LoginController extends GetxController {
           return;
         }
 
-        AuthService().saveAuth(response.data['token'], email);
+        authService.saveAuth(response.data['token'], email);
         if (!Get.isRegistered<ProfileController>()) {
           Get.put(ProfileController());
         }

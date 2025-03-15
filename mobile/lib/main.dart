@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Correct import
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/shared_pref.dart';
+import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
@@ -12,6 +13,7 @@ import './modules/controllers/middleware/auth_middleware.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('th_TH', null); // Correct call
+  Get.put(AuthService());
   Get.put(AuthMiddleware());
   Get.put(ApiUrls());
   Get.put(ThemeController());
