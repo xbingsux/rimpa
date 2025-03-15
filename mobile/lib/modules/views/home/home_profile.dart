@@ -246,7 +246,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                         items: [
                           MenuItem(title: "ช่วยเหลือ", icon: Iconsax.headphone, route: "/faq"),
                           MenuItem(title: "นโยบายความเป็นส่วนตัว", icon: Iconsax.security_user, route: "/policy"),
-                          MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account"),
+                          MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account", agrument: () => _logout(),),
                         ],
                       ),
                       const SizedBox(height: 20),

@@ -390,9 +390,9 @@ class PointsController extends GetxController {
     // เรียกใช้ fetchProfile สำหรับดึงข้อมูลเริ่มต้น
 
     // เรียกใช้ fetchpoint ทุก ๆ 1 วินาที
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      fetchpoint(); // เรียกใช้ฟังก์ชัน fetchpoint ทุก ๆ 1 วินาที
-    });
+    // timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    //   fetchpoint(); // เรียกใช้ฟังก์ชัน fetchpoint ทุก ๆ 1 วินาที
+    // });
 
     super.onInit();
   }
