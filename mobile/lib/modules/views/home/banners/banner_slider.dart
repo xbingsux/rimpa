@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'dart:async'; // นำเข้าคลาส Timer
 import 'package:rimpa/core/services/api_urls.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,7 +15,7 @@ class BannerSliderComponent extends StatefulWidget {
 class _BannerSliderComponentState extends State<BannerSliderComponent> {
   ApiUrls apiUrls = Get.find();
   final BannerEventController controller = Get.put(BannerEventController());
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(viewportFraction: 0.925);
   Timer? _timer;
 
   @override
@@ -68,8 +69,8 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
         children: [
           // bannerLoading(),
           // Banner Slider
-          SizedBox(
-            height: 150,
+          AspectRatio(
+            aspectRatio: (16.0/9.0) * 0.925,
             child: PageView.builder(
               controller: _pageController,
               itemCount: banners.length,
@@ -79,13 +80,13 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
               itemBuilder: (context, index) {
                 String bannerPath = banners[index]["path"] ?? '';
                 String imageUrl = bannerPath.isEmpty ? 'assets/images/default_banner.jpg' : '${apiUrls.imgUrl.value}$bannerPath';
-
+            
                 return GestureDetector(
                   onTap: () {
                     // stopAutoScroll(); // หยุด Timer เมื่อกดเข้าไปดูแบนเนอร์
                     // var bannerId = banners[index]['id'];
                     // controller.fetchBannerDetail(bannerId);
-
+            
                     // Get.to(() => BannersDetailPage(bannerId: bannerId), arguments: bannerId)?.then((_) {
                     //   // เมื่อกลับมาที่หน้าหลัก ให้เริ่มการเลื่อนใหม่
                     //   startAutoScroll();
@@ -103,7 +104,7 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
                   //   ),
                   // ),
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
                     child: AppImageComponent(
                       aspectRatio: 16 / 9,
                       fit: BoxFit.cover,
