@@ -24,7 +24,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
   String email = '';
   bool isLoggedIn = false;
   late AnimationController _animationController;
-  final AuthService _authService = AuthService(); // สร้าง instance ของ AuthService
+  final AuthService _authService = Get.find<AuthService>(); // สร้าง instance ของ AuthService
   final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
   final picker = ImagePicker(); // สร้างตัวเลือกภาพ
 
