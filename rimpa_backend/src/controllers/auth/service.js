@@ -393,7 +393,7 @@ const getNoti = async (userId, type) => {
     orderBy: { createdAt: 'desc' }
   })
 
-  return noti.map((item) => {
+  return noti.filter((item) => {
     if (!type || item.type == type) {
       return item
     }
