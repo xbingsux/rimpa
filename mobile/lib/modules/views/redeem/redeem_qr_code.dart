@@ -145,7 +145,13 @@ class _ReddemQRcodeState extends State<ReddemQRcode> {
                             height: 200,
                             width: 200,
                             child: SfBarcodeGenerator(
-                              value: "123456789asdqwertasdsadsadasdasd",
+                              showValue: true,
+                              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontSize: 12,
+                                    color: AppTextColors.secondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                              value: "cm7p228nf000as012aqbkb8e4",
                               symbology: QRCode(errorCorrectionLevel: ErrorCorrectionLevel.low),
                             ),
                           ),
