@@ -68,6 +68,13 @@ class AuthService extends GetxService {
     return false;
   }
 
+  Future<void> checkLoginStatusWithOutForceLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    isLoggedIn.value = token != null && token.isNotEmpty;
+  }
+
   Future<void> clearUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('email');

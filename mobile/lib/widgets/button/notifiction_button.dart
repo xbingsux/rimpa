@@ -14,7 +14,7 @@ class NotificationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Get.find<AuthService>();
-    authService.checkLoginStatus();
+    authService.checkLoginStatusWithOutForceLogin();
     return Obx(() => authService.isLoggedIn.value
         ? Container(
             width: size,
