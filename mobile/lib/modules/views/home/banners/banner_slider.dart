@@ -70,7 +70,7 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
           // bannerLoading(),
           // Banner Slider
           AspectRatio(
-            aspectRatio: (16.0/9.0) * 0.925,
+            aspectRatio: (16.0 / 9.0) * 0.925,
             child: PageView.builder(
               controller: _pageController,
               itemCount: banners.length,
@@ -80,13 +80,13 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
               itemBuilder: (context, index) {
                 String bannerPath = banners[index]["path"] ?? '';
                 String imageUrl = bannerPath.isEmpty ? 'assets/images/default_banner.jpg' : '${apiUrls.imgUrl.value}$bannerPath';
-            
+
                 return GestureDetector(
                   onTap: () {
                     // stopAutoScroll(); // หยุด Timer เมื่อกดเข้าไปดูแบนเนอร์
                     // var bannerId = banners[index]['id'];
                     // controller.fetchBannerDetail(bannerId);
-            
+
                     // Get.to(() => BannersDetailPage(bannerId: bannerId), arguments: bannerId)?.then((_) {
                     //   // เมื่อกลับมาที่หน้าหลัก ให้เริ่มการเลื่อนใหม่
                     //   startAutoScroll();

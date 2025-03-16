@@ -7,9 +7,6 @@ import '../../controllers/middleware/auth_middleware.dart';
 
 class ResetPasswordController extends GetxController {
   var isLoading = false.obs;
-  var oldPassword = ''.obs;
-  var newPassword = ''.obs;
-  var confirmPassword = ''.obs;
   var token = ''.obs;
   var message = ''.obs;
   var status = ''.obs;
@@ -23,32 +20,11 @@ class ResetPasswordController extends GetxController {
   final apiUrlsController = Get.find<ApiUrls>();
 
   // ฟังก์ชันสำหรับรีเซ็ตรหัสผ่าน
-  Future<void> resetPassword() async {
+  Future<void> resetPassword({required String oldPassword, required String newPassword}) async {
     isLoading.value = true;
     String? token = await _authMiddleware.getToken();
 
     try {
-      // ตรวจสอบข้อมูลรหัสผ่าน
-      if (newPassword.value.isEmpty || confirmPassword.value.isEmpty) {
-        showError("กรุณากรอกรหัสผ่านใหม่และยืนยันรหัสผ่าน");
-        return;
-      }
-
-      if (newPassword.value.length < 6) {
-        showError("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
-        return;
-      }
-
-      if (newPassword.value != confirmPassword.value) {
-        showError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
-        return;
-      }
-
-      if (token == null) {
-        showError("ไม่พบ Token");
-        return;
-      }
-
       // ส่งคำขอไปยัง backend
       var response = await dio.put(
         apiUrlsController.resetPassword.value,
@@ -58,8 +34,8 @@ class ResetPasswordController extends GetxController {
           },
         ),
         data: {
-          "old_password": oldPassword.value,
-          "new_password": newPassword.value,
+          "old_password": oldPassword,
+          "new_password": newPassword,
         },
       );
 
@@ -71,6 +47,7 @@ class ResetPasswordController extends GetxController {
         } else {
           showSuccess("เปลี่ยนรหัสผ่านสำเร็จ");
           clearFields(); // เคลียร์ข้อมูลหลังจากการรีเซ็ตรหัสผ่านสำเร็จ
+          Get.offNamedUntil('/home', (route) => false, parameters: {'pages': '4'});
         }
       } else {
         showError("ไม่สามารถรีเซ็ตรหัสผ่านได้");
@@ -86,10 +63,7 @@ class ResetPasswordController extends GetxController {
   void showError(String msg) {
     message.value = msg;
     status.value = "error";
-    Get.snackbar("เกิดข้อผิดพลาด", msg,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Get.theme.colorScheme.error,
-        colorText: Colors.white);
+    Get.snackbar("เกิดข้อผิดพลาด", msg, snackPosition: SnackPosition.BOTTOM, backgroundColor: Get.theme.colorScheme.error, colorText: Colors.white);
     isLoading.value = false;
   }
 
@@ -97,17 +71,11 @@ class ResetPasswordController extends GetxController {
   void showSuccess(String msg) {
     message.value = msg;
     status.value = "success";
-    Get.snackbar("สำเร็จ", msg,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white);
+    Get.snackbar("สำเร็จ", msg, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
   }
 
   // ฟังก์ชันสำหรับเคลียร์ข้อมูลที่กรอก
   void clearFields() {
-    oldPassword.value = '';
-    newPassword.value = '';
-    confirmPassword.value = '';
     isOldPasswordVisible.value = false;
     isNewPasswordVisible.value = false;
     isConfirmPasswordVisible.value = false;

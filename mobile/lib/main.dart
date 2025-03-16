@@ -15,6 +15,7 @@ import './modules/controllers/middleware/auth_middleware.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('th_TH', null); // Correct call
+  configLoading();
   Get.put(AuthService());
   Get.put(AuthMiddleware());
   Get.put(ApiUrls());
@@ -32,7 +33,7 @@ void configLoading() {
     ..backgroundColor = Colors.transparent
     ..boxShadow = []
     ..indicatorWidget = const AppLoading()
-    ..maskType = EasyLoadingMaskType.clear
+    ..maskType = EasyLoadingMaskType.black
     ..indicatorColor = const Color(0xFF8866F6)
     ..textColor = const Color(0xFF009ACD)
     ..userInteractions = false
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
     return Obx(() => GetMaterialApp(
           title: 'Rimpa',
+          builder: EasyLoading.init(),
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeController.themeMode, // ใช้ themeMode ที่อัพเดตด้วย Obx

@@ -255,14 +255,6 @@ class HomeDetailReward extends StatelessWidget {
                   padding: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.md, right: AppRadius.md, bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: () {
-                      // if (idProfile != null && reward.cost != null) {
-                      //   Decimal cost = Decimal.tryParse(reward.cost) ?? Decimal.zero;
-                      //   print("Redeeming reward with idProfile: $idProfile, reward.id: ${reward.id}, cost: $cost");
-                      //   rewardController.redeemReward(idProfile, reward.id.toString(), cost);
-                      // } else {
-                      //   print("Invalid idProfile or cost");
-                      // }
-
                       showDialog(
                         context: context,
                         barrierDismissible: false, // ป้องกันกดข้างนอกเพื่อปิด
@@ -313,7 +305,7 @@ class HomeDetailReward extends StatelessWidget {
                                     radius: 32,
                                     onTap: () {
                                       Get.back();
-                                      Get.to(() => ReddemQRcode(), preventDuplicates: true);
+                                      Get.to(() => ReddemQRcode(rewardID: reward.id), preventDuplicates: true);
                                     },
                                   ),
                                 ),
@@ -329,7 +321,7 @@ class HomeDetailReward extends StatelessWidget {
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.rounded), gradient: AppGradiant.gradientX_1),
                       child: const Center(
                           child: Text(
-                        'แลกรับสิทธิ์ 888',
+                        'แลกรับสิทธิ์',
                         style: TextStyle(fontSize: AppTextSize.lg, color: AppTextColors.white),
                       )),
                     ),

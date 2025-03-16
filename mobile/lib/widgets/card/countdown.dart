@@ -19,7 +19,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
   @override
   void initState() {
     super.initState();
-    targetTime = DateTime(2025, 3, 16, 18, 0);
+    targetTime = widget.targetDateTime;
     _updateTimeRemaining();
     _startCountdown();
   }

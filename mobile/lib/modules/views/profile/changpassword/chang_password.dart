@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -76,7 +77,7 @@ class ChangePassword extends StatelessWidget {
                         hintText: 'รหัสผ่านปัจจุบัน',
                         isPassword: true,
                         controller: passwordController.value,
-                        onChanged: (value) => resetPasswordController.oldPassword.value = value,
+                        onChanged: (value) => passwordController.value.text = value,
                         validator: MultiValidator(
                           [
                             RequiredValidator(errorText: "กรุณาป้อนรหัสผ่านปัจจุบัน"),
@@ -87,7 +88,7 @@ class ChangePassword extends StatelessWidget {
                         hintText: 'รหัสผ่านใหม่',
                         isPassword: true,
                         controller: newPasswordController.value,
-                        onChanged: (value) => resetPasswordController.newPassword.value = value,
+                        onChanged: (value) => newPasswordController.value.text = value,
                         validator: MultiValidator(
                           [
                             RequiredValidator(errorText: "กรุณาป้อนรหัสผ่านปัจจุบัน"),
@@ -98,33 +99,30 @@ class ChangePassword extends StatelessWidget {
                         hintText: 'ยืนยันรหัสผ่านใหม่',
                         isPassword: true,
                         controller: confirmPasswordController.value,
+                        onChanged: (value) => confirmPasswordController.value.text = value,
                         validator: (val) {
-                          return MatchValidator(errorText: 'รหัสผ่านไม่ตรงกัน').validateMatch(val!, passwordController.value.text);
+                          return MatchValidator(errorText: 'รหัสผ่านไม่ตรงกัน').validateMatch(val!, newPasswordController.value.text);
                         },
                       ),
                       Gap(8),
                     ],
                   ),
                 ),
+                Gap(20),
                 GradiantButton(
-                  text: isLoading ? 'กำลังรีเซ็ต...' : 'รีเซ็ต',
-                  onTap: isLoading
-                      ? () {}
-                      : () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          String? token = prefs.getString('token');
-                          if (token == null) {
-                            Get.snackbar('ข้อผิดพลาด', 'ไม่พบ Token');
-                            return;
-                          }
+                  text: 'ยืนยัน',
+                  onTap: () async {
+                    EasyLoading.show();
 
-                          await resetPasswordController.resetPassword();
+                    // await Future.delayed(Duration(seconds: 10));
+                    formKey.currentState!.save();
 
-                          // ถ้าเปลี่ยนรหัสผ่านสำเร็จ ให้รีเซ็ตช่องกรอกข้อมูล
-                          if (resetPasswordController.status.value == "success") {
-                            resetPasswordController.clearFields();
-                          }
-                        },
+                    if (formKey.currentState!.validate()) {
+                      await resetPasswordController.resetPassword(oldPassword: passwordController.value.text, newPassword: newPasswordController.value.text);
+                    }
+
+                    EasyLoading.dismiss();
+                  },
                 ),
               ],
             ),
