@@ -1,48 +1,47 @@
-
-class HistoryPointModels {
+class HistoryPointModel {
   final int id;
-  final String title;
-  final String message;
-  final String? type;
-  final bool read;
-  final bool delete;
+  final String type;
+  final String points;
+  final String description;
+  final int profileId;
   final DateTime createdAt;
-  final String notiRoomId;
+  final DateTime updatedAt;
+  final bool active;
 
-  HistoryPointModels({
+  HistoryPointModel({
     required this.id,
-    required this.title,
-    required this.message,
-    this.type,
-    required this.read,
-    required this.delete,
+    required this.type,
+    required this.points,
+    required this.description,
+    required this.profileId,
     required this.createdAt,
-    required this.notiRoomId,
+    required this.updatedAt,
+    required this.active,
   });
 
-  factory HistoryPointModels.fromJson(Map<String, dynamic> json) {
-    return HistoryPointModels(
+  factory HistoryPointModel.fromJson(Map<String, dynamic> json) {
+    return HistoryPointModel(
       id: json['id'] as int,
-      title: json['title'] as String,
-      message: json['message'] as String,
-      type: json['type'] as String?,
-      read: json['read'] as bool? ?? false,
-      delete: json['delete'] as bool? ?? false,
+      type: json['type'] as String,
+      points: json['points'] as String,
+      description: json['description'] as String,
+      profileId: json['profileId'] as int,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      notiRoomId: json['noti_roomId'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      active: json['active'] as bool,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id' : id,
-      'title' : title,
-      'message' : message,
-      'type' : type,
-      'read' : read,
-      'delete' : delete,
-      'createdAt' : createdAt,
-      'notiRoomId' : notiRoomId
+      'id': id,
+      'type': type,
+      'points': points,
+      'description': description,
+      'profileId': profileId,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'active': active,
     };
   }
 }

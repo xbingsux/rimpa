@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:rimpa/components/cards/app-card.component.dart';
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/history/history.controller.dart';
+import 'package:rimpa/modules/models/history/historypoint.model.dart';
 
 enum HistoryType {
   all,
-  received,
-  spent
+  earn,
+  redeem
 }
 
 class HistoryView extends StatelessWidget {
@@ -60,27 +62,35 @@ class HistoryView extends StatelessWidget {
                     historyTypeButton(
                       context, 
                       historyController.activeType.value == HistoryType.all,
-                      () => historyController.activeType.value = HistoryType.all, 
+                      () {
+                        historyController.activeType.value = HistoryType.all;
+                        historyController.fetchPointHistory();
+                      }, 
                       'ทั้งหมด'
                     ),
                     historyTypeButton(
                       context, 
-                      historyController.activeType.value == HistoryType.received,
-                      () => historyController.activeType.value = HistoryType.received, 
+                      historyController.activeType.value == HistoryType.earn,
+                      () {
+                        historyController.activeType.value = HistoryType.earn;
+                        historyController.fetchPointHistory();
+                      }, 
                       'รับคะแนน'
                     ),
                     historyTypeButton(
                       context, 
-                      historyController.activeType.value == HistoryType.spent,
-                      () => historyController.activeType.value = HistoryType.spent, 
+                      historyController.activeType.value == HistoryType.redeem,
+                      () {
+                        historyController.activeType.value = HistoryType.redeem;
+                        historyController.fetchPointHistory();
+                      }, 
                       'แลกคะแนน'
                     ),
                   ],
                 ),
               )),
             ),
-            Obx(() => historyDisplay(context, historyController.historyList))
-            // historyDisplay(context, ['sdfsdf', 'sdfsdf', ' sdfdsfgds'])
+            Obx(() => historyDisplay(context, historyController.historyPointList))
           ],
         ),
       )
@@ -115,16 +125,16 @@ class HistoryView extends StatelessWidget {
     );
   }
 
-  Widget historyDisplay(BuildContext context, List historyList) {
+  Widget historyDisplay(BuildContext context, List<HistoryPointModel> historyList) {
     if (historyList.isNotEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        child: Expanded(
-          child: SingleChildScrollView(
+      return Expanded(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: AppRadius.md, right: AppRadius.md, bottom: AppRadius.md),
             child: Column(
               children: List.generate(historyList.length, (index) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.md),
+                  padding: EdgeInsets.only(top: index == 0 ? 0.0 : AppSpacing.md),
                   child: AppCardComponent(
                     aspectRatio: 358/80,
                     border: Border.all(width: 1, color: AppColors.secondary),
@@ -142,10 +152,10 @@ class HistoryView extends StatelessWidget {
                               child: Container(
                                 padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.035),
                                 decoration: BoxDecoration(
-                                  color: AppColors.accent1,
+                                  color: historyList[index].type == 'REDEEM' ? AppColors.softdanger : AppColors.softsuccess,
                                   borderRadius: BorderRadius.circular(AppRadius.rounded)
                                 ),
-                                child: const AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/icon/history/point_icon.png', aspectRatio: 1/1,)),
+                                child: AppImageComponent(imageType: AppImageType.assets, imageAddress: historyList[index].type == 'REDEEM' ? 'assets/icon/history/redeem.png' : 'assets/icon/history/earn.png', aspectRatio: 1/1,)),
                             ),
                           ),
                         ),
@@ -157,16 +167,29 @@ class HistoryView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'lorem topics',
-                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    fontSize: AppTextSize.sm,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppTextColors.primary
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      historyList[index].description,
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        fontSize: AppTextSize.sm,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppTextColors.primary
+                                      ),
+                                    ),
+                                    Text(
+                                      historyList[index].type == 'REDEEM' ? '- ${historyList[index].points}' : '+ ${historyList[index].points}',
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        fontSize: AppTextSize.sm,
+                                        fontWeight: FontWeight.w600,
+                                        color: historyList[index].type == 'REDEEM' ? AppColors.danger : AppColors.success
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Text(
-                                  '04/02/2568 20:00',
+                                  DateFormat('dd/MM/yyyy HH:mm').format(historyList[index].updatedAt),
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     fontSize: AppTextSize.xs,
                                     fontWeight: FontWeight.w400,

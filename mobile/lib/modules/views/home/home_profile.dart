@@ -317,7 +317,25 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                     ),
                   ],
                 ),
-                child: AppImageComponent(
+                child: profileImage.isEmpty ?
+                AspectRatio(
+                  aspectRatio: 1/1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.rounded),
+                    child: Container(
+                      color: AppColors.secondary,
+                      child: const Center(
+                        child: Icon(
+                          Iconsax.user, 
+                          size: 50, 
+                          color: AppTextColors.secondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                :
+                 AppImageComponent(
                   imageType: AppImageType.network, // ระบุประเภทเป็น Network
                   imageAddress: imageUrl, // URL ของภาพโปรไฟล์
                   aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)

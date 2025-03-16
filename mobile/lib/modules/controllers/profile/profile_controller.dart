@@ -200,7 +200,8 @@ class ProfileController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+              Get.back();
         // Show dialog after successful update
       } else {
         uploadStatus.value = 'อัปเดตข้อมูลล้มเหลว: ${response.statusCode}';
@@ -262,6 +263,7 @@ class ProfileController extends GetxController {
       genderLoading.value = true;
       isLoading.value = false;
       fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
+
     }
   }
 
@@ -353,7 +355,6 @@ class PointsController extends GetxController {
     uploadStatus.value = '';
   }
 
-  // ดึงข้อมูล point ทุก 1 วินาที
   Future<void> fetchpoint() async {
     isLoading.value = true;
     try {
@@ -372,7 +373,7 @@ class PointsController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        pointsData.value = response.body["profile"];
+        pointsData.value = response.body["profile"];;
         uploadStatus.value = '';
       } else {
         uploadStatus.value = 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้';

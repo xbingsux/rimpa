@@ -38,13 +38,17 @@ class AppColors {
   static const Color info = Color(0xFF0DCAF0);
 
   /// สีเขียว success #198754
-  static const Color success = Color(0xFF198754);
+  static const Color success = Color(0xFF53CA99);
+  /// soft success #E0F2EC
+  static const Color softsuccess = Color(0xffE0F2EC);
 
   /// สีเหลือง warning info #FFC107
   static const Color warning = Color(0xFFFFC107);
 
   /// สีแดง danger #DC3545
-  static const Color danger = Color(0xFFDC3545);
+  static const Color danger = Color(0xFFFF0000);
+    /// soft danger #FAE0E2
+  static const Color softdanger = Color(0xffFAE0E2);
 
   /// สีเทาอ่อน #1E1E1E
   static const Color gray = Color(0xFF1E1E1E);

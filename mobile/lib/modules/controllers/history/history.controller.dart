@@ -9,8 +9,7 @@ class HistoryController extends GetxController {
   final GetConnect getConnect = GetConnect();
 
   Rx<HistoryType> activeType = HistoryType.all.obs;
-  RxList<HistoryPointModels> historyPointList = <HistoryPointModels>[].obs;
-  var historyList = <dynamic>[].obs;
+  RxList<HistoryPointModel> historyPointList = <HistoryPointModel>[].obs;
   var isPointLoading = false.obs;
 
   @override
@@ -28,21 +27,30 @@ class HistoryController extends GetxController {
       }
 
       isPointLoading.value = true;
+      String api = "${AppApi.urlApi}/auth/point-history";
+      if (activeType.value == HistoryType.earn) {
+        api = "$api?type=EARN";
+      } else if (activeType.value == HistoryType.redeem) {
+        api = "$api?type=REDEEM";
+      } else {
+        api = "$api?type";
+      }
 
       final response = await getConnect.get(
-        "${AppApi.urlApi}/auth/point-history",
+        api,
         headers: {"Authorization": "Bearer $token"},
       );
 
       if (response.statusCode == 200) {
         var data = response.body;
         if (data != null && data['status'] == 'success') {
-          print(data);
-          // print(List.from(data['noti']));
-          //   List.from(data['noti']).map((item){
-          //     print(item);
-          //     // historyPointList.add(HistoryPointModels.fromJson(item));
-          //   });
+          if (data['history'] != null && data['history'] is List) {
+            historyPointList.value = (data['history'] as List<dynamic>)
+              .map((json) => HistoryPointModel.fromJson(json as Map<String, dynamic>))
+              .toList();
+          } else {
+            historyPointList.clear(); // ถ้าไม่มีข้อมูล ให้ล้าง list
+          }
         } else {
           print("Error: ${data['message']}");
         }
