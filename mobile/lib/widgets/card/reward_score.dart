@@ -70,7 +70,7 @@ class RewardScore extends StatelessWidget {
                           ? "0"
                           : (pointsValue > 999999)
                               ? "999999" // จำกัดตัวเลขสูงสุด 6 หลัก
-                              : pointsValue.toStringAsFixed(2); // ปัดเศษ 2 ตำแหน่ง
+                              : points; // ปัดเศษ 2 ตำแหน่ง
 
                       return Text(
                         displayPoints,
