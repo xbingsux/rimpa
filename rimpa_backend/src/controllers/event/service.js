@@ -24,6 +24,8 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                     event_type: "Main",
                     startDate: startDate,
                     endDate: endDate,
+                    title: title,
+                    description: description
                 }
             },
         },
@@ -38,7 +40,9 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 update: {
                     where: {
                         id: sub_event_id || 0,
-                        event_type: "Main"
+                        event_type: "Main",
+                        title: title,
+                        description: description
                     },
                     data: {
                         map: map,
