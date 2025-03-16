@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:rimpa/core/services/api_urls.dart';
 import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
 import 'package:rimpa/widgets/button/notifiction_button.dart';
@@ -45,7 +46,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       height: 40,
                       fit: BoxFit.cover, // ปรับให้เต็มวงกลม
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.person_outline, color: Colors.grey, size: 24);
+                        return const Icon(Iconsax.user, color: Colors.grey, size: 24);
                       },
                     ),
                   ),
