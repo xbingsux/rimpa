@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   void loginwithemail({required String email, required String password}) async {
     try {
       final apiUrlsController = Get.find<ApiUrls>();
+      final AuthService authService = Get.find<AuthService>();
       final response = await dio.post(
         apiUrlsController.login.value,
         data: {
@@ -36,7 +37,7 @@ class LoginController extends GetxController {
           return;
         }
 
-        AuthService().saveAuth(response.data['token'], email);
+        authService.saveAuth(response.data['token'], email);
         if (!Get.isRegistered<ProfileController>()) {
           Get.put(ProfileController());
         }
@@ -48,8 +49,17 @@ class LoginController extends GetxController {
       } else {
         Get.snackbar('ข้อผิดพลาด', 'เข้าสู่ระบบไม่สำเร็จ');
       }
-    } catch (e) {
-      Get.snackbar('ข้อผิดพลาด', 'โปรดตรวจสอบอีเมลและรหัสผ่าน ${e}');
+    } on DioException catch (e) {
+      if (e.response?.data != null && e.response?.data is Map<String, dynamic>) {
+        String errorMessage = e.response!.data['message'] ?? 'เกิดข้อผิดพลาด';
+        Get.snackbar('ข้อผิดพลาด', errorMessage);
+      } else {
+        Get.snackbar('ข้อผิดพลาด', 'เกิดข้อผิดพลาด ไม่สามารถติดต่อเซิร์ฟเวอร์ได้');
+      }
+
+      print("DioError: ${e.message}, Response: ${e.response?.data}");
+    }catch (e) {
+      Get.snackbar('ข้อผิดพลาด', '$e');
       print("Error: $e");
     }
   }

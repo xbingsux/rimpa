@@ -24,7 +24,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
   String email = '';
   bool isLoggedIn = false;
   late AnimationController _animationController;
-  final AuthService _authService = AuthService(); // สร้าง instance ของ AuthService
+  final AuthService _authService = Get.find<AuthService>(); // สร้าง instance ของ AuthService
   final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
   final picker = ImagePicker(); // สร้างตัวเลือกภาพ
 
@@ -69,6 +69,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
 
     // Clear profile data and other states
     Get.find<ProfileController>().resetProfile();
+    Get.find<AuthService>().isLoggedIn.value = false;
 
     setState(() {
       isLoggedIn = false;
@@ -246,7 +247,7 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                         items: [
                           MenuItem(title: "ช่วยเหลือ", icon: Iconsax.headphone, route: "/faq"),
                           MenuItem(title: "นโยบายความเป็นส่วนตัว", icon: Iconsax.security_user, route: "/policy"),
-                          MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account"),
+                          MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account", agrument: () => _logout(),),
                         ],
                       ),
                       const SizedBox(height: 20),

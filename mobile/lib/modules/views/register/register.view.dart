@@ -47,10 +47,10 @@ class _CreateAccountViewState extends State<CreateAccountView> {
 
   @override
   Widget build(BuildContext context) {
-    birthDate.value = profileController.profileData['birth_date'];
-    gender.value = profileController.profileData['gender'];
 
     if (!widget.isCreate) {
+      birthDate.value = profileController.profileData['birth_date'];
+      gender.value = profileController.profileData['gender'];
       profileName.value = TextEditingController(text: profileController.profileData['profile_name']);
       firstName.value = TextEditingController(text: profileController.profileData['first_name']);
       lastName.value = TextEditingController(text: profileController.profileData['last_name']);
@@ -295,7 +295,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       hintText: 'ยืนยันรหัสผ่าน',
                       isPassword: true,
                       controller: confirmpass.value,
-                      onChanged: (value) => confirmpass.value.text = value,
+                      // onChanged: (value) => confirmpass.value.text = value,
                       validator: (val) {
                         return MatchValidator(errorText: 'รหัสผ่านไม่ตรงกัน').validateMatch(val!, password.value.text);
                       },

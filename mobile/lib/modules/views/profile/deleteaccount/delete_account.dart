@@ -17,6 +17,7 @@ class DeleteAccount extends StatefulWidget {
 class _DeleteAccountState extends State<DeleteAccount> {
   bool checkbox1 = false;
   bool checkbox2 = false;
+  final Function()? finalfunction = Get.arguments;
   @override
   Widget build(BuildContext context) {
     // ตรวจสอบโหมดธีมที่ใช้งาน
@@ -142,7 +143,11 @@ class _DeleteAccountState extends State<DeleteAccount> {
                               builder: (context) => DeleteConfirmationPage(
                                 onConfirmDelete: () {
                                   profileController.deleteUser(); // เรียก deleteUser() เมื่อกดตกลง
-                                  Navigator.pop(context); // ปิดหน้ายืนยันหลังลบ
+                                  Get.offNamedUntil('/home', (route) => false, parameters: {'pages': '4'});
+                                  if (finalfunction != null) {
+                                    finalfunction!();
+                                  }
+                                  
                                 },
                               ),
                             ),

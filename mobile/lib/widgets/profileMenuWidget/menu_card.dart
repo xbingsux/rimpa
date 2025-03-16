@@ -7,12 +7,14 @@ class MenuItem {
   final String title;
   final IconData icon;
   final String route;
+  final void Function()? agrument;
   final bool isToggle; // เพิ่มตัวแปรเช็คว่าเป็นเมนูแบบ Toggle หรือไม่
 
   MenuItem({
     required this.title,
     required this.icon,
     required this.route,
+    this.agrument,
     this.isToggle = false, // ค่าเริ่มต้นเป็น false หากไม่ใช่ Toggle
   });
 }
@@ -116,7 +118,7 @@ class _MenuCardState extends State<MenuCard> {
                       color: AppTextColors.secondary,
                     ),
                     onTap: () {
-                      Navigator.pushNamed(context, item.route);
+                      Get.toNamed(item.route, arguments: item.agrument); // สามารถส่ง Function ได้
                     },
                   );
                 }
