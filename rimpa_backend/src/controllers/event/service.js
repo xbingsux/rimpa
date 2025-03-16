@@ -40,15 +40,15 @@ const upsertEvent = async (event_id, sub_event_id, title, description, max_atten
                 update: {
                     where: {
                         id: sub_event_id || 0,
-                        event_type: "Main",
-                        title: title,
-                        description: description
+                        event_type: "Main"
                     },
                     data: {
                         map: map,
                         point: point,
                         startDate: startDate,
                         endDate: endDate,
+                        title: title,
+                        description: description
                     }
                 }
             },
