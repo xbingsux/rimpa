@@ -200,7 +200,8 @@ class ProfileController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+              Get.back();
         // Show dialog after successful update
       } else {
         uploadStatus.value = 'อัปเดตข้อมูลล้มเหลว: ${response.statusCode}';
@@ -262,6 +263,7 @@ class ProfileController extends GetxController {
       genderLoading.value = true;
       isLoading.value = false;
       fetchProfile(); // โหลดข้อมูลโปรไฟล์ใหม่
+
     }
   }
 
