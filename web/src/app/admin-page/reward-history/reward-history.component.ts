@@ -5,6 +5,8 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-reward-history',
@@ -44,6 +46,40 @@ export class RewardHistoryComponent {
     return path
   }
 
+  exportToExcel(): void {
+    const data = this.data.map((item) => {
+      let date = new Date(item.createdAt);
+      let datePipe = new DatePipe('th-TH');
+      return {
+        username: item.Profile.profile_name,
+        contact_email: item.Profile.contact_email,
+        reward_name: item.Reward.reward_name,
+        qty: item.quantity,
+        used: item.usedCoints,
+        date: datePipe.transform(date, 'dd MMMM YYYY', 'th-TH')
+      }
+    })
+
+    const now = new Date();
+    const fileName: string = `${now.getTime()}`
+    // `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
+    // สร้างเวิร์กบุ๊กและชีตจากข้อมูล
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'ข้อมูล': worksheet },
+      SheetNames: ['ข้อมูล'],
+    };
+
+    // แปลงไฟล์เป็นไบนารี
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    // ดาวน์โหลดไฟล์
+    const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(dataBlob, `${fileName}.xlsx`);
+  }
 
   //Search Func
   search = ''
