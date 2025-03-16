@@ -427,10 +427,8 @@ const pointHistory = async (userId, type) => {
     }
   })
 
-  return point.map((item) => {
-    if (!item.type || type.trim() == '' || type == item.type) {
-      return item;
-    }
+  return point.filter((item) => {
+    return !item.type || type.trim() == '' || type == item.type
   })
 }
 

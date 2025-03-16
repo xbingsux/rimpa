@@ -110,7 +110,7 @@ router.post("/checkIn", auth, async (req, res) => {
       error.message === 'No information available or out of the event period'
     ) {
       return res
-        .status(500)
+        .status(400)
         .json({ status: "error", message: error.message });
     } else if (error.message === 'The event has reached its limit.') {
       return res
