@@ -355,7 +355,6 @@ class PointsController extends GetxController {
     uploadStatus.value = '';
   }
 
-  // ดึงข้อมูล point ทุก 1 วินาที
   Future<void> fetchpoint() async {
     isLoading.value = true;
     try {
@@ -374,7 +373,7 @@ class PointsController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        pointsData.value = response.body["profile"];
+        pointsData.value = response.body["profile"];;
         uploadStatus.value = '';
       } else {
         uploadStatus.value = 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้';

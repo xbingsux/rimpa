@@ -10,6 +10,7 @@ class RewardScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pointsController = Get.put(PointsController());
+    pointsController.fetchpoint();
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -60,6 +61,7 @@ class RewardScore extends StatelessWidget {
                     ),
                     Obx(() {
                       // ดึงค่าคะแนนจาก profileData
+                      
                       var points = pointsController.pointsData["points"];
                       double? pointsValue = double.tryParse(points.toString());
 
