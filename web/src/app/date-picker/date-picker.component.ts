@@ -156,7 +156,7 @@ export class DatePickerComponent implements OnInit {
   key: string = ''
 
   selectText(id: string | HTMLElement): void {
-    console.log(this.date);
+    // console.log(this.date);
 
     let element = null
     if (typeof id == 'string') {
