@@ -424,6 +424,9 @@ const pointHistory = async (userId, type) => {
   const point = await prisma.point.findMany({
     where: {
       Profile: { user_id: userId },
+    },
+    orderBy:{
+      createdAt:'desc'
     }
   })
 

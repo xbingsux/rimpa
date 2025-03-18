@@ -1,3 +1,5 @@
 {
-    "deepscan.enable": true
+    "deepscan.enable": true,
+    "cmake.sourceDirectory": "C:/New project/rimpa/mobile/linux/flutter",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
