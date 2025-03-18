@@ -37,7 +37,7 @@
           <div
             class="relative rounded-[50%] overflow-hidden aspect-square bg-[#E7E7E7] flex justify-center items-center">
             <img *ngIf="img_url" [src]="img_url"
-              class="absolute min-h-[40px] min-w-[40px] object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
+              class="absolute min-h-full min-w-full object-contain left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]">
             <img *ngIf="!img_url" src="user_outline.svg" class="w-[20px] aspect-square">
           </div>
           <div [style]="barActive ? 'display: none;':''" class="text-[#F3F3F3] font-light w-full overflow-hidden">

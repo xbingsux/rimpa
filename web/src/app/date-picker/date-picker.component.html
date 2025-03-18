@@ -1,10 +1,10 @@
-<div class="relative flex min-h-[40px] min-w-[250px] w-full h-full px-4 border-[#D9D9D9] border-[1px] rounded-[12px] bg-white
+<div class="relative flex gap-3 min-h-[40px] min-w-[250px] w-full h-full px-4 border-[#D9D9D9] border-[1px] rounded-[12px] bg-white
 items-center cursor-default">
-    <div class="flex-1" tabindex="0" (keydown)="keydownElement($event)" (blur)="endElement()">
+    <div class="flex-1 p-1 outline-none" tabindex="0" (keydown)="keydownElement($event)" (blur)="endElement()">
 
-        <input type="text" #bsDatepicker="bsDatepicker" bsDatepicker [(ngModel)]="date" id="{{itemId}}"
+        <input type="text" #datepicker="bsDatepicker" bsDatepicker [(ngModel)]="date" id="{{itemId}}"
             [bsConfig]="bsConfig" class="absolute -z-10 w-full p-2 border border-gray-300 rounded-md shadow-sm"
-            (focus)="selectText(parts[0]);" (ngModelChange)="setDate($event)">
+            (focus)="selectText(parts![0]);" (ngModelChange)="setDate($event)">
         <!-- <div class="d-flex align-items-center gap-2">
 
         <input type="text" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" [(ngModel)]="selectedDate"
@@ -18,24 +18,41 @@ items-center cursor-default">
             <!-- <div *ngFor="let part of parts" id="{{part}}" (click)="selectText(part)">
             {{item['dd'].value}}
         </div> -->
+
+            <!-- <ng-container *ngFor="let part of part_array">
+                <div class="relative">
+                    <div *ngIf="date_object.hasOwnProperty(part) && part.trim() != '' && part != key"
+                        (click)="selectText(part);">
+                        {{date_object[part].value}}
+                    </div>
+                    <div *ngIf="date_object.hasOwnProperty(part) && part.trim() != ''"
+                        [ngClass]="{ 'absolute -z-10': select && '{{itemId}}-{{part}}' !== select.id ,'absolute z-10':select?.id == `{{itemId}}-{{part}}`}"
+                        id="{{itemId}}-{{part}}">
+                        {{date_object[part].value}}
+                    </div>
+                </div>
+                <p *ngIf="!date_object.hasOwnProperty(part)  && part.trim() != ''" class="select-none">{{ part }}</p>
+                <div *ngIf="!date_object.hasOwnProperty(part)  && part.trim() == ''" class="w-2"></div>
+            </ng-container> -->
+
             <div id="{{itemId}}-dd" (click)="selectText('dd')">
-                {{item['dd'].value}}
+                {{date_object['dd'].value}}
             </div>
             <p class="select-none">/</p>
             <div id="{{itemId}}-MM" (click)="selectText('MM')">
-                {{item['MM'].value}}
+                {{date_object['MM'].value}}
             </div>
             <p class="select-none">/</p>
             <div id="{{itemId}}-YYYY" (click)="selectText('YYYY')">
-                {{item['YYYY'].value}}
+                {{date_object['YYYY'].value}}
             </div>
             <div class="w-2"></div>
             <div id="{{itemId}}-HH" (click)="selectText('HH')">
-                {{item['HH'].value}}
+                {{date_object['HH'].value}}
             </div>
             <p class="select-none">:</p>
             <div id="{{itemId}}-mm" (click)="selectText('mm')">
-                {{item['mm'].value}}
+                {{date_object['mm'].value}}
             </div>
         </div>
         <div *ngIf="showDate" class="flex flex-1">
