@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, KeyValuePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
@@ -8,19 +8,24 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 @Component({
   selector: 'app-date-picker',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, FormsModule, BsDatepickerModule, TimepickerModule],
+  imports: [DatePipe, NgFor, NgIf, FormsModule, BsDatepickerModule, TimepickerModule, NgClass],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss'
 })
 export class DatePickerComponent implements OnInit {
-  @ViewChild('bsDatepicker', { static: false }) datepicker!: BsDatepickerDirective;
+  @ViewChild('datepicker', { static: false }) datepicker!: BsDatepickerDirective;
   @Input() itemId = 'date-picker'
   @Input() date = new Date()
   @Output() dateChange: EventEmitter<Date> = new EventEmitter<Date>();
   selectedDate: Date = new Date(); // กำหนดค่าเริ่มต้นของ DatePicker
   selectedTime: Date = new Date(); // กำหนดค่าเริ่มต้นของ TimePicker
 
+  // parts = 'dd/MM/YYYY HH:mm'.split(/\W+/);
+  path = 'dd/MM/YYYY HH:mm'
   parts = 'dd/MM/YYYY HH:mm'.split(/\W+/);
+  part_array: RegExpMatchArray = ["", ...[]];
+
+
   tz: string = 'UTC';
   tz_num = Number(environment.timeZone.replace(/\D+/, '')) * 60
   time_gap = ((this.tz_num + this.date.getTimezoneOffset()) / -60) * 60 * 60 * 1000
@@ -33,21 +38,29 @@ export class DatePickerComponent implements OnInit {
   };
 
   updateDate() {
+    this.setItem()
     this.dateChange.emit(this.date); // ส่งค่าออกไปยัง Parent Component
+
   }
 
   ngOnInit(): void {
+    let array = this.path.match(/(\d+|[a-zA-Z]+|[/:\s])/g);
+    if (array) {
+      this.part_array = array
+    }
+
     this.tz = environment.timeZone;
     // this.date = new Date();
     // this.date.setHours(0, 0, 0, 0)
     // console.log(this.item['YYYY']);
-    this.setItem()
     this.date = new Date(this.date.getTime() + this.time_gap)
+    this.setItem()
   }
 
-  item: { [key: string]: any } = {}
+  date_object: { [key: string]: any } = {}
+
   setItem() {
-    this.item = {
+    this.date_object = {
       YYYY: {
         value: this.date.getFullYear(),
         min: 1,
@@ -156,7 +169,7 @@ export class DatePickerComponent implements OnInit {
   key: string = ''
 
   selectText(id: string | HTMLElement): void {
-    console.log(this.date);
+    // console.log(this.date);
 
     let element = null
     if (typeof id == 'string') {
@@ -186,6 +199,7 @@ export class DatePickerComponent implements OnInit {
     // console.log(event.key);
     const number = Number(event.key)
     let select = this.select;
+
     let tap = (id: string) => {
       id = id.slice(this.itemId.length + 1)
 
@@ -200,11 +214,12 @@ export class DatePickerComponent implements OnInit {
         this.key = '';
       }
     }
+
     if (select) {
       let id = select.id.slice(this.itemId.length + 1)
       if (!isNaN(number) && event.key.trim() != '') {
         this.key += number;
-        let item = this.item[id]
+        let item = this.date_object[id]
         if (item) {
           let max = item.max;
           let max_length = item.max_length;
@@ -223,8 +238,8 @@ export class DatePickerComponent implements OnInit {
           }
 
           let date = new Date()
-          date.setFullYear(+this.item['YYYY'].value, +this.item['MM'].value - 1, +this.item['dd'].value)
-          date.setHours(+this.item['HH'].value, +this.item['mm'].value, 0, 0)
+          date.setFullYear(+this.date_object['YYYY'].value, +this.date_object['MM'].value - 1, +this.date_object['dd'].value)
+          date.setHours(+this.date_object['HH'].value, +this.date_object['mm'].value, 0, 0)
 
           this.date = new Date(date.getTime() + this.time_gap)
 
@@ -243,16 +258,18 @@ export class DatePickerComponent implements OnInit {
 
       }
     }
+
   }
 
   endElement() {
+
     let select = this.select;
     // console.log(select);
     if (select) {
       let id = select.id.slice(this.itemId.length + 1)
       // console.log(id);
 
-      let item = this.item[id]
+      let item = this.date_object[id]
       if (item && +item.value <= 0) item.value = `${item.min}`.padStart(item.max_length, '0')
       select.innerText = item.value
     }
@@ -265,7 +282,14 @@ export class DatePickerComponent implements OnInit {
 
   setDate(date: Date) {
     this.date.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
-    this.setItem()
     this.updateDate()
+    Object.entries(this.date_object).forEach(([key, value]) => {
+      const el = document.getElementById(`${this.itemId}-${key}`) as HTMLElement;
+      if (el) {
+        el.innerText = String(value.value)
+        // console.log(el.id);
+      }
+      // console.log(`Key: ${key}, Value: ${value.value}`);
+    });
   }
 }

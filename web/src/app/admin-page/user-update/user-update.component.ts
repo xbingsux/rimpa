@@ -39,7 +39,7 @@ export class UserUpdateComponent implements OnInit {
           this.data.Status = item.user.active;
           this.data.birthday = new Date(item.birth_date).toISOString().slice(0, 10)
           this.data.path = item.profile_img
-          let path = `${environment.API_URL}${item.profile_img.replace('src', '')}`;
+          let path = item.profile_img ? `${environment.API_URL}${item.profile_img.replace('src', '')}` : '';
           path = await this.api.checkImageExists(path) != 500 ? path : ''
           this.img_path = path;
           this.loading = false

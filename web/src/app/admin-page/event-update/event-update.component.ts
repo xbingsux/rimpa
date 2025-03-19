@@ -17,13 +17,14 @@ import { DatePickerComponent } from "../../date-picker/date-picker.component";
 export class EventUpdateComponent implements OnInit {
 
   setStartDate(newDate: Date) {
+
     this.data.startDate = newDate;
-    // console.log('Updated start date:', this.startDate);
+    // console.log('Updated start date:', this.data.startDate);
   }
 
   setEndDate(newDate: Date) {
     this.data.endDate = newDate;
-    // console.log('Updated start date:', this.startDate);
+    // console.log('Updated end date:', this.data.endDate);
   }
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public api: ApiService) { }
@@ -37,31 +38,34 @@ export class EventUpdateComponent implements OnInit {
         this.data.id = Number(param.get('id'))
         const params = new HttpParams().set('id', this.data.id);
         this.http.get(`${environment.API_URL}/get-event`, { params }).subscribe(async (item: any) => {
-          // console.log(item);
-
           let event = item.event;
           this.data.id = event.id;
-          this.data.sub_event_id = event.SubEvent[0].id
+          this.data.sub_event_id = event.SubEvent[0].id;
           this.data.title = event.title;
           this.data.description = event.description;
           this.data.max_attendees = event.max_attendees;
-          this.data.map = event.SubEvent[0].map
+          this.data.map = event.SubEvent[0].map;
 
-          this.data.startDate = new Date(event.startDate)
-          this.data.endDate = new Date(event.endDate)
+          this.data.startDate = new Date(event.startDate);
+          this.data.endDate = new Date(event.endDate);
           this.data.point = event.SubEvent[0].point;
 
-          event.SubEvent[0].img.filter(async (item: any) => {
-            let path = `${environment.API_URL}${item.path.replace('src', '')}`;
-            let name = path.split(/[/\\]/).pop();
-            path = await this.api.checkImageExists(path) != 500 ? path : ''
+          this.data.list_img = await Promise.all(
+            event.SubEvent[0].img.map(async (item: any) => {
+              let path = `${environment.API_URL}${item.path.replace('src', '')}`;
+              let name = path.split(/[/\\]/).pop();
 
-            this.data.list_img.push(new Img({ id: item.id, path: item.path.replace('src', ''), realpath: path, name }))
-            this.list_file = this.data.list_img;
-          })
+              let isValidImage = await this.api.checkImageExists(path) !== 500;
+              path = isValidImage ? path : '';
 
-          this.loading = false
-        })
+              return new Img({ id: item.id, path: item.path.replace('src', ''), realpath: path, name });
+            })
+          );
+
+          this.list_file = this.data.list_img;
+          this.loading = false;
+        });
+
       } else {
         this.loading = false
       }
