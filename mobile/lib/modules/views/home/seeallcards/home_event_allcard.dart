@@ -78,7 +78,7 @@ class _HomeEventAllcardState extends State<HomeEventAllcard> {
           child: AllReward(
             showTitle: false,
             isScroll: true,
-            screenHigh: bodyHeight - (40),
+            screenHigh: bodyHeight - (60),
           ),
         );
       }),

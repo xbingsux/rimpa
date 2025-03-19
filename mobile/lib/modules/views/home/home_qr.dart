@@ -88,7 +88,7 @@ class _HomeQRPageState extends State<HomeQRPage> with WidgetsBindingObserver {
                         await showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return CustomDialog(context: context, point: response?.data['event']['points'], total: "1234");
+                            return CustomDialog(context: context, point: response?.data['event']['points'], total: response?.data['event']['Profile']['points']);
                           },
                         );
                       } else {

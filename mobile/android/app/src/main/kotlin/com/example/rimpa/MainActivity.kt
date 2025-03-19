@@ -1,4 +1,4 @@
-package co.newdice.rimpa
+package co.newdice.gocon
 
 import io.flutter.embedding.android.FlutterActivity
 

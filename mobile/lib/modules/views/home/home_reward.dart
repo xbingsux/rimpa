@@ -101,7 +101,7 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
               ),
             ),
             Container(
-              height: bodyHeight - (96 + 40 + 58),
+              height: bodyHeight - (96 + 60 + 58 ),
               child: SingleChildScrollView(
                 child: Container(
                   decoration: BoxDecoration(
@@ -111,60 +111,6 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Removed card here
-                      // const SizedBox(height: 40),
-                      // Banner slider
-                      // Obx(() {
-                      //   if (listBannerController.isLoading.value) {
-                      //     return const Center(child: CircularProgressIndicator());
-                      //   } else {
-                      //     return SizedBox(
-                      //       height: 150,
-                      //       child: PageView.builder(
-                      //         controller: _pageController,
-                      //         itemCount: listBannerController.banners.length,
-                      //         onPageChanged: (index) {
-                      //           setState(() {
-                      //             _currentPage = index;
-                      //           });
-                      //         },
-                      //         itemBuilder: (context, index) {
-                      //           var banner = listBannerController.banners[index];
-                      //           return GestureDetector(
-                      //             onTap: () {
-                      //               Get.to(() => BannerDetailPage(banner: banner)); // Corrected line
-                      //             },
-                      //             child: Container(
-                      //               margin: const EdgeInsets.symmetric(horizontal: 8),
-                      //               child: AppImageComponent(
-                      //                 aspectRatio: 16 / 9,
-                      //                 fit: BoxFit.cover,
-                      //                 imageType: AppImageType.network,
-                      //                 imageAddress: '${AppApi.urlApi}${banner.path.replaceAll("\\", "/")}', // Use AppApi.urlApi
-                      //               ),
-                      //             ),
-                      //           );
-                      //         },
-                      //       ),
-                      //     );
-                      //   }
-                      // }),
-
-                      // const SizedBox(height: 8),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: List.generate(listBannerController.banners.length, (index) {
-                      //     return Container(
-                      //       margin: const EdgeInsets.symmetric(horizontal: 4),
-                      //       width: _currentPage == index ? 12 : 8,
-                      //       height: 8,
-                      //       decoration: BoxDecoration(
-                      //         color: _currentPage == index ? Colors.blue : Colors.grey,
-                      //         borderRadius: BorderRadius.circular(4),
-                      //       ),
-                      //     );
-                      //   }),
-                      // ),
                       RewardRecommend(),
                       // EventFav(),
                       // EventRecommend(),
@@ -172,7 +118,6 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
                         padding: EdgeInsets.all(16.0),
                         child: AllReward(),
                       ),
-                      // Add dashed line
                     ],
                   ),
                 ),
