@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Correct import
 import 'package:get/get.dart';
+import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/core/constant/shared_pref.dart';
 import 'package:rimpa/widgets/loading/app_loading.dart';
 import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
+import 'package:store_redirect/store_redirect.dart';
+import 'package:upgrader/upgrader.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'core/routes/app_pages.dart';
@@ -21,7 +25,7 @@ void main() async {
   Get.put(ApiUrls());
   Get.put(ThemeController());
   await SharedPrefService().init();
-
+  await checkVersion();
   runApp(const MyApp());
 }
 
@@ -38,6 +42,109 @@ void configLoading() {
     ..textColor = const Color(0xFF009ACD)
     ..userInteractions = false
     ..dismissOnTap = false;
+}
+
+Future<void> checkVersion() async{
+  final upgrader = Upgrader.sharedInstance;
+  await upgrader.initialize();
+
+  if (upgrader.isUpdateAvailable()) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showUpdateDialog();
+    });
+  }
+}
+
+void showUpdateDialog() {
+  showDialog(
+    context: Get.context!,
+    barrierDismissible: false, // บังคับไม่ให้ปิด Dialog นอก
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.sm)
+          ),
+          contentPadding: const EdgeInsets.only(left: AppSpacing.lg, right: AppRadius.lg, bottom: AppSpacing.lg),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/images/update/update.png'),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (bounds) {
+                      return AppGradiant.gradientY_1.createShader(bounds);
+                    },
+                    child: Text(
+                      'อัปเดตใหม่',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: AppTextColors.white
+                        ),
+                    ),
+                  ),
+                  Text(
+                    '  🚀✨',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'เพื่อให้คุณได้รับประสบการณ์ที่ดีที่สุด',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: AppTextSize.md,
+                      fontWeight: FontWeight.w400,
+                      color: AppTextColors.secondary,
+                    ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.md),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      StoreRedirect.redirect(
+                        androidAppId: "co.newdice.gocon",
+                        iOSAppId: "6482293361", // ID สำหรับเทสเท่านั้น
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: AppGradiant.gradientX_1,
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 13, horizontal: AppSpacing.xl),
+                      child: Text(
+                        'อัปเดตตอนนี้',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: AppTextSize.md,
+                            fontWeight: FontWeight.w600,
+                            color: AppTextColors.white,
+                          ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
