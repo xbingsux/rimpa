@@ -93,7 +93,23 @@ class _CreateAccountViewState extends State<CreateAccountView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: [RimpaTextFormField(
+                    hintText: 'อีเมล',
+                    controller: email.value,
+                    onChanged: (value) {
+                      if(widget.isCreate) {
+                        registerController.user.email.value = value;
+                      }
+                    },
+                    validator: MultiValidator(
+                      [
+                        RequiredValidator(errorText: ''),
+                        EmailValidator(errorText: "รูปแบบอีเมลไม่ถูกต้อง"),
+                      ],
+                    ),
+                    showTitle: true,
+                    enabled: widget.isCreate,
+                  ),
                   RimpaTextFormField(
                     hintText: 'ชื่อผู้ใช้',
                     controller: profileName.value,
@@ -128,22 +144,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                     showTitle: true,
                   ),
 
-                  RimpaTextFormField(
-                    hintText: 'อีเมล',
-                    controller: email.value,
-                    onChanged: (value) {
-                      if(widget.isCreate) {
-                        registerController.user.email.value = value;
-                      }
-                    },
-                    validator: MultiValidator(
-                      [
-                        RequiredValidator(errorText: ''),
-                        EmailValidator(errorText: "รูปแบบอีเมลไม่ถูกต้อง"),
-                      ],
-                    ),
-                    showTitle: true,
-                  ),
+                  
                   RimpaTextFormField(
                     hintText: 'หมายเลขโทรศัพท์',
                     controller: phone.value,

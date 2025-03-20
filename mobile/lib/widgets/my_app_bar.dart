@@ -19,6 +19,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: backgroundColor, // รองรับ Light/Dark Mode
       elevation: 0,
+      shadowColor:Colors.transparent,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

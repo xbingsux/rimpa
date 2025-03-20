@@ -17,3 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 
 fastlane distribute
+
+upload-keystore.jks 
+Password : 245696

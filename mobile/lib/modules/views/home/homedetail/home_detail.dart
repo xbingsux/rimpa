@@ -91,7 +91,7 @@ class HomeDetailPage extends StatelessWidget {
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     flex: 4,
@@ -120,6 +120,7 @@ class HomeDetailPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  if (mapUrl.isNotEmpty)
                                   Expanded(
                                     flex: 1,
                                     child: Center(

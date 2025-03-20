@@ -1,0 +1,2 @@
+/Users/xbingsux/Desktop/dev/rimpa/mobile/android/app/.cxx/RelWithDebInfo/6e1p2j3h/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/xbingsux/Desktop/dev/rimpa/mobile/android/app/.cxx/RelWithDebInfo/6e1p2j3h/armeabi-v7a/CMakeFiles/rebuild_cache.dir
