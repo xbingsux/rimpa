@@ -392,10 +392,15 @@ class ReddemQRcode extends StatelessWidget {
                                     ),
                                 value: data.token,
                                 symbology: QRCode(errorCorrectionLevel: ErrorCorrectionLevel.low),
+                                
                               ),
                             ),
                           ),
-                          Gap(60),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Text(data.token, maxLines: 2,style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 20, fontWeight: FontWeight.w700,)),
+                          ),
+                          Gap(40),
                           CustomPaint(
                             size: Size(double.infinity, 1),
                             painter: DottedLinePainter(

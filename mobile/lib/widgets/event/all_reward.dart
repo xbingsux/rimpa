@@ -26,6 +26,7 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
+    listRewardController.fetchRewards();
     _controller = AnimationController(vsync: this);
   }
 

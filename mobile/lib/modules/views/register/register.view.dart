@@ -185,7 +185,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                             locale: DateTimePickerLocale.th, // ✅ ตั้งค่าภาษาไทย
                             looping: false,
                             backgroundColor: Colors.white,
-                            // textColor: Colors.black,
+                            textColor: AppColors.primary,
                             itemTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                   fontSize: AppTextSize.xl,
                                   fontWeight: FontWeight.w500,
@@ -194,6 +194,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                             titleText: "กรุณาเลือกวันเกิด",
                             cancelText: "ยกเลิก",
                             confirmText: "ตกลง",
+                            reverse: true
                           );
                           if (pickedDate != null) {
                             if (widget.isCreate) {

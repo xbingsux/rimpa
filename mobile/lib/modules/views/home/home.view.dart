@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
+import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'home_main.dart';
 import 'home_event.dart';
 import 'home_qr.dart';
@@ -21,11 +22,13 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = int.tryParse(Get.parameters['pages'] ?? '0') ?? 0;
   bool isLoggedIn = false; // ตัวแปรสำหรับการตรวจสอบสถานะการล็อกอิน
   String email = ''; // ตัวแปรสำหรับเก็บข้อมูลอีเมลของผู้ใช้
+  final AuthService authService = Get.find<AuthService>();
+    
 
   @override
   void initState() {
     super.initState();
-
+    authService.checkLoginStatusWithOutForceLogin();
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       if (_currentPage < 7) {
         _currentPage++;
@@ -49,13 +52,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int index) {
-    if (index == 2) {
+    if (index == 2 && authService.isLoggedIn.value) {
       Get.to(HomeQRPage())!.then((_) {
         setState(() {
           _selectedIndex = 0;
         });
       });
-    } else {
+    }else if (index == 2 && !authService.isLoggedIn.value) {
+      Get.toNamed('/login')!;
+    } 
+    else {
       setState(() {
         _selectedIndex = index;
       });

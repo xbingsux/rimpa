@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
-import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
 import 'package:rimpa/modules/models/listevent.model.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
@@ -28,6 +27,7 @@ class _AllEventsState extends State<AllEvents> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
+    listEventController.fetchEvents();
     _controller = AnimationController(vsync: this);
   }
 

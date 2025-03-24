@@ -6,7 +6,22 @@ import '../../modules/models/listreward.model.dart';
 class ApiListReward {
   static Future<List<ListReward>?> fetchRewards() async {
     final response = await http.get(
-        Uri.parse('${AppApi.urlApi}/reward/list-reward')); // Use AppApi.urlApi
+        Uri.parse('${AppApi.urlApi}/reward/list-reward'));
+
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonResponse = json.decode(jsonString);
+      var rewardList = jsonResponse['reward'] as List;
+      return rewardList.map((data) => ListReward.fromJson(data)).toList();
+    } else {
+      // Handle error
+      return null;
+    }
+  }
+
+  static Future<List<ListReward>?> fetchRecommendRewards() async { //NOTE
+    final response = await http.get(
+        Uri.parse('${AppApi.urlApi}/reward/list-reward'));
 
     if (response.statusCode == 200) {
       var jsonString = response.body;

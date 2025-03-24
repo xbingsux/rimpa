@@ -14,6 +14,7 @@ class RewardRecommend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    listRewardController.fetchRecommendRewards(); //NOTE
     return Column(
       children: [
         Padding(
@@ -65,7 +66,7 @@ class RewardRecommend extends StatelessWidget {
                 child: Row(
                   children: [
                     Gap(16),
-                    ...listRewardController.rewards.map((reward) {
+                    ...listRewardController.recommendRewards.map((reward) {
                       return GestureDetector(
                         onTap: () {
                           print("Going to reward: ${reward.rewardName}");
