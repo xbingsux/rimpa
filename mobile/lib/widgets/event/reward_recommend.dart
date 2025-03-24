@@ -7,6 +7,7 @@ import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 
 import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
+import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
 class RewardRecommend extends StatelessWidget {
   RewardRecommend({super.key});
@@ -58,8 +59,8 @@ class RewardRecommend extends StatelessWidget {
         Container(
           width: double.infinity,
           child: Obx(() {
-            if (listRewardController.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
+            if (listRewardController.isLoading.value ) {
+              return loadingEvent(context: context);
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -94,4 +95,23 @@ class RewardRecommend extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget loadingEvent({required BuildContext context}) {
+  double width = MediaQuery.of(context).size.width - 32 - 8;
+  return Column(
+    children: [
+     
+      Row(
+        children: [
+          Gap(15),
+          shimmerBox(width: 150, height: 195),
+          Gap(16),
+          shimmerBox(width: 150, height: 195),
+          Gap(16),
+          shimmerBox(width: 150, height: 195),
+        ],
+      )
+    ],
+  );
 }

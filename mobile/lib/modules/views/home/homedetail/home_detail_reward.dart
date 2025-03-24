@@ -317,7 +317,8 @@ class HomeDetailReward extends StatelessWidget {
                       bottom: AppSpacing.lg),
                   child: GestureDetector(
                     onTap: authService.isLoggedIn.value &&
-                            (int.parse(pointsController.pointsData["points"]) >=
+                            (int.parse(pointsController.pointsData["points"] ??
+                                    '0') >=
                                 int.parse(reward.cost))
                         ? () {
                             showDialog(
@@ -406,8 +407,10 @@ class HomeDetailReward extends StatelessWidget {
                       padding:
                           const EdgeInsets.symmetric(vertical: AppRadius.xs),
                       decoration: authService.isLoggedIn.value &&
-                              (int.parse(pointsController.pointsData["points"]) >=
-                                int.parse(reward.cost))
+                              (int.parse(
+                                      pointsController.pointsData["points"] ??
+                                          '0') >=
+                                  int.parse(reward.cost))
                           ? (BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(AppRadius.rounded),
@@ -419,7 +422,8 @@ class HomeDetailReward extends StatelessWidget {
                             ),
                       child: Center(
                           child: Text(
-                        (int.parse(pointsController.pointsData["points"]) >=
+                        (int.parse(pointsController.pointsData["points"] ??
+                                    '0') >=
                                 int.parse(reward.cost))
                             ? 'แลกรับสิทธิ์'
                             : 'คะแนนไม่เพียงพอ',

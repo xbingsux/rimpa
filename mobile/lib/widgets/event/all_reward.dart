@@ -12,13 +12,18 @@ class AllReward extends StatefulWidget {
   final bool showTitle;
   final bool isScroll;
   final double? screenHigh;
-  const AllReward({super.key, this.showTitle = true, this.isScroll = false, this.screenHigh});
+  const AllReward(
+      {super.key,
+      this.showTitle = true,
+      this.isScroll = false,
+      this.screenHigh});
 
   @override
   State<AllReward> createState() => _AllEventsState();
 }
 
-class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMixin {
+class _AllEventsState extends State<AllReward>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final listRewardController = Get.put(ListRewardController());
   bool isDesc = true;
@@ -39,7 +44,7 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (listRewardController.isLoading.value) {
+      if (listRewardController.isLoading.value ) {
         return loadingEvent(context: context);
       } else {
         // รับข้อมูลรางวัลจาก listRewardController
@@ -60,7 +65,8 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
                   Expanded(
                     child: Text(
                       "รีวอร์ดทั้งหมด",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
               ],
@@ -96,9 +102,11 @@ class _AllEventsState extends State<AllReward> with SingleTickerProviderStateMix
         var reward = sortedRewards[index];
         return EventCard(
           title: reward.rewardName, // ใช้ชื่อรางวัล
-          imageUrl: '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // ใช้ image path ของรางวัล
+          imageUrl:
+              '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}', // ใช้ image path ของรางวัล
           onTap: () {
-            Get.to(() => HomeDetailReward(reward: reward)); // ไปที่หน้ารายละเอียดของรางวัล
+            Get.to(() => HomeDetailReward(
+                reward: reward)); // ไปที่หน้ารายละเอียดของรางวัล
           },
           maxLines: 2,
         );
@@ -111,7 +119,9 @@ Widget loadingEvent({required BuildContext context}) {
   double width = MediaQuery.of(context).size.width - 32 - 8;
   return Column(
     children: [
-      Align(alignment: Alignment.centerLeft, child: shimmerBox(width: 100, height: 32)),
+      Align(
+          alignment: Alignment.centerLeft,
+          child: shimmerBox(width: 100, height: 32)),
       Gap(8),
       Row(
         children: [
@@ -120,6 +130,7 @@ Widget loadingEvent({required BuildContext context}) {
           shimmerBox(width: width / 2, height: 200),
         ],
       ),
+      Gap(8),
       Row(
         children: [
           shimmerBox(width: width / 2, height: 200),
@@ -127,6 +138,7 @@ Widget loadingEvent({required BuildContext context}) {
           shimmerBox(width: width / 2, height: 200),
         ],
       ),
+      Gap(8),
       Row(
         children: [
           shimmerBox(width: width / 2, height: 200),
