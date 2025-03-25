@@ -20,3 +20,7 @@ fastlane distribute
 
 upload-keystore.jks 
 Password : 245696
+
+flutter build ios --release
+
+flutter build appbundle --release

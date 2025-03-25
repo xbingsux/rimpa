@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Correct import
 import 'package:get/get.dart';
@@ -25,6 +26,7 @@ void main() async {
   Get.put(ApiUrls());
   Get.put(ThemeController());
   await SharedPrefService().init();
+  _clearCache();
   await checkVersion();
   runApp(const MyApp());
 }
@@ -43,6 +45,10 @@ void configLoading() {
     ..userInteractions = false
     ..dismissOnTap = false;
 }
+
+void _clearCache() async {
+    await DefaultCacheManager().emptyCache(); // ล้างแคชทั้งหมด
+  }
 
 Future<void> checkVersion() async{
   final upgrader = Upgrader.sharedInstance;
@@ -117,7 +123,7 @@ void showUpdateDialog() {
                   child: GestureDetector(
                     onTap: () {
                       StoreRedirect.redirect(
-                        androidAppId: "co.newdice.gocon",
+                        androidAppId: "co.newdice.goconapp",
                         iOSAppId: "6482293361", // ID สำหรับเทสเท่านั้น
                       );
                     },

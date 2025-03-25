@@ -60,7 +60,7 @@ class HomeDetailReward extends StatelessWidget {
                         AppCarousel(
                           imageSrc: AppImageType.network,
                           images: [imageUrl], // Use reward image
-                          ratio: 4 / 3,
+                          ratio: 1 ,
                           borderRadius: BorderRadius.all(Radius.circular(0)),
                         ),
                         Padding(

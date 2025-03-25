@@ -1,4 +1,4 @@
-package co.newdice.gocon
+package co.newdice.goconapp
 
 import io.flutter.embedding.android.FlutterActivity
 

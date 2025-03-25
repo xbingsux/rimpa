@@ -1,7 +1,7 @@
 name: rimpa
 description: ""
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+8
+version: 1.0.0+2
 
 environment:
   sdk: ^3.5.4
@@ -18,7 +18,7 @@ dependencies:
   shimmer: ^2.0.0
   image_picker: ^0.8.6
   go_router: ^13.1.0
-  mobile_scanner: ^3.2.0
+  mobile_scanner: ^6.0.7
   cupertino_icons: ^1.0.8
   url_launcher: ^6.0.20
   flutter_launcher_icons: ^0.14.3
@@ -33,6 +33,8 @@ dependencies:
   syncfusion_flutter_barcodes: ^28.2.11
   upgrader: ^11.3.1
   store_redirect: ^2.0.4
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
 
 flutter_launcher_icons:
   android: "launcher_icon"

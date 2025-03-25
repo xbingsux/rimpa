@@ -31,7 +31,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   PopupDialog.checkAndShowPopup(context);
     // });
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    listEventController.fetchRecommendEvents();
+    listEventController.fetchEvents();
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
         _currentPage++;
       } else {

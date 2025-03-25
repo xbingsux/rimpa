@@ -26,14 +26,14 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
   }
 
   void startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      if (_pageController.hasClients) {
-        int currentIndex = _pageController.page?.round() ?? 0;
-        int nextPage = (currentIndex + 1) % controller.banners.length;
+    // _timer = Timer.periodic(Duration(seconds: 15), (timer) {
+    //   if (_pageController.hasClients) {
+    //     int currentIndex = _pageController.page?.round() ?? 0;
+    //     int nextPage = (currentIndex + 1) % controller.banners.length;
 
-        _pageController.animateToPage(nextPage, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-      }
-    });
+    //     // _pageController.animateToPage(nextPage, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+    //   }
+    // });
   }
 
   void stopAutoScroll() {
@@ -70,7 +70,7 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
           // bannerLoading(),
           // Banner Slider
           AspectRatio(
-            aspectRatio: (16.0 / 9.0) * 0.925,
+            aspectRatio: (17.0 / 9.0),
             child: PageView.builder(
               controller: _pageController,
               itemCount: banners.length,
@@ -92,22 +92,13 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
                     //   startAutoScroll();
                     // });
                   },
-                  // child: AspectRatio(
-                  //   aspectRatio: 16 / 9,
-                  //   child: Container(
-                  //     decoration: ShapeDecoration(
-                  //       color: Colors.amber,
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  
                   child: Container(
+                    // color: Colors.grey[300],
                     margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
                     child: AppImageComponent(
                       aspectRatio: 16 / 9,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       imageType: AppImageType.network,
                       imageAddress: imageUrl,
                     ),

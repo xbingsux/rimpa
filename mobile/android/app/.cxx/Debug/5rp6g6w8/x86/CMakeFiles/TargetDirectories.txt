@@ -1,0 +1,2 @@
+/Users/xbingsux/Desktop/dev/rimpa/mobile/android/app/.cxx/Debug/5rp6g6w8/x86/CMakeFiles/edit_cache.dir
+/Users/xbingsux/Desktop/dev/rimpa/mobile/android/app/.cxx/Debug/5rp6g6w8/x86/CMakeFiles/rebuild_cache.dir

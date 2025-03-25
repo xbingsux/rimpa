@@ -84,7 +84,7 @@ class HistoryView extends StatelessWidget {
                         historyController.activeType.value = HistoryType.redeem;
                         historyController.fetchPointHistory();
                       }, 
-                      'แลกคะแนน'
+                      'แลกรางวัล'
                     ),
                   ],
                 ),

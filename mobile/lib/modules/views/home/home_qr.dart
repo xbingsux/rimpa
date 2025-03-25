@@ -64,7 +64,6 @@ class _HomeQRPageState extends State<HomeQRPage> with WidgetsBindingObserver {
             child: ClipPath(
               clipper: QRScannerClipper(),
               child: MobileScanner(
-                startDelay: true,
                 controller: scannerController,
                 onDetect: (capture) async {
                   if (isProcessing) return; // ป้องกันการยิงซ้ำ

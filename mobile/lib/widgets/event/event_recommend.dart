@@ -6,13 +6,23 @@ import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 
-class EventRecommend extends StatelessWidget {
-  EventRecommend({super.key});
-  final listEventController = Get.put(ListEventController());
+class EventRecommend extends StatefulWidget {
+  const EventRecommend({super.key});
 
   @override
+  State<EventRecommend> createState() => _EventRecommendState();
+}
+
+class _EventRecommendState extends State<EventRecommend> {
+  final listEventController = Get.find<ListEventController>();
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+  @override
   Widget build(BuildContext context) {
-    listEventController.fetchRecommendEvents(); //NOTE
     return Container(
       child: Column(
         children: [
@@ -87,5 +97,6 @@ class EventRecommend extends StatelessWidget {
         ],
       ),
     );
+  
   }
 }

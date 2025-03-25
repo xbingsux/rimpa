@@ -9,14 +9,24 @@ import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
-class RewardRecommend extends StatelessWidget {
-  RewardRecommend({super.key});
-  final listRewardController = Get.put(ListRewardController());
+class RewardRecommend extends StatefulWidget {
+  const RewardRecommend({super.key});
 
   @override
+  State<RewardRecommend> createState() => _RewardRecommendState();
+}
+
+class _RewardRecommendState extends State<RewardRecommend> {
+
+  final listRewardController = Get.put(ListRewardController());
+  @override
+  void initState() {
+    super.initState();
+     listRewardController.fetchRecommendRewards(); //NOTE
+  }
+  @override
   Widget build(BuildContext context) {
-    listRewardController.fetchRecommendRewards(); //NOTE
-    return Column(
+   return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -59,8 +69,8 @@ class RewardRecommend extends StatelessWidget {
         Container(
           width: double.infinity,
           child: Obx(() {
-            if (listRewardController.isLoading.value ) {
-              return loadingEvent(context: context);
+            if (listRewardController.isLoading.value) {
+              return loadingEvent();
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -97,12 +107,11 @@ class RewardRecommend extends StatelessWidget {
   }
 }
 
-Widget loadingEvent({required BuildContext context}) {
-  double width = MediaQuery.of(context).size.width - 32 - 8;
-  return Column(
-    children: [
-     
-      Row(
+
+Widget loadingEvent() {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
         children: [
           Gap(15),
           shimmerBox(width: 150, height: 195),
@@ -112,6 +121,6 @@ Widget loadingEvent({required BuildContext context}) {
           shimmerBox(width: 150, height: 195),
         ],
       )
-    ],
+    
   );
 }
