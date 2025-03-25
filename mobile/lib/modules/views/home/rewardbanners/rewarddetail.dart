@@ -7,7 +7,6 @@ import 'package:rimpa/modules/controllers/reward/list_reward_controller.dart';
 import 'package:intl/intl.dart'; // สำหรับการจัดการวันที่
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
-import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 import 'package:decimal/decimal.dart';
 
 class RewardDetail extends StatelessWidget {
@@ -27,7 +26,7 @@ class RewardDetail extends StatelessWidget {
     if (controller.rewardDetail.value.isEmpty) {
       controller.fetchRewardDetail(bannerId);
     }
-    String? idProfile = profileController.profileData['id']?.toString(); // ดึง id ของโปรไฟล์จากข้อมูลที่ได้
+    // String? idProfile = profileController.profileData['id']?.toString(); // ดึง id ของโปรไฟล์จากข้อมูลที่ได้
     // พิมพ์ค่า idProfile ออกมาใน console
     var points = Decimal.tryParse(pointsController.pointsData['points']?.toString() ?? '0') ?? Decimal.zero;
 

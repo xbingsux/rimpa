@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -9,12 +7,10 @@ import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'package:rimpa/modules/views/home/home_qr.dart';
 import 'package:rimpa/widgets/button/back_button.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
-
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
 import '../../../models/listevent.model.dart';
-import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
 class HomeDetailPage extends StatelessWidget {
   final ListEvent event;
@@ -28,7 +24,7 @@ class HomeDetailPage extends StatelessWidget {
     List<String> paths = event.subEvents.expand((subEvent) => subEvent.img.map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/"))).toList();
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
-    String id_event = event.subEvents[0].id.toString();
+    // String id_event = event.subEvents[0].id.toString();
     String title = event.title;
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
