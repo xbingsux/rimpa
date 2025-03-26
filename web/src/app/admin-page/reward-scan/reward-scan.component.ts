@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
@@ -43,7 +43,9 @@ export class RewardScanComponent implements OnInit {
     return path
   }
 
+  noData = false;
   scanning = false
+  barcode_focus = false
   data_scan: RewardOrder | null = null;
 
   onBarcodeScanned(event: Event) {
@@ -62,11 +64,14 @@ export class RewardScanComponent implements OnInit {
     console.log("Processing scanned data:", token);
     if (token.trim() != '') {
       this.http.post(`${environment.API_URL}/redeem-rewards`, { token: token }).subscribe((response: any) => {
-        console.log(response.reward);
-        if (response.reward) {
-          let data = response.reward;
-          this.data_scan = new RewardOrder({ reward_name: data.Reward.reward_name, totalPoints: data.Profile.points, usedPoints: data.usedCoints, date: new Date(data.createdAt) })
+        console.log(response.redeem);
+        if (response.redeem) {
+          let data = response.redeem;
+          const remainingPoints = +data.Profile.points;
+          this.data_scan = new RewardOrder({ profile_name: data.Profile.profile_name, reward_name: data.Reward.reward_name, totalPoints: +data.usedCoints + remainingPoints, usedPoints: data.usedCoints, date: new Date(data.createdAt) })
         }
+        this.api.addAlert('success', 'ชำระเงินสำเร็จ');
+        this.ngOnInit()
       }, error => {
         event.blur()
         console.error('Error:', error);
@@ -75,19 +80,64 @@ export class RewardScanComponent implements OnInit {
     }
   }
 
+  barcode = ''
+  getRedeem() {
+    if (this.barcode.length == 10) {
+      this.noData = true;
+      const params = new HttpParams().set('barcode', Number(this.barcode));
+      this.http.get(`${environment.API_URL}/get-redeem`, { params }).subscribe(async (response: any) => {
+        console.log(response.redeem);
+        if (response.redeem?.status == 'PENDING') {
+          let redeem = response.redeem;
+          this.data_scan = new RewardOrder({ profile_name: redeem.Profile.profile_name, reward_name: redeem.Reward.reward_name, totalPoints: redeem.Profile.points, usedPoints: redeem.usedCoints, date: new Date(redeem.createdAt) })
+          this.noData = false;
+          this.barcode_focus = false;
+        } else {
+          this.barcode_focus = false
+        }
+
+      }, error => {
+        console.error('Error:', error);
+      });
+    } else {
+      this.data_scan = null
+      this.barcode_focus = true;
+      this.noData = false;
+    }
+  }
+
+  submitRedeem() {
+    this.http.post(`${environment.API_URL}/redeem-rewards`, { barcode: this.barcode }).subscribe((response: any) => {
+      console.log(response.redeem);
+      if (response.redeem) {
+        // let data = response.redeem;
+        // this.data_scan = new RewardOrder({ profile_name: data.Profile.profile_name, reward_name: data.Reward.reward_name, totalPoints: data.Profile.points, usedPoints: data.usedCoints, date: new Date(data.createdAt) })
+        this.barcode = ''
+        this.api.addAlert('success', 'ชำระเงินสำเร็จ');
+        this.ngOnInit()
+      }
+    }, error => {
+      console.error('Error:', error);
+      alert('ชำระเงินไม่สำเร็จ')
+    });
+  }
+
 }
 
 class RewardOrder {
+  profile_name: string
   date: Date
   reward_name: string
   totalPoints: number;  // คะแนนทั้งหมดที่มี
   usedPoints: number;    // คะแนนที่ใช้ไป
-  remainingPoints: number; // คะแนนคงเหลือ
-  constructor({ reward_name = '', totalPoints = 0, usedPoints = 0, date = new Date() }: Partial<RewardOrder> = {}) {
+  remainingPoints = () => {
+    return this.totalPoints - this.usedPoints
+  } // คะแนนคงเหลือ
+  constructor({ profile_name = '', reward_name = '', totalPoints = 0, usedPoints = 0, date = new Date() }: Partial<RewardOrder> = {}) {
+    this.profile_name = profile_name;
     this.reward_name = reward_name;
     this.totalPoints = totalPoints;
     this.usedPoints = usedPoints;
-    this.remainingPoints = this.totalPoints - this.usedPoints;
     this.date = date
   }
 }

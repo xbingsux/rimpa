@@ -18,10 +18,10 @@ router.get("/test", async (req, res) => {
 });
 
 router.get("/list-reward", async (req, res) => {
-  const { } = req.query;
+  const { popular, limit } = req.query;
   try {
 
-    const reward = await Service.listReward()
+    const reward = await Service.listReward(limit, popular)
     return res.status(200).json({ status: "success", reward });
 
   } catch (error) {
@@ -64,28 +64,20 @@ router.post("/redeem-qrcode", auth, async (req, res) => {
   try {
     if (typeof reward_id != 'number') throw new Error('reward_id is not number')
 
-    const reward = await Service.rewardById(reward_id)
-    if (reward) {
-      const redeem_token = jwt.sign({ userId: req.user.userId, reward_id: reward.id }, process.env.SECRET_KEY, { expiresIn: '30m' })
+    const redeem = await Service.redeemReward(req.user.userId, reward_id)
+    if (redeem) {
+      const barcode = `${redeem.id}`.padStart(9, '0').padStart(10, '9')
+      const redeem_token = jwt.sign({ redeemId: redeem.id, userId: req.user.userId, reward_id: redeem.id }, process.env.SECRET_KEY, { expiresIn: '30m' })
       const decode = jwt.decode(redeem_token)
 
-      return res.status(200).json({ status: "success", token: redeem_token, iat: decode.iat, exp: decode.exp });
-    } else {
-      return res.status(404).json({ status: "error", message: "Reward not found" });
+      return res.status(200).json({ status: "success", barcode, token: redeem_token, iat: decode.iat, exp: decode.exp });
     }
 
   } catch (error) {
     console.error(error);
-    // console.log("error");
-    if (error.message == 'reward_id is not number') {
-      return res
-        .status(500)
-        .json({ status: "error", message: error.message });
-    } else {
-      return res
-        .status(500)
-        .json({ status: "error", message: "Internal Server Error" });
-    }
+    return res
+      .status(500)
+      .json({ status: "error", message: error.message });
   }
 });
 

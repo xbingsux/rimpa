@@ -104,8 +104,18 @@ const upsertEventIMG = async (path, id, sub_event_id) => {
     return img;
 }
 
-const listEvent = async () => {
+const listEvent = async (limit, popular) => {
     const currentDate = new Date();
+
+    let orderBy = {};
+
+    if (popular) {
+        orderBy = {
+            EventView: {
+                _count: popular
+            }
+        };
+    }
 
     let events = await prisma.event.findMany({
         where: {
@@ -123,15 +133,17 @@ const listEvent = async () => {
             releaseDate: true,
             max_attendees: true,
             SubEvent: {
-                include: { img: true, checkIn: true, EventParticipant: true }
+                include: { img: true, checkIn: true, EventParticipant: true },
             },
             _count: {
                 select: {
                     EventView: true,
-                    EventLike: true
+                    EventLike: true,
                 }
             }
-        }
+        },
+        orderBy: orderBy,
+        take: limit
     });
 
     return events.map((item) => ({

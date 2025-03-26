@@ -33,10 +33,10 @@ router.post("/update-event", auth, async (req, res) => {
 });
 
 router.get("/list-event", async (req, res) => {
-  const { } = req.body;
+  const { popular, limit } = req.body;
   try {
 
-    const event = await Service.listEvent()
+    const event = await Service.listEvent(limit, popular)
     return res.status(200).json({ status: "success", event });
 
   } catch (error) {

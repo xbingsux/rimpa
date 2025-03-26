@@ -341,12 +341,15 @@ const upsertReward = async (id, reward_name, description, startDate, endDate, im
     return banner;
 }
 
-const redeemReward = async (userId, reward_id) => {
+const redeemReward = async (redeemId) => {
+    const item = await prisma.redeemReward.findFirst({
+        where: { id: redeemId }
+    })
 
     // ดึงข้อมูลโปรไฟล์
     const qty = 1;
     const profile = await prisma.profile.findUnique({
-        where: { user_id: userId },
+        where: { id: item.profileId },
         select: { points: true, id: true },
     });
 
@@ -355,7 +358,7 @@ const redeemReward = async (userId, reward_id) => {
     }
 
     // ดึงข้อมูลรางวัล
-    const reward = await rewardById(reward_id);
+    const reward = await rewardById(item.rewardId);
 
     if (!reward) {
         throw new Error("Reward not found");
@@ -364,7 +367,7 @@ const redeemReward = async (userId, reward_id) => {
     // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
     if (reward.max_per_user !== null && reward.max_per_user > 0) {
         const redeemed = await prisma.redeemReward.findMany({
-            where: { rewardId: reward_id },
+            where: { rewardId: item.rewardId, OR: [{ status: 'PAID' }, { status: 'DELIVERED' }] },
         });
 
         let userRedeemedCount = 0
@@ -408,16 +411,21 @@ const redeemReward = async (userId, reward_id) => {
             });
 
             // บันทึกการแลกรางวัล
-            const redeem = await tx.redeemReward.create({
-                data: {
+            const redeem = await tx.redeemReward.upsert({
+                where: {
+                    id: item?.id | 0
+                },
+                create: {
                     profileId: profile.id,
-                    rewardId: reward_id,
+                    rewardId: item.rewardId,
                     quantity: qty,
                     base_fee: 0,
                     addressId: null,
                     delivery: "Pickup",
                     status: "PAID",
                     usedCoints: usePoint
+                }, update: {
+                    status: "PAID",
                 }, include: {
                     Profile: true,
                     Reward: true
@@ -436,6 +444,8 @@ const redeemReward = async (userId, reward_id) => {
             return redeem;
 
         }).catch((e) => {
+            console.log(e);
+
             throw new Error("Transaction could not be completed.");
         })
 
@@ -446,6 +456,9 @@ const redeemReward = async (userId, reward_id) => {
 
 const rewardHistory = async () => {
     const history = await prisma.redeemReward.findMany({
+        where: {
+            status: 'PAID'
+        },
         include: {
             Profile: true,
             Reward: true
@@ -453,6 +466,26 @@ const rewardHistory = async () => {
     });
 
     return history;
+};
+
+const getRedeem = async (barcode) => {
+
+    const redeemId = Number(String(barcode).startsWith('9') ? String(barcode).slice(1) : String(barcode))
+    if (isNaN(redeemId)) {
+        throw new Error('Invalid barcode')
+    }
+
+    const redeem = await prisma.redeemReward.findFirst({
+        where: {
+            id: redeemId
+        },
+        include: {
+            Profile: true,
+            Reward: true
+        }
+    });
+
+    return redeem;
 };
 
 const deleteUser = async (id) => {
@@ -512,6 +545,7 @@ module.exports = {
     rewardById,
     deleteReward,
     rewardHistory,
+    getRedeem,
     redeemReward,
     //banner
     listBanner,
