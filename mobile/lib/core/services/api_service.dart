@@ -7,7 +7,7 @@ class ApiService {
 
   ApiService() {
     _dio = Dio(BaseOptions(
-      baseUrl: "https://api-rimpa.nightbears.co", // เปลี่ยนเป็น URL ของ API จริง
+      baseUrl: "https://gocon-api.newdice.co", // เปลี่ยนเป็น URL ของ API จริง
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {

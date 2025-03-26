@@ -6,9 +6,21 @@ import 'package:rimpa/modules/controllers/listevent/listevent.controller.dart';
 import 'package:rimpa/modules/views/home/homedetail/home_detail.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
 
-class EventRecommend extends StatelessWidget {
-  EventRecommend({super.key});
-  final listEventController = Get.put(ListEventController());
+class EventRecommend extends StatefulWidget {
+  const EventRecommend({super.key});
+
+  @override
+  State<EventRecommend> createState() => _EventRecommendState();
+}
+
+class _EventRecommendState extends State<EventRecommend> {
+  final listEventController = Get.find<ListEventController>();
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +37,8 @@ class EventRecommend extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.offNamedUntil('/home', (route) => false, parameters: {'pages': '1'});
+                    Get.offNamedUntil('/home', (route) => false,
+                        parameters: {'pages': '1'});
                   },
                   child: Row(
                     children: [
@@ -59,7 +72,7 @@ class EventRecommend extends StatelessWidget {
               child: Row(
                 children: [
                   Gap(16),
-                  ...listEventController.events.map((event) {
+                  ...listEventController.recommendEvents.map((event) {
                     return GestureDetector(
                         onTap: () {
                           Get.to(() => HomeDetailPage(event: event));
@@ -68,36 +81,13 @@ class EventRecommend extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 8.0),
                           child: EventCard(
                             title: event.title,
-                            imageUrl: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
+                            imageUrl:
+                                '${AppApi.urlApi}${event.subEvents[0].imagePath}',
                             onTap: () {
                               Get.to(() => HomeDetailPage(event: event));
                             },
                           ),
-                        )
-                        // child: Container(
-                        //   width: 150,
-                        //   margin: EdgeInsets.only(right: 8),
-                        //   child: AppCardComponent(
-                        //     child: Column(
-                        //       children: [
-                        //         AppImageComponent(
-                        //           imageType: AppImageType.network,
-                        //           imageAddress: '${AppApi.urlApi}${event.subEvents[0].imagePath}',
-                        //         ),
-                        //         Gap(8),
-                        //         Padding(
-                        //           padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        //           child: Text(
-                        //             event.title,
-                        //             style: TextStyle(fontSize: 12),
-                        //             textAlign: TextAlign.center,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        );
+                        ));
                   }).toList(),
                   Gap(16),
                 ],
@@ -107,5 +97,6 @@ class EventRecommend extends StatelessWidget {
         ],
       ),
     );
+  
   }
 }

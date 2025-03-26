@@ -60,9 +60,9 @@ class _NotifyViewState extends State<NotifyView> {
             await controller.fetchNotifications();
           },
           child: Obx(() {
-            if (controller.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
-            }
+            // if (controller.isLoading.value) {
+            //   return Center(child: CircularProgressIndicator());
+            // }
 
             if (controller.notifications.isEmpty) {
               return Center(child: Text('ไม่มีการแจ้งเตือน'));

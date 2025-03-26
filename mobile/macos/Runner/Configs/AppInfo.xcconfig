@@ -8,7 +8,7 @@
 PRODUCT_NAME = rimpa
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = co.newdice.rimpa
+PRODUCT_BUNDLE_IDENTIFIER = co.newdice.goconapp
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.

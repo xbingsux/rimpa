@@ -10,9 +10,10 @@ class RimpaTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
   final bool showTitle;
+  final bool enabled;
 
   const RimpaTextFormField(
-      {super.key, this.isPassword = false, required this.hintText, required this.controller, this.onChanged, this.validator, this.onSaved, this.showTitle = false});
+      {super.key, this.isPassword = false, required this.hintText, required this.controller, this.onChanged, this.validator, this.onSaved, this.showTitle = false, this.enabled = true});
 
   @override
   State<RimpaTextFormField> createState() => _RimpaTextFormFieldState();
@@ -43,6 +44,7 @@ class _RimpaTextFormFieldState extends State<RimpaTextFormField> {
             onChanged: widget.onChanged,
             validator: widget.validator,
             onSaved: widget.onSaved,
+            enabled: widget.enabled,
             obscureText: widget.isPassword ? _obscureText : false,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontSize: AppTextSize.md,
@@ -53,7 +55,7 @@ class _RimpaTextFormFieldState extends State<RimpaTextFormField> {
               hintText: widget.hintText,
               hintStyle: const TextStyle(color: AppColors.secondary, fontSize: AppTextSize.md),
               filled: true,
-              fillColor: Colors.white,
+              fillColor:widget.enabled? Colors.white:AppColors.secondary.withOpacity(0.5),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(color: AppColors.secondary, width: 1),

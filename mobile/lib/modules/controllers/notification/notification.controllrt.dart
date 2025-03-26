@@ -1,3 +1,5 @@
+
+import 'dart:async';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:rimpa/core/services/api_urls.dart';
@@ -7,11 +9,16 @@ import 'package:rimpa/modules/models/notification.model.dart';
 class NotificationController extends GetxController {
   var isLoading = false.obs;
   var notifications = <NotificationItem>[].obs; // ✅ RxList ของ NotificationItem
+  var isRead = true.obs;
 
   @override
   void onInit() {
-    fetchNotifications();
     super.onInit();
+    fetchNotifications();
+    Timer.periodic(Duration(seconds: 30), (timer) {
+      // print("fetching notifications ${isRead.value}");
+      fetchNotifications();
+    });
   }
 
   Future<void> fetchNotifications() async {
@@ -39,13 +46,15 @@ class NotificationController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = NotificationResponse.fromJson(response.data);
-        notifications.assignAll(data.noti); // ✅ ต้องเป็น data.noti ไม่ใช่ data ทั้งหมด
+        notifications
+            .assignAll(data.noti); // ✅ ต้องเป็น data.noti ไม่ใช่ data ทั้งหมด
       } else {
         Get.snackbar("Error", "Failed to fetch notifications");
       }
     } catch (e) {
       Get.snackbar("Error", "Error fetching notifications: $e");
     } finally {
+      areAllNotificationsRead();
       isLoading(false);
     }
   }
@@ -101,6 +110,12 @@ class NotificationController extends GetxController {
       Get.snackbar("Error", "Error read notifications: $e");
     } finally {
       // isLoading(false);
+      areAllNotificationsRead();
     }
+  }
+
+  void areAllNotificationsRead() {
+    // ถ้ามี NotificationItem ที่ยังไม่อ่าน (read == false) จะ return false
+    isRead(!notifications.any((noti) => noti.read == false));
   }
 }

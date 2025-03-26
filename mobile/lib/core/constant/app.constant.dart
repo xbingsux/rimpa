@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppApi {
-  static const String urlApi = 'https://api-rimpa.nightbears.co'; // Rename to urlApi
+  static const String urlApi = 'https://gocon-api.newdice.co'; // Rename to urlApi
 }
 
 class AppColors {

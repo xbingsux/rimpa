@@ -1,19 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Add this import
 import 'package:rimpa/modules/controllers/events/list_event_controller.dart';
+import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'package:rimpa/modules/views/home/home_qr.dart';
 import 'package:rimpa/widgets/button/back_button.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
-
 import '../../../../components/imageloader/app-image.component.dart';
 import '../../../../core/constant/app.constant.dart';
 import '../../../../components/carousel/app-carousel.component.dart';
 import '../../../models/listevent.model.dart';
-import '../../../../widgets/popupdialog/popupeventpoint_dialog.dart';
 
 class HomeDetailPage extends StatelessWidget {
   final ListEvent event;
@@ -27,7 +24,7 @@ class HomeDetailPage extends StatelessWidget {
     List<String> paths = event.subEvents.expand((subEvent) => subEvent.img.map((img) => '${AppApi.urlApi}${img.path}'.replaceAll("\\", "/"))).toList();
     // Extract event details
     Get.put(EventController()); // เพิ่มการสร้าง EventController
-    String id_event = event.subEvents[0].id.toString();
+    // String id_event = event.subEvents[0].id.toString();
     String title = event.title;
     String description = event.description;
     String startDate = _formatDate(event.startDate); // Update this line
@@ -39,6 +36,8 @@ class HomeDetailPage extends StatelessWidget {
     // ใช้ RxString สำหรับค่าพอยท์
     RxDouble point = event.subEvents[0].point.obs; // ใช้ .obs เพื่อทำให้เป็น reactive
     final evencontroller = Get.find<EventController>();
+    final AuthService authService = Get.find<AuthService>();
+    authService.checkLoginStatusWithOutForceLogin();
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -91,7 +90,7 @@ class HomeDetailPage extends StatelessWidget {
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     flex: 4,
@@ -120,6 +119,7 @@ class HomeDetailPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  if (mapUrl.isNotEmpty)
                                   Expanded(
                                     flex: 1,
                                     child: Center(
@@ -195,16 +195,16 @@ class HomeDetailPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.md, right: AppRadius.md, bottom: AppSpacing.lg),
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: authService.isLoggedIn.value ?() {
                       // HomeQRPage()
                       Get.to(() => HomeQRPage(), preventDuplicates: true);
-                    },
+                    }:(){},
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: AppRadius.xs),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadius.rounded),
-                        color: const Color(0xFFEBF5FD), // แก้ไขสีให้ถูกต้อง
+                        color: authService.isLoggedIn.value ? const Color(0xFFEBF5FD):AppColors.secondary, // แก้ไขสีให้ถูกต้อง
                       ),
                       child: Center(
                         child: Row(
@@ -213,8 +213,11 @@ class HomeDetailPage extends StatelessWidget {
                             Container(
                               width: 38,
                               height: 38,
-                              decoration: BoxDecoration(
+                              decoration: authService.isLoggedIn.value ?BoxDecoration(
                                 gradient: AppGradiant.gradientX_1, // ใช้ Gradient
+                                shape: BoxShape.circle,
+                              ):BoxDecoration(
+                                color: AppTextColors.secondary, // ใช้ Gradient
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(Icons.star, color: Colors.white),
@@ -225,7 +228,7 @@ class HomeDetailPage extends StatelessWidget {
                                 '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
                                 style: TextStyle(
                                   fontSize: AppTextSize.lg,
-                                  color: AppTextColors.accent2,
+                                  color: authService.isLoggedIn.value ?AppTextColors.accent2:AppTextColors.secondary,
                                 ),
                               );
                             }),

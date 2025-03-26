@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
-import 'package:rimpa/modules/controllers/notification/socketNotification.controller.dart';
+import 'package:rimpa/modules/controllers/notification/notification.controllrt.dart';
+// import 'package:rimpa/modules/controllers/notification/socketNotification.controller.dart';
 import 'package:rimpa/modules/views/notify/notify.view.dart';
 
 class NotificationButton extends StatelessWidget {
@@ -10,10 +11,11 @@ class NotificationButton extends StatelessWidget {
   final bool isDark;
   NotificationButton({super.key, this.size = 40, this.isDark = false});
   // final SocketNotificationController socketController = Get.put(SocketNotificationController());
-
+  final AuthService authService = Get.find<AuthService>();
+  final NotificationController controller = Get.put(NotificationController());
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = Get.find<AuthService>();
+   
     authService.checkLoginStatusWithOutForceLogin();
     return Obx(() => authService.isLoggedIn.value
         ? Container(
@@ -37,7 +39,8 @@ class NotificationButton extends StatelessWidget {
                     alignment: Alignment.topRight,
                     children: [
                       Icon(Icons.notifications_none, size: size / 1.5, color: isDark ? Colors.white : Colors.grey),
-                      // if (socketController.hasNewNotification.value) redDotNotification(),
+                      if (!(controller.isRead.value)) redDotNotification(),
+                      // Text("${controller.isRead.value.toString()}",style: TextStyle(color: Colors.black),),
                     ],
                   ),
                 ),

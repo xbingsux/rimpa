@@ -1,11 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 
-enum AppImageType {
-  network,
-  assets
-}
+enum AppImageType { network, assets }
 
 class AppImageComponent extends StatelessWidget {
   final AppImageType imageType;
@@ -14,15 +12,12 @@ class AppImageComponent extends StatelessWidget {
   final BorderRadius borderRadius;
   final BoxFit fit;
   const AppImageComponent(
-    {
-      super.key, 
+      {super.key,
       required this.imageType,
-      required this.imageAddress, 
-      this.aspectRatio = 1 / 1, 
-      this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)), 
-      this.fit = BoxFit.cover
-    }
-  );
+      required this.imageAddress,
+      this.aspectRatio = 1 / 1,
+      this.borderRadius = const BorderRadius.all(Radius.circular(AppRadius.xs)),
+      this.fit = BoxFit.cover});
 
   @override
   Widget build(BuildContext context) {
@@ -35,52 +30,57 @@ class AppImageComponent extends StatelessWidget {
       child: ClipRRect(
         borderRadius: borderRadius,
         child: Image.asset(
-          imageAddress, 
+          imageAddress,
           fit: fit,
           errorBuilder: (context, error, stackTrace) {
             return Container(
               color: AppColors.secondary,
               child: const Center(
-                child: Icon(Icons.image_not_supported, size: AppTextSize.xxl, color: AppTextColors.secondary,),
+                child: Icon(
+                  Icons.image_not_supported,
+                  size: AppTextSize.xxl,
+                  color: AppTextColors.secondary,
+                ),
               ),
             );
           },
         ),
-      ), 
+      ),
     );
   }
 
   Widget imageNetwork() {
-  return AspectRatio(
-    aspectRatio: aspectRatio,
-    child: ClipRRect(
-      borderRadius: borderRadius,
-      child: Image.network(
-        imageAddress, 
-        fit: fit,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: AppColors.secondary,
-            child: const Center(
-              child: CupertinoActivityIndicator(), // หรือ CircularProgressIndicator()
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: AppColors.secondary,
-            child: const Center(
-              child: Icon(
-                Icons.image_not_supported, 
-                size: AppTextSize.xxl, 
-                color: AppTextColors.secondary,
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: Image(
+          image: CachedNetworkImageProvider(
+              imageAddress), // ใช้ CachedNetworkImageProvider
+          fit: fit,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              color: AppColors.secondary,
+              child: const Center(
+                child: CupertinoActivityIndicator(),
               ),
-            ),
-          );
-        },
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.secondary,
+              child: const Center(
+                child: Icon(
+                  Icons.image_not_supported,
+                  size: AppTextSize.xxl,
+                  color: AppTextColors.secondary,
+                ),
+              ),
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

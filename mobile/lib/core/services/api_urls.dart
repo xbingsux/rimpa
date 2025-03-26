@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 
 class ApiUrls extends GetxController {
   // Base URL และ Upload URL ที่เป็น Observable
-  var imgUrl = 'https://api-rimpa.nightbears.co'.obs;
-  var baseUrl = 'https://api-rimpa.nightbears.co/auth'.obs;
-  var notiUrl = 'https://api-rimpa.nightbears.co/auth/get-noti'.obs;
-  var readNotiUrl = 'https://api-rimpa.nightbears.co/auth/read-noti'.obs;
-  var eventsUrl = 'https://api-rimpa.nightbears.co/event'.obs;
-  var rewardUrl = 'https://api-rimpa.nightbears.co/reward'.obs;
+  var imgUrl = 'https://gocon-api.newdice.co'.obs;
+  var baseUrl = 'https://gocon-api.newdice.co/auth'.obs;
+  var notiUrl = 'https://gocon-api.newdice.co/auth/get-noti'.obs;
+  var readNotiUrl = 'https://gocon-api.newdice.co/auth/read-noti'.obs;
+  var eventsUrl = 'https://gocon-api.newdice.co/event'.obs;
+  var rewardUrl = 'https://gocon-api.newdice.co/reward'.obs;
 
   // สร้างตัวแปร URL เป็น Observable
   var login = ''.obs;

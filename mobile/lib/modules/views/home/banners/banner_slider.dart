@@ -26,7 +26,7 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
   }
 
   void startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 15), (timer) {
       if (_pageController.hasClients) {
         int currentIndex = _pageController.page?.round() ?? 0;
         int nextPage = (currentIndex + 1) % controller.banners.length;
@@ -65,79 +65,65 @@ class _BannerSliderComponentState extends State<BannerSliderComponent> {
       var banners = controller.banners.take(8).toList();
 
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // bannerLoading(),
-          // Banner Slider
-          AspectRatio(
-            aspectRatio: (16.0 / 9.0) * 0.925,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: banners.length,
-              onPageChanged: (index) {
-                controller.pageIndex.value = index; // อัปเดตหน้าปัจจุบัน
-              },
-              itemBuilder: (context, index) {
-                String bannerPath = banners[index]["path"] ?? '';
-                String imageUrl = bannerPath.isEmpty ? 'assets/images/default_banner.jpg' : '${apiUrls.imgUrl.value}$bannerPath';
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    AspectRatio(
+      aspectRatio: (17.0 / 9.0),
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: null, // ไม่มีขีดจำกัด
+        onPageChanged: (index) {
+          controller.pageIndex.value = index % banners.length; // อัปเดตหน้าปัจจุบัน
+        },
+        itemBuilder: (context, index) {
+          // คำนวณให้รูปภาพวนรอบ
+          int actualIndex = index % banners.length;
+          String bannerPath = banners[actualIndex]["path"] ?? '';
+          String imageUrl = bannerPath.isEmpty
+              ? 'assets/images/default_banner.jpg'
+              : '${apiUrls.imgUrl.value}$bannerPath';
 
-                return GestureDetector(
-                  onTap: () {
-                    // stopAutoScroll(); // หยุด Timer เมื่อกดเข้าไปดูแบนเนอร์
-                    // var bannerId = banners[index]['id'];
-                    // controller.fetchBannerDetail(bannerId);
-
-                    // Get.to(() => BannersDetailPage(bannerId: bannerId), arguments: bannerId)?.then((_) {
-                    //   // เมื่อกลับมาที่หน้าหลัก ให้เริ่มการเลื่อนใหม่
-                    //   startAutoScroll();
-                    // });
-                  },
-                  // child: AspectRatio(
-                  //   aspectRatio: 16 / 9,
-                  //   child: Container(
-                  //     decoration: ShapeDecoration(
-                  //       color: Colors.amber,
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-                    child: AppImageComponent(
-                      aspectRatio: 16 / 9,
-                      fit: BoxFit.cover,
-                      imageType: AppImageType.network,
-                      imageAddress: imageUrl,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          SizedBox(height: 8),
-          // จุดที่แสดงด้านล่างแบนเนอร์
-          GetX<BannerEventController>(
-            builder: (_) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(banners.length, (index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    width: controller.pageIndex.value == index ? 12 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: controller.pageIndex.value == index ? Colors.blue : Colors.grey,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  );
-                }),
-              );
+          return GestureDetector(
+            onTap: () {
+              // ทำงานที่ต้องการเมื่อกดแบนเนอร์
             },
-          ),
-        ],
-      );
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+              child: AppImageComponent(
+                aspectRatio: 16 / 9,
+                fit: BoxFit.fill,
+                imageType: AppImageType.network,
+                imageAddress: imageUrl,
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+    SizedBox(height: 8),
+    GetX<BannerEventController>(
+      builder: (_) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(banners.length, (index) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              width: controller.pageIndex.value == index ? 12 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: controller.pageIndex.value == index
+                    ? Colors.blue
+                    : Colors.grey,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            );
+          }),
+        );
+      },
+    ),
+  ],
+);
+
     });
   }
 }

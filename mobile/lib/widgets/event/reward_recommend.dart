@@ -7,14 +7,26 @@ import 'package:rimpa/modules/views/home/homedetail/home_detail_reward.dart';
 
 import 'package:rimpa/modules/views/home/seeallcards/home_event_allcard.dart';
 import 'package:rimpa/widgets/card/event_card.dart';
+import 'package:rimpa/widgets/loginWidget/shimmer_box.dart';
 
-class RewardRecommend extends StatelessWidget {
-  RewardRecommend({super.key});
-  final listRewardController = Get.put(ListRewardController());
+class RewardRecommend extends StatefulWidget {
+  const RewardRecommend({super.key});
 
   @override
+  State<RewardRecommend> createState() => _RewardRecommendState();
+}
+
+class _RewardRecommendState extends State<RewardRecommend> {
+
+  final listRewardController = Get.put(ListRewardController());
+  @override
+  void initState() {
+    super.initState();
+     listRewardController.fetchRecommendRewards(); //NOTE
+  }
+  @override
   Widget build(BuildContext context) {
-    return Column(
+   return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -58,14 +70,14 @@ class RewardRecommend extends StatelessWidget {
           width: double.infinity,
           child: Obx(() {
             if (listRewardController.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
+              return loadingEvent();
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
                     Gap(16),
-                    ...listRewardController.rewards.map((reward) {
+                    ...listRewardController.recommendRewards.map((reward) {
                       return GestureDetector(
                         onTap: () {
                           print("Going to reward: ${reward.rewardName}");
@@ -93,4 +105,22 @@ class RewardRecommend extends StatelessWidget {
       ],
     );
   }
+}
+
+
+Widget loadingEvent() {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+        children: [
+          Gap(15),
+          shimmerBox(width: 150, height: 195),
+          Gap(16),
+          shimmerBox(width: 150, height: 195),
+          Gap(16),
+          shimmerBox(width: 150, height: 195),
+        ],
+      )
+    
+  );
 }

@@ -3,7 +3,7 @@
 // import 'package:web_socket_channel/status.dart' as status;
 
 // class SocketNotificationController extends GetxController {
-//   final String socketUrl = "https://api-rimpa.nightbears.co"; // เปลี่ยนเป็น WebSocket จริง
+//   final String socketUrl = "https://gocon-api.newdice.co"; // เปลี่ยนเป็น WebSocket จริง
 //   late WebSocketChannel channel;
 
 //   var hasNewNotification = false.obs; // ✅ ใช้ RxBool สำหรับอัปเดต Badge
