@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart'; // นำเข้า ImagePicker
 import 'package:rimpa/components/imageloader/app-image.component.dart';
 import 'package:rimpa/core/services/api_urls.dart';
+import 'package:rimpa/widgets/button/botton.dart';
 import '../../controllers/getusercontroller/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant/app.constant.dart';
@@ -87,29 +88,44 @@ class _HomeProfilePageState extends State<HomeProfilePage>
         _selectedImage = File(pickedFile.path);
       });
 
-      // ถามผู้ใช้ว่าแน่ใจไหมที่จะเปลี่ยนรูป
-      Get.dialog(
-        AlertDialog(
-          title: const Text('ยืนยันการเปลี่ยนรูปโปรไฟล์'),
-          content: const Text('คุณต้องการเปลี่ยนรูปโปรไฟล์หรือไม่?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back(); // ปิด dialog
-              },
-              child: const Text('ยกเลิก'),
-            ),
-            TextButton(
-              onPressed: () {
-                Get.back();
-                // เรียกฟังก์ชันอัปโหลดรูป
-                profileController.uploadProfileImage(_selectedImage!);
-              },
-              child: const Text('ยืนยัน'),
-            ),
-          ],
+    // ถามผู้ใช้ว่าแน่ใจไหมที่จะเปลี่ยนรูป
+    Get.dialog(
+      AlertDialog(
+        content:  Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Text('คุณต้องการเปลี่ยนรูปโปรไฟล์หรือไม่?',style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppTextColors.primary),
+          ),
         ),
-      );
+        backgroundColor: AppColors.white,
+        actions: [
+          Row(children: [
+            Expanded(
+              child: RimpaButton(
+                text: 'ยกเลิก',
+                radius: 32,
+                disble: false,
+                onTap: () => Get.back(),
+              ),
+            ),
+            const SizedBox(width: 10), // เว้นระยะห่างระหว่างปุ่ม
+            // ปุ่มยืนยันลบ
+            Expanded(
+              child: GradiantButton(
+                text: 'ยืนยัน',
+                radius: 32,
+                onTap: () {
+                  Get.back();
+                  profileController.uploadProfileImage(_selectedImage!);
+                },
+              ),
+            ),
+          ])
+        ],
+      ),
+    );
     }
   }
 
@@ -362,55 +378,55 @@ class _HomeProfilePageState extends State<HomeProfilePage>
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              // รูปโปรไฟล์
-              Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  // color: profileImage.isEmpty ? const Color.fromARGB(255, 218, 165, 165) : Colors.transparent,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 3,
-                    ),
-                  ],
-                ),
-                child: profileImage.isEmpty
-                    ? AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(AppRadius.rounded),
-                          child: Container(
-                            color: AppColors.secondary,
-                            child: const Center(
-                              child: Icon(
-                                Iconsax.user,
-                                size: 50,
-                                color: AppTextColors.secondary,
+          child: InkWell(
+            onTap: _pickImage,
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                // รูปโปรไฟล์
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // color: profileImage.isEmpty ? const Color.fromARGB(255, 218, 165, 165) : Colors.transparent,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 3,
+                      ),
+                    ],
+                  ),
+                  child: profileImage.isEmpty
+                      ? AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(AppRadius.rounded),
+                            child: Container(
+                              color: AppColors.secondary,
+                              child: const Center(
+                                child: Icon(
+                                  Iconsax.user,
+                                  size: 50,
+                                  color: AppTextColors.secondary,
+                                ),
                               ),
                             ),
                           ),
+                        )
+                      : AppImageComponent(
+                          imageType:
+                              AppImageType.network, // ระบุประเภทเป็น Network
+                          imageAddress: imageUrl, // URL ของภาพโปรไฟล์
+                          aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)), // รูปทรงวงกลม
                         ),
-                      )
-                    : AppImageComponent(
-                        imageType:
-                            AppImageType.network, // ระบุประเภทเป็น Network
-                        imageAddress: imageUrl, // URL ของภาพโปรไฟล์
-                        aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(50)), // รูปทรงวงกลม
-                      ),
-              ),
-              // ไอคอนเปลี่ยนรูป
-              InkWell(
-                onTap: _pickImage,
-                child: Container(
+                ),
+                // ไอคอนเปลี่ยนรูป
+                Container(
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
@@ -424,8 +440,8 @@ class _HomeProfilePageState extends State<HomeProfilePage>
                     size: 14,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

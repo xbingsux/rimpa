@@ -27,7 +27,7 @@ class ListEventController extends GetxController {
   void fetchRecommendEvents() async {
     try {
       isLoading(true);
-      var eventList = await ApiListEvent.fetchEvents();
+      var eventList = await ApiListEvent.fetchRecommendEvents();
       recommendEvents.assignAll(eventList);
       recommendEvents.sort((a, b) => b.id.compareTo(a.id)); // Sort by latest first
     } finally {
