@@ -330,10 +330,10 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: AppSpacing.md,
+                        top: AppSpacing.xl,
                         left: AppSpacing.md,
                         right: AppRadius.md,
-                        bottom: AppSpacing.lg),
+                        bottom: AppSpacing.xl),
                     child: GestureDetector(
                       onTap: authService.isLoggedIn.value &&
                               (int.parse(

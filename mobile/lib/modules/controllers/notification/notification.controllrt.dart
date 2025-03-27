@@ -49,10 +49,10 @@ class NotificationController extends GetxController {
         notifications
             .assignAll(data.noti); // ✅ ต้องเป็น data.noti ไม่ใช่ data ทั้งหมด
       } else {
-        Get.snackbar("Error", "Failed to fetch notifications");
+        // Get.snackbar("Error", "Failed to fetch notifications");
       }
     } catch (e) {
-      Get.snackbar("Error", "Error fetching notifications: $e");
+      // Get.snackbar("Error", "Error fetching notifications: $e");
     } finally {
       areAllNotificationsRead();
       isLoading(false);

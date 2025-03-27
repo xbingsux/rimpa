@@ -54,32 +54,11 @@ class _NotifyViewState extends State<NotifyView> {
         ),
         toolbarHeight: MediaQuery.of(context).size.height * 0.075,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await controller.fetchNotifications();
-        },
-        child: Obx(() {
-          // if (controller.isLoading.value) {
-          //   return Center(child: CircularProgressIndicator());
-          // }
-    
-          if (controller.notifications.isEmpty) {
-            return Center(child: Text('ไม่มีการแจ้งเตือน'));
-          }
-    
-          return Padding(
+      body: Padding(
             padding: const EdgeInsets.all(AppSpacing.sm),
             child: showNoti(controller.notifications),
             // child: Text("${controller.notifications}"),
-          );
-        }),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.fetchNotifications(); // ✅ ดึงข้อมูลใหม่เมื่อลูกค้ากดปุ่ม
-        },
-        child: Icon(Icons.refresh),
-      ),
+          )
     );
   }
 

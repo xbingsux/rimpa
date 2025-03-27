@@ -47,6 +47,12 @@ class HomeDetailPage extends StatelessWidget {
     double mediaWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColors.white,
+             appBar:AppBar(
+              toolbarHeight: 0,
+              // backgroundColor: Colors.amber,
+              elevation: 0,
+              forceMaterialTransparency: true,
+            ),
       body: Stack(
         children: [
           Column(
