@@ -20,80 +20,78 @@ class HistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HistoryController historyController = Get.put(HistoryController());
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.background_main,
-          centerTitle: true,
-          title: Text(
-            'ประวัติคะแนน',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontSize: AppTextSize.xl,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.accent,
-                ),
-          ),
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              decoration: const BoxDecoration(),
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: const Center(
-                child: Icon(
-                  Icons.arrow_back,
-                  color: AppTextColors.secondary,
-                  size: AppTextSize.xxl,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.background_main,
+        centerTitle: true,
+        title: Text(
+          'ประวัติคะแนน',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: AppTextSize.xl,
+                fontWeight: FontWeight.w600,
+                color: AppColors.accent,
+              ),
+        ),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            decoration: const BoxDecoration(),
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            child: const Center(
+              child: Icon(
+                Icons.arrow_back,
+                color: AppTextColors.secondary,
+                size: AppTextSize.xxl,
               ),
             ),
           ),
-          toolbarHeight: MediaQuery.of(context).size.height * 0.075,
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Obx(() => SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    historyTypeButton(
-                      context, 
-                      historyController.activeType.value == HistoryType.all,
-                      () {
-                        historyController.activeType.value = HistoryType.all;
-                        historyController.fetchPointHistory();
-                      }, 
-                      'ทั้งหมด'
-                    ),
-                    historyTypeButton(
-                      context, 
-                      historyController.activeType.value == HistoryType.earn,
-                      () {
-                        historyController.activeType.value = HistoryType.earn;
-                        historyController.fetchPointHistory();
-                      }, 
-                      'รับคะแนน'
-                    ),
-                    historyTypeButton(
-                      context, 
-                      historyController.activeType.value == HistoryType.redeem,
-                      () {
-                        historyController.activeType.value = HistoryType.redeem;
-                        historyController.fetchPointHistory();
-                      }, 
-                      'แลกรางวัล'
-                    ),
-                  ],
-                ),
-              )),
-            ),
-            Obx(() => historyDisplay(context, historyController.historyPointList))
-          ],
-        ),
-      )
+        toolbarHeight: MediaQuery.of(context).size.height * 0.075,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Obx(() => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  historyTypeButton(
+                    context, 
+                    historyController.activeType.value == HistoryType.all,
+                    () {
+                      historyController.activeType.value = HistoryType.all;
+                      historyController.fetchPointHistory();
+                    }, 
+                    'ทั้งหมด'
+                  ),
+                  historyTypeButton(
+                    context, 
+                    historyController.activeType.value == HistoryType.earn,
+                    () {
+                      historyController.activeType.value = HistoryType.earn;
+                      historyController.fetchPointHistory();
+                    }, 
+                    'รับคะแนน'
+                  ),
+                  historyTypeButton(
+                    context, 
+                    historyController.activeType.value == HistoryType.redeem,
+                    () {
+                      historyController.activeType.value = HistoryType.redeem;
+                      historyController.fetchPointHistory();
+                    }, 
+                    'แลกรางวัล'
+                  ),
+                ],
+              ),
+            )),
+          ),
+          Obx(() => historyDisplay(context, historyController.historyPointList))
+        ],
+      ),
     );
   }
 
@@ -137,7 +135,7 @@ class HistoryView extends StatelessWidget {
                   padding: EdgeInsets.only(top: index == 0 ? 0.0 : AppSpacing.md),
                   child: AppCardComponent(
                     aspectRatio: 358/80,
-                    border: Border.all(width: 1, color: AppColors.secondary),
+                    border: Border.all(width: 1, color: Colors.transparent),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     boxShadow: AppShadow.custom(
                             color: AppColors.secondary,
