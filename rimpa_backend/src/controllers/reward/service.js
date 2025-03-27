@@ -27,7 +27,7 @@ const listReward = async (limit, popular) => {
         include: {
             RedeemReward: true
         },
-        take: limit,
+        ...(limit ? { take: limit } : {}),
         orderBy: orderBy
     });
 

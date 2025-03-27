@@ -143,7 +143,7 @@ const listEvent = async (limit, popular) => {
             }
         },
         orderBy: orderBy,
-        take: limit
+        ...(limit ? { take: limit } : {}),
     });
 
     return events.map((item) => ({
