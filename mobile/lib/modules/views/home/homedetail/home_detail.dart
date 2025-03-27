@@ -45,256 +45,257 @@ class HomeDetailPage extends StatelessWidget {
     authService.checkLoginStatusWithOutForceLogin();
     double mediaHeight = MediaQuery.of(context).size.height;
     double mediaWidth = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            AppCarousel(
-                              imageSrc: AppImageType.network,
-                              images: paths,
-                              ratio: 1 / 1,
-                              indicatorBottomSpace: 30,
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          AppCarousel(
+                            imageSrc: AppImageType.network,
+                            images: paths,
+                            ratio: 1 / 1,
+                            indicatorBottomSpace: 30,
+                          ),
+                        ],
+                      ),
+                      Transform.translate(
+                        offset: Offset(0, -mediaHeight * 0.03),
+                        child: Container(
+                          width: mediaWidth,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(AppRadius.lg),
+                              topRight: Radius.circular(AppRadius.lg),
                             ),
-                          ],
-                        ),
-                        Transform.translate(
-                          offset: Offset(0, -mediaHeight * 0.03),
-                          child: Container(
-                            width: mediaWidth,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(AppRadius.lg),
-                                topRight: Radius.circular(AppRadius.lg),
-                              ),
-                              color: AppColors.white,
+                            color: AppColors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.lg,
+                              horizontal: AppSpacing.lg,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: AppSpacing.lg,
-                                horizontal: AppSpacing.lg,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            title,
+                                            style: const TextStyle(
+                                                fontSize: AppTextSize.xxl,
+                                                color: AppTextColors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(
+                                              height: AppSpacing.xs),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.calendar_month_outlined,
+                                                size: AppTextSize.sm,
+                                                color: AppColors.accent,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                '$startDate - $endDate',
+                                                style: const TextStyle(
+                                                    fontSize: AppTextSize.xs,
+                                                    color: AppTextColors
+                                                        .secondary),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    if (mapUrl.isNotEmpty)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                            child: GestureDetector(
+                                          onTap: () {
+                                            if (mapUrl.isNotEmpty) {
+                                              _launchURL(context, mapUrl);
+                                            } else {
+                                              // แจ้งเตือนว่าหมุดแผนที่ไม่มี
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
+                                              );
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(
+                                                AppSpacing.sm),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 0.5,
+                                                color: Colors.transparent,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      AppRadius.rounded),
+                                              color: mapUrl.isNotEmpty
+                                                  ? Colors.blue
+                                                  : Colors
+                                                      .grey, // เปลี่ยนสีปุ่มถ้าไม่มีลิงก์
+                                            ),
+                                            child: const Icon(
+                                              Icons.location_on_outlined,
+                                              size: AppTextSize.xxl,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )),
+                                      )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: AppSpacing.md),
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        flex: 4,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              title,
-                                              style: const TextStyle(
-                                                  fontSize: AppTextSize.xxl,
-                                                  color: AppTextColors.black,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                                height: AppSpacing.xs),
-                                            Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.calendar_month_outlined,
-                                                  size: AppTextSize.sm,
-                                                  color: AppColors.accent,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  '$startDate - $endDate',
-                                                  style: const TextStyle(
-                                                      fontSize: AppTextSize.xs,
-                                                      color: AppTextColors
-                                                          .secondary),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                      const Text(
+                                        'รายละเอียดกิจกรรม ',
+                                        style: TextStyle(
+                                            fontSize: AppTextSize.sm,
+                                            color: AppTextColors.black,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      if (mapUrl.isNotEmpty)
-                                        Expanded(
-                                          flex: 1,
-                                          child: Center(
-                                              child: GestureDetector(
-                                            onTap: () {
-                                              if (mapUrl.isNotEmpty) {
-                                                _launchURL(context, mapUrl);
-                                              } else {
-                                                // แจ้งเตือนว่าหมุดแผนที่ไม่มี
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                      content: Text(
-                                                          'ไม่มีลิงก์แผนที่สำหรับอีเว้นต์นี้')),
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(
-                                                  AppSpacing.sm),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 0.5,
-                                                  color: Colors.transparent,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        AppRadius.rounded),
-                                                color: mapUrl.isNotEmpty
-                                                    ? Colors.blue
-                                                    : Colors
-                                                        .grey, // เปลี่ยนสีปุ่มถ้าไม่มีลิงก์
-                                              ),
-                                              child: const Icon(
-                                                Icons.location_on_outlined,
-                                                size: AppTextSize.xxl,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )),
-                                        )
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: AppSpacing.md),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'รายละเอียดกิจกรรม ',
-                                          style: TextStyle(
-                                              fontSize: AppTextSize.sm,
-                                              color: AppTextColors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(
-                                              AppSpacing.xs),
-                                          child: Text(
-                                            description,
-                                            style: const TextStyle(
-                                              fontSize: AppTextSize.sm,
-                                              color: AppTextColors.secondary,
-                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(
+                                            AppSpacing.xs),
+                                        child: Text(
+                                          description,
+                                          style: const TextStyle(
+                                            fontSize: AppTextSize.sm,
+                                            color: AppTextColors.secondary,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 2,
-                      color: AppColors.secondary,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: AppSpacing.md,
-                          left: AppSpacing.md,
-                          right: AppRadius.md,
-                          bottom: AppSpacing.lg),
-                      child: GestureDetector(
-                        onTap: authService.isLoggedIn.value
-                            ? () {
-                                // HomeQRPage()
-                                Get.to(() => HomeQRPage(),
-                                    preventDuplicates: true);
-                              }
-                            : () {},
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: AppRadius.xs),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(AppRadius.rounded),
-                            color: authService.isLoggedIn.value
-                                ? const Color(0xFFEBF5FD)
-                                : AppColors.secondary, // แก้ไขสีให้ถูกต้อง
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: authService.isLoggedIn.value
-                                      ? BoxDecoration(
-                                          gradient: AppGradiant
-                                              .gradientX_1, // ใช้ Gradient
-                                          shape: BoxShape.circle,
-                                        )
-                                      : BoxDecoration(
-                                          color: AppTextColors
-                                              .secondary, // ใช้ Gradient
-                                          shape: BoxShape.circle,
-                                        ),
-                                  child: const Icon(Icons.star,
-                                      color: Colors.white),
                                 ),
-                                const SizedBox(
-                                    width: 8), // เพิ่ม const เพื่อลด warning
-                                Obx(() {
-                                  return Text(
-                                    '${point.value} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
-                                    style: TextStyle(
-                                      fontSize: AppTextSize.lg,
-                                      color: authService.isLoggedIn.value
-                                          ? AppTextColors.accent2
-                                          : AppTextColors.secondary,
-                                    ),
-                                  );
-                                }),
-                                Gap(38),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              Column(
                 children: [
-                  MyBackButton(),
+                  Container(
+                    width: double.infinity,
+                    height: 2,
+                    color: AppColors.secondary,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: AppSpacing.md,
+                        left: AppSpacing.md,
+                        right: AppRadius.md,
+                        bottom: AppSpacing.lg),
+                    child: GestureDetector(
+                      onTap: authService.isLoggedIn.value
+                          ? () {
+                              // HomeQRPage()
+                              Get.to(() => HomeQRPage(),
+                                  preventDuplicates: true);
+                            }
+                          : () {},
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: AppRadius.xs),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(AppRadius.rounded),
+                          color: authService.isLoggedIn.value
+                              ? const Color(0xFFEBF5FD)
+                              : AppColors.secondary, // แก้ไขสีให้ถูกต้อง
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: authService.isLoggedIn.value
+                                    ? BoxDecoration(
+                                        gradient: AppGradiant
+                                            .gradientX_1, // ใช้ Gradient
+                                        shape: BoxShape.circle,
+                                      )
+                                    : BoxDecoration(
+                                        color: AppTextColors
+                                            .secondary, // ใช้ Gradient
+                                        shape: BoxShape.circle,
+                                      ),
+                                child: const Icon(
+                                    Icons.star,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                              ),
+                              const SizedBox(
+                                  width: 8), // เพิ่ม const เพื่อลด warning
+                              Obx(() {
+                                return Text(
+                                  '${point.value.toInt()} คะแนน', // ค่าพอยท์ที่ถูกดึงจาก RxString
+                                  style: TextStyle(
+                                    fontSize: AppTextSize.lg,
+                                    color: authService.isLoggedIn.value
+                                        ? AppTextColors.accent2
+                                        : AppTextColors.secondary,
+                                  ),
+                                );
+                              }),
+                              Gap(38),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyBackButton(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
