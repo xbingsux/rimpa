@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
               _buildNavItem(icon: Iconsax.home, label: "หน้าหลัก", index: 0),
               _buildNavItem(icon: Iconsax.calendar_1, label: "กิจกรรม", index: 1),
               _buildQRItem(2),
-              _buildNavItem(icon: Iconsax.award, label: "รีวอร์ด", index: 3),
+              _buildNavItem(icon: Iconsax.star, label: "รีวอร์ด", index: 3),
               _buildNavItem(icon: Iconsax.user, label: "โปรไฟล์", index: 4),
             ],
           ),

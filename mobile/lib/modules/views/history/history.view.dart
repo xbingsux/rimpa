@@ -139,13 +139,17 @@ class HistoryView extends StatelessWidget {
                     aspectRatio: 358/80,
                     border: Border.all(width: 1, color: AppColors.secondary),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
-                    boxShadow: BoxShadow(blurRadius: 4, color: AppColors.black.withOpacity(0.25)),
+                    boxShadow: AppShadow.custom(
+                            color: AppColors.secondary,
+                            blurRadius: 2,
+                            spreadRadius: 0.1,
+                          ),
                     incardPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 2, 
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.all(AppSpacing.xs),

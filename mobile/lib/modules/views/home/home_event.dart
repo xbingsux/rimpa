@@ -48,6 +48,7 @@ class _HomeEventPageState extends State<HomeEventPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
         automaticallyImplyLeading: false,
+        forceMaterialTransparency: true,
         elevation: 0,
         title: Stack(
           alignment: Alignment.center,

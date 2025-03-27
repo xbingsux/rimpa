@@ -20,21 +20,24 @@ class HomeProfilePage extends StatefulWidget {
   _HomeProfilePageState createState() => _HomeProfilePageState();
 }
 
-class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProviderStateMixin {
+class _HomeProfilePageState extends State<HomeProfilePage>
+    with SingleTickerProviderStateMixin {
   String email = '';
   bool isLoggedIn = false;
   late AnimationController _animationController;
-  final AuthService _authService = Get.find<AuthService>(); // สร้าง instance ของ AuthService
-  final profileController = Get.put(ProfileController()); // เพิ่ม ProfileController
+  final AuthService _authService =
+      Get.find<AuthService>(); // สร้าง instance ของ AuthService
+  final profileController =
+      Get.put(ProfileController()); // เพิ่ม ProfileController
   final picker = ImagePicker(); // สร้างตัวเลือกภาพ
 
   File? _selectedImage; // ตัวแปรสำหรับเก็บไฟล์รูปที่เลือก
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarIconBrightness: Brightness.light,
+    // ));
     _checkLoginStatus(); // ตรวจสอบสถานะการล็อกอินเมื่อเริ่มต้น
     _animationController = AnimationController(
       vsync: this,
@@ -112,6 +115,10 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
 
   @override
   void dispose() {
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarIconBrightness:
+    //       Brightness.dark, // คืนค่ากลับเป็นสีขาวหรือค่าเดิม
+    // ));
     _animationController.dispose();
     super.dispose();
   }
@@ -129,7 +136,12 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Gap(35),
+              AppBar(
+                toolbarHeight: 0,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                forceMaterialTransparency: true,
+              ),
               Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
@@ -185,43 +197,67 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
-                      const SizedBox(height: 450), // เผื่อพื้นที่ป้องกัน bottom overflow
+                      const SizedBox(
+                          height: 450), // เผื่อพื้นที่ป้องกัน bottom overflow
                     ] else ...[
                       Obx(() {
                         // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
-                        if (profileController.profileData.isEmpty || profileController.profileData["profile_name"] == null) {
+                        if (profileController.profileData.isEmpty ||
+                            profileController.profileData["profile_name"] ==
+                                null) {
                           // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
                           return Text(
                             "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  fontSize: AppTextSize.md, // ปรับขนาดฟอนต์เป็น 16
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontSize:
+                                      AppTextSize.md, // ปรับขนาดฟอนต์เป็น 16
                                 ),
                           );
                         } else {
                           // หากมีข้อมูลใน profileData
                           return Text(
-                            profileController.profileData["profile_name"] ?? "profile_name", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: AppTextSize.xl, fontWeight: FontWeight.w600),
+                            profileController.profileData["profile_name"] ??
+                                "profile_name", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    fontSize: AppTextSize.xl,
+                                    fontWeight: FontWeight.w600),
                           );
                         }
                       }),
                       const SizedBox(height: 5),
                       Obx(() {
                         // ตรวจสอบหากไม่มีข้อมูลใน profileData หรือ profile_name
-                        if (profileController.profileData.isEmpty || profileController.profileData["user"]["email"] == null) {
+                        if (profileController.profileData.isEmpty ||
+                            profileController.profileData["user"]["email"] ==
+                                null) {
                           // หากข้อมูลโปรไฟล์ยังไม่ถูกดึงหรือไม่มีข้อมูลใน profile_name
                           return Text(
                             "ยังไม่มีข้อมูล", // แสดงข้อความนี้ถ้ายังไม่มีข้อมูล
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  fontSize: AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontSize:
+                                      AppTextSize.sm, // ปรับขนาดฟอนต์เป็น 16
                                 ),
                           );
                         } else {
                           // หากมีข้อมูลใน profileData
                           return Text(
-                            profileController.profileData["user"]["email"] ?? "email", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  fontSize: AppTextSize.md, // ปรับขนาดฟอนต์เป็น 16
+                            profileController.profileData["user"]["email"] ??
+                                "email", // ถ้ามีข้อมูลก็แสดงชื่อผู้ใช้
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontSize:
+                                      AppTextSize.md, // ปรับขนาดฟอนต์เป็น 16
                                   color: AppTextColors.secondary,
                                 ),
                           );
@@ -231,8 +267,14 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                       MenuCard(
                         title: "บัญชีและความเป็นส่วนตัว",
                         items: [
-                          MenuItem(title: "บัญชีผู้ใช้งาน", icon: Iconsax.user_edit, route: "/user-deteil"),
-                          MenuItem(title: "เปลี่ยนรหัสผ่าน", icon: Iconsax.lock_1, route: "/chang-password"),
+                          MenuItem(
+                              title: "บัญชีผู้ใช้งาน",
+                              icon: Iconsax.user_edit,
+                              route: "/user-deteil"),
+                          MenuItem(
+                              title: "เปลี่ยนรหัสผ่าน",
+                              icon: Iconsax.lock_1,
+                              route: "/chang-password"),
                           // MenuItem(
                           //   title: "การแจ้งเตือน",
                           //   icon: Icons.notifications,
@@ -245,9 +287,20 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                       MenuCard(
                         title: "อื่นๆ",
                         items: [
-                          MenuItem(title: "ช่วยเหลือ", icon: Iconsax.headphone, route: "/faq"),
-                          MenuItem(title: "นโยบายความเป็นส่วนตัว", icon: Iconsax.security_user, route: "/policy"),
-                          MenuItem(title: "ลบบัญชีผู้ใช้", icon: Iconsax.bag, route: "/delete-account", agrument: () => _logout(),),
+                          MenuItem(
+                              title: "ช่วยเหลือ",
+                              icon: Iconsax.headphone,
+                              route: "/faq"),
+                          MenuItem(
+                              title: "นโยบายความเป็นส่วนตัว",
+                              icon: Iconsax.security_user,
+                              route: "/policy"),
+                          MenuItem(
+                            title: "ลบบัญชีผู้ใช้",
+                            icon: Iconsax.bag,
+                            route: "/delete-account",
+                            agrument: () => _logout(),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -261,11 +314,15 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Iconsax.logout_1, color: AppColors.danger),
+                            const Icon(Iconsax.logout_1,
+                                color: AppColors.danger),
                             Gap(16),
                             Text(
                               'ออกจากระบบ',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
                                     fontSize: 18,
                                     color: AppColors.danger,
                                     fontWeight: FontWeight.w700,
@@ -277,7 +334,10 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                     ],
                     Container(
                         // color: Colors.amber,
-                        height: (MediaQuery.of(context).size.height - 725 <= 0 ? 0 : MediaQuery.of(context).size.height - 725)), // เผื่อพื้นที่ป้องกัน bottom overflow
+                        height: (MediaQuery.of(context).size.height - 725 <= 0
+                            ? 0
+                            : MediaQuery.of(context).size.height -
+                                725)), // เผื่อพื้นที่ป้องกัน bottom overflow
                   ],
                 ),
               ),
@@ -292,10 +352,13 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
     return Obx(
       () {
         // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-        String profileImage = profileController.profileData["profile_img"] ?? '';
+        String profileImage =
+            profileController.profileData["profile_img"] ?? '';
 
         // สร้าง URL ของภาพจาก path ที่ต้องการ
-        String imageUrl = profileImage.isEmpty ? 'assets/images/default_profile.jpg' : '${baseUrl}$profileImage'; // กำหนด URL รูปโปรไฟล์
+        String imageUrl = profileImage.isEmpty
+            ? 'assets/images/default_profile.jpg'
+            : '${baseUrl}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -317,30 +380,32 @@ class _HomeProfilePageState extends State<HomeProfilePage> with SingleTickerProv
                     ),
                   ],
                 ),
-                child: profileImage.isEmpty ?
-                AspectRatio(
-                  aspectRatio: 1/1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.rounded),
-                    child: Container(
-                      color: AppColors.secondary,
-                      child: const Center(
-                        child: Icon(
-                          Iconsax.user, 
-                          size: 50, 
-                          color: AppTextColors.secondary,
+                child: profileImage.isEmpty
+                    ? AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(AppRadius.rounded),
+                          child: Container(
+                            color: AppColors.secondary,
+                            child: const Center(
+                              child: Icon(
+                                Iconsax.user,
+                                size: 50,
+                                color: AppTextColors.secondary,
+                              ),
+                            ),
+                          ),
                         ),
+                      )
+                    : AppImageComponent(
+                        imageType:
+                            AppImageType.network, // ระบุประเภทเป็น Network
+                        imageAddress: imageUrl, // URL ของภาพโปรไฟล์
+                        aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(50)), // รูปทรงวงกลม
                       ),
-                    ),
-                  ),
-                )
-                :
-                 AppImageComponent(
-                  imageType: AppImageType.network, // ระบุประเภทเป็น Network
-                  imageAddress: imageUrl, // URL ของภาพโปรไฟล์
-                  aspectRatio: 1 / 1, // อัตราส่วนภาพ (วงกลม)
-                  borderRadius: const BorderRadius.all(Radius.circular(50)), // รูปทรงวงกลม
-                ),
               ),
               // ไอคอนเปลี่ยนรูป
               InkWell(

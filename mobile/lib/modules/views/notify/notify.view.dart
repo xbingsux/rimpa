@@ -25,62 +25,60 @@ class _NotifyViewState extends State<NotifyView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: AppBar(
-          backgroundColor: AppColors.background_main,
-          centerTitle: true,
-          title: Text(
-            'การแจ้งเตือน',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontSize: AppTextSize.xl,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.accent,
-                ),
-          ),
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              decoration: const BoxDecoration(),
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: const Center(
-                child: Icon(
-                  Icons.arrow_back,
-                  color: AppTextColors.secondary,
-                  size: AppTextSize.xxl,
-                ),
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.background_main,
+        centerTitle: true,
+        title: Text(
+          'การแจ้งเตือน',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: AppTextSize.xl,
+                fontWeight: FontWeight.w600,
+                color: AppColors.accent,
+              ),
+        ),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            decoration: const BoxDecoration(),
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            child: const Center(
+              child: Icon(
+                Icons.arrow_back,
+                color: AppTextColors.secondary,
+                size: AppTextSize.xxl,
               ),
             ),
           ),
-          toolbarHeight: MediaQuery.of(context).size.height * 0.075,
         ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            await controller.fetchNotifications();
-          },
-          child: Obx(() {
-            // if (controller.isLoading.value) {
-            //   return Center(child: CircularProgressIndicator());
-            // }
-
-            if (controller.notifications.isEmpty) {
-              return Center(child: Text('ไม่มีการแจ้งเตือน'));
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: showNoti(controller.notifications),
-              // child: Text("${controller.notifications}"),
-            );
-          }),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            controller.fetchNotifications(); // ✅ ดึงข้อมูลใหม่เมื่อลูกค้ากดปุ่ม
-          },
-          child: Icon(Icons.refresh),
-        ),
+        toolbarHeight: MediaQuery.of(context).size.height * 0.075,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await controller.fetchNotifications();
+        },
+        child: Obx(() {
+          // if (controller.isLoading.value) {
+          //   return Center(child: CircularProgressIndicator());
+          // }
+    
+          if (controller.notifications.isEmpty) {
+            return Center(child: Text('ไม่มีการแจ้งเตือน'));
+          }
+    
+          return Padding(
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            child: showNoti(controller.notifications),
+            // child: Text("${controller.notifications}"),
+          );
+        }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.fetchNotifications(); // ✅ ดึงข้อมูลใหม่เมื่อลูกค้ากดปุ่ม
+        },
+        child: Icon(Icons.refresh),
       ),
     );
   }

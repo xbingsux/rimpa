@@ -10,7 +10,7 @@ class MyBackButton extends StatelessWidget {
     return BackButton(
       color: AppTextColors.secondary,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.8)),
         fixedSize: MaterialStateProperty.all(Size(30, 30)),
       ),
     );

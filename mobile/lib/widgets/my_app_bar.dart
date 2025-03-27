@@ -8,7 +8,8 @@ import 'package:rimpa/widgets/button/notifiction_button.dart';
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final bool darkMode;
-  MyAppBar({super.key, this.backgroundColor = Colors.white, this.darkMode = false});
+  MyAppBar(
+      {super.key, this.backgroundColor = Colors.white, this.darkMode = false});
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   final ApiUrls apiUrls = Get.find();
@@ -18,8 +19,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: backgroundColor, // รองรับ Light/Dark Mode
-      elevation: 0,
-      shadowColor:Colors.transparent,
+      elevation: 0, forceMaterialTransparency: true,
+      shadowColor: Colors.transparent,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -28,10 +29,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               // รูปโปรไฟล์แทนไอคอน
               Obx(() {
                 // ดึงข้อมูล URL ของรูปโปรไฟล์จาก Controller
-                String profileImage = profileController.profileData["profile_img"] ?? '';
+                String profileImage =
+                    profileController.profileData["profile_img"] ?? '';
 
                 // สร้าง URL ของภาพจาก path ที่ต้องการ
-                String imageUrl = profileImage.isEmpty ? 'assets/images/default_profile.jpg' : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
+                String imageUrl = profileImage.isEmpty
+                    ? 'assets/images/default_profile.jpg'
+                    : '${apiUrls.imgUrl.value}$profileImage'; // กำหนด URL รูปโปรไฟล์
 
                 return Container(
                   width: 40, // ขนาดเดิม
@@ -47,7 +51,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       height: 40,
                       fit: BoxFit.cover, // ปรับให้เต็มวงกลม
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Iconsax.user, color: Colors.grey, size: 24);
+                        return const Icon(Iconsax.user,
+                            color: Colors.grey, size: 24);
                       },
                     ),
                   ),
@@ -55,12 +60,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               }),
               const SizedBox(width: 8),
               Obx(() {
-                var profileName = profileController.profileData["profile_name"] ?? "ยังไม่มีข้อมูล";
+                var profileName =
+                    profileController.profileData["profile_name"] ??
+                        "ยังไม่มีข้อมูล";
 
                 return Text(
                   profileName,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: darkMode ? Colors.white : Colors.black, // สีตัวอักษรดำหรือขาวตาม Dark Mode
+                        color: darkMode
+                            ? Colors.white
+                            : Colors.black, // สีตัวอักษรดำหรือขาวตาม Dark Mode
                         fontSize: 16, // ปรับขนาดฟอนต์เป็น 16
                       ),
                 );

@@ -32,22 +32,22 @@ class _AppCarouselState extends State<AppCarousel> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    _startAutoSlide();
+    // _startAutoSlide();
   }
 
-  void _startAutoSlide() {
-    Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
-      int nextPage = _currentIndex + 1 < widget.images.length ? _currentIndex + 1 : 0;
-      _pageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      setState(() => _currentIndex = nextPage);
-      _startAutoSlide();
-    });
-  }
+  // void _startAutoSlide() {
+  //   Future.delayed(const Duration(seconds: 3), () {
+  //     if (!mounted) return;
+  //     int nextPage = _currentIndex + 1 < widget.images.length ? _currentIndex + 1 : 0;
+  //     _pageController.animateToPage(
+  //       nextPage,
+  //       duration: const Duration(milliseconds: 300),
+  //       curve: Curves.easeIn,
+  //     );
+  //     setState(() => _currentIndex = nextPage);
+  //     _startAutoSlide();
+  //   });
+  // }
 
   @override
   void dispose() {

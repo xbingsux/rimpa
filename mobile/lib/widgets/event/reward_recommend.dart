@@ -78,20 +78,15 @@ class _RewardRecommendState extends State<RewardRecommend> {
                   children: [
                     Gap(16),
                     ...listRewardController.recommendRewards.map((reward) {
-                      return GestureDetector(
-                        onTap: () {
-                          print("Going to reward: ${reward.rewardName}");
-                          Get.to(() => HomeDetailReward(reward: reward));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: EventCard(
-                            title: reward.rewardName,
-                            imageUrl:
-                                '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
-                            onTap: () =>
-                                Get.to(() => HomeDetailReward(reward: reward)),
-                          ),
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: EventCard(
+                          title: reward.rewardName,
+                          imageUrl:
+                              '${AppApi.urlApi}${reward.img.replaceAll("\\", "/")}',
+                          onTap: () =>
+                              Get.to(() => HomeDetailReward(reward: reward)
+                              ),
                         ),
                       );
                     }).toList(),

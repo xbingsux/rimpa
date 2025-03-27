@@ -8,7 +8,14 @@ class Policy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("นโยบายความเป็นส่วนตัว"),
+        title: Text(
+          "นโยบายความเป็นส่วนตัว",
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: AppTextColors.black,
+            ),
+        ),
         iconTheme: const IconThemeData(color: AppTextColors.secondary),
       ),
       body: ListView(
@@ -16,7 +23,8 @@ class Policy extends StatelessWidget {
         children: const [
           Section(
             title: "1. บทนำ",
-            content: "แอปพลิเคชันให้ความสำคัญกับความเป็นส่วนตัวของผู้ใช้ เรามุ่งเน้นที่จะปกป้องข้อมูลส่วนบุคคลของคุณ "
+            content:
+                "แอปพลิเคชันให้ความสำคัญกับความเป็นส่วนตัวของผู้ใช้ เรามุ่งเน้นที่จะปกป้องข้อมูลส่วนบุคคลของคุณ "
                 "เราอธิบายถึงวิธีที่เราเก็บรวบรวม ใช้ เปิดเผย และปกป้องข้อมูลของคุณเพื่อใช้ในแอปของเรา",
           ),
           Section(
@@ -35,15 +43,18 @@ class Policy extends StatelessWidget {
           ),
           Section(
             title: "4. การรักษาความปลอดภัยของข้อมูล",
-            content: "เราดำเนินการรักษาความปลอดภัยที่เหมาะสมเพื่อป้องกันการเข้าถึงหรือเปิดเผยข้อมูลโดยไม่ได้รับอนุญาต",
+            content:
+                "เราดำเนินการรักษาความปลอดภัยที่เหมาะสมเพื่อป้องกันการเข้าถึงหรือเปิดเผยข้อมูลโดยไม่ได้รับอนุญาต",
           ),
           Section(
             title: "5. สิทธิของผู้ใช้",
-            content: "คุณมีสิทธิในการเข้าถึง แก้ไขหรือลบข้อมูลส่วนบุคคลของคุณ สามารถติดต่อเรา",
+            content:
+                "คุณมีสิทธิในการเข้าถึง แก้ไขหรือลบข้อมูลส่วนบุคคลของคุณ สามารถติดต่อเรา",
           ),
           Section(
             title: "6. การเปลี่ยนแปลงนโยบาย",
-            content: "เราขอสงวนสิทธิ์ในการเปลี่ยนแปลงนโยบายนี้ กรุณาตรวจสอบการเปลี่ยนแปลงบนแอปฯของเรา",
+            content:
+                "เราขอสงวนสิทธิ์ในการเปลี่ยนแปลงนโยบายนี้ กรุณาตรวจสอบการเปลี่ยนแปลงบนแอปฯของเรา",
           ),
         ],
       ),
