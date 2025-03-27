@@ -118,23 +118,28 @@ const redeemReward = async (userId, reward_id) => {
         })
 
         // บันทึกการแลกรางวัล
-        if (!redeem) {
-            redeem = await prisma.redeemReward.create({
-                data: {
-                    profileId: profile.id,
-                    rewardId: reward_id,
-                    quantity: qty,
-                    base_fee: 0,
-                    addressId: null,
-                    delivery: "Pickup",
-                    status: "PENDING",
-                    usedCoints: usePoint
-                }, include: {
-                    Profile: true,
-                    Reward: true
-                }
-            });
-        }
+
+        redeem = await prisma.redeemReward.upsert({
+            where: {
+                id: redeem.id | 0
+            },
+            create: {
+                profileId: profile.id,
+                rewardId: reward_id,
+                quantity: qty,
+                base_fee: 0,
+                addressId: null,
+                delivery: "Pickup",
+                status: "PENDING",
+                usedCoints: usePoint
+            }, update: {
+                createdAt: now
+            }, include: {
+                Profile: true,
+                Reward: true
+            }
+        });
+
 
         return redeem;
     }

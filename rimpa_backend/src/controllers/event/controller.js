@@ -33,10 +33,15 @@ router.post("/update-event", auth, async (req, res) => {
 });
 
 router.get("/list-event", async (req, res) => {
-  const { popular, limit } = req.body;
+  let { popular, limit } = req.query;
   try {
+    if (isNaN(Number(limit))) {
+      limit = null
+    } else {
+      limit = Number(limit)
+    }
 
-    const event = await Service.listEvent(limit, popular)
+    const event = await Service.listEvent(Number(limit), popular)
     return res.status(200).json({ status: "success", event });
 
   } catch (error) {

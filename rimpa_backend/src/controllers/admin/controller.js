@@ -332,7 +332,7 @@ router.post("/redeem-rewards", auth, async (req, res) => {
     if (token) {
       // ตรวจสอบและถอดรหัส token
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
+      
       if (!decoded || !decoded.redeemId) {
         return res.status(200).json({ status: 400, message: 'Invalid token or missing redeem ID' });
       }

@@ -18,9 +18,13 @@ router.get("/test", async (req, res) => {
 });
 
 router.get("/list-reward", async (req, res) => {
-  const { popular, limit } = req.query;
+  let { popular, limit } = req.query;
   try {
-
+    if (isNaN(Number(limit))) {
+      limit = null
+    } else {
+      limit = Number(limit)
+    }
     const reward = await Service.listReward(limit, popular)
     return res.status(200).json({ status: "success", reward });
 
