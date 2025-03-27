@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:rimpa/components/imageloader/app-image.component.dart';
+import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:url_launcher/url_launcher.dart'; // เพิ่มสำหรับเปิดแอปอีเมล
 import 'package:flutter/material.dart';
 import '../models/users.model.dart';
@@ -82,63 +84,143 @@ class RegisterController extends GetxController {
   }
 
   void showEmailVerificationDialog() {
-    Get.defaultDialog(
-      title: "ยืนยันอีเมล",
-      titleStyle: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-      content: Column(
-        children: [
-          Icon(Icons.email, size: 60, color: Colors.blue),
-          SizedBox(height: 10),
-          Text(
-            "คุณต้องการไปยืนยันอีเมลตอนนี้ไหม?",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+    showDialog(
+    context: Get.context!,
+    barrierDismissible: false, // บังคับไม่ให้ปิด Dialog นอก
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.sm)
           ),
-          SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                final Uri emailLaunchUri = Uri(
-                  scheme: 'mailto',
-                  path: user.email.value, // เปิดแอปอีเมลที่ใช้อยู่
-                );
-                await launchUrl(emailLaunchUri);
-                Navigator.pop(Get.context!); // ปิด Dialog
-                Get.snackbar("เสร็จสิ้น", "สมัครบัญชีเสร็จสิ้น");
-                Get.toNamed('/login');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+          contentPadding: const EdgeInsets.only(left: AppSpacing.lg, right: AppRadius.lg, bottom: AppSpacing.lg),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: AppImageComponent(imageType: AppImageType.assets, imageAddress: 'assets/images/register/verify.png'),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (bounds) {
+                      return AppGradiant.gradientY_1.createShader(bounds);
+                    },
+                    child: Text(
+                      'ยืนยันอีเมล',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: AppTextColors.white
+                        ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'เกือบเสร็จแล้ว! ยืนยันอีเมลของคุณตอนนี้เลย',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: AppTextSize.md,
+                      fontWeight: FontWeight.w400,
+                      color: AppTextColors.secondary,
+                    ),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 14),
               ),
-              child: Text(
-                "ไปที่เมล",
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.md),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/login');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: AppGradiant.gradientX_1,
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 13, horizontal: AppSpacing.xl),
+                      child: Text(
+                        'ย้อนกลับ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: AppTextSize.md,
+                            fontWeight: FontWeight.w600,
+                            color: AppTextColors.white,
+                          ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          SizedBox(height: 10),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(Get.context!); // ปิด Dialog
-              Get.snackbar("เสร็จสิ้น", "สมัครบัญชีเสร็จสิ้น");
-              Get.toNamed('/login');
-            },
-            child: Text(
-              "ยังไม่ยืนยันตอนนี้",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-          ),
-        ],
-      ),
-      radius: 20,
-    );
+        ),
+      );
+    },
+  );
+    // Get.defaultDialog(
+    //   title: "ยืนยันอีเมล",
+    //   titleStyle: TextStyle(
+    //     fontSize: 18,
+    //     fontWeight: FontWeight.bold,
+    //   ),
+    //   content: Column(
+    //     children: [
+    //       Icon(Icons.email, size: 60, color: Colors.blue),
+    //       SizedBox(height: 10),
+    //       Text(
+    //         "คุณต้องการไปยืนยันอีเมลตอนนี้ไหม?",
+    //         textAlign: TextAlign.center,
+    //         style: TextStyle(fontSize: 16),
+    //       ),
+    //       SizedBox(height: 20),
+    //       SizedBox(
+    //         width: double.infinity,
+    //         child: ElevatedButton(
+    //           onPressed: () async {
+    //             final Uri emailLaunchUri = Uri(
+    //               scheme: 'mailto',
+    //               path: user.email.value, // เปิดแอปอีเมลที่ใช้อยู่
+    //             );
+    //             await launchUrl(emailLaunchUri);
+    //             Navigator.pop(Get.context!); // ปิด Dialog
+    //             Get.snackbar("เสร็จสิ้น", "สมัครบัญชีเสร็จสิ้น");
+    //             Get.toNamed('/login');
+    //           },
+    //           style: ElevatedButton.styleFrom(
+    //             backgroundColor: Colors.blue,
+    //             shape: RoundedRectangleBorder(
+    //               borderRadius: BorderRadius.circular(10),
+    //             ),
+    //             padding: EdgeInsets.symmetric(vertical: 14),
+    //           ),
+    //           child: Text(
+    //             "ไปที่เมล",
+    //             style: TextStyle(fontSize: 16, color: Colors.white),
+    //           ),
+    //         ),
+    //       ),
+    //       SizedBox(height: 10),
+    //       TextButton(
+    //         onPressed: () {
+    //           Navigator.pop(Get.context!); // ปิด Dialog
+    //           Get.snackbar("เสร็จสิ้น", "สมัครบัญชีเสร็จสิ้น");
+    //           Get.toNamed('/login');
+    //         },
+    //         child: Text(
+    //           "ยังไม่ยืนยันตอนนี้",
+    //           style: TextStyle(fontSize: 14, color: Colors.grey),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    //   radius: 20,
+    // );
   }
 }
