@@ -110,4 +110,13 @@ export class BannerManagementComponent {
       console.error('Error:', error);
     });
   }
+
+  timeFrame(sDate: Date, eDate: Date): boolean {
+    const now = new Date();
+    const startDate = new Date(sDate);
+    const endDate = new Date(new Date(eDate).getTime() + 24 * 60 * 60 * 1000);
+
+    return now.getTime() >= startDate.getTime() && now.getTime() <= endDate.getTime();
+  }
+
 }

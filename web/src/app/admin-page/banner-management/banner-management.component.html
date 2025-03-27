@@ -20,16 +20,17 @@
     </div>
     <div class="">
         <div
-            class="my-container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_200px_200px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
+            class="my-container h-[56px] text-[18px] text-white font-semibold grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 rounded-tl-[12px] rounded-tr-[12px] bg-[#1093ED]">
             <div><input type="checkbox"></div>
             <div class="justify-center"></div>
             <div>Banner</div>
             <div class="justify-center">Start Date</div>
             <div class="justify-center">End Date</div>
+            <div class="justify-center">Status</div>
             <div class="justify-center">Action</div>
         </div>
 
-        <div *ngFor="let item of data" class="my-container h-[56px] grid grid-cols-[80px_80px_1fr_200px_200px_120px] gap-4 hover:bg-[#EBF5FD]
+        <div *ngFor="let item of data" class="my-container h-[56px] grid grid-cols-[80px_80px_1fr_150px_150px_120px_120px] gap-4 hover:bg-[#EBF5FD]
         border-x-[1px] border-b-[1px] text-[16px] font-normal">
             <div><input type="checkbox"></div>
             <div class="grid justify-center">
@@ -50,7 +51,16 @@
                     {{item.endDate | date : 'dd-MM-YYYY' : tz}}
                 </p>
             </div>
-
+            <div class="justify-center">
+                <p *ngIf="timeFrame(item.startDate,item.endDate)"
+                    class="rounded-[16px] px-4 py-1 text-center bg-[#D2FFEC] text-[#53CA99] w-full truncate overflow-hidden whitespace-nowrap">
+                    Active
+                </p>
+                <p *ngIf="!timeFrame(item.startDate,item.endDate)"
+                    class="rounded-[16px] px-4 py-1 text-center bg-[#D9D9D9] text-white w-full truncate overflow-hidden whitespace-nowrap">
+                    Inactive
+                </p>
+            </div>
             <div class="grid-cols-[auto_auto] gap-2 justify-center">
                 <div (click)="api.toEdit('/admin/banner-update',item.id)"
                     class="w-[32px] cursor-pointer grid justify-center items-center aspect-square border-[1px] border-[#999] rounded-[8px]">
