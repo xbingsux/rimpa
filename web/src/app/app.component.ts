@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     if (this.api.listAlert.length != 0) {
       if (this.api.listAlert[index].status == 'send') {
         this.alerting = true;
-        console.log(index);
+        // console.log(index);
         this.api.listAlert[index].status = 'reading'
         setTimeout(() => {
           this.api.listAlert[index].status = 'read'

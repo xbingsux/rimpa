@@ -321,34 +321,73 @@ router.post("/delete-banner", auth, async (req, res) => {
 });
 
 router.post("/redeem-rewards", auth, async (req, res) => {
-  const { token } = req.body;
+  const { token, barcode } = req.body;
   try {
     if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
 
-    if (!token) {
-      return res.status(401).send("No token");
+    if (!token && !barcode) {
+      return res.status(400).send("No token");
     }
 
-    // ตรวจสอบและถอดรหัส token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    if (token) {
+      // ตรวจสอบและถอดรหัส token
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    if (!decoded || !decoded.userId) {
-      return res.status(200).json({ status: 401, message: 'Invalid token or missing user ID' });
+      if (!decoded || !decoded.redeemId) {
+        return res.status(200).json({ status: 400, message: 'Invalid token or missing redeem ID' });
+      }
+
+      if (usedTokens.has(token)) {
+        return res.status(200).json({ status: 400, message: 'Token already used' });
+      }
+
+      const redeem = await Service.redeemReward(decoded.redeemId)
+      usedTokens.add(token)
+      return res.status(201).json({ status: "Reward redeemed successfully", redeem });
+    } else if (barcode) {
+
+      if (!barcode || String(barcode).length != 10) {
+        return res.status(400).json({ status: "Invalid barcode" });
+      }
+
+      const id = String(barcode).startsWith('9') ? String(barcode).slice(1) : String(barcode)
+      const redeemId = +id;
+
+      if (isNaN(redeemId)) {
+        return res.status(400).json({ status: "Invalid barcode" });
+      }
+
+      const redeem = await Service.redeemReward(redeemId)
+      return res.status(201).json({ status: "Reward redeemed successfully", redeem });
+    } else {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Transaction could not be completed." });
     }
 
-    if (usedTokens.has(token)) {
-      return res.status(200).json({ status: 403, message: 'Token already used' });
-    }
-
-    const reward = await Service.redeemReward(decoded.userId, decoded.reward_id)
-    usedTokens.add(token)
-    return res.status(201).json({ status: "Reward redeemed successfully", reward });
 
   } catch (error) {
+    console.error(error);
     return res
       .status(500)
       .json({ status: "error", message: error.message });
   }
 });
+
+router.get("/get-redeem", auth, async (req, res) => {
+  const { barcode } = req.query;
+  try {
+    if (req.user.role !== 'admin') return res.status(401).json({ status: "error", message: "Insufficient permissions" });
+
+    const redeem = await Service.getRedeem(barcode);
+    return res.status(200).json({ status: "success", redeem });
+
+  } catch (e) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ status: "error", message: error.message });
+  }
+})
 
 module.exports = router;

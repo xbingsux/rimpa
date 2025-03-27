@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { DatePickerComponent } from "../../date-picker/date-picker.component";
 @Component({
   selector: 'app-event-update',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, DatePickerComponent],
+  imports: [FormsModule, NgIf, NgFor, DatePickerComponent, NgClass],
   templateUrl: './event-update.component.html',
   styleUrl: './event-update.component.scss'
 })
@@ -130,53 +130,71 @@ export class EventUpdateComponent implements OnInit {
 
   submitting = false;
   async submit() {
-    this.submitting = true;
-    // console.log(this.data.list_img);
-    // this.data.list_img 
-    const imgs = await Promise.all(
-      this.list_file.map(async (item, index) => {
-        if (item.file) {
-          const imgPath = await this.upload_img(item.file);
-          // console.log("🚀 Image Path:", imgPath);
-          if (imgPath != null) {
-            item.path = imgPath;
+    if (String(this.data.point).trim() == '' || Number(this.data.point) <= 0) {
+      this.point_class = true;
+    }
+
+    if (String(this.data.max_attendees).trim() == '' || Number(this.data.max_attendees) < 0) {
+      this.max_attendees_class = true;
+    }
+
+    if (!this.point_class && !this.max_attendees_class) {
+      this.submitting = true;
+      // console.log(this.data.list_img);
+      // this.data.list_img 
+      const imgs = await Promise.all(
+        this.list_file.map(async (item, index) => {
+          if (item.file) {
+            const imgPath = await this.upload_img(item.file);
+            // console.log("🚀 Image Path:", imgPath);
+            if (imgPath != null) {
+              item.path = imgPath;
+            }
           }
+          return { index, id: item.id, path: item.path };
+        })
+      ).then(results => results.sort((a, b) => a.index - b.index));
+
+      // console.log(imgs);
+
+      // console.log(this.data.list_img);
+      // alert(this.data.startDate)
+
+      this.http.post(`${environment.API_URL}/event/update-event`, {
+        event_id: this.data.id,
+        sub_event_id: this.data.sub_event_id,
+        title: this.data.title,
+        description: this.data.description,
+        max_attendees: +this.data.max_attendees,
+        map: this.data.map,
+        releaseDate: this.data.releaseDate ? new Date(this.data.releaseDate) : null,
+        startDate: new Date(this.data.startDate),
+        endDate: new Date(this.data.endDate),
+        point: +this.data.point,
+        event_img: imgs
+      }).subscribe(async (response: any) => {
+        // console.log(response);
+        if (response.status == 'success') {
+          this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
+          // alert('บันทึกข้อมูลสำเร็จ')
+          this.router.navigate(['/admin/event'])
         }
-        return { index, id: item.id, path: item.path };
-      })
-    ).then(results => results.sort((a, b) => a.index - b.index));
+      }, error => {
+        this.submitting = false;
+        this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
+        // alert('บันทึกข้อมูลไม่สำเร็จ')
+        console.error('Error:', error);
+      });
+    }
 
-    // console.log(imgs);
-
-    // console.log(this.data.list_img);
-    // alert(this.data.startDate)
-
-    this.http.post(`${environment.API_URL}/event/update-event`, {
-      event_id: this.data.id,
-      sub_event_id: this.data.sub_event_id,
-      title: this.data.title,
-      description: this.data.description,
-      max_attendees: +this.data.max_attendees,
-      map: this.data.map,
-      releaseDate: this.data.releaseDate ? new Date(this.data.releaseDate) : null,
-      startDate: new Date(this.data.startDate),
-      endDate: new Date(this.data.endDate),
-      point: +this.data.point,
-      event_img: imgs
-    }).subscribe(async (response: any) => {
-      // console.log(response);
-      if (response.status == 'success') {
-        this.api.addAlert('success', 'บันทึกข้อมูลสำเร็จ');
-        // alert('บันทึกข้อมูลสำเร็จ')
-        this.router.navigate(['/admin/event'])
-      }
-    }, error => {
-      this.submitting = false;
-      this.api.addAlert('unsuccessful', 'บันทึกข้อมูลไม่สำเร็จ');
-      // alert('บันทึกข้อมูลไม่สำเร็จ')
-      console.error('Error:', error);
-    });
   }
+
+  point_class = false;
+  max_attendees_class = false;
+  onInput(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, ''); // ลบค่าที่ไม่ใช่ 1-9 ออก
+  }
+
 }
 class Img {
   id: number
@@ -200,11 +218,11 @@ class AddEvent {
   sub_event_id: number = 0
   title = ''
   description = ''
-  max_attendees: number = 0
+  max_attendees: string = '0'
   map = ''
   releaseDate = null
   startDate = new Date(new Date().setHours(0, 0, 0, 0))
   endDate = new Date(new Date().setHours(24, 0, 0, 0))
-  point: number = 0
+  point: string = '0'
   list_img: Img[] = []
 }

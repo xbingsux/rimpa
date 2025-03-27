@@ -6,6 +6,7 @@ const router = express.Router();
 const https = require("https");
 const { auth } = require("../../middleware/authorization");
 const nodemailer = require("nodemailer");
+require('dotenv').config();
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -32,10 +33,10 @@ router.post("/update-event", auth, async (req, res) => {
 });
 
 router.get("/list-event", async (req, res) => {
-  const { } = req.body;
+  const { popular, limit } = req.body;
   try {
 
-    const event = await Service.listEvent()
+    const event = await Service.listEvent(limit, popular)
     return res.status(200).json({ status: "success", event });
 
   } catch (error) {
@@ -48,12 +49,20 @@ router.get("/list-event", async (req, res) => {
 });
 
 router.get("/get-event", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  let decoded = null;
+
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    decoded = jwt.verify(token, process.env.SECRET_KEY);
+  }
+
   const { id } = req.query;
   try {
 
     const event_id = Number(id);
     if (!isNaN(event_id) && Number.isInteger(event_id) && id.trim() != '') {
-      const event = await Service.getEvent(event_id);
+      const event = await Service.getEvent(event_id, decoded);
       if (event) {
         return res.status(200).json({ status: "success", event });
       } else {

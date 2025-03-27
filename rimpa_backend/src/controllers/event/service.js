@@ -104,8 +104,18 @@ const upsertEventIMG = async (path, id, sub_event_id) => {
     return img;
 }
 
-const listEvent = async () => {
+const listEvent = async (limit, popular) => {
     const currentDate = new Date();
+
+    let orderBy = {};
+
+    if (popular) {
+        orderBy = {
+            EventView: {
+                _count: popular
+            }
+        };
+    }
 
     let events = await prisma.event.findMany({
         where: {
@@ -123,15 +133,17 @@ const listEvent = async () => {
             releaseDate: true,
             max_attendees: true,
             SubEvent: {
-                include: { img: true, checkIn: true, EventParticipant: true }
+                include: { img: true, checkIn: true, EventParticipant: true },
             },
             _count: {
                 select: {
                     EventView: true,
-                    EventLike: true
+                    EventLike: true,
                 }
             }
-        }
+        },
+        orderBy: orderBy,
+        take: limit
     });
 
     return events.map((item) => ({
@@ -149,8 +161,36 @@ const listEvent = async () => {
     }));
 };
 
-const getEvent = async (id) => {
+const getEvent = async (id, decoded) => {
     const currentDate = new Date();
+    try {
+        if (decoded && decoded.userId) {
+            const profile = await prisma.profile.findFirst({
+                where: { user_id: decoded.userId }
+            })
+
+            let view = await prisma.eventView.findFirst({
+                where: {
+                    profile_id: profile.id,
+                    eventId: id
+                }
+            })
+
+            view = await prisma.eventView.upsert({
+                where: {
+                    id: view?.id | 0
+                },
+                create: {
+                    eventId: id,
+                    profile_id: profile.id,
+                }, update: {
+
+                }
+            })
+        }
+    } catch (e) {
+
+    }
 
     const event = await prisma.event.findFirst({
         where: {
@@ -237,21 +277,21 @@ const checkIn = async (user_id, qrcode) => {
 
     if (checkIn) throw new Error('You have already claimed the point.')
 
-    const point = await prisma.$transaction(async (prisma)=>{
+    const point = await prisma.$transaction(async (prisma) => {
         checkIn = await prisma.checkIn.create({
             data: {
                 sub_event: { connect: { id: sub_event.id } },
                 profile: { connect: { user_id: user_id } },
             }
         });
-    
+
         const profile = await prisma.profile.update({
             where: { user_id: user_id },
             data: {
                 points: { increment: sub_event.point },
             }
         })
-    
+
         const point = await prisma.point.create({
             data: {
                 points: sub_event.point,
@@ -259,15 +299,15 @@ const checkIn = async (user_id, qrcode) => {
                 type: 'EARN',
                 description: sub_event.title
             },
-            include:{
-                Profile:true
+            include: {
+                Profile: true
             }
         })
-    
+
         if (profile) {
-            socket.serverMessageByUser(user_id, `🎉 ยินดีด้วย! คุณได้รับ ${sub_event.point} คะแนนสะสมแล้ว!`, `แต้มของคุณเพิ่มขึ้นเรื่อย ๆ! อย่าลืมสะสมให้ครบ \nเพื่อแลกรับสิทธิพิเศษ ของรางวัลสุดคุ้ม`)
+            socket.serverMessageByUser(user_id, `🎉 ยินดีด้วย! คุณได้รับ ${sub_event.point} คะแนน`, `แต้มของคุณเพิ่มขึ้นเรื่อย ๆ! อย่าลืมสะสมให้ครบ \nเพื่อแลกรับสิทธิพิเศษ ของรางวัลสุดคุ้ม`)
         }
-        
+
         return point;
     })
 

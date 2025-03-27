@@ -107,10 +107,13 @@
             <div class="flex flex-col gap-y-2">
                 <label for="point">Point</label>
                 <input type="text" id="point" placeholder="300" [(ngModel)]="data.point" onclick="this.select()"
-                    class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                    (focus)="point_class = false" [ngClass]="{'border-[2px] border-red-600': point_class}"
+                    (input)="onInput($event)" class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
                 <label for="max_attendees">Max Attendees</label>
                 <input type="text" id="max_attendees" placeholder="500" [(ngModel)]="data.max_attendees"
-                    onclick="this.select()" class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
+                    (focus)="max_attendees_class = false" (input)="onInput($event)"
+                    [ngClass]="{'border-[2px] border-red-600': max_attendees_class}" onclick="this.select()"
+                    class="w-full h-[40px] px-4 border-[#D9D9D9] border-[1px] rounded-[12px]">
             </div>
         </div>
     </div>
