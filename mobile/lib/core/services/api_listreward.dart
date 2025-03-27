@@ -21,7 +21,7 @@ class ApiListReward {
 
   static Future<List<ListReward>?> fetchRecommendRewards() async { //NOTE
     final response = await http.get(
-        Uri.parse('${AppApi.urlApi}/reward/list-reward'));
+        Uri.parse('${AppApi.urlApi}/reward/list-reward?popular=desc&limit=5'));
 
     if (response.statusCode == 200) {
       var jsonString = response.body;

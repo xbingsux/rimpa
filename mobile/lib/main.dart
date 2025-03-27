@@ -124,7 +124,7 @@ void showUpdateDialog() {
                     onTap: () {
                       StoreRedirect.redirect(
                         androidAppId: "co.newdice.goconapp",
-                        iOSAppId: "6482293361", // ID สำหรับเทสเท่านั้น
+                        iOSAppId: "6743720845",
                       );
                     },
                     child: Container(

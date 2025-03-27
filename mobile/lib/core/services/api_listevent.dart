@@ -21,7 +21,7 @@ class ApiListEvent {
 
   static Future<List<ListEvent>> fetchRecommendEvents() async { //NOTE
     final response = await http.get(
-        Uri.parse('${AppApi.urlApi}/event/list-event')); 
+        Uri.parse('${AppApi.urlApi}/event/list-event?popular=desc&limit=5')); 
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);

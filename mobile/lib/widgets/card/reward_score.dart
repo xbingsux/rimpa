@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:rimpa/core/constant/app.constant.dart';
 import 'package:rimpa/modules/controllers/getusercontroller/auth_service.dart';
 import 'package:rimpa/modules/controllers/profile/profile_controller.dart';
@@ -115,7 +116,7 @@ class RewardScore extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.av_timer_rounded, color: authService.isLoggedIn.value?Colors.blue:AppTextColors.secondary),
+                        Icon(Icons.history, color: authService.isLoggedIn.value?Colors.blue:AppTextColors.secondary),
                         const SizedBox(width: 8),
                          Text(
                           "ประวัติ",

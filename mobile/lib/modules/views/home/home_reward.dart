@@ -30,9 +30,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarBrightness: Brightness.dark,
+    //   statusBarIconBrightness: Brightness.dark,
+    // ));
 
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < listBannerController.banners.length - 1) {
@@ -53,6 +54,10 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   void dispose() {
     _timer?.cancel();
     _pageController.dispose();
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarIconBrightness:
+    //       Brightness.dark, // คืนค่ากลับเป็นสีขาวหรือค่าเดิม
+    // ));
     super.dispose();
   }
 
@@ -60,7 +65,9 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
   Widget build(BuildContext context) {
     // เพิ่ม ProfileController
     return Scaffold(
-      body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      // appBar: AppBar(toolbarHeight: 0,),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
         double bodyHeight = constraints.maxHeight;
         // double bodyWidth = constraints.maxWidth;
         return Column(
@@ -101,11 +108,12 @@ class _HomeRewardPageState extends State<HomeRewardPage> {
               ),
             ),
             Container(
-              height: bodyHeight - (96 + 60 + 58 ),
+              height: bodyHeight - (96 + 60 + 58),
               child: SingleChildScrollView(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor, // รองรับ Light/Dark Mode
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor, // รองรับ Light/Dark Mode
                     // color: Colors.amber,
                   ),
                   child: Column(

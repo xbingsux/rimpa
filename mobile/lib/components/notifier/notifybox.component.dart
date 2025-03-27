@@ -56,10 +56,11 @@ class NotifierBoxComponent extends StatelessWidget {
                         boxShadow: [
                           AppShadow.custom(
                             color: AppColors.secondary,
-                            blurRadius: 3,
-                            spreadRadius: 1,
+                            blurRadius: 2,
+                            spreadRadius: 0.1,
                           )
-                        ]),
+                        ]
+                        ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
