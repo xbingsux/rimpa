@@ -7,15 +7,9 @@ require('dotenv').config();
 const prisma = new PrismaClient();
 
 const listReward = async (userId, limit, popular) => {
-    let orderBy = {};
-
-    if (popular) {
-        orderBy = {
-            RedeemReward: {
-                _count: popular
-            }
-        };
-    }
+    const orderBy = popular ? {
+        RedeemReward: { _count: popular }
+    } : {};
 
     const currentDate = new Date();
     let rewards = await prisma.reward.findMany({
@@ -28,7 +22,7 @@ const listReward = async (userId, limit, popular) => {
             RedeemReward: true
         },
         ...(limit ? { take: limit } : {}),
-        orderBy: orderBy
+        orderBy
     });
 
     if (userId) {
@@ -38,11 +32,11 @@ const listReward = async (userId, limit, popular) => {
         });
 
         rewards = await Promise.all(
-            rewards.map(async reward => {
-                const { permiss } = await redeemPermission(reward, profile);
+            rewards.map(async (reward) => {
+                const { canRedeem } = await checkRedeemPermission(reward, profile);
                 return {
                     ...reward,
-                    canRedeem: permiss
+                    canRedeem
                 };
             })
         );
@@ -84,11 +78,9 @@ const redeemReward = async (userId, reward_id) => {
         throw new Error("Reward not found");
     }
 
-    const { permiss, message } = await redeemPermission(reward, profile);
+    const { canRedeem, message } = await checkRedeemPermission(reward, profile);
 
-    if (!permiss) {
-        throw new Error(message);
-    }
+    if (!canRedeem) throw new Error(message);
 
     // ตรวจสอบว่ามีคะแนนพอหรือไม่
     const cost = Number(reward.cost);
@@ -110,7 +102,7 @@ const redeemReward = async (userId, reward_id) => {
         }
     })
 
-    if (permiss || redeem != null) {
+    if (canRedeem || redeem != null) {
         // บันทึกการแลกรางวัล
         redeem = await prisma.redeemReward.upsert({
             where: {
@@ -137,7 +129,7 @@ const redeemReward = async (userId, reward_id) => {
     return redeem;
 };
 
-const redeemPermission = async (reward, profile) => {
+const checkRedeemPermission = async (reward, profile) => {
     // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
 
     if (reward.max_per_user !== null && reward.max_per_user > 0) {
@@ -148,32 +140,33 @@ const redeemPermission = async (reward, profile) => {
         let userRedeemedCount = 0;
         let redeemedCount = 0;
 
-        redeemed.map((item) => {
-            if (item.profileId == profile.id) {
-                userRedeemedCount += item.quantity
+        for (const item of redeemed) {
+            if (item.profileId === profile.id) {
+                userRedeemedCount += item.quantity;
             }
-            redeemedCount += item.quantity
-        })
+            redeemedCount += item.quantity;
+        }
 
         if (userRedeemedCount >= reward.max_per_user) {
-            return { permiss: false, message: `You have already redeemed this reward ${reward.max_per_user} times!` }
+            return { canRedeem: false, message: `You have already redeemed this reward ${reward.max_per_user} times!` }
         }
 
         // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
         const now = new Date();
         if (now < new Date(reward.startDate) || now > new Date(reward.endDate)) {
-            return { permiss: false, message: "Reward is not available at this time" }
+            return { canRedeem: false, message: "Reward is not available at this time" }
         }
 
         // ตรวจสอบว่าสินค้าถูกแลกไปแล้วกี่ครั้ง
         if (redeemedCount >= reward.stock) {
-            return { permiss: false, message: "Reward is out of stock" }
+            return { canRedeem: false, message: "Reward is out of stock" }
         }
 
-        return { permiss: true }
-    } else {
-        return { permiss: true }
+        return { canRedeem: true }
     }
+
+    return { canRedeem: true }
+
 }
 
 module.exports = {
