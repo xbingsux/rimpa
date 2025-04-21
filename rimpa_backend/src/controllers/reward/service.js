@@ -109,7 +109,7 @@ const redeemReward = async (userId, reward_id) => {
         // บันทึกการแลกรางวัล
         redeem = await prisma.redeemReward.upsert({
             where: {
-                id: redeem.id | 0
+                id: redeem ? redeem.id : -1,
             },
             create: {
                 profileId: profile.id,
