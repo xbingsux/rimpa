@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const prisma = new PrismaClient();
 
-const listReward = async (limit, popular) => {
+const listReward = async (userId, limit, popular) => {
     let orderBy = {};
 
     if (popular) {
@@ -16,6 +16,8 @@ const listReward = async (limit, popular) => {
             }
         };
     }
+
+
 
     const currentDate = new Date();
     let rewards = await prisma.reward.findMany({
@@ -30,6 +32,18 @@ const listReward = async (limit, popular) => {
         ...(limit ? { take: limit } : {}),
         orderBy: orderBy
     });
+
+    if (userId) {
+        const profile = await prisma.profile.findUnique({
+            where: { user_id: userId },
+            select: { points: true, id: true },
+        });
+
+        rewards.map(async reward => {
+            const { permiss } = await redeemPermission(reward, profile);
+            reward.canRedeem = permiss;
+        })
+    }
 
     return rewards;
 };
@@ -67,58 +81,31 @@ const redeemReward = async (userId, reward_id) => {
         throw new Error("Reward not found");
     }
 
-    // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
-    if (reward.max_per_user !== null && reward.max_per_user > 0) {
-        const redeemed = await prisma.redeemReward.findMany({
-            where: { rewardId: reward_id, OR: [{ status: 'PAID' }, { status: 'DELIVERED' }] },
-        });
+    const { permiss, message } = await redeemPermission(reward, profile);
 
-        let userRedeemedCount = 0
-        let redeemedCount = 0;
+    if (!permiss) {
+        throw new Error(message);
+    }
 
-        redeemed.map((item) => {
-            if (item.profileId == profile.id) {
-                userRedeemedCount += item.quantity
-            }
-            redeemedCount += item.quantity
-        })
+    // ตรวจสอบว่ามีคะแนนพอหรือไม่
+    const cost = Number(reward.cost);
+    if (profile.points < (cost * qty)) {
+        throw new Error("Insufficient points");
+    }
 
-        if (userRedeemedCount >= reward.max_per_user) {
-            throw new Error(`You have already redeemed this reward ${reward.max_per_user} times!`);
+    // ทำธุรกรรมแบบป้องกัน race condition
+    const usePoint = (reward.cost * qty);
+
+    let redeem = await prisma.redeemReward.findFirst({
+        where: {
+            profileId: profile.id,
+            rewardId: reward_id,
+            status: 'PENDING'
         }
+    })
 
-        // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
-        const now = new Date();
-        if (now < new Date(reward.startDate) || now > new Date(reward.endDate)) {
-            throw new Error("Reward is not available at this time");
-        }
-
-        // ตรวจสอบว่าสินค้าถูกแลกไปแล้วกี่ครั้ง
-        if (redeemedCount >= reward.stock) {
-            throw new Error("Reward is out of stock");
-        }
-
-        // ตรวจสอบว่ามีคะแนนพอหรือไม่
-        const cost = Number(reward.cost);
-        if (profile.points < (cost * qty)) {
-            throw new Error("Insufficient points");
-        }
-
-
-
-        // ทำธุรกรรมแบบป้องกัน race condition
-        const usePoint = (reward.cost * qty);
-
-        let redeem = await prisma.redeemReward.findFirst({
-            where: {
-                profileId: profile.id,
-                rewardId: reward_id,
-                status: 'PENDING'
-            }
-        })
-
+    if (permiss || redeem != null) {
         // บันทึกการแลกรางวัล
-
         redeem = await prisma.redeemReward.upsert({
             where: {
                 id: redeem.id | 0
@@ -139,12 +126,49 @@ const redeemReward = async (userId, reward_id) => {
                 Reward: true
             }
         });
-
-
-        return redeem;
     }
 
+    return redeem;
 };
+
+const redeemPermission = async (reward, profile) => {
+    // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
+
+    if (reward.max_per_user !== null && reward.max_per_user > 0) {
+        const redeemed = await prisma.redeemReward.findMany({
+            where: { rewardId: reward.id, OR: [{ status: 'PAID' }, { status: 'DELIVERED' }] },
+        });
+
+        let userRedeemedCount = 0;
+        let redeemedCount = 0;
+
+        redeemed.map((item) => {
+            if (item.profileId == profile.id) {
+                userRedeemedCount += item.quantity
+            }
+            redeemedCount += item.quantity
+        })
+
+        if (userRedeemedCount >= reward.max_per_user) {
+            return { permiss: false, message: `You have already redeemed this reward ${reward.max_per_user} times!` }
+        }
+
+        // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
+        const now = new Date();
+        if (now < new Date(reward.startDate) || now > new Date(reward.endDate)) {
+            return { permiss: false, message: "Reward is not available at this time" }
+        }
+
+        // ตรวจสอบว่าสินค้าถูกแลกไปแล้วกี่ครั้ง
+        if (redeemedCount >= reward.stock) {
+            return { permiss: false, message: "Reward is out of stock" }
+        }
+
+        return { permiss: true }
+    } else {
+        return { permiss: true }
+    }
+}
 
 module.exports = {
     listReward,

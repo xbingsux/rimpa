@@ -18,14 +18,29 @@ router.get("/test", async (req, res) => {
 });
 
 router.get("/list-reward", async (req, res) => {
-  let { popular, limit } = req.query;
+  let { token, popular, limit } = req.query;
   try {
+    if (!token && !barcode) {
+      return res.status(400).send("No token");
+    }
+
+    let userId = null;
+    if (token) {
+      // ตรวจสอบและถอดรหัส token
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+      if (!decoded || !decoded.userId) {
+        return res.status(200).json({ status: 400, message: 'Invalid token or missing user ID' });
+      }
+      userId = decoded.userId;
+    }
+
     if (isNaN(Number(limit))) {
       limit = null
     } else {
       limit = Number(limit)
     }
-    const reward = await Service.listReward(limit, popular)
+    const reward = await Service.listReward(userId, limit, popular)
     return res.status(200).json({ status: "success", reward });
 
   } catch (error) {
