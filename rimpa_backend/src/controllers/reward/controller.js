@@ -20,7 +20,7 @@ router.get("/test", async (req, res) => {
 router.get("/list-reward", async (req, res) => {
   let { token, popular, limit } = req.query;
   try {
-    if (!token && !barcode) {
+    if (!token) {
       return res.status(400).send("No token");
     }
 
