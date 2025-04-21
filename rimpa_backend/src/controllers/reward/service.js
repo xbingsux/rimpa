@@ -17,8 +17,6 @@ const listReward = async (userId, limit, popular) => {
         };
     }
 
-
-
     const currentDate = new Date();
     let rewards = await prisma.reward.findMany({
         where: {
@@ -101,6 +99,9 @@ const redeemReward = async (userId, reward_id) => {
             profileId: profile.id,
             rewardId: reward_id,
             status: 'PENDING'
+        }, include: {
+            Profile: true,
+            Reward: true
         }
     })
 
