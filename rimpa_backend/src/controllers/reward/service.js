@@ -37,10 +37,15 @@ const listReward = async (userId, limit, popular) => {
             select: { points: true, id: true },
         });
 
-        rewards.map(async reward => {
-            const { permiss } = await redeemPermission(reward, profile);
-            reward.canRedeem = permiss;
-        })
+        rewards = await Promise.all(
+            rewards.map(async reward => {
+                const { permiss } = await redeemPermission(reward, profile);
+                return {
+                    ...reward,
+                    canRedeem: permiss
+                };
+            })
+        );
     }
 
     return rewards;
