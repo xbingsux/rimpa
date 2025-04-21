@@ -104,6 +104,7 @@ const redeemReward = async (userId, reward_id) => {
 
     if (canRedeem || redeem != null) {
         // บันทึกการแลกรางวัล
+        const now = new Date();
         redeem = await prisma.redeemReward.upsert({
             where: {
                 id: redeem ? redeem.id : -1,
@@ -132,6 +133,7 @@ const redeemReward = async (userId, reward_id) => {
 const checkRedeemPermission = async (reward, profile) => {
     // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
     const now = new Date();
+
     if (reward.max_per_user !== null && reward.max_per_user > 0) {
         const redeemed = await prisma.redeemReward.findMany({
             where: { rewardId: reward.id, OR: [{ status: 'PAID' }, { status: 'DELIVERED' }] },
