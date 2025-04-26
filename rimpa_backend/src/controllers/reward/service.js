@@ -18,9 +18,9 @@ const listReward = async (userId, limit, popular) => {
             endDate: { gte: currentDate },
             active: true
         },
-        include: {
-            RedeemReward: true
-        },
+        // include: {
+        //     RedeemReward: true
+        // },
         ...(limit ? { take: limit } : {}),
         orderBy
     });
@@ -33,7 +33,8 @@ const listReward = async (userId, limit, popular) => {
 
         rewards = await Promise.all(
             rewards.map(async (reward) => {
-                const { canRedeem } = await checkRedeemPermission(reward, profile);
+                const { canRedeem } = await checkRedeemPermission(reward, 1, profile);
+
                 return {
                     ...reward,
                     canRedeem
@@ -78,15 +79,9 @@ const redeemReward = async (userId, reward_id) => {
         throw new Error("Reward not found");
     }
 
-    const { canRedeem, message } = await checkRedeemPermission(reward, profile);
+    const { canRedeem, message } = await checkRedeemPermission(reward, qty, profile);
 
     if (!canRedeem) throw new Error(message);
-
-    // ตรวจสอบว่ามีคะแนนพอหรือไม่
-    const cost = Number(reward.cost);
-    if (profile.points < (cost * qty)) {
-        throw new Error("Insufficient points");
-    }
 
     // ทำธุรกรรมแบบป้องกัน race condition
     const usePoint = (reward.cost * qty);
@@ -105,6 +100,7 @@ const redeemReward = async (userId, reward_id) => {
     if (canRedeem || redeem != null) {
         // บันทึกการแลกรางวัล
         const now = new Date();
+
         redeem = await prisma.redeemReward.upsert({
             where: {
                 id: redeem ? redeem.id : -1,
@@ -130,11 +126,18 @@ const redeemReward = async (userId, reward_id) => {
     return redeem;
 };
 
-const checkRedeemPermission = async (reward, profile) => {
+const checkRedeemPermission = async (reward, qty, profile) => {
     // ตรวจสอบว่า user แลกไปแล้วกี่ครั้ง (ถ้ามีการจำกัด)
     const now = new Date();
 
     if (reward.max_per_user !== null && reward.max_per_user > 0) {
+        // ตรวจสอบว่ามีคะแนนพอหรือไม่
+        const cost = Number(reward.cost);
+
+        if (profile.points < (cost * qty)) {
+            return { canRedeem: false, message: `Insufficient points` }
+        }
+
         const redeemed = await prisma.redeemReward.findMany({
             where: { rewardId: reward.id, OR: [{ status: 'PAID' }, { status: 'DELIVERED' }] },
         });
@@ -154,7 +157,6 @@ const checkRedeemPermission = async (reward, profile) => {
         }
 
         // ตรวจสอบว่าวันที่ปัจจุบันอยู่ในช่วงที่สามารถแลกของรางวัลได้
-
         if (now < new Date(reward.startDate) || now > new Date(reward.endDate)) {
             return { canRedeem: false, message: "Reward is not available at this time" }
         }

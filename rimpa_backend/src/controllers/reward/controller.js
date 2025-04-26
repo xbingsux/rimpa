@@ -20,6 +20,7 @@ router.get("/test", async (req, res) => {
 router.get("/list-reward", async (req, res) => {
   let { token, popular, limit } = req.query;
   try {
+    console.log('token', token);
 
     let userId = null;
     if (token) {

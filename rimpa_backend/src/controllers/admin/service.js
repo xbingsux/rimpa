@@ -348,7 +348,7 @@ const redeemReward = async (redeemId) => {
 
     const redeemExp = new Date(item.createdAt.getTime() + 30 * 60 * 1000)
 
-    if (redeemExp.getTime() > new Date().getTime()) {
+    if (redeemExp.getTime() < new Date().getTime()) {
         throw new Error("Your license has expired.");
     }
 
