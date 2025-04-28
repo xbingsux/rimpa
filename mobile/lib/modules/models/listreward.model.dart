@@ -12,6 +12,7 @@ class ListReward {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool active;
+  final bool canRedeem;
 
   ListReward({
     required this.id,
@@ -27,6 +28,7 @@ class ListReward {
     required this.createdAt,
     required this.updatedAt,
     required this.active,
+    this.canRedeem = false,
   });
 
   factory ListReward.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class ListReward {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       active: json['active'],
+      canRedeem: json['canRedeem'] != null ? json['canRedeem'] : false,
     );
   }
 }

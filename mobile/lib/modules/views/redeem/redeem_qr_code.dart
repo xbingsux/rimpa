@@ -12,6 +12,7 @@ import 'package:rimpa/widgets/card/countdown.dart';
 import 'package:rimpa/widgets/popupdialog/popupeventpoint_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
+
 class ReddemQRcode extends StatelessWidget {
   final int rewardID;
   ReddemQRcode({super.key, required this.rewardID});
@@ -29,7 +30,8 @@ class ReddemQRcode extends StatelessWidget {
           children: [
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +52,10 @@ class ReddemQRcode extends StatelessWidget {
                                 title: Center(
                                   child: Text(
                                     "ต้องการออกจากหน้านี้?",
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
                                           fontSize: 20,
                                           color: AppColors.danger,
                                           fontWeight: FontWeight.w700,
@@ -60,7 +65,10 @@ class ReddemQRcode extends StatelessWidget {
                                 content: Text(
                                   "หากออกจากหน้านี้ สิทธิ์คูปองของคุณอาจไม่ได้รับการบันทึก กรุณาตรวจสอบสิทธิ์คูปองก่อนออก",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
                                         fontSize: 14,
                                         color: AppTextColors.secondary,
                                         fontWeight: FontWeight.w500,
@@ -82,8 +90,12 @@ class ReddemQRcode extends StatelessWidget {
                                         text: 'ออกจากหน้านี้',
                                         radius: 32,
                                         onTap: () {
-                                          Get.back();
-                                          Get.back();
+                                          //NOTE
+                                          Get.offNamedUntil(
+                                              '/home', (route) => false,
+                                              parameters: {'pages': '3'});
+                                          // Get.back();
+                                          // Get.back();
                                         },
                                       ),
                                     ),
@@ -110,7 +122,8 @@ class ReddemQRcode extends StatelessWidget {
             Expanded(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   child: Obx(() {
                     if (controller.isLoading.value) {
                       return Shimmer.fromColors(
@@ -147,7 +160,10 @@ class ReddemQRcode extends StatelessWidget {
                           Gap(40),
                           Text(
                             "แลกรับสิทธิ์",
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
                                   fontSize: 18,
                                   color: AppTextColors.secondary,
                                   fontWeight: FontWeight.w600,
@@ -160,20 +176,33 @@ class ReddemQRcode extends StatelessWidget {
                               width: 300,
                               child: SfBarcodeGenerator(
                                 showValue: false,
-                                textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
                                       fontSize: 12,
                                       color: AppTextColors.secondary,
                                       fontWeight: FontWeight.w500,
                                     ),
                                 value: data.token,
-                                symbology: QRCode(errorCorrectionLevel: ErrorCorrectionLevel.low),
-                                
+                                symbology: QRCode(
+                                    errorCorrectionLevel:
+                                        ErrorCorrectionLevel.low),
                               ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                            child: Text(data.barcode, maxLines: 2,style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 20, fontWeight: FontWeight.w700,)),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Text(data.barcode,
+                                maxLines: 2,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    )),
                           ),
                           Gap(40),
                           CustomPaint(
@@ -189,7 +218,8 @@ class ReddemQRcode extends StatelessWidget {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text("วันที่แลกรับสิทธิ์"),
                                     Text(thDateFormat(data.issuedAt)),
@@ -197,10 +227,12 @@ class ReddemQRcode extends StatelessWidget {
                                 ),
                                 Gap(10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text("หมดอายุใน"),
-                                    CountdownTimer(targetDateTime: data.expiresAt),
+                                    CountdownTimer(
+                                        targetDateTime: data.expiresAt),
                                   ],
                                 ),
                               ],
