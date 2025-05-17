@@ -18,6 +18,8 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@zxing/library": "^0.21.3",
+    "@zxing/ngx-scanner": "^19.0.0",
     "angularx-qrcode": "^18.0.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",

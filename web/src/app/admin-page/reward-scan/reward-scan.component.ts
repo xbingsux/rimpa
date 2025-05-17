@@ -1,14 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, viewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
+import { ZXingScannerComponent, ZXingScannerModule } from '@zxing/ngx-scanner';
+import { Result } from '@zxing/library';
 
 @Component({
   selector: 'app-reward-scan',
   standalone: true,
-  imports: [NgFor, DatePipe, NgIf, FormsModule, NgClass],
+  imports: [NgFor, DatePipe, NgIf, FormsModule, NgClass, ZXingScannerModule],
   templateUrl: './reward-scan.component.html',
   styleUrl: './reward-scan.component.scss'
 })
@@ -36,6 +38,7 @@ export class RewardScanComponent implements OnInit {
     }, error => {
       console.error('Error:', error);
     });
+
   }
 
   getImg(url: string) {
@@ -120,6 +123,109 @@ export class RewardScanComponent implements OnInit {
       console.error('Error:', error);
       alert('ชำระเงินไม่สำเร็จ')
     });
+  }
+
+  //
+  init = true;
+  ngAfterContentChecked() {
+    if (this.init) {
+      this.init = false;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
+      console.log('✅ กล้องที่พบ:', devices);
+
+      this.hasDevices = true;
+      this.availableDevices = devices;
+
+      const backCam = devices.find(device =>
+        /back|rear|environment/gi.test(device.label)
+      );
+
+      this.currentDevice = backCam ?? devices[0];
+    });
+
+    this.scanner.camerasNotFound.subscribe(() => {
+      this.hasDevices = false;
+      console.warn('❌ ไม่พบกล้อง');
+    });
+
+    this.scanner.scanComplete.subscribe((result: Result) => {
+      this.qrResult = result;
+      console.log('📦 Scan result:', result.getText());
+    });
+
+    this.scanner.permissionResponse.subscribe((perm: boolean) => {
+      this.hasPermission = perm;
+      console.log('🔐 Permission:', perm);
+    });
+  }
+
+
+  @ViewChild('scanner')
+  scanner!: ZXingScannerComponent;
+
+  hasPermission!: boolean;
+  hasDevices!: boolean;
+  qrResultString!: string;
+  qrResult!: Result;
+
+  availableDevices!: MediaDeviceInfo[];
+  currentDevice!: MediaDeviceInfo;
+
+  displayCameras(cameras: MediaDeviceInfo[]) {
+    console.debug('Devics: ', cameras);
+    this.availableDevices = cameras;
+  }
+
+  handleQrCodeResult(resultString: string) {
+    console.debug('Result: ', resultString);
+    this.qrResultString = resultString;
+  }
+
+  // onDeviceSelectChange(selectdValue: string) {
+  //   console.debug('Selection changed: ', selectdValue);
+  //   // this.scanner.camerasFound.subscribe()
+  //   // this.currentDevice = this.scanner.device.find(d => d.deviceId === selectedValue);
+
+  // }
+
+  onDeviceSelectChange(event: Event) {
+    this.scanner.restart()
+
+    const target = event.target as HTMLSelectElement | null;
+
+    if (target?.value) {
+      const selectedDeviceId = target.value;
+      const device = this.availableDevices.find(d => d.deviceId === selectedDeviceId);
+      if (device) {
+        this.currentDevice = device;
+      }
+    }
+  }
+
+  onScanError(error: any) {
+    console.error('❌ Scan error:', error);
+
+    alert('เปิดกล้องไม่สำเร็จ กรุณา:\n- ปิดแอปอื่นที่ใช้กล้อง\n- ตรวจสอบว่าให้สิทธิ์เบราว์เซอร์ใช้กล้องแล้ว\n- เปลี่ยนกล้องตัวอื่น');
+  }
+
+  onCamerasFound(devices: MediaDeviceInfo[]) {
+    this.hasDevices = true;
+    this.availableDevices = devices;
+
+    const backCam = devices.find(device =>
+      /back|rear|environment/gi.test(device.label)
+    );
+
+    this.currentDevice = backCam ?? devices[0];
+  }
+
+
+  openScan() {
+
   }
 
 }

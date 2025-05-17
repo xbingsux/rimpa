@@ -14,12 +14,14 @@ import localeTh from '@angular/common/locales/th';
 import { registerLocaleData } from '@angular/common';
 registerLocaleData(localeTh);
 
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     importProvidersFrom(
       BsDatepickerModule.forRoot(),
-      TimepickerModule.forRoot()
+      TimepickerModule.forRoot(),
+      ZXingScannerModule
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
