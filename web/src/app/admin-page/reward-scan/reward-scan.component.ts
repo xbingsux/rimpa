@@ -5,7 +5,7 @@ import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ApiService } from '../../api/api.service';
 import { FormsModule } from '@angular/forms';
 import { ZXingScannerComponent, ZXingScannerModule } from '@zxing/ngx-scanner';
-import { Result } from '@zxing/library';
+import { Result, BarcodeFormat } from '@zxing/library';
 
 @Component({
   selector: 'app-reward-scan',
@@ -127,37 +127,37 @@ export class RewardScanComponent implements OnInit {
 
   //
   init = true;
-  ngAfterContentChecked() {
-    if (this.init) {
-      this.init = false;
-    }
-  }
 
   ngAfterViewInit(): void {
     this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
+      console.log('0');
       console.log('✅ กล้องที่พบ:', devices);
 
       this.hasDevices = true;
       this.availableDevices = devices;
 
-      const backCam = devices.find(device =>
-        /back|rear|environment/gi.test(device.label)
-      );
+      this.currentDevice = devices[0];
 
-      this.currentDevice = backCam ?? devices[0];
     });
 
     this.scanner.camerasNotFound.subscribe(() => {
+      console.log('1');
       this.hasDevices = false;
       console.warn('❌ ไม่พบกล้อง');
     });
 
     this.scanner.scanComplete.subscribe((result: Result) => {
+      console.log('2');
       this.qrResult = result;
-      console.log('📦 Scan result:', result.getText());
+      try {
+        console.log('📦 Scan result:', result.getText());
+      } catch (e) {
+
+      }
     });
 
     this.scanner.permissionResponse.subscribe((perm: boolean) => {
+      console.log('3');
       this.hasPermission = perm;
       console.log('🔐 Permission:', perm);
     });
@@ -174,13 +174,16 @@ export class RewardScanComponent implements OnInit {
 
   availableDevices!: MediaDeviceInfo[];
   currentDevice!: MediaDeviceInfo;
+  pevDevice!: MediaDeviceInfo;
 
   displayCameras(cameras: MediaDeviceInfo[]) {
+    console.log('4');
     console.debug('Devics: ', cameras);
     this.availableDevices = cameras;
   }
 
   handleQrCodeResult(resultString: string) {
+    console.log('5');
     console.debug('Result: ', resultString);
     this.qrResultString = resultString;
   }
@@ -192,40 +195,57 @@ export class RewardScanComponent implements OnInit {
 
   // }
 
-  onDeviceSelectChange(event: Event) {
-    this.scanner.restart()
+  onScanError(error: any) {
+    console.error('❌ Scan error:', error);
+    if (!this.init) {
+      alert('เปิดกล้องไม่สำเร็จ กรุณา:\n- ปิดแอปอื่นที่ใช้กล้อง\n- ตรวจสอบว่าให้สิทธิ์เบราว์เซอร์ใช้กล้องแล้ว\n- เปลี่ยนกล้องตัวอื่น');
+    }
+  }
 
-    const target = event.target as HTMLSelectElement | null;
+  onDeviceSelectChange(event: Event | string): void {
+    console.log('6');
+    this.scanner.restart();
+    // this.scanner.reset(); // หยุดกล้องและการสแกน
 
-    if (target?.value) {
-      const selectedDeviceId = target.value;
+    let selectedDeviceId: string | null = null;
+
+    if (typeof event === 'string') {
+      selectedDeviceId = event;
+    } else {
+      const target = event.target as HTMLSelectElement | null;
+      selectedDeviceId = target?.value || null;
+    }
+
+    if (selectedDeviceId) {
       const device = this.availableDevices.find(d => d.deviceId === selectedDeviceId);
       if (device) {
         this.currentDevice = device;
+        this.scanner.device = this.currentDevice;
+        console.log(this.scanner.device);
       }
     }
   }
 
-  onScanError(error: any) {
-    console.error('❌ Scan error:', error);
-
-    alert('เปิดกล้องไม่สำเร็จ กรุณา:\n- ปิดแอปอื่นที่ใช้กล้อง\n- ตรวจสอบว่าให้สิทธิ์เบราว์เซอร์ใช้กล้องแล้ว\n- เปลี่ยนกล้องตัวอื่น');
-  }
-
   onCamerasFound(devices: MediaDeviceInfo[]) {
+    console.log('7');
     this.hasDevices = true;
-    this.availableDevices = devices;
+    this.scanner.restart();
 
     const backCam = devices.find(device =>
       /back|rear|environment/gi.test(device.label)
     );
 
+    console.log(backCam);
+
     this.currentDevice = backCam ?? devices[0];
   }
 
+  formats = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.CODE_128, BarcodeFormat.DATA_MATRIX];
 
   openScan() {
+    this.init = false;
 
+    this.onDeviceSelectChange(this.currentDevice.deviceId)
   }
 
 }

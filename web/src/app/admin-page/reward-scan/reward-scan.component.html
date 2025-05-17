@@ -193,9 +193,9 @@
         </div>
 
     </div>
-    <div class="absolute w-[50vw] h-full top-0 left-0 z-50 bg-black opacity-70">
-
-        <!-- <div class="scanner-sheel" [hidden]="!hisDevices">
+    <div [hidden]="init || scanner.device != currentDevice" class="absolute w-[50vw] h-full top-0 left-0 z-50 bg-black">
+        <button (click)="init = true;scanner.reset()">close</button>
+        <!-- <div class="scanner-sheel" [hidden]="!hisDevices">[hidden]="init"
             <header>
                 <select (change)="onDeviceSlectChange($event.target.value)" name="" id="">
                     <option value="" [selected]="!currentDevice">No Device Selected</option>
@@ -214,13 +214,13 @@
 
 
         <select (change)="onDeviceSelectChange($event)">
-            <option *ngFor="let cam of availableDevices" [value]="cam.deviceId">
+            <option [(ngModel)]="currentDevice.deviceId" *ngFor="let cam of availableDevices" [value]="cam.deviceId">
                 {{ cam.label || 'Unnamed Camera' }}
             </option>
         </select>
 
-        <zxing-scanner #scanner [device]="currentDevice" (camerasFound)="onCamerasFound($event)"
-            (scanSuccess)="handleQrCodeResult($event)" (scanError)="onScanError($event)">
+        <zxing-scanner #scanner [autostart]="true" [device]="currentDevice" (camerasFound)="onCamerasFound($event)"
+            (scanSuccess)="handleQrCodeResult($event)" (scanError)="onScanError($event)" [formats]="formats">
         </zxing-scanner>
 
     </div>
