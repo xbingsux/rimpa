@@ -54,18 +54,19 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
     String description = widget.reward.description;
     String startDate = thDateFormat(widget.reward.startDate);
     String endDate = thDateFormat(widget.reward.endDate);
+    bool canRedeem = widget.reward.canRedeem;
     String imageUrl =
         '${AppApi.urlApi}${widget.reward.img.replaceAll("\\", "/")}';
     final pointsController = Get.put(PointsController());
     pointsController.fetchpoint();
 
     return Scaffold(
-       appBar:AppBar(
-              toolbarHeight: 0,
-              // backgroundColor: Colors.amber,
-              elevation: 0,
-              forceMaterialTransparency: true,
-            ),
+      appBar: AppBar(
+        toolbarHeight: 0,
+        // backgroundColor: Colors.amber,
+        elevation: 0,
+        forceMaterialTransparency: true,
+      ),
       body: Stack(
         children: [
           Column(
@@ -81,8 +82,7 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                             imageSrc: AppImageType.network,
                             images: [imageUrl], // Use reward image
                             ratio: 1,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(0)),
+                            borderRadius: BorderRadius.all(Radius.circular(0)),
                           ),
                           Positioned(
                             bottom: -1,
@@ -134,15 +134,13 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                 aspectRatio: 345 / 80,
                                 child: Container(
                                   width: double.infinity,
-                                  padding:
-                                      const EdgeInsets.all(AppSpacing.md),
+                                  padding: const EdgeInsets.all(AppSpacing.md),
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.circular(AppRadius.xs),
                                       color: AppColors.accent1),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         flex: 3,
@@ -167,11 +165,9 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                   children: [
                                                     Container(
                                                       padding:
-                                                          const EdgeInsets
-                                                              .all(
+                                                          const EdgeInsets.all(
                                                               AppSpacing.xs),
-                                                      decoration:
-                                                          BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                                 AppRadius
@@ -182,16 +178,14 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                       child: const Icon(
                                                         Icons.star,
                                                         size: AppTextSize.sm,
-                                                        color:
-                                                            AppColors.white,
+                                                        color: AppColors.white,
                                                       ),
                                                     ),
                                                     const SizedBox(
                                                       width: 5,
                                                     ),
                                                     ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) {
+                                                      shaderCallback: (bounds) {
                                                         return AppGradiant
                                                             .gradientY_1
                                                             .createShader(
@@ -202,11 +196,9 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                             .cost, // Use reward cost
                                                         style: const TextStyle(
                                                             fontSize:
-                                                                AppTextSize
-                                                                    .md,
-                                                            color:
-                                                                AppTextColors
-                                                                    .white),
+                                                                AppTextSize.md,
+                                                            color: AppTextColors
+                                                                .white),
                                                       ),
                                                     )
                                                   ],
@@ -234,8 +226,7 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                 'ระยะเวลาในการแลกรับสิทธิ์',
                                                 style: TextStyle(
                                                     fontSize: AppTextSize.xs,
-                                                    color:
-                                                        AppTextColors.dark)),
+                                                    color: AppTextColors.dark)),
                                             const SizedBox(
                                               height: 5,
                                             ),
@@ -244,9 +235,8 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Container(
-                                                  padding:
-                                                      const EdgeInsets.all(
-                                                          AppSpacing.xs),
+                                                  padding: const EdgeInsets.all(
+                                                      AppSpacing.xs),
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -267,10 +257,9 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                 Text(
                                                   '$startDate - $endDate', // Use reward dates
                                                   style: const TextStyle(
-                                                      fontSize:
-                                                          AppTextSize.xs,
-                                                      color: AppTextColors
-                                                          .black),
+                                                      fontSize: AppTextSize.xs,
+                                                      color:
+                                                          AppTextColors.black),
                                                 )
                                               ],
                                             )
@@ -335,11 +324,12 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                         right: AppRadius.md,
                         bottom: AppSpacing.xl),
                     child: GestureDetector(
-                      onTap: authService.isLoggedIn.value &&
-                              (int.parse(
-                                      pointsController.pointsData["points"] ??
-                                          '0') >=
-                                  int.parse(widget.reward.cost))
+                      onTap: buttonActive(
+                              authService: authService.isLoggedIn.value,
+                              points: int.parse(
+                                  pointsController.pointsData["points"] ?? '0'),
+                              cost: int.parse(widget.reward.cost),
+                              canRedeem: canRedeem)
                           ? () {
                               showDialog(
                                 context: context,
@@ -374,8 +364,7 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                                   fontSize: 14,
                                                   color:
                                                       AppTextColors.secondary,
-                                                  fontWeight:
-                                                      FontWeight.w500),
+                                                  fontWeight: FontWeight.w500),
                                         ),
                                         Gap(16),
                                         Text(
@@ -387,8 +376,7 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                                               ?.copyWith(
                                                   fontSize: 14,
                                                   color: AppColors.danger,
-                                                  fontWeight:
-                                                      FontWeight.w600),
+                                                  fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
@@ -429,13 +417,15 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                           : () {},
                       child: Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppRadius.xs),
-                        decoration: authService.isLoggedIn.value &&
-                                (int.parse(pointsController
-                                            .pointsData["points"] ??
-                                        '0') >=
-                                    int.parse(widget.reward.cost))
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppRadius.xs),
+                        decoration: buttonActive(
+                                authService: authService.isLoggedIn.value,
+                                points: int.parse(
+                                    pointsController.pointsData["points"] ??
+                                        '0'),
+                                cost: int.parse(widget.reward.cost),
+                                canRedeem: canRedeem)
                             ? (BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(AppRadius.rounded),
@@ -447,11 +437,12 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
                               ),
                         child: Center(
                             child: Text(
-                          (int.parse(pointsController.pointsData["points"] ??
-                                      '0') >=
-                                  int.parse(widget.reward.cost))
-                              ? 'แลกรับสิทธิ์'
-                              : 'คะแนนไม่เพียงพอ',
+                          textButton(
+                              authService: authService.isLoggedIn.value,
+                              points: int.parse(
+                                  pointsController.pointsData["points"] ?? '0'),
+                              cost: int.parse(widget.reward.cost),
+                              canRedeem: canRedeem),
                           style: TextStyle(
                               fontSize: AppTextSize.lg,
                               color: AppTextColors.white),
@@ -475,5 +466,53 @@ class _HomeDetailRewardState extends State<HomeDetailReward> {
         ],
       ),
     );
+  }
+
+  String textButton({
+    required bool authService,
+    required int points,
+    required int cost,
+    required bool canRedeem,
+  }) {
+    print('authService: $authService');
+    print('points: $points');
+    print('cost: $cost');
+    print('canRedeem: $canRedeem');
+    if (authService) {
+      if (points >= cost) {
+        if (canRedeem) {
+          return 'แลกรับสิทธิ์';
+        }
+        return 'รับรางวัลแล้ว';
+      } else {
+        return 'คะแนนไม่เพียงพอ';
+      }
+    } else {
+      return 'เข้าสู่ระบบ';
+    }
+  }
+
+  bool buttonActive({
+    required bool authService,
+    required int points,
+    required int cost,
+    required bool canRedeem,
+  }) {
+    print('authService: $authService');
+    print('points: $points');
+    print('cost: $cost');
+    print('canRedeem: $canRedeem');
+    if (authService) {
+      if (points >= cost) {
+        if (canRedeem) {
+          return true;
+        }
+        return false;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
