@@ -151,8 +151,9 @@ export class RewardScanComponent implements OnInit {
       try {
         console.log('📦 Scan result:', result.getText());
         this.barcode = result.getText();
-        this.getRedeem()
+        this.getRedeem();
         this.init = true;
+        this.scanner.reset();
       } catch (e) {
 
       }
