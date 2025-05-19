@@ -127,7 +127,6 @@ export class RewardScanComponent implements OnInit {
 
   //
   init = true;
-
   ngAfterViewInit(): void {
     this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
       console.log('0');
@@ -151,6 +150,9 @@ export class RewardScanComponent implements OnInit {
       this.qrResult = result;
       try {
         console.log('📦 Scan result:', result.getText());
+        this.barcode = result.getText();
+        this.getRedeem()
+        this.init = true;
       } catch (e) {
 
       }
@@ -244,7 +246,6 @@ export class RewardScanComponent implements OnInit {
 
   openScan() {
     this.init = false;
-
     this.onDeviceSelectChange(this.currentDevice.deviceId)
   }
 

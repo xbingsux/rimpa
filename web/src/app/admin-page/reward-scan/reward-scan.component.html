@@ -193,8 +193,10 @@
         </div>
 
     </div>
-    <div [hidden]="init || scanner.device != currentDevice" class="absolute w-[50vw] h-full top-0 left-0 z-50 bg-black">
-        <button (click)="init = true;scanner.reset()">close</button>
+    <div [hidden]="init || scanner.device != currentDevice" class="fixed w-[100vh] top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50 bg-black
+        rounded-[12px] overflow-hidden py-1">
+        <button (click)="init = true;scanner.reset()"
+            class="absolute right-2 top-3 bg-black text-white rounded-[12px] border-[1px] border-white px-3 py-1">close</button>
         <!-- <div class="scanner-sheel" [hidden]="!hisDevices">[hidden]="init"
             <header>
                 <select (change)="onDeviceSlectChange($event.target.value)" name="" id="">
@@ -218,10 +220,10 @@
                 {{ cam.label || 'Unnamed Camera' }}
             </option>
         </select>
-
-        <zxing-scanner #scanner [autostart]="true" [device]="currentDevice" (camerasFound)="onCamerasFound($event)"
-            (scanSuccess)="handleQrCodeResult($event)" (scanError)="onScanError($event)" [formats]="formats">
-        </zxing-scanner>
-
+        <div class="w-full h-auto object-contain">
+            <zxing-scanner #scanner [autostart]="true" [device]="currentDevice" (camerasFound)="onCamerasFound($event)"
+                (scanSuccess)="handleQrCodeResult($event)" (scanError)="onScanError($event)" [formats]="formats">
+            </zxing-scanner>
+        </div>
     </div>
 </div>
