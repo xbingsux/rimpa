@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, Input, OnInit, ViewChild, viewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, viewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ApiService } from '../../api/api.service';
@@ -23,8 +23,7 @@ export class RewardScanComponent implements OnInit {
   ngOnInit(): void {
     this.http.get(`${environment.API_URL}/reward-history`, {}).subscribe(async (response: any) => {
       // console.log(response.history);
-      this.list = response.history
-
+      this.list = response.history.reverse();
       this.list.map(async (item: any) => {
         if (item.Reward.img) {
           let url = `${environment.API_URL}${item.Reward.img.replace('src', '')}`
@@ -39,6 +38,16 @@ export class RewardScanComponent implements OnInit {
       console.error('Error:', error);
     });
 
+    // เรียกตอน resize หน้าจอ
+    window.addEventListener('resize', () => { this.updateClassByViewport() });
+    const video = document.querySelector('video') as HTMLVideoElement | null;
+    if (video) {
+      video.addEventListener('loadedmetadata', () => {
+        this.w_video = video.videoWidth;
+        this.h_video = video.videoHeight;
+        this.updateClassByViewport();
+      });
+    }
   }
 
   getImg(url: string) {
@@ -47,8 +56,8 @@ export class RewardScanComponent implements OnInit {
   }
 
   noData = false;
-  scanning = false
-  barcode_focus = false
+  scanning = false;
+  barcode_focus = false;
   data_scan: RewardOrder | null = null;
 
   onBarcodeScanned(event: Event) {
@@ -127,6 +136,7 @@ export class RewardScanComponent implements OnInit {
 
   //
   init = true;
+  @ViewChild('scan', { static: false }) scanInput!: ElementRef<HTMLInputElement>;
   ngAfterViewInit(): void {
     this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
       console.log('0');
@@ -150,8 +160,16 @@ export class RewardScanComponent implements OnInit {
       this.qrResult = result;
       try {
         console.log('📦 Scan result:', result.getText());
-        this.barcode = result.getText();
-        this.getRedeem();
+
+        this.scanInput.nativeElement.value = result.getText();
+        const enterEvent = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          code: 'Enter',
+          bubbles: true,
+          cancelable: true
+        });
+        this.scanInput.nativeElement.dispatchEvent(enterEvent);
+
         this.init = true;
         this.scanner.reset();
       } catch (e) {
@@ -243,11 +261,40 @@ export class RewardScanComponent implements OnInit {
     this.currentDevice = backCam ?? devices[0];
   }
 
-  formats = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.CODE_128, BarcodeFormat.DATA_MATRIX];
+  formats = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128];
 
   openScan() {
     this.init = false;
     this.onDeviceSelectChange(this.currentDevice.deviceId)
+    // เรียกตอนโหลดหน้า
+    this.updateClassByViewport();
+  }
+
+  // ตัวอย่าง vanilla JS
+
+  @ViewChild('continer_scanner') continer_scanner!: ElementRef<HTMLDivElement>;
+  h_video = 0;
+  w_video = 0;
+  updateClassByViewport() {
+    const el = this.continer_scanner.nativeElement;
+    const vh = window.innerHeight;
+    const vw = window.innerWidth;
+
+    if (el) {
+      if (vh > vw) {
+        el.classList.add('w-max-[100vw]');
+        el.classList.add('w-[90vw]');
+        el.classList.remove('h-max-[100vh]');
+        el.classList.remove('h-[90vh]');
+      } else {
+        el.classList.add('h-max-[100vh]');
+        el.classList.add('h-[90vh]');
+        el.classList.add('w-fit');
+        el.classList.remove('w-max-[100vw]');
+        el.classList.remove('w-[90vw]');
+      }
+    }
+    el.style.aspectRatio = `${this.w_video} / ${this.h_video}`;
   }
 
 }

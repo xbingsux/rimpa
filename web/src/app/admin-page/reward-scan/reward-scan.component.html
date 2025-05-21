@@ -193,10 +193,19 @@
         </div>
 
     </div>
-    <div [hidden]="init || scanner.device != currentDevice" class="fixed w-[100vh] top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50 bg-black
-        rounded-[12px] overflow-hidden py-1">
-        <button (click)="init = true;scanner.reset()"
-            class="absolute right-2 top-3 bg-black text-white rounded-[12px] border-[1px] border-white px-3 py-1">close</button>
+    <div [hidden]="init || scanner.device != currentDevice" #continer_scanner class="aspect-[640 / 480] fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50 bg-black
+        rounded-[12px] overflow-hidden py-1 border-[4px] border-black">
+        <div class="relative w-full">
+            <select (change)="onDeviceSelectChange($event)" class="mx-4 my-2">
+                <option [(ngModel)]="currentDevice.deviceId" *ngFor="let cam of availableDevices"
+                    [value]="cam.deviceId">
+                    {{ cam.label || 'Unnamed Camera' }}
+                </option>
+            </select>
+            <button (click)="init = true;scanner.reset()"
+                class="absolute top-[50%] right-2 -translate-y-[50%] bg-black text-white rounded-[12px] border-[1px] border-white px-3 py-1">close</button>
+        </div>
+
         <!-- <div class="scanner-sheel" [hidden]="!hisDevices">[hidden]="init"
             <header>
                 <select (change)="onDeviceSlectChange($event.target.value)" name="" id="">
@@ -215,15 +224,12 @@
         </section> -->
 
 
-        <select (change)="onDeviceSelectChange($event)">
-            <option [(ngModel)]="currentDevice.deviceId" *ngFor="let cam of availableDevices" [value]="cam.deviceId">
-                {{ cam.label || 'Unnamed Camera' }}
-            </option>
-        </select>
-        <div class="w-full h-auto object-contain">
+
+        <div class="relative max-h-[90vh] max-w-[90vw]">
             <zxing-scanner #scanner [autostart]="true" [device]="currentDevice" (camerasFound)="onCamerasFound($event)"
                 (scanSuccess)="handleQrCodeResult($event)" (scanError)="onScanError($event)" [formats]="formats">
             </zxing-scanner>
+            <div class="scan-line absolute left-0 w-full h-1 bg-green-500 opacity-70 animate-scanMove"></div>
         </div>
     </div>
 </div>
